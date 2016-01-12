@@ -1,0 +1,131 @@
+body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+}
+
+.zf-green {
+    color: #68b604;
+}
+
+.scpper-layout {
+    color: #999;
+}
+
+.vertical-align {
+    display: flex;
+    align-items: center;
+}
+
+.btn-success {
+  background-color: #57a900;
+  background-image: -moz-linear-gradient(top, #70d900, #57a900);
+  background-image: -ms-linear-gradient(top, #70d900, #57a900);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#70d900), to(#57a900));
+  background-image: -webkit-linear-gradient(top, #70d900, #57a900);
+  background-image: -o-linear-gradient(top, #70d900, #57a900);
+  background-image: linear-gradient(top, #70d900, #57a900);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#70d900', endColorstr='#57a900', GradientType=0);
+}
+
+.btn-success:hover,
+.btn-success:active,
+.btn-success.active,
+.btn-success.disabled,
+.btn-success[disabled] {
+  background-color: #57a900;
+}
+
+.btn-success:active, .btn-success.active {
+  background-color: #57a900;
+}
+
+div.container a.brand {
+    background: url("../img/zf2-logo.png") no-repeat scroll 0 10px transparent;
+    margin-left: 0;
+    padding: 8px 20px 12px 40px;
+}
+
+.panel-extra-padding {
+    padding: 20px;
+}
+
+.panel-extra-margins {
+    margin: 10px;
+}
+
+.row-margin {
+    margin-bottom: 10px;
+}
+
+.small-text {
+    font-size: smaller;
+    color: #AAAAAA;
+}
+
+.equal, .equal > div[class*='col-'] {  
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    flex:1 0 auto;
+}
+
+.top-buffer { margin-top:30px; }
+
+.bottom-buffer { margin-bottom:30px; }
+
+.left-buffer { margin-left:20px; }
+.right-buffer { margin-right:20px; }
+
+div.main-container {
+    display: flex; 
+    justify-content: center;
+}
+
+table.tile-table {
+    width: 60%; 
+    table-layout: fixed;
+    border-spacing: 10px;    
+    border-collapse: separate;        
+}
+
+table.tile-table td {
+    border: 1px solid #ddd;
+    border-radius:4px;
+    -moz-border-radius:4px;        
+    padding: 15px;
+}
+
+[class*=info-box] {
+   border-width: 1px; 
+   border-color: #aaaaaa; 
+   border-radius: 6px; 
+   border-style: solid; 
+   margin-top: 15px;
+}
+
+.info-box-green {
+    background-color: #E5F5DF;
+}
+
+.info-box-blue {
+    background-color: #d9edf7;
+}
+
+.info-box-red {
+    background-color: #f2dede;
+}
+
+.info-box-orange {
+    background-color: #F7E3CD;
+}
+
+hr {
+    margin-top: 0px;
+    margin-bottom: 25px;
+}
+
+/* Charts */
+
+div.google-visualization-tooltip {
+    font-size: 14px;
+}

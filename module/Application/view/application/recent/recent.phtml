@@ -1,0 +1,144 @@
+<?php
+$this->headScript()->appendFile('/js/charts.js');
+$this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
+
+$form = $this->intervalForm;
+$form->setAttribute('action', $this->url('recent'));
+//$form->setAttribute('method', 'GET');
+$fromDate = $form->get('from-date');
+$toDate = $form->get('to-date');
+$submit = $form->get('submit');
+$submit->setValue('Show');
+?>
+
+<?php $this->headScript()->captureStart(); ?>
+// Initialize global variables for graphs
+changeChartsData.siteId = <?php echo $this->site->getWikidotId(); ?>;
+changeChartsData.fromDate = "<?php echo $fromDate->getValue(); ?>";
+changeChartsData.toDate = "<?php echo $toDate->getValue(); ?>";
+
+// Call google graphing API
+google.charts.load('current', {packages: ['corechart']});
+google.charts.setOnLoadCallback(drawChangeCharts);
+<?php $this->headScript()->captureEnd(); ?>
+<div class="form-inline">
+    <?php
+    $form->prepare();
+    echo $this->form()->openTag($form);
+    ?>
+        <div class="form-group">
+            <?php echo $this->formElement($fromDate); ?>
+        </div>
+    –
+        <div class="form-group">
+            <?php echo $this->formElement($toDate); ?>
+        </div>
+        <div class="form-group">
+            <?php echo $this->formElement($submit); ?>
+        </div>
+    <?php $this->form()->closeTag(); ?>
+</div>
+<!-- USERS -->
+<h1>Users</h1>
+<hr>
+<div class="container top-buffer">
+    <div class="row">
+        <div class="col-md-2 info-box-green">
+            <h3><?php echo $this->members['total'] ?> users</h3>
+            <ul class="list-unstyled">
+                <li><?php echo $this->members['voters'] ?> voters</li>
+                <li><?php echo $this->members['contributors'] ?> contributors</li>
+                <li><?php echo $this->members['posters'] ?> posters</li>
+                <li><?php echo $this->members['active'] ?> still active</li>
+            </ul>
+        </div>
+        <div class="col-md-8">
+            <div id="members-joined">
+            </div>
+        </div>
+    </div>
+    <div class="row top-buffer">
+        <div class="col-md-8 col-md-offset-2">
+            <div id="members-total">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- PAGES -->
+<h1>Pages</h1>
+<hr>
+<div class="container top-buffer">
+    <div class="row">
+        <div class="col-md-2 info-box-blue">
+            <h3><?php echo $this->pages ?> pages</h3>
+            <ul class="list-unstyled">
+                <li>stub</li>
+                <li>stub</li>
+                <li>stub</li>
+                <li>stub</li>
+            </ul>
+        </div>
+        <div class="col-md-8">
+            <div id="pages-created">
+            </div>
+        </div>
+    </div>
+    <div class="row top-buffer">
+        <div class="col-md-8 col-md-offset-2">
+            <div id="pages-total">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- REVISIONS -->
+<h1>Revisions</h1>
+<hr>
+<div class="container top-buffer">
+    <div class="row">
+        <div class="col-md-2 info-box-red">
+            <h3><?php echo $this->revisions ?> revisions</h3>
+            <ul class="list-unstyled">
+                <li>stub</li>
+                <li>stub</li>
+                <li>stub</li>
+                <li>stub</li>
+            </ul>
+        </div>
+        <div class="col-md-8">
+            <div id="revisions-created">
+            </div>
+        </div>
+    </div>
+    <div class="row top-buffer">
+        <div class="col-md-8 col-md-offset-2">
+            <div id="revisions-total">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- VOTES -->
+<h1>Votes</h1>
+<hr>
+<div class="container top-buffer">
+    <div class="row">
+        <div class="col-md-2 info-box-orange">
+            <h3><?php echo $this->votes ?> votes</h3>
+            <ul class="list-unstyled">
+                <li>stub</li>
+                <li>stub</li>
+                <li>stub</li>
+                <li>stub</li>
+            </ul>
+        </div>
+        <div class="col-md-8">
+            <div id="votes-cast">
+            </div>
+        </div>
+    </div>
+    <div class="row top-buffer">
+        <div class="col-md-8 col-md-offset-2">
+            <div id="votes-total">
+            </div>
+        </div>
+    </div>
+</div>
