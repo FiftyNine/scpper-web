@@ -1,60 +1,25 @@
-body {
-    padding-top: 60px;
-    padding-bottom: 40px;
+/* Navigation */
+
+.navbar-brand {
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 
-.zf-green {
-    color: #68b604;
-}
-
-.scpper-layout {
+.scpper-navbar-text {
     color: #999;
 }
 
-.vertical-align {
-    display: flex;
-    align-items: center;
-}
-
-.btn-success {
-  background-color: #57a900;
-  background-image: -moz-linear-gradient(top, #70d900, #57a900);
-  background-image: -ms-linear-gradient(top, #70d900, #57a900);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#70d900), to(#57a900));
-  background-image: -webkit-linear-gradient(top, #70d900, #57a900);
-  background-image: -o-linear-gradient(top, #70d900, #57a900);
-  background-image: linear-gradient(top, #70d900, #57a900);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#70d900', endColorstr='#57a900', GradientType=0);
-}
-
-.btn-success:hover,
-.btn-success:active,
-.btn-success.active,
-.btn-success.disabled,
-.btn-success[disabled] {
-  background-color: #57a900;
-}
-
-.btn-success:active, .btn-success.active {
-  background-color: #57a900;
-}
-
 div.container a.brand {
-    background: url("../img/zf2-logo.png") no-repeat scroll 0 10px transparent;
+    background: url("../img/logo.png") no-repeat scroll 0 10px transparent;
     margin-left: 0;
     padding: 8px 20px 12px 40px;
 }
 
-.panel-extra-padding {
-    padding: 20px;
-}
+/* General */
 
-.panel-extra-margins {
-    margin: 10px;
-}
-
-.row-margin {
-    margin-bottom: 10px;
+body {
+    padding-top: 60px;
+    padding-bottom: 40px;
 }
 
 .small-text {
@@ -62,19 +27,16 @@ div.container a.brand {
     color: #AAAAAA;
 }
 
-.equal, .equal > div[class*='col-'] {  
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: flex;
-    flex:1 0 auto;
+.top-buffer { 
+    margin-top:30px; 
 }
 
-.top-buffer { margin-top:30px; }
+hr {
+    margin-top: 0px;
+    margin-bottom: 25px;
+}
 
-.bottom-buffer { margin-bottom:30px; }
-
-.left-buffer { margin-left:20px; }
-.right-buffer { margin-right:20px; }
+/* Index */
 
 div.main-container {
     display: flex; 
@@ -94,6 +56,8 @@ table.tile-table td {
     -moz-border-radius:4px;        
     padding: 15px;
 }
+
+/* Changes */
 
 [class*=info-box] {
    border-width: 1px; 
@@ -119,13 +83,33 @@ table.tile-table td {
     background-color: #F7E3CD;
 }
 
-hr {
-    margin-top: 0px;
-    margin-bottom: 25px;
-}
-
 /* Charts */
 
 div.google-visualization-tooltip {
     font-size: 14px;
+}
+
+/* Legacy stuff */
+
+.btn-success {
+  background-color: #57a900;
+  background-image: -moz-linear-gradient(top, #70d900, #57a900);
+  background-image: -ms-linear-gradient(top, #70d900, #57a900);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#70d900), to(#57a900));
+  background-image: -webkit-linear-gradient(top, #70d900, #57a900);
+  background-image: -o-linear-gradient(top, #70d900, #57a900);
+  background-image: linear-gradient(top, #70d900, #57a900);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#70d900', endColorstr='#57a900', GradientType=0);
+}
+
+.btn-success:hover,
+.btn-success:active,
+.btn-success.active,
+.btn-success.disabled,
+.btn-success[disabled] {
+  background-color: #57a900;
+}
+
+.btn-success:active, .btn-success.active {
+  background-color: #57a900;
 }
