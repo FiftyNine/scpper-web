@@ -9,10 +9,14 @@ use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Expression;
 use Zend\Db\Adapter\Driver\ResultInterface;
 use Zend\Db\ResultSet\HydratingResultSet;
+use Zend\EventManager\EventManagerAwareInterface;
 use Application\Utils\DateGroupType;
 
-class ZendDbSqlMapper implements SimpleMapperInterface
+class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterface
 {
+    // User trait to avoid implementing basic stuff
+    use \Zend\EventManager\EventManagerAwareTrait;
+    
     /**
      *
      * @var AdapterInterface
@@ -43,6 +47,18 @@ class ZendDbSqlMapper implements SimpleMapperInterface
      */
     protected $idFieldName;
     
+    
+    /**
+     * Sends event for a logger to write down query text
+     * @param Select $select
+     */
+    protected function logQuery(Select $select)
+    {
+        $platform = $this->dbAdapter->getPlatform();
+        $query = $select->getSqlString($platform);
+        $this->getEventManager()->trigger(\Application\Utils\Events::LOG_SQL_QUERY, $this, compact('query'));               
+    }
+    
     /**
      * 
      * @param AdapterInterface $dbAdapter
@@ -62,7 +78,7 @@ class ZendDbSqlMapper implements SimpleMapperInterface
         $this->hydrator = $hydrator;
         $this->objectPrototype = $objectPrototype;
         $this->table = $table;
-        $this->idFieldName = $idFieldName;
+        $this->idFieldName = $idFieldName;       
     }
 
     /**
@@ -75,6 +91,7 @@ class ZendDbSqlMapper implements SimpleMapperInterface
      */
     protected function fetch(Sql $sql, Select $select, $offset = 0, $limit = 0)
     {
+        $this->logQuery($select);
         if ($offset > 0) {
             $select->offset($offset);
         }
@@ -109,6 +126,7 @@ class ZendDbSqlMapper implements SimpleMapperInterface
     protected function fetchCount(Sql $sql, Select $select)
     {
         $select->columns(array('num' => new Expression('COUNT(*)')));
+        $this->logQuery($select);
         $stmt = $sql->prepareStatementForSqlObject($select);
         $result = $stmt->execute();
         if ($result instanceof ResultInterface && $result->isQueryResult()) {

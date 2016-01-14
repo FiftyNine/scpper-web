@@ -16,10 +16,15 @@ class Module
 {
     public function onBootstrap(MvcEvent $e)
     {
-        $eventManager        = $e->getApplication()->getEventManager();
+        $app = $e->getApplication();
+        $eventManager = $app->getEventManager();        
+        $serviceManager = $app->getServiceManager();
+        $serviceManager->addInitializer(new \Application\Utils\PostInitializer());
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);        
         $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'attachLayoutForms'), 100);        
+        // Initialize logger
+        $serviceManager->get('EventLogger');
     }
     
     public function getConfig()

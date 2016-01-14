@@ -83,6 +83,7 @@ return array(
             'Application\Service\VoteServiceInterface' => 'Application\Factory\Service\VoteServiceFactory',
             'Application\Service\UtilityServiceInterface' => 'Application\Factory\Service\UtilityServiceFactory',
             'Application\Service\HubServiceInterface' => 'Application\Factory\Service\HubServiceFactory',
+            'EventLogger' => 'Application\Factory\Service\FileEventLoggerFactory',
             // Mappers
             'SiteMapper' => 'Application\Factory\Mapper\SiteDbSqlMapperFactory',
             'UserMapper' => 'Application\Factory\Mapper\UserDbSqlMapperFactory',
