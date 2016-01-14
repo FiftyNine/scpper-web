@@ -51,6 +51,18 @@ function getDateTooltipContent(date, group, text, value) {
     return '<b>' + period + ' </b><br>' + text+': <b>' + value + '</b> <br>'
 }
 
+function setFailedBackground(id)
+{
+    var elem = document.getElementById(id);
+    elem.className = "chart-failed";
+}
+
+function removeChartContainer(id)
+{
+    var elem = document.getElementById(id);
+    elem.parentNode.removeChild(elem);
+}
+
 function drawColumnChart(rawData, label, title, id, color) {
     var data = new google.visualization.DataTable();
     data.addColumn({type: 'date', label: 'Time'});
@@ -86,6 +98,8 @@ function drawLineChart(rawData, label, title, id, color) {
 function drawTimeLineCharts(result, barLabel, barTitle, barId, lineLabel, lineTitle, lineId, color) {
     // Define the chart to be drawn
     if (!result.success || result.data.length === 0) {
+        setFailedBackground(barId);
+        setFailedBackground(lineId);        
         return;
     } 
     // Convert returned values from string to date
@@ -121,7 +135,8 @@ function drawMemberCharts() {
         drawTimeLineCharts(result, 'Joined', 'New members', 'members-joined', 'Members', 'Total members', 'members-total', '#94C282');
     })
     .fail(function () {
-        alert("error");
+        setFailedBackground('members-joined');
+        removeChartContainer('members-total');
     });
 }
 
@@ -135,7 +150,8 @@ function drawPageCharts() {
         drawTimeLineCharts(result, 'Created', 'New pages', 'pages-created', 'Pages', 'Total pages', 'pages-total', '#6DAECF');
     })
     .fail(function () {
-        alert("error");
+        setFailedBackground('pages-created');
+        removeChartContainer('pages-total');
     });
 }
 
@@ -149,7 +165,8 @@ function drawRevisionCharts() {
         drawTimeLineCharts(result, 'Created', 'New revisions', 'revisions-created', 'Revisions', 'Total revisions', 'revisions-total', '#DB9191');
     })
     .fail(function () {
-        alert("error");
+        setFailedBackground('revisions-created');
+        removeChartContainer('revisions-total');
     });
 }
 
@@ -163,7 +180,8 @@ function drawVoteCharts() {
         drawTimeLineCharts(result, 'Votes', 'New votes', 'votes-cast', 'Votes', 'Total votes', 'votes-total', '#E0A96E');
     })
     .fail(function () {
-        alert("error");
+        setFailedBackground('votes-cast');
+        removeChartContainer('votes-total');
     });
 
 }

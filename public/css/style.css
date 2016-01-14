@@ -89,6 +89,21 @@ div.google-visualization-tooltip {
     font-size: 14px;
 }
 
+.chart-container, .chart-failed {    
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;     
+    height: 200px;
+}
+
+.chart-container {
+    background-image: url("/img/chartstub.png");
+}
+
+.chart-failed {
+    background-image: url("/img/chartfail.png");
+}
+
 /* Legacy stuff */
 
 .btn-success {
