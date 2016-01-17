@@ -4,7 +4,6 @@ namespace Application\Service;
 
 use Application\Mapper\VoteMapperInterface;
 use Application\Utils\VoteType;
-use Application\Utils\DateGroupType;
 
 class VoteService implements VoteServiceInterface 
 {
@@ -40,7 +39,6 @@ class VoteService implements VoteServiceInterface
      */
     public function getAggregatedValues($siteId, $aggregates, \DateTime $castAfter, \DateTime $castBefore)
     {
-        $group = DateGroupType::getBestGroupType($castAfter, $castBefore);
-        return $this->mapper->getAggregatedValues($siteId, $aggregates, $castAfter, $castBefore, $group);        
+        return $this->mapper->getAggregatedValues($siteId, $aggregates, $castAfter, $castBefore);
     }
 }

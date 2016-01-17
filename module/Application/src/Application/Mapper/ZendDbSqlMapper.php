@@ -6,11 +6,9 @@ use Zend\Db\Adapter\AdapterInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Select;
-use Zend\Db\Sql\Expression;
 use Zend\Db\Adapter\Driver\ResultInterface;
 use Zend\Db\ResultSet\HydratingResultSet;
 use Zend\EventManager\EventManagerAwareInterface;
-use Application\Utils\DateGroupType;
 
 class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterface
 {
@@ -176,7 +174,7 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
      */
     protected function fetchCount(Sql $sql, Select $select)
     {
-        $aggregate = new \Application\Utils\Aggregate('*', \Application\Utils\AggregateType::COUNT, 'Number');
+        $aggregate = new \Application\Utils\Aggregate('*', \Application\Utils\Aggregate::COUNT, 'Number');
         $this->aggregateSelect($select, array($aggregate));
         $array = $this->fetchArray($sql, $select);
         if (count($array) > 0) {
@@ -188,39 +186,25 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
 
     /**
      * Builds a new aggregated select from normal select
-     * @param Sql $sql
-     * @param Select $select
-     * @param \Application\Utils\Aggregate[] $aggregates
+     * @param \Zend\Db\Sql\Select $select
+     * @param \Application\Utils\QueryAggregateInterface[] $aggregates
      * @return Select
      */
     protected function aggregateSelect(Select $select, $aggregates)
     {
         $columns = array();
         foreach ($aggregates as $aggregate) {
-            $columns[$aggregate->getAggregateName()] = $aggregate->getAggregateExpression();
+            $aggName = $aggregate->getAggregateName();
+            if ($aggregate->getGroup()) {
+                $aggName = $aggName.self::GROUP_SUFFIX;
+                $select->group($aggName);
+            }
+            $columns[$aggName] = $aggregate->getAggregateExpression();
         }
-        $select->columns($columns, false);
+        $select->columns($columns, false);    
         return $select;
     }    
-    
-    /**
-     * Adds a grouping by date to an aggregated select
-     * @param Select $select
-     * @param string $dateName Name of field with date
-     * @param int $groupBy Type of grouping from \Application\Utils\DateGroupType
-     * @return Select
-     */
-    protected function groupSelectByDate(Select $select, $dateName, $groupBy)
-    {
-        $aggName = $dateName.self::GROUP_SUFFIX;
-        $group = DateGroupType::getSqlGroupString($groupBy, $dateName);
-        $columns = $select->getRawState(Select::COLUMNS);
-        $columns[$aggName] = new Expression($group);
-        $select->columns($columns, false)
-                ->group($aggName);
-        return $select;
-    }
-    
+
     /**
      * 
      * {@inheritDoc}

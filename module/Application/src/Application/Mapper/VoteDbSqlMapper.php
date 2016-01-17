@@ -4,7 +4,6 @@ namespace Application\Mapper;
 
 use Zend\Db\Sql\Sql;
 use Application\Utils\VoteType;
-use Application\Utils\DateGroupType;
 use Application\Utils\DbConsts\DbViewVotes;
 
 class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
@@ -41,12 +40,11 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
      * 
      * {@inheritDoc}
      */    
-    public function getAggregatedValues($siteId, $aggregates, \DateTime $castAfter, \DateTime $castBefore, $groupBy = DateGroupType::DAY)
+    public function getAggregatedValues($siteId, $aggregates, \DateTime $castAfter, \DateTime $castBefore)
     {
         $sql = new Sql($this->dbAdapter);
         $select = $this->buildVoteSelect($sql, $siteId, VoteType::ANY, $castAfter, $castBefore);
         $this->aggregateSelect($select, $aggregates);
-        $this->groupSelectByDate($select, DbViewVotes::DATETIME, $groupBy);
         return $this->fetchArray($sql, $select);
     }
 }

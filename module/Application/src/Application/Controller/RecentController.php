@@ -14,7 +14,6 @@ use Zend\View\Model\JsonModel;
 use Zend\Form\FormInterface;
 use Application\Service\HubServiceInterface;
 use Application\Form\DateIntervalForm;
-use Application\Utils\DateGroupType;
 use Application\Utils\UserType;
 use Application\Utils\PageType;
 use Application\Utils\VoteType;
@@ -83,6 +82,8 @@ class RecentController extends AbstractActionController
         }
         $from->setTime(0, 0, 0);
         $to->setTime(23, 59, 59);
+//            \Zend\Debug\Debug::dump($joins);
+//            die();
         $result = array(            
             'intervalForm' => $this->dateIntervalForm,
             'site' => $site,
@@ -126,7 +127,7 @@ class RecentController extends AbstractActionController
                 'list' => array(
                 )
             ),                        
-        );          
+        );
         return new ViewModel($result);
     }
     
@@ -137,14 +138,15 @@ class RecentController extends AbstractActionController
         $fromDate = null;
         $toDate = null;                
         if ($this->getChartParams($siteId, $fromDate, $toDate)) {
-            $count = new \Application\Utils\Aggregate('*', \Application\Utils\AggregateType::COUNT, 'Number');
-            $joins = $this->services->getUserService()->getAggregatedValues($siteId, array($count), UserType::ANY, false, $fromDate, $toDate);
+            $count = new \Application\Utils\Aggregate('*', \Application\Utils\Aggregate::COUNT, 'Number');
+            $dateAgg = new \Application\Utils\DateAggregate(DbViewMembership::JOINDATE);
+            $dateAgg->setBestAggregateType($fromDate, $toDate);
+            $joins = $this->services->getUserService()->getAggregatedValues($siteId, array($count, $dateAgg), UserType::ANY, false, $fromDate, $toDate);
             foreach($joins as $join) {
                 $result['data'][] = array($join[DbViewMembership::JOINDATE]->format(\DateTime::ISO8601), $join['Number']);
             }
-            $group = DateGroupType::getBestGroupType($fromDate, $toDate);
-            $result['group'] = DateGroupType::getGroupName($group);
-            $result['starting'] = (int)$this->services->getUserService()->countSiteMembers($siteId, UserType::ANY, false, null, $fromDate);            
+            $result['group'] = $dateAgg->getAggregateDescription();
+            $result['starting'] = $this->services->getUserService()->countSiteMembers($siteId, UserType::ANY, false, null, $fromDate);            
             $result['success'] = true;
         }        
         return new JsonModel($result);
@@ -157,14 +159,15 @@ class RecentController extends AbstractActionController
         $fromDate = null;
         $toDate = null;
         if ($this->getChartParams($siteId, $fromDate, $toDate)) {
-            $count = new \Application\Utils\Aggregate('*', \Application\Utils\AggregateType::COUNT, 'Number');
-            $pages = $this->services->getPageService()->getAggregatedValues($siteId, array($count), $fromDate, $toDate);            
+            $count = new \Application\Utils\Aggregate('*', \Application\Utils\Aggregate::COUNT, 'Number');            
+            $dateAgg = new \Application\Utils\DateAggregate(DbViewPages::CREATIONDATE);
+            $dateAgg->setBestAggregateType($fromDate, $toDate);            
+            $pages = $this->services->getPageService()->getAggregatedValues($siteId, array($count, $dateAgg), $fromDate, $toDate);            
             foreach ($pages as $page) {
                 $result['data'][] = array($page[DbViewPages::CREATIONDATE]->format(\DateTime::ISO8601), $page['Number']);
             }
-            $group = DateGroupType::getBestGroupType($fromDate, $toDate);
-            $result['group'] = DateGroupType::getGroupName($group);
-            $result['starting'] = (int)$this->services->getPageService()->countSitePages($siteId, PageType::ANY, null, $fromDate);
+            $result['group'] = $dateAgg->getAggregateDescription();
+            $result['starting'] = $this->services->getPageService()->countSitePages($siteId, PageType::ANY, null, $fromDate);
             $result['success'] = true;
         }
         return new JsonModel($result);
@@ -177,14 +180,15 @@ class RecentController extends AbstractActionController
         $fromDate = null;
         $toDate = null;
         if ($this->getChartParams($siteId, $fromDate, $toDate)) {
-            $count = new \Application\Utils\Aggregate('*', \Application\Utils\AggregateType::COUNT, 'Number');
-            $revs = $this->services->getRevisionService()->getAggregatedValues($siteId, array($count), $fromDate, $toDate);
+            $count = new \Application\Utils\Aggregate('*', \Application\Utils\Aggregate::COUNT, 'Number');
+            $dateAgg = new \Application\Utils\DateAggregate(DbViewRevisions::DATETIME);
+            $dateAgg->setBestAggregateType($fromDate, $toDate);            
+            $revs = $this->services->getRevisionService()->getAggregatedValues($siteId, array($count, $dateAgg), $fromDate, $toDate);
             foreach($revs as $rev) {
                 $result['data'][] = array($rev[DbViewRevisions::DATETIME]->format(\DateTime::ISO8601), $rev['Number']);
             }
-            $group = DateGroupType::getBestGroupType($fromDate, $toDate);
-            $result['group'] = DateGroupType::getGroupName($group);
-            $result['starting'] = (int)$this->services->getRevisionService()->countSiteRevisions($siteId, null, $fromDate);
+            $result['group'] = $dateAgg->getAggregateDescription();
+            $result['starting'] = $this->services->getRevisionService()->countSiteRevisions($siteId, null, $fromDate);
             $result['success'] = true;
         }
         return new JsonModel($result);
@@ -197,14 +201,15 @@ class RecentController extends AbstractActionController
         $fromDate = null;
         $toDate = null;
         if ($this->getChartParams($siteId, $fromDate, $toDate)) {
-            $count = new \Application\Utils\Aggregate('*', \Application\Utils\AggregateType::COUNT, 'Number');
-            $votes = $this->services->getVoteService()->getAggregatedValues($siteId, array($count), $fromDate, $toDate);            
+            $count = new \Application\Utils\Aggregate('*', \Application\Utils\Aggregate::COUNT, 'Number');
+            $dateAgg = new \Application\Utils\DateAggregate(DbViewVotes::DATETIME);
+            $dateAgg->setBestAggregateType($fromDate, $toDate);            
+            $votes = $this->services->getVoteService()->getAggregatedValues($siteId, array($count, $dateAgg), $fromDate, $toDate);            
             foreach($votes as $vote) {
                 $result['data'][] = array($vote[DbViewVotes::DATETIME]->format(\DateTime::ISO8601), $vote['Number']);
             }
-            $group = DateGroupType::getBestGroupType($fromDate, $toDate);
-            $result['group'] = DateGroupType::getGroupName($group);
-            $result['starting'] = (int)$this->services->getVoteService()->countSiteVotes($siteId, VoteType::ANY, null, $fromDate);
+            $result['group'] = $dateAgg->getAggregateDescription();
+            $result['starting'] = $this->services->getVoteService()->countSiteVotes($siteId, VoteType::ANY, null, $fromDate);
             $result['success'] = true;
         }
         return new JsonModel($result);

@@ -50,7 +50,7 @@ interface UserServiceInterface
      * Get an aggregated results from users, grouped by period when joined
      * P.e. Get a number of users, average rating etc.
      * @param int $siteId
-     * @param \Application\Utils\Aggregate[] $aggregates
+     * @param \Application\Utils\QueryAggregateInterface[] $aggregates
      * @param int $types
      * @param bool $active Count only active users
      * @param \DateTime $joinedAfter

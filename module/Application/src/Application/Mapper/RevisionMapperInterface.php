@@ -2,8 +2,6 @@
 
 namespace Application\Mapper;
 
-use Application\Utils\DateGroupType;
-
 interface RevisionMapperInterface extends SimpleMapperInterface
 {
     /**
@@ -15,15 +13,14 @@ interface RevisionMapperInterface extends SimpleMapperInterface
     public function countSiteRevisions($siteId, \DateTime $createdAfter = null, \DateTime $createdBefore = null);        
     
     /**
-     * Get an aggregated results from revisions, grouped by creation date
+     * Get an aggregated results from revisions
      * P.e. Get a number of revisions
      * 
      * @param int $siteId
-     * @param \Application\Utils\Aggregate[] $aggregates
+     * @param \Application\Utils\QueryAggregateInterface[] $aggregates
      * @param \DateTime $createdAfter
      * @param \DateTime $createdBefore
-     * @param int $groupBy
      * @return array(array(string => mixed))
      */
-    public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore, $groupBy = DateGroupType::DAY);    
+    public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore);    
 }

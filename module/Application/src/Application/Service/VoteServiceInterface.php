@@ -27,7 +27,7 @@ interface VoteServiceInterface
      * Get an aggregated results from votes, grouped by period when cast
      * P.e. Get a number of votes
      * @param int $siteId
-     * @param \Application\Utils\Aggregate[] $aggregates
+     * @param \Application\Utils\QueryAggregateInterface[] $aggregates
      * @param \DateTime $castAfter
      * @param \DateTime $castBefore
      * @return array(array(string => mixed))

@@ -3,7 +3,6 @@
 namespace Application\Mapper;
 
 use Zend\Db\Sql\Sql;
-use Application\Utils\DateGroupType;
 use Application\Utils\DbConsts\DbViewRevisions;
 
 class RevisionDbSqlMapper extends ZendDbSqlMapper implements RevisionMapperInterface
@@ -35,12 +34,11 @@ class RevisionDbSqlMapper extends ZendDbSqlMapper implements RevisionMapperInter
     /**
      * {@inheritDoc}
      */    
-    public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore, $groupBy = DateGroupType::DAY)
+    public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore)
     {
         $sql = new Sql($this->dbAdapter);
         $select = $this->buildRevisionSelect($sql, $siteId, $createdAfter, $createdBefore);
         $this->aggregateSelect($select, $aggregates);
-        $this->groupSelectByDate($select, DbViewRevisions::DATETIME, $groupBy);
         return $this->fetchArray($sql, $select);
     }
 }

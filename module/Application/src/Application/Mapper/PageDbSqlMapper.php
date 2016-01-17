@@ -4,7 +4,6 @@ namespace Application\Mapper;
 
 use Zend\Db\Sql\Sql;
 use Application\Utils\PageType;
-use Application\Utils\DateGroupType;
 use Application\Utils\DbConsts\DbViewPages;
 use Application\Utils\DbConsts\DbViewPageStatus;
 
@@ -60,12 +59,11 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
      * 
      * {@inheritDoc}
      */
-    public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore, $groupBy = DateGroupType::DAY)   
+    public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore)   
     {
         $sql = new Sql($this->dbAdapter);
         $select = $this->buildPageSelect($sql, $siteId, PageType::ANY, $createdAfter, $createdBefore);
         $this->aggregateSelect($select, $aggregates);
-        $this->groupSelectByDate($select, DbViewPages::CREATIONDATE, $groupBy);
         return $this->fetchArray($sql, $select);
     }
 }

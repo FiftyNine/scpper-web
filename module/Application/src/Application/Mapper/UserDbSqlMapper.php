@@ -4,7 +4,6 @@ namespace Application\Mapper;
 
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Select;
-use Application\Utils\DateGroupType;
 use Application\Utils\UserType;
 use Application\Utils\DbConsts\DbViewMembership;
 
@@ -101,14 +100,12 @@ class UserDbSqlMapper extends ZendDbSqlMapper implements UserMapperInterface
             $types = UserType::ANY,
             \DateTime $lastActive = null,
             \DateTime $joinedAfter = null,
-            \DateTime $joinedBefore = null,
-            $groupBy = DateGroupType::DAY
+            \DateTime $joinedBefore = null
     )
     {
         $sql = new Sql($this->dbAdapter);
         $select = $this->buildMemberSelect($sql, $siteId, $types, $lastActive, $joinedAfter, $joinedBefore);
         $this->aggregateSelect($select, $aggregates);
-        $this->groupSelectByDate($select, DbViewMembership::JOINDATE, $groupBy);
         return $this->fetchArray($sql, $select);
     }
     

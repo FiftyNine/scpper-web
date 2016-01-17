@@ -4,7 +4,6 @@ namespace Application\Service;
 
 use Application\Model\PageInterface;
 use Application\Utils\PageType;
-use Application\Utils\DateGroupType;
 
 interface PageServiceInterface
 {
@@ -48,7 +47,7 @@ interface PageServiceInterface
      * P.e. Get a number of pages, average rating etc.
      * 
      * @param int $siteId
-     * @param \Application\Utils\Aggregate[] $aggregates
+     * @param \Application\Utils\QueryAggregateInterface[] $aggregates
      * @param \DateTime $createdAfter
      * @param \DateTime $createdBefore
      * @return array(array(string => mixed))

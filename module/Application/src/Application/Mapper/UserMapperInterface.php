@@ -3,7 +3,6 @@
 namespace Application\Mapper;
 
 use Application\Model\UserInterface;
-use Application\Utils\DateGroupType;
 use Application\Utils\UserType;
 
 interface UserMapperInterface extends SimpleMapperInterface
@@ -40,16 +39,15 @@ interface UserMapperInterface extends SimpleMapperInterface
     public function countSiteMembers($siteId, $types = UserType::ANY, \DateTime $lastActive = null, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null);
         
     /**
-     * Get an aggregated results from users, grouped by period when joined
+     * Get an aggregated results from users
      * P.e. Get a number of users, average rating etc.
      * @param int $siteId
-     * @param \Application\Utils\Aggregate[] $aggregates
+     * @param \Application\Utils\QueryAggregateInterface[] $aggregates
      * @param int $types     
      * @param \DateTime $lastActive
      * @param \DateTime $joinedAfter
      * @param \DateTime $joinedBefore
-     * @param int $groupBy A constant from \Application\Utils\AggregateType
      * @return array(array(string => mixed))
      */
-    public function getAggregatedValues($siteId, $aggregates, $types = UserType::ANY, \DateTime $lastActive = null, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null, $groupBy = DateGroupType::DAY);
+    public function getAggregatedValues($siteId, $aggregates, $types = UserType::ANY, \DateTime $lastActive = null, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null);
 }

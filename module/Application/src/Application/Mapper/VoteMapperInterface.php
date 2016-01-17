@@ -3,7 +3,6 @@
 namespace Application\Mapper;
 
 use Application\Utils\VoteType;
-use Application\Utils\DateGroupType;
 
 interface VoteMapperInterface extends SimpleMapperInterface
 {
@@ -20,11 +19,10 @@ interface VoteMapperInterface extends SimpleMapperInterface
      * Get an aggregated results from votes, grouped by period when cast
      * P.e. Get a number of votes
      * @param int $siteId
-     * @param \Application\Utils\Aggregate[] $aggregates
+     * @param \Application\Utils\QueryAggregateInterface[] $aggregates
      * @param \DateTime $castAfter
      * @param \DateTime $castBefore
-     * @param int $groupBy
      * @return array(array(string => mixed))
      */
-    public function getAggregatedValues($siteId, $aggregates, \DateTime $castAfter, \DateTime $castBefore, $groupBy = DateGroupType::DAY);
+    public function getAggregatedValues($siteId, $aggregates, \DateTime $castAfter, \DateTime $castBefore);
 }

@@ -3,7 +3,6 @@
 namespace Application\Service;
 
 use Application\Mapper\UserMapperInterface;
-use Application\Utils\DateGroupType;
 use Application\Utils\UserType;
 
 class UserService implements UserServiceInterface
@@ -69,8 +68,7 @@ class UserService implements UserServiceInterface
         if ($active) {
             $lastActive = $this->getActiveDate();
         }
-        $group = DateGroupType::getBestGroupType($joinedAfter, $joinedBefore);
-        return $this->mapper->getAggregatedValues($siteId, $aggregates, $types, $lastActive, $joinedAfter, $joinedBefore, $group);
+        return $this->mapper->getAggregatedValues($siteId, $aggregates, $types, $lastActive, $joinedAfter, $joinedBefore);
     }
     
     /**

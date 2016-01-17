@@ -4,7 +4,6 @@ namespace Application\Service;
 
 use Application\Mapper\PageMapperInterface;
 use Application\Utils\PageType;
-use Application\Utils\DateGroupType;
 
 class PageService implements PageServiceInterface 
 {
@@ -56,7 +55,6 @@ class PageService implements PageServiceInterface
      */
     public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore)
     {
-        $group = DateGroupType::getBestGroupType($createdAfter, $createdBefore);
-        return $this->mapper->getAggregatedValues($siteId, $aggregates, $createdAfter, $createdBefore, $group);        
+        return $this->mapper->getAggregatedValues($siteId, $aggregates, $createdAfter, $createdBefore);
     }            
 }

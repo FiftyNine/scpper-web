@@ -36,7 +36,7 @@ interface RevisionServiceInterface
      * P.e. Get a number of votes
      * 
      * @param int $siteId
-     * @param \Application\Utils\Aggregate[] $aggregates
+     * @param \Application\Utils\QueryAggregateInterface[] $aggregates
      * @param \DateTime $createdAfter
      * @param \DateTime $createdBefore
      * @return array(array(string => mixed))

@@ -13,22 +13,45 @@ namespace Application\Utils;
  *
  * @author Alexander
  */
-class Aggregate 
+class Aggregate implements QueryAggregateInterface
 {
+    const COUNT = 0;
+    const SUM = 1;
+    const AVERAGE = 2;
+    
+    const SQL_NAMES = array(
+        self::COUNT => 'COUNT',
+        self::SUM => 'SUM',
+        self::AVERAGE => 'AVERAGE',
+    );        
+    
     protected $propertyName;
     protected $aggregateType;
     protected $aggregateName;
+    protected $group;
     
-    public function __construct($propertyName, $aggregateType, $aggregateName) 
+    /**
+     * 
+     * @param string $propertyName
+     * @param int $aggregateType \Application\Utils\AggregateType
+     * @param string $aggregateName
+     * @param bool $group
+     */
+    public function __construct($propertyName, $aggregateType, $aggregateName = '', $group = false) 
     {
         $this->propertyName = $propertyName;
         $this->aggregateType = $aggregateType;
-        $this->aggregateName = $aggregateName;
+        if ($aggregateName !== '') {
+            $this->aggregateName = $aggregateName;            
+        } else {
+            $this->aggregateName = $propertyName;
+        }
+        $this->group = $group;
     }
     
     public function getPropertyName()
     {
-        if ($this->getAggregateType() === AggregateType::COUNT) {
+        if ($this->getAggregateType() === self::COUNT) {
             return '*';
         } else {
             return $this->propertyName;
@@ -44,16 +67,21 @@ class Aggregate
     {
         if (isset($this->aggregateName)) {
             return $this->aggregateName;
-        } else if ($this->getAggregateType() !== AggregateType::COUNT) {
+        } else if ($this->getAggregateType() !== self::COUNT) {
             return $this->propertyName;
         } else {
             return 'Count';
         }
     }
+    
+    public function getGroup()
+    {
+        return $this->group;
+    }
 
     public function getAggregateExpression()
     {
-        $sqlAggregate = AggregateType::getSqlAggregateString($this->getAggregateType());
+        $sqlAggregate = self::SQL_NAMES[$this->getAggregateType()];
         return new \Zend\Db\Sql\Expression("$sqlAggregate({$this->getPropertyName()})");
-    }
+    }    
 }

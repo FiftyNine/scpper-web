@@ -3,7 +3,6 @@
 namespace Application\Service;
 
 use Application\Mapper\RevisionMapperInterface;
-use Application\Utils\DateGroupType;
 
 class RevisionService implements RevisionServiceInterface 
 {
@@ -47,7 +46,6 @@ class RevisionService implements RevisionServiceInterface
      */    
     public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore)
     {
-        $group = DateGroupType::getBestGroupType($createdAfter, $createdBefore);
-        return $this->mapper->getAggregatedValues($siteId, $aggregates, $createdAfter, $createdBefore, $group);        
+        return $this->mapper->getAggregatedValues($siteId, $aggregates, $createdAfter, $createdBefore);
     }                        
 }
