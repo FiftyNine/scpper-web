@@ -26,10 +26,10 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
                    ->where(array('s.'.DbViewPageStatus::STATUSID.' = ?' => $type));
         }
         if ($createdAfter) {
-            $select->where(array('p.'.DbViewPages::CREATIONDATE.' >= ?' => $createdAfter->format('Y-m-d H:i:s')));
+            $select->where(array('p.'.DbViewPages::CREATIONDATE.' >= ?' => $createdAfter->format(self::DATETIME_FORMAT)));
         }
         if ($createdBefore) {
-            $select->where(array('p.'.DbViewPages::CREATIONDATE.' <= ?' => $createdBefore->format('Y-m-d H:i:s')));
+            $select->where(array('p.'.DbViewPages::CREATIONDATE.' <= ?' => $createdBefore->format(self::DATETIME_FORMAT)));
         }
         return $select;
     }
@@ -60,10 +60,12 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
      * 
      * {@inheritDoc}
      */
-    public function countCreatedPages($siteId, \DateTime $createdAfter, \DateTime $createdBefore, $groupBy = DateGroupType::DAY)
+    public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore, $groupBy = DateGroupType::DAY)   
     {
         $sql = new Sql($this->dbAdapter);
         $select = $this->buildPageSelect($sql, $siteId, PageType::ANY, $createdAfter, $createdBefore);
-        return $this->fetchCountGroupedByDate($sql, $select, DbViewPages::CREATIONDATE, $groupBy);        
+        $this->aggregateSelect($select, $aggregates);
+        $this->groupSelectByDate($select, DbViewPages::CREATIONDATE, $groupBy);
+        return $this->fetchArray($sql, $select);
     }
 }

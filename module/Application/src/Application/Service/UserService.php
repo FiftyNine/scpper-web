@@ -63,14 +63,14 @@ class UserService implements UserServiceInterface
      * 
      * {@inheritDoc}
      */
-    public function countSiteMembersGroup($siteId, $types = UserType::ANY, $active = false, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null)
+    public function getAggregatedValues($siteId, $aggregates, $types = UserType::ANY, $active = false, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null)
     {
         $lastActive = null;
         if ($active) {
             $lastActive = $this->getActiveDate();
         }
         $group = DateGroupType::getBestGroupType($joinedAfter, $joinedBefore);
-        return $this->mapper->countSiteMembersGroup($siteId, $types, $lastActive, $joinedAfter, $joinedBefore, $group);
+        return $this->mapper->getAggregatedValues($siteId, $aggregates, $types, $lastActive, $joinedAfter, $joinedBefore, $group);
     }
     
     /**

@@ -18,10 +18,10 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
             $select->where(array('v.'.DbViewVotes::VALUE.' = ?' => $type));
         }
         if ($castAfter) {
-            $select->where(array('v.'.DbViewVotes::DATETIME.' >= ?' => $castAfter->format('Y-m-d H:i:s')));
+            $select->where(array('v.'.DbViewVotes::DATETIME.' >= ?' => $castAfter->format(self::DATETIME_FORMAT)));
         }
         if ($castBefore) {
-            $select->where(array('v.'.DbViewVotes::DATETIME.' <= ?' => $castBefore->format('Y-m-d H:i:s')));
+            $select->where(array('v.'.DbViewVotes::DATETIME.' <= ?' => $castBefore->format(self::DATETIME_FORMAT)));
         }
         return $select;
     }
@@ -41,10 +41,12 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
      * 
      * {@inheritDoc}
      */    
-    public function countCastVotes($siteId, \DateTime $castAfter, \DateTime $castBefore, $groupBy = DateGroupType::DAY)
+    public function getAggregatedValues($siteId, $aggregates, \DateTime $castAfter, \DateTime $castBefore, $groupBy = DateGroupType::DAY)
     {
         $sql = new Sql($this->dbAdapter);
         $select = $this->buildVoteSelect($sql, $siteId, VoteType::ANY, $castAfter, $castBefore);
-        return $this->fetchCountGroupedByDate($sql, $select, DbViewVotes::DATETIME, $groupBy);                        
+        $this->aggregateSelect($select, $aggregates);
+        $this->groupSelectByDate($select, DbViewVotes::DATETIME, $groupBy);
+        return $this->fetchArray($sql, $select);
     }
 }

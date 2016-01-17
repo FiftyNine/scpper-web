@@ -38,9 +38,9 @@ class VoteService implements VoteServiceInterface
     /**
      * {@inheritDoc}
      */
-    public function countCastVotes($siteId, \DateTime $castAfter, \DateTime $castBefore)
+    public function getAggregatedValues($siteId, $aggregates, \DateTime $castAfter, \DateTime $castBefore)
     {
         $group = DateGroupType::getBestGroupType($castAfter, $castBefore);
-        return $this->mapper->countCastVotes($siteId, $castAfter, $castBefore, $group);        
+        return $this->mapper->getAggregatedValues($siteId, $aggregates, $castAfter, $castBefore, $group);        
     }
 }

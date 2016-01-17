@@ -18,6 +18,10 @@ use Application\Utils\DateGroupType;
 use Application\Utils\UserType;
 use Application\Utils\PageType;
 use Application\Utils\VoteType;
+use Application\Utils\DbConsts\DbViewMembership;
+use Application\Utils\DbConsts\DbViewPages;
+use Application\Utils\DbConsts\DbViewRevisions;
+use Application\Utils\DbConsts\DbViewVotes;
 
 /**
  * Description of RecentController
@@ -84,18 +88,44 @@ class RecentController extends AbstractActionController
             'site' => $site,
             // Users
             'members' => array(
-                'total' => $this->services->getUserService()->countSiteMembers($siteId, UserType::ANY, false, $from, $to),
-                'voters' => $this->services->getUserService()->countSiteMembers($siteId, UserType::VOTER, false, $from, $to),
-                'contributors' => $this->services->getUserService()->countSiteMembers($siteId, UserType::CONTRIBUTOR, false, $from, $to),
-                'posters' => $this->services->getUserService()->countSiteMembers($siteId, UserType::POSTER, false, $from, $to),
-                'active' => $this->services->getUserService()->countSiteMembers($siteId, UserType::ANY, true, $from, $to),
-            ),
+                'header' => array(
+                    'users' => $this->services->getUserService()->countSiteMembers($siteId, UserType::ANY, false, $from, $to)
+                ),
+                'list' => array(
+                    'voters' => $this->services->getUserService()->countSiteMembers($siteId, UserType::VOTER, false, $from, $to),
+                    'contributors' => $this->services->getUserService()->countSiteMembers($siteId, UserType::CONTRIBUTOR, false, $from, $to),
+                    'posters' => $this->services->getUserService()->countSiteMembers($siteId, UserType::POSTER, false, $from, $to),
+                    'still active' => $this->services->getUserService()->countSiteMembers($siteId, UserType::ANY, true, $from, $to),
+                )
+            ),            
             // Pages
-            'pages' => $this->services->getPageService()->countSitePages($siteId, PageType::ANY, $from, $to),
+            'pages' => array(
+                'header' => array(
+                    'pages' => $this->services->getPageService()->countSitePages($siteId, PageType::ANY, $from, $to),
+                ),
+                'list' => array(
+                    'originals' => $this->services->getPageService()->countSitePages($siteId, PageType::ORIGINAL, $from, $to),
+                    'translations' => $this->services->getPageService()->countSitePages($siteId, PageType::TRANSLATION, $from, $to),
+                )
+            ),
             // Votes
-            'votes' => $this->services->getVoteService()->countSiteVotes($siteId, VoteType::ANY, $from, $to),
-            // Revisions
-            'revisions' => $this->services->getRevisionService()->countSiteRevisions($siteId, $from, $to)
+            'votes' => array(
+                'header' => array(
+                    'votes' => $this->services->getVoteService()->countSiteVotes($siteId, VoteType::ANY, $from, $to),
+                ),
+                'list' => array(
+                    'positive' => $this->services->getVoteService()->countSiteVotes($siteId, VoteType::POSITIVE, $from, $to),
+                    'negative' => $this->services->getVoteService()->countSiteVotes($siteId, VoteType::NEGATIVE, $from, $to),
+                )
+            ),            
+            // Revisions            
+            'revisions' => array(
+                'header' => array(
+                    'revisions' => $this->services->getRevisionService()->countSiteRevisions($siteId, $from, $to)
+                ),
+                'list' => array(
+                )
+            ),                        
         );          
         return new ViewModel($result);
     }
@@ -107,9 +137,10 @@ class RecentController extends AbstractActionController
         $fromDate = null;
         $toDate = null;                
         if ($this->getChartParams($siteId, $fromDate, $toDate)) {
-            $joins = $this->services->getUserService()->countSiteMembersGroup($siteId, UserType::ANY, false, $fromDate, $toDate);
+            $count = new \Application\Utils\Aggregate('*', \Application\Utils\AggregateType::COUNT, 'Number');
+            $joins = $this->services->getUserService()->getAggregatedValues($siteId, array($count), UserType::ANY, false, $fromDate, $toDate);
             foreach($joins as $join) {
-                $result['data'][] = array($join[0]->format(\DateTime::ISO8601), $join[1]);
+                $result['data'][] = array($join[DbViewMembership::JOINDATE]->format(\DateTime::ISO8601), $join['Number']);
             }
             $group = DateGroupType::getBestGroupType($fromDate, $toDate);
             $result['group'] = DateGroupType::getGroupName($group);
@@ -126,9 +157,10 @@ class RecentController extends AbstractActionController
         $fromDate = null;
         $toDate = null;
         if ($this->getChartParams($siteId, $fromDate, $toDate)) {
-            $pages = $this->services->getPageService()->countCreatedPages($siteId, $fromDate, $toDate);
-            foreach($pages as $page) {
-                $result['data'][] = array($page[0]->format(\DateTime::ISO8601), $page[1]);
+            $count = new \Application\Utils\Aggregate('*', \Application\Utils\AggregateType::COUNT, 'Number');
+            $pages = $this->services->getPageService()->getAggregatedValues($siteId, array($count), $fromDate, $toDate);            
+            foreach ($pages as $page) {
+                $result['data'][] = array($page[DbViewPages::CREATIONDATE]->format(\DateTime::ISO8601), $page['Number']);
             }
             $group = DateGroupType::getBestGroupType($fromDate, $toDate);
             $result['group'] = DateGroupType::getGroupName($group);
@@ -145,9 +177,10 @@ class RecentController extends AbstractActionController
         $fromDate = null;
         $toDate = null;
         if ($this->getChartParams($siteId, $fromDate, $toDate)) {
-            $revs = $this->services->getRevisionService()->countCreatedRevisions($siteId, $fromDate, $toDate);
+            $count = new \Application\Utils\Aggregate('*', \Application\Utils\AggregateType::COUNT, 'Number');
+            $revs = $this->services->getRevisionService()->getAggregatedValues($siteId, array($count), $fromDate, $toDate);
             foreach($revs as $rev) {
-                $result['data'][] = array($rev[0]->format(\DateTime::ISO8601), $rev[1]);
+                $result['data'][] = array($rev[DbViewRevisions::DATETIME]->format(\DateTime::ISO8601), $rev['Number']);
             }
             $group = DateGroupType::getBestGroupType($fromDate, $toDate);
             $result['group'] = DateGroupType::getGroupName($group);
@@ -164,9 +197,10 @@ class RecentController extends AbstractActionController
         $fromDate = null;
         $toDate = null;
         if ($this->getChartParams($siteId, $fromDate, $toDate)) {
-            $votes = $this->services->getVoteService()->countCastVotes($siteId, $fromDate, $toDate);
+            $count = new \Application\Utils\Aggregate('*', \Application\Utils\AggregateType::COUNT, 'Number');
+            $votes = $this->services->getVoteService()->getAggregatedValues($siteId, array($count), $fromDate, $toDate);            
             foreach($votes as $vote) {
-                $result['data'][] = array($vote[0]->format(\DateTime::ISO8601), $vote[1]);
+                $result['data'][] = array($vote[DbViewVotes::DATETIME]->format(\DateTime::ISO8601), $vote['Number']);
             }
             $group = DateGroupType::getBestGroupType($fromDate, $toDate);
             $result['group'] = DateGroupType::getGroupName($group);

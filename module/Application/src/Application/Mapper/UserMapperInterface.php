@@ -40,14 +40,16 @@ interface UserMapperInterface extends SimpleMapperInterface
     public function countSiteMembers($siteId, $types = UserType::ANY, \DateTime $lastActive = null, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null);
         
     /**
-     * Get a number of users who joined the site, grouped by period
+     * Get an aggregated results from users, grouped by period when joined
+     * P.e. Get a number of users, average rating etc.
      * @param int $siteId
-     * @param int $types
+     * @param \Application\Utils\Aggregate[] $aggregates
+     * @param int $types     
      * @param \DateTime $lastActive
      * @param \DateTime $joinedAfter
      * @param \DateTime $joinedBefore
-     * @param type $groupBy
-     * @return array(array(\DateTime, int))
+     * @param int $groupBy A constant from \Application\Utils\AggregateType
+     * @return array(array(string => mixed))
      */
-    public function countSiteMembersGroup($siteId, $types = UserType::ANY, \DateTime $lastActive = null, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null, $groupBy = DateGroupType::DAY);
+    public function getAggregatedValues($siteId, $aggregates, $types = UserType::ANY, \DateTime $lastActive = null, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null, $groupBy = DateGroupType::DAY);
 }

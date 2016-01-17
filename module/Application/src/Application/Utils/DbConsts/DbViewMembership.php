@@ -12,6 +12,10 @@ class DbViewMembership
     const SITE = 'Site';
     const USERID = 'UserId';
     const USERNAME = 'UserName';
+    const DISPLAYNAME = 'DisplayName';
     const JOINDATE = 'JoinDate';
     const LASTACTIVITY = 'LastActivity';
+    const VOTES = 'Votes';
+    const REVISIONS = 'Revisions';
+    const PAGES = 'Pages';
 }

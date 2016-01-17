@@ -54,9 +54,9 @@ class PageService implements PageServiceInterface
     /**
      * {@inheritDoc}
      */
-    public function countCreatedPages($siteId, \DateTime $createdAfter, \DateTime $createdBefore)
+    public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore)
     {
         $group = DateGroupType::getBestGroupType($createdAfter, $createdBefore);
-        return $this->mapper->countCreatedPages($siteId, $createdAfter, $createdBefore, $group);        
+        return $this->mapper->getAggregatedValues($siteId, $aggregates, $createdAfter, $createdBefore, $group);        
     }            
 }

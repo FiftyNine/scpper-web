@@ -99,7 +99,7 @@ function drawTimeLineCharts(result, barLabel, barTitle, barId, lineLabel, lineTi
     // Define the chart to be drawn
     if (!result.success || result.data.length === 0) {
         setFailedBackground(barId);
-        setFailedBackground(lineId);        
+        removeChartContainer(lineId);        
         return;
     } 
     // Convert returned values from string to date

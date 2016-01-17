@@ -38,19 +38,31 @@ google.charts.setOnLoadCallback(drawChangeCharts);
         </div>
     <?php $this->form()->closeTag(); ?>
 </div>
+<?php
+
+function printInfoLabel($data)
+{
+    foreach ($data['header'] as $name => $number) {
+        echo "<h3>$number $name</h3>";
+    }
+    if (count($data['list']) > 0) {
+        echo '<hr>';
+        echo '<ul class="list-unstyled">';
+        foreach ($data['list'] as $name => $number) {
+            echo "<li>$number $name</li>";
+        }
+        echo '</ul>';    
+    }
+}
+
+?>
 <!-- USERS -->
 <h1>Users</h1>
 <hr>
 <div class="container top-buffer">
     <div class="row">
-        <div class="col-md-2 info-box-green">
-            <h3><?php echo $this->members['total'] ?> users</h3>
-            <ul class="list-unstyled">
-                <li><?php echo $this->members['voters'] ?> voters</li>
-                <li><?php echo $this->members['contributors'] ?> contributors</li>
-                <li><?php echo $this->members['posters'] ?> posters</li>
-                <li><?php echo $this->members['active'] ?> still active</li>
-            </ul>
+        <div class="col-md-2 info-box background-green">
+            <?php printInfoLabel($this->members); ?>
         </div>
         <div class="col-md-8">
             <div class="chart-container" id="members-joined">
@@ -69,14 +81,8 @@ google.charts.setOnLoadCallback(drawChangeCharts);
 <hr>
 <div class="container top-buffer">
     <div class="row">
-        <div class="col-md-2 info-box-blue">
-            <h3><?php echo $this->pages ?> pages</h3>
-            <ul class="list-unstyled">
-                <li>stub</li>
-                <li>stub</li>
-                <li>stub</li>
-                <li>stub</li>
-            </ul>
+        <div class="col-md-2 info-box background-blue">
+            <?php printInfoLabel($this->pages); ?>
         </div>
         <div class="col-md-8">
             <div class="chart-container" id="pages-created">
@@ -95,14 +101,8 @@ google.charts.setOnLoadCallback(drawChangeCharts);
 <hr>
 <div class="container top-buffer">
     <div class="row">
-        <div class="col-md-2 info-box-red">
-            <h3><?php echo $this->revisions ?> revisions</h3>
-            <ul class="list-unstyled">
-                <li>stub</li>
-                <li>stub</li>
-                <li>stub</li>
-                <li>stub</li>
-            </ul>
+        <div class="col-md-2 info-box background-red">
+            <?php printInfoLabel($this->revisions); ?>
         </div>
         <div class="col-md-8">
             <div class="chart-container" id="revisions-created">
@@ -121,14 +121,8 @@ google.charts.setOnLoadCallback(drawChangeCharts);
 <hr>
 <div class="container top-buffer">
     <div class="row">
-        <div class="col-md-2 info-box-orange">
-            <h3><?php echo $this->votes ?> votes</h3>
-            <ul class="list-unstyled">
-                <li>stub</li>
-                <li>stub</li>
-                <li>stub</li>
-                <li>stub</li>
-            </ul>
+        <div class="col-md-2 info-box background-orange">
+            <?php printInfoLabel($this->votes); ?>
         </div>
         <div class="col-md-8">
             <div class="chart-container" id="votes-cast">

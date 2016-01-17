@@ -4,16 +4,9 @@ namespace Application\Mapper;
 
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Select;
-use Zend\Db\Sql\Expression;
-use Application\Model\User;
 use Application\Utils\DateGroupType;
 use Application\Utils\UserType;
-use Application\Utils\DbConsts\DbViewUsers;
-use Application\Utils\DbConsts\DbViewVotes;
 use Application\Utils\DbConsts\DbViewMembership;
-use Application\Utils\DbConsts\DbViewRevisions;
-use Application\Utils\DbConsts\DbViewAuthors;
-
 
 class UserDbSqlMapper extends ZendDbSqlMapper implements UserMapperInterface
 {
@@ -38,44 +31,27 @@ class UserDbSqlMapper extends ZendDbSqlMapper implements UserMapperInterface
     )
     {
         $select = $sql->select();
-        $select->from(array('u' => DbViewUsers::TABLE))
-               ->join(array('m' => DbViewMembership::TABLE), 'u.'.DbViewUsers::USERID.' = m.'.DbViewMembership::USERID, array(DbViewMembership::JOINDATE, DbViewMembership::SITEID))
+        $select->from(array('m' => DbViewMembership::TABLE))               
                ->where(array('m.'.DbViewMembership::SITEID.' = ?' => $siteId));
         if ($types & UserType::VOTER) {
-            $sub = $sql->select()
-                    ->from(DbViewVotes::TABLE)
-                    ->columns(array(new Expression('DISTINCT('.DbViewVotes::USERID.') as '.DbViewVotes::USERID)))
-                    ->where(array(DbViewVotes::SITEID.' = ?' => $siteId));
-            $subText = $sub->getSqlString($this->dbAdapter->getPlatform());
-            $select->where->in('u.'.DbViewUsers::USERID, array(new Expression($subText)));
+            $select->where(array('m.'.DbViewMembership::VOTES.' > 0'));
         }        
         if ($types & UserType::CONTRIBUTOR) {
-            $sub = $sql->select()
-                    ->from(DbViewRevisions::TABLE)
-                    ->columns(array(new Expression('DISTINCT('.DbViewRevisions::USERID.') as '.DbViewRevisions::USERID)))
-                    ->where(array(DbViewRevisions::SITEID.' = ?' => $siteId));
-            $subText = $sub->getSqlString($this->dbAdapter->getPlatform());
-            $select->where->in('u.'.DbViewUsers::USERID, array(new Expression($subText)));
+            $select->where(array('m.'.DbViewMembership::REVISIONS.' > 0'));
         }
         if ($types & UserType::POSTER) {
-            $sub = $sql->select()
-                    ->from(DbViewAuthors::TABLE)
-                    ->columns(array(new Expression('DISTINCT('.DbViewAuthors::USERID.') as '.DbViewAuthors::USERID)))
-                    ->where(array(DbViewAuthors::SITEID.' = ?' => $siteId));
-            $subText = $sub->getSqlString($this->dbAdapter->getPlatform());
-            $select->where->in('u.'.DbViewUsers::USERID, array(new Expression($subText)));
+            $select->where(array('m.'.DbViewMembership::PAGES.' > 0'));
         }        
         if ($lastActive && $lastActive->getTimestamp() < time()) {
             $select->where->isNotNull('m.'.DbViewMembership::LASTACTIVITY);
-            $select->where(array('m.'.DbViewMembership::LASTACTIVITY.' >= ?' => $lastActive->format('Y-m-d H:i:s')));                   
+            $select->where(array('m.'.DbViewMembership::LASTACTIVITY.' >= ?' => $lastActive->format(self::DATETIME_FORMAT)));
         }                
         if ($joinedAfter) {            
-            $select->where(array('m.'.DbViewMembership::JOINDATE.' >= ?' => $joinedAfter->format('Y-m-d H:i:s')));                   
+            $select->where(array('m.'.DbViewMembership::JOINDATE.' >= ?' => $joinedAfter->format(self::DATETIME_FORMAT)));                   
         }                
         if ($joinedBefore) {            
-            $select->where(array('m.'.DbViewMembership::JOINDATE.' <= ?' => $joinedBefore->format('Y-m-d H:i:s')));                   
+            $select->where(array('m.'.DbViewMembership::JOINDATE.' <= ?' => $joinedBefore->format(self::DATETIME_FORMAT)));                   
         }
-        $select->order('m.'.DbViewMembership::JOINDATE.' ASC');
         return $select;
     }
     
@@ -119,18 +95,21 @@ class UserDbSqlMapper extends ZendDbSqlMapper implements UserMapperInterface
      * 
      * {@inheritDoc}
      */
-    public function countSiteMembersGroup(
-            $siteId, 
-            $types = UserType::ANY, 
-            \DateTime $lastActive = null, 
-            \DateTime $joinedAfter = null, 
-            \DateTime $joinedBefore = null, 
+    public function getAggregatedValues(
+            $siteId,
+            $aggregates,
+            $types = UserType::ANY,
+            \DateTime $lastActive = null,
+            \DateTime $joinedAfter = null,
+            \DateTime $joinedBefore = null,
             $groupBy = DateGroupType::DAY
     )
     {
         $sql = new Sql($this->dbAdapter);
         $select = $this->buildMemberSelect($sql, $siteId, $types, $lastActive, $joinedAfter, $joinedBefore);
-        return $this->fetchCountGroupedByDate($sql, $select, DbViewMembership::JOINDATE, $groupBy);
+        $this->aggregateSelect($select, $aggregates);
+        $this->groupSelectByDate($select, DbViewMembership::JOINDATE, $groupBy);
+        return $this->fetchArray($sql, $select);
     }
     
     /**

@@ -24,12 +24,13 @@ interface VoteServiceInterface
     public function countSiteVotes($siteId, $type = VoteType::ANY, \DateTime $castAfter = null, \DateTime $castBefore = null);
     
     /**
-     * Get a number of cast votes, grouped by period
-     * 
+     * Get an aggregated results from votes, grouped by period when cast
+     * P.e. Get a number of votes
      * @param int $siteId
+     * @param \Application\Utils\Aggregate[] $aggregates
      * @param \DateTime $castAfter
      * @param \DateTime $castBefore
-     * @return array(\DateTime, int)
+     * @return array(array(string => mixed))
      */
-    public function countCastVotes($siteId, \DateTime $castAfter, \DateTime $castBefore);    
+    public function getAggregatedValues($siteId, $aggregates, \DateTime $castAfter, \DateTime $castBefore);
 }

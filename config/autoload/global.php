@@ -16,7 +16,8 @@
          'driver'         => 'Pdo',
          'dsn'            => 'mysql:dbname=fiddynun_scpper;host=localhost',
          'driver_options' => array(
-             PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
+             PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\'',
+             PDO::ATTR_EMULATE_PREPARES => false         
          ),
      ),
      'service_manager' => array(

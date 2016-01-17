@@ -10,3 +10,4 @@ nbproject
 vendor
 composer.phar
 *.log
+/public/phpinfo.php

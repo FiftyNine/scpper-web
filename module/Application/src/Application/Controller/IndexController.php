@@ -30,7 +30,7 @@ class IndexController extends AbstractActionController
     }
     
     public function indexAction()
-    {        
+    {                
         $siteId = $this->services->getUtilityService()->getSiteId();
         $site = $this->services->getSiteService()->find($siteId);                
         $result = array(

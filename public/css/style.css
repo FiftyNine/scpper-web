@@ -57,9 +57,13 @@ table.tile-table td {
     padding: 15px;
 }
 
+hr {
+    border-color: #dddddd;
+}
+
 /* Changes */
 
-[class*=info-box] {
+.info-box {
    border-width: 1px; 
    border-color: #aaaaaa; 
    border-radius: 6px; 
@@ -67,20 +71,30 @@ table.tile-table td {
    margin-top: 15px;
 }
 
-.info-box-green {
+.background-green {
     background-color: #E5F5DF;
 }
 
-.info-box-blue {
+.background-blue {
     background-color: #d9edf7;
 }
 
-.info-box-red {
+.background-red {
     background-color: #f2dede;
 }
 
-.info-box-orange {
+.background-orange {
     background-color: #F7E3CD;
+}
+
+.info-box > hr {
+    border-color: inherit;
+    margin: 5px;
+}
+
+.info-box > h3 {    
+    margin-top: 15px;
+    margin-bottom: 5px;
 }
 
 /* Charts */

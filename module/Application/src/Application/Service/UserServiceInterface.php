@@ -47,14 +47,16 @@ interface UserServiceInterface
     public function countSiteMembers($siteId, $types = UserType::ANY, $active = false, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null);
     
     /**
-     * Get a number of users who joined the site, grouped by period
+     * Get an aggregated results from users, grouped by period when joined
+     * P.e. Get a number of users, average rating etc.
      * @param int $siteId
+     * @param \Application\Utils\Aggregate[] $aggregates
      * @param int $types
      * @param bool $active Count only active users
      * @param \DateTime $joinedAfter
      * @param \DateTime $joinedBefore
      * @param type $groupBy
-     * @return array(array(\DateTime, int))
-     */    
-    public function countSiteMembersGroup($siteId, $types = UserType::ANY, $active = false, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null);
+     * @return array(array(string => mixed))
+     */
+    public function getAggregatedValues($siteId, $aggregates, $types = UserType::ANY, $active = false, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null);
 }

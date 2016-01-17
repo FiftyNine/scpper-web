@@ -14,10 +14,10 @@ class RevisionDbSqlMapper extends ZendDbSqlMapper implements RevisionMapperInter
                       ->from(array("r" => DbViewRevisions::TABLE))
                       ->where(array('r.'.DbViewRevisions::SITEID.' = ?' => $siteId));
         if ($createdAfter && $createdAfter->getTimestamp() <= time()) {
-            $select->where(array('r.'.DbViewRevisions::DATETIME.' >= ?' => $createdAfter->format('Y-m-d H:i:s')));
+            $select->where(array('r.'.DbViewRevisions::DATETIME.' >= ?' => $createdAfter->format(self::DATETIME_FORMAT)));
         }
         if ($createdBefore) {
-            $select->where(array('r.'.DbViewRevisions::DATETIME.' <= ?' => $createdBefore->format('Y-m-d H:i:s')));
+            $select->where(array('r.'.DbViewRevisions::DATETIME.' <= ?' => $createdBefore->format(self::DATETIME_FORMAT)));
         }
         return $select; 
    }
@@ -35,10 +35,12 @@ class RevisionDbSqlMapper extends ZendDbSqlMapper implements RevisionMapperInter
     /**
      * {@inheritDoc}
      */    
-    public function countCreatedRevisions($siteId, \DateTime $createdAfter, \DateTime $createdBefore, $groupBy = DateGroupType::DAY)
+    public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore, $groupBy = DateGroupType::DAY)
     {
         $sql = new Sql($this->dbAdapter);
         $select = $this->buildRevisionSelect($sql, $siteId, $createdAfter, $createdBefore);
-        return $this->fetchCountGroupedByDate($sql, $select, DbViewRevisions::DATETIME, $groupBy);                
+        $this->aggregateSelect($select, $aggregates);
+        $this->groupSelectByDate($select, DbViewRevisions::DATETIME, $groupBy);
+        return $this->fetchArray($sql, $select);
     }
 }

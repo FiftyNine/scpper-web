@@ -45,9 +45,9 @@ class RevisionService implements RevisionServiceInterface
     /**
      * {@inheritDoc}
      */    
-    public function countCreatedRevisions($siteId, \DateTime $createdAfter, \DateTime $createdBefore)
+    public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore)
     {
         $group = DateGroupType::getBestGroupType($createdAfter, $createdBefore);
-        return $this->mapper->countCreatedRevisions($siteId, $createdAfter, $createdBefore, $group);        
+        return $this->mapper->getAggregatedValues($siteId, $aggregates, $createdAfter, $createdBefore, $group);        
     }                        
 }
