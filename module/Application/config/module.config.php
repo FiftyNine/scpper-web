@@ -84,6 +84,7 @@ return array(
             'Application\Service\UtilityServiceInterface' => 'Application\Factory\Service\UtilityServiceFactory',
             'Application\Service\HubServiceInterface' => 'Application\Factory\Service\HubServiceFactory',
             'EventLogger' => 'Application\Factory\Service\FileEventLoggerFactory',
+            'Zend\Db\Adapter\Adapter' => 'Application\Factory\Service\DbAdapterFactory',
             // Mappers
             'SiteMapper' => 'Application\Factory\Mapper\SiteDbSqlMapperFactory',
             'UserMapper' => 'Application\Factory\Mapper\UserDbSqlMapperFactory',
@@ -92,8 +93,7 @@ return array(
             'VoteMapper' => 'Application\Factory\Mapper\VoteDbSqlMapperFactory',
             // Zend
             'translator' => 'Zend\Mvc\Service\TranslatorServiceFactory',            
-            'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',            
-            'Zend\Db\Adapter\Adapter' => 'Zend\Db\Adapter\AdapterServiceFactory'
+            'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',                       
         ),
     ),
     'translator' => array(

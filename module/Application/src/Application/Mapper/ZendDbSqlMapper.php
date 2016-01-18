@@ -51,12 +51,15 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
     
     /**
      * Sends event for a logger to write down query text
-     * @param Select $select
+     * @param mixed $select
      */
-    protected function logQuery(Select $select)
+    protected function logQuery($select)
     {
-        $platform = $this->dbAdapter->getPlatform();
-        $query = $select->getSqlString($platform);
+        if ($select instanceof Select) {
+            $platform = $this->dbAdapter->getPlatform();
+            $query = $select->getSqlString($platform);
+        } else 
+            $query = json_encode($select);
         $this->getEventManager()->trigger(\Application\Utils\Events::LOG_SQL_QUERY, $this, compact('query'));               
     }
     
@@ -100,7 +103,15 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
             $select->limit($limit);
         }                
         $stmt = $sql->prepareStatementForSqlObject($select);
-        $result = $stmt->execute();        
+        $profiler = $this->dbAdapter->getProfiler();
+        if ($profiler) {
+            $profiler->profilerStart($stmt);
+            $result = $stmt->execute();
+            $profile = $profiler->getLastProfile();
+            $this->logQuery($profile);
+        } else {
+            $result = $stmt->execute();
+        }
         if ($result instanceof ResultInterface && $result->isQueryResult()) {
             return $result;
         }        
