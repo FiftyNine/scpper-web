@@ -33,18 +33,6 @@ class IndexController extends AbstractActionController
     {                
         $siteId = $this->services->getUtilityService()->getSiteId();
         $site = $this->services->getSiteService()->find($siteId);                
-/*        $this->services->getUserService()->countSiteMembers($siteId);
-        $this->services->getUserService()->countSiteMembers($siteId, UserType::CONTRIBUTOR);
-        $this->services->getUserService()->countSiteMembers($siteId, UserType::getTypeMask(false, true, true));
-        $this->services->getUserService()->countSiteMembers($siteId, UserType::ANY, true);
-        $this->services->getPageService()->countSitePages($siteId);
-        $this->services->getPageService()->countSitePages($siteId, PageType::ORIGINAL);
-        $this->services->getPageService()->countSitePages($siteId, PageType::TRANSLATION);
-        $this->services->getPageService()->countSitePages($siteId, PageType::REWRITE);
-        $this->services->getRevisionService()->countSiteRevisions($siteId);
-        $this->services->getVoteService()->countSiteVotes($siteId);
-        $this->services->getVoteService()->countSiteVotes($siteId, VoteType::POSITIVE);
-*/        
         $result = array(
             'site' => $site,
             'members' => $this->services->getUserService()->countSiteMembers($siteId),

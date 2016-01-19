@@ -15,14 +15,20 @@ namespace Application\Utils;
  */
 class Aggregate implements QueryAggregateInterface
 {
-    const COUNT = 0;
-    const SUM = 1;
-    const AVERAGE = 2;
+    const NONE = 0;
+    const COUNT = 1;
+    const SUM = 2;
+    const AVERAGE = 3;
+    const MIN = 4;    
+    const MAX = 5;    
     
     const SQL_NAMES = array(
+        self::NONE => '',
         self::COUNT => 'COUNT',
         self::SUM => 'SUM',
-        self::AVERAGE => 'AVERAGE',
+        self::AVERAGE => 'AVG',
+        self::MIN => 'MIN',
+        self::MAX => 'MAX'
     );        
     
     protected $propertyName;
@@ -82,6 +88,10 @@ class Aggregate implements QueryAggregateInterface
     public function getAggregateExpression()
     {
         $sqlAggregate = self::SQL_NAMES[$this->getAggregateType()];
-        return new \Zend\Db\Sql\Expression("$sqlAggregate({$this->getPropertyName()})");
+        if ($sqlAggregate) {
+            return new \Zend\Db\Sql\Expression("$sqlAggregate({$this->getPropertyName()})");
+        } else {
+            return $this->getPropertyName();
+        }
     }    
 }

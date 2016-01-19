@@ -21,6 +21,8 @@ use Application\Utils\DbConsts\DbViewMembership;
 use Application\Utils\DbConsts\DbViewPages;
 use Application\Utils\DbConsts\DbViewRevisions;
 use Application\Utils\DbConsts\DbViewVotes;
+use Application\Utils\Aggregate;
+use Application\Utils\DateAggregate;
 
 /**
  * Description of RecentController
@@ -82,8 +84,6 @@ class RecentController extends AbstractActionController
         }
         $from->setTime(0, 0, 0);
         $to->setTime(23, 59, 59);
-//            \Zend\Debug\Debug::dump($joins);
-//            die();
         $result = array(            
             'intervalForm' => $this->dateIntervalForm,
             'site' => $site,
@@ -128,6 +128,17 @@ class RecentController extends AbstractActionController
                 )
             ),                        
         );
+        $maxRating = new Aggregate(DbViewPages::CLEANRATING, Aggregate::MAX, 'MaxRating');
+        $avgRating = new Aggregate(DbViewPages::CLEANRATING, Aggregate::AVERAGE, 'AvgRating');
+        $temp = $this->services->getPageService()->getAggregatedValues($siteId, array($maxRating, $avgRating), $from, $to);
+        $result['pages']['list']['highest rating'] = $temp[0]['MaxRating'];
+        $result['pages']['list']['average rating'] = $temp[0]['AvgRating'];
+        $pageIdGroup = new Aggregate(DbViewRevisions::PAGEID, Aggregate::NONE, 'Tmp', true);
+        $temp = $this->services->getRevisionService()->getAggregatedValues($siteId, array($pageIdGroup), $from, $to);
+        $result['revisions']['list']['edited pages'] = count($temp);
+        $userIdGroup = new Aggregate(DbViewRevisions::USERID, Aggregate::NONE, 'Tmp', true);
+        $temp = $this->services->getRevisionService()->getAggregatedValues($siteId, array($userIdGroup), $from, $to);
+        $result['revisions']['list']['editors'] = count($temp);        
         return new ViewModel($result);
     }
     
@@ -138,8 +149,8 @@ class RecentController extends AbstractActionController
         $fromDate = null;
         $toDate = null;                
         if ($this->getChartParams($siteId, $fromDate, $toDate)) {
-            $count = new \Application\Utils\Aggregate('*', \Application\Utils\Aggregate::COUNT, 'Number');
-            $dateAgg = new \Application\Utils\DateAggregate(DbViewMembership::JOINDATE);
+            $count = new Aggregate('*', Aggregate::COUNT, 'Number');
+            $dateAgg = new DateAggregate(DbViewMembership::JOINDATE);
             $dateAgg->setBestAggregateType($fromDate, $toDate);
             $joins = $this->services->getUserService()->getAggregatedValues($siteId, array($count, $dateAgg), UserType::ANY, false, $fromDate, $toDate);
             foreach($joins as $join) {
@@ -159,8 +170,8 @@ class RecentController extends AbstractActionController
         $fromDate = null;
         $toDate = null;
         if ($this->getChartParams($siteId, $fromDate, $toDate)) {
-            $count = new \Application\Utils\Aggregate('*', \Application\Utils\Aggregate::COUNT, 'Number');            
-            $dateAgg = new \Application\Utils\DateAggregate(DbViewPages::CREATIONDATE);
+            $count = new Aggregate('*', Aggregate::COUNT, 'Number');            
+            $dateAgg = new DateAggregate(DbViewPages::CREATIONDATE);
             $dateAgg->setBestAggregateType($fromDate, $toDate);            
             $pages = $this->services->getPageService()->getAggregatedValues($siteId, array($count, $dateAgg), $fromDate, $toDate);            
             foreach ($pages as $page) {
@@ -180,8 +191,8 @@ class RecentController extends AbstractActionController
         $fromDate = null;
         $toDate = null;
         if ($this->getChartParams($siteId, $fromDate, $toDate)) {
-            $count = new \Application\Utils\Aggregate('*', \Application\Utils\Aggregate::COUNT, 'Number');
-            $dateAgg = new \Application\Utils\DateAggregate(DbViewRevisions::DATETIME);
+            $count = new Aggregate('*', Aggregate::COUNT, 'Number');
+            $dateAgg = new DateAggregate(DbViewRevisions::DATETIME);
             $dateAgg->setBestAggregateType($fromDate, $toDate);            
             $revs = $this->services->getRevisionService()->getAggregatedValues($siteId, array($count, $dateAgg), $fromDate, $toDate);
             foreach($revs as $rev) {
@@ -201,8 +212,8 @@ class RecentController extends AbstractActionController
         $fromDate = null;
         $toDate = null;
         if ($this->getChartParams($siteId, $fromDate, $toDate)) {
-            $count = new \Application\Utils\Aggregate('*', \Application\Utils\Aggregate::COUNT, 'Number');
-            $dateAgg = new \Application\Utils\DateAggregate(DbViewVotes::DATETIME);
+            $count = new Aggregate('*', Aggregate::COUNT, 'Number');
+            $dateAgg = new DateAggregate(DbViewVotes::DATETIME);
             $dateAgg->setBestAggregateType($fromDate, $toDate);            
             $votes = $this->services->getVoteService()->getAggregatedValues($siteId, array($count, $dateAgg), $fromDate, $toDate);            
             foreach($votes as $vote) {

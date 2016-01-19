@@ -15,4 +15,7 @@ class DbViewPages
     const TITLE = 'Title';
     const SOURCE = 'Source';
     const CREATIONDATE = 'CreationDate';
+    const RATING = 'Rating';
+    const CLEANRATING = 'CleanRating';
+    const REVISIONS = 'Revisions';
 }
