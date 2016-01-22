@@ -20,8 +20,11 @@ class UserDbSqlMapperFactory implements FactoryInterface
         $hydrator = new AggregateHydrator();
         $baseHydrator = new ClassMethods(); 
         $namingStrat = new MapNamingStrategy(array(
-            DbViewUsers::USERID => 'id',
-            DbViewUsers::WIKIDOTNAME => 'name'
+            DbViewMembership::USERID => 'id',
+            DbViewMembership::USERNAME => 'name',
+            DbViewMembership::VOTES => 'voteCount',
+            DbViewMembership::REVISIONS => 'revisionCount',
+            DbViewMembership::PAGES => 'pageCount',
         ));        
         $baseHydrator->setNamingStrategy($namingStrat);
         $hydrator->add($baseHydrator);

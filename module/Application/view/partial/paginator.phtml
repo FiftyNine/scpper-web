@@ -1,0 +1,64 @@
+<!--
+See http://developer.yahoo.com/ypatterns/pattern.php?pattern=searchpagination
+-->
+
+<?php if ($this->pageCount): ?>
+<nav class="text-center">
+    <ul class="pagination">
+        <!-- First page link -->
+        <li class="text-condensed">
+            <?php if ($this->current !== 1): ?>
+                <a data-page="1" href="javascript:;">
+                    &lt;&lt;
+                </a>
+            <?php else: ?>
+            <span class="disabled">&lt;&lt;</span>
+            <?php endif; ?>
+        </li>
+        <!-- Previous page link -->
+        <li>
+            <?php if (isset($this->previous)): ?>
+                <a data-page="<?php echo $this->previous ?>" href="javascript:;">
+                    &lt;
+                </a>
+            <?php else: ?>
+              <span class="disabled">&lt;</span>
+            <?php endif; ?>
+        </li>
+        <!-- Numbered page links -->
+        <?php foreach ($this->pagesInRange as $page): ?>
+        <li>
+          <?php if ($page != $this->current): ?>
+            <a data-page="<?php echo $page ?>" href="javascript:;">
+                <?php echo $page; ?>
+            </a>
+          <?php else: ?>
+            <span class="active">
+                <?php echo $page; ?>
+            </span>
+          <?php endif; ?>
+        </li>
+        <?php endforeach; ?>
+        <!-- Next page link -->
+        <li>
+            <?php if (isset($this->next)): ?>
+              <a data-page="<?php echo $this->next ?>" href="javascript:;">
+                &gt;
+              </a>
+            <?php else: ?>
+              <span class="disabled">&gt;</span>
+            <?php endif; ?>
+        </li>
+        <!-- Last page link -->
+        <li class="text-condensed">
+            <?php if ($this->current !== $this->last): ?>
+              <a data-page="<?php echo $this->last ?>" href="javascript:;">
+                &gt;&gt;
+              </a>
+            <?php else: ?>
+              <span class="disabled">&gt;&gt;</span>
+            <?php endif; ?>
+        </li>
+    </ul>
+</nav>
+<?php endif; ?>

@@ -64,28 +64,6 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
     }
     
     /**
-     * 
-     * @param AdapterInterface $dbAdapter
-     * @param HydratorInterface $hydrator
-     * @param Object $objectPrototype
-     * @param string $table
-     * @param string $idFieldName
-     */
-    public function __construct(
-            AdapterInterface $dbAdapter, 
-            HydratorInterface $hydrator, 
-            $objectPrototype,
-            $table,
-            $idFieldName)
-    {
-        $this->dbAdapter = $dbAdapter;
-        $this->hydrator = $hydrator;
-        $this->objectPrototype = $objectPrototype;
-        $this->table = $table;
-        $this->idFieldName = $idFieldName;       
-    }
-
-    /**
      * Returns result of a query if it's successful and false otherwise
      * @param Sql $sql
      * @param Select $select
@@ -216,6 +194,41 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
         return $select;
     }    
 
+    /**
+     * Returns paginator object encapsulating a select query
+     * @param Select $select
+     * @return \Zend\Paginator\Paginator
+     */
+    protected function getPaginator(Select $select)
+    {
+        $resultSet = new \Zend\Db\ResultSet\HydratingResultSet($this->hydrator, $this->objectPrototype);
+        $adapter = new \Zend\Paginator\Adapter\DbSelect($select, $this->dbAdapter, $resultSet);
+        $paginator = new \Zend\Paginator\Paginator($adapter);
+        return $paginator;        
+    }
+    
+    /**
+     * 
+     * @param AdapterInterface $dbAdapter
+     * @param HydratorInterface $hydrator
+     * @param Object $objectPrototype
+     * @param string $table
+     * @param string $idFieldName
+     */
+    public function __construct(
+            AdapterInterface $dbAdapter, 
+            HydratorInterface $hydrator, 
+            $objectPrototype,
+            $table,
+            $idFieldName)
+    {
+        $this->dbAdapter = $dbAdapter;
+        $this->hydrator = $hydrator;
+        $this->objectPrototype = $objectPrototype;
+        $this->table = $table;
+        $this->idFieldName = $idFieldName;       
+    }    
+    
     /**
      * 
      * {@inheritDoc}

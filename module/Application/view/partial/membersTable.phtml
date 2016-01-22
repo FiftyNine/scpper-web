@@ -1,0 +1,20 @@
+<?php $members = $this->members;?>
+<table class="table table-striped">
+    <tr>                        
+        <th>User</th>
+        <th>Votes</th>
+        <th>Revisions</th>
+        <th>Pages</th>
+        <th>Joined</th>
+    </tr>    
+    <?php foreach ($members as $user): ?>
+    <tr>
+        <td><a href="#"><?php echo $user->getDisplayName(); ?></a></td>                                                
+        <td><?php echo $user->getVoteCount(); ?></td>
+        <td><?php echo $user->getRevisionCount(); ?></td>
+        <td><?php echo $user->getPageCount(); ?></td>
+        <td><?php echo $user->getMembership()[$this->siteId]->format('Y-m-d'); ?></td>
+    </tr>
+    <?php endforeach; ?>
+</table>
+<?php echo $this->paginationControl($members, 'Sliding', 'partial/paginator'); ?>

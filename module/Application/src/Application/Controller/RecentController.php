@@ -43,7 +43,7 @@ class RecentController extends AbstractActionController
      */
     protected $dateIntervalForm;
        
-    protected function getChartParams(&$siteId, &$fromDate, &$toDate)
+    protected function getCommonParams(&$siteId, &$fromDate, &$toDate)
     {
         $siteId = $this->params()->fromQuery('siteId', 0);
         $from = $this->params()->fromQuery('fromDate', '2000-01-01');
@@ -139,6 +139,10 @@ class RecentController extends AbstractActionController
         $userIdGroup = new Aggregate(DbViewRevisions::USERID, Aggregate::NONE, 'Tmp', true);
         $temp = $this->services->getRevisionService()->getAggregatedValues($siteId, array($userIdGroup), $from, $to);
         $result['revisions']['list']['editors'] = count($temp);        
+        $members = $this->services->getUserService()->findSiteMembers($siteId, UserType::ANY, false, $from, $to, true);
+        $members->setCurrentPageNumber(1);
+        $members->setItemCountPerPage(3);
+        $result['members']['members'] = $members;
         return new ViewModel($result);
     }
     
@@ -148,7 +152,7 @@ class RecentController extends AbstractActionController
         $siteId = -1;
         $fromDate = null;
         $toDate = null;                
-        if ($this->getChartParams($siteId, $fromDate, $toDate)) {
+        if ($this->getCommonParams($siteId, $fromDate, $toDate)) {
             $count = new Aggregate('*', Aggregate::COUNT, 'Number');
             $dateAgg = new DateAggregate(DbViewMembership::JOINDATE);
             $dateAgg->setBestAggregateType($fromDate, $toDate);
@@ -169,7 +173,7 @@ class RecentController extends AbstractActionController
         $siteId = -1;
         $fromDate = null;
         $toDate = null;
-        if ($this->getChartParams($siteId, $fromDate, $toDate)) {
+        if ($this->getCommonParams($siteId, $fromDate, $toDate)) {
             $count = new Aggregate('*', Aggregate::COUNT, 'Number');            
             $dateAgg = new DateAggregate(DbViewPages::CREATIONDATE);
             $dateAgg->setBestAggregateType($fromDate, $toDate);            
@@ -190,7 +194,7 @@ class RecentController extends AbstractActionController
         $siteId = -1;
         $fromDate = null;
         $toDate = null;
-        if ($this->getChartParams($siteId, $fromDate, $toDate)) {
+        if ($this->getCommonParams($siteId, $fromDate, $toDate)) {
             $count = new Aggregate('*', Aggregate::COUNT, 'Number');
             $dateAgg = new DateAggregate(DbViewRevisions::DATETIME);
             $dateAgg->setBestAggregateType($fromDate, $toDate);            
@@ -211,7 +215,7 @@ class RecentController extends AbstractActionController
         $siteId = -1;
         $fromDate = null;
         $toDate = null;
-        if ($this->getChartParams($siteId, $fromDate, $toDate)) {
+        if ($this->getCommonParams($siteId, $fromDate, $toDate)) {
             $count = new Aggregate('*', Aggregate::COUNT, 'Number');
             $dateAgg = new DateAggregate(DbViewVotes::DATETIME);
             $dateAgg->setBestAggregateType($fromDate, $toDate);            
@@ -224,5 +228,26 @@ class RecentController extends AbstractActionController
             $result['success'] = true;
         }
         return new JsonModel($result);
-    }    
+    }
+    
+    public function membersAction()
+    {
+        $result = array('success' => false);
+        $siteId = -1;
+        $from = null;
+        $to = null;
+        if ($this->getCommonParams($siteId, $from, $to)) {
+            $page = (int)$this->params()->fromQuery("page", 1);
+            $perPage = (int)$this->params()->fromQuery("perPage", 10);
+            $members = $this->services->getUserService()->findSiteMembers($siteId, UserType::ANY, false, $from, $to, true);
+            $members->setCurrentPageNumber($page);
+            $members->setItemCountPerPage($perPage);
+            $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
+            if ($renderer) {
+                $result['success'] = true;                
+                $result['content'] = $renderer('partial/membersTable.phtml', array('members' => $members, 'siteId' => $siteId));
+            }
+        }        
+        return new JsonModel($result);
+    }
 }

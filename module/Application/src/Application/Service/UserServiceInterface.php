@@ -29,11 +29,10 @@ interface UserServiceInterface
      * @param bool $active Count only active users
      * @param \DateTime $joinedAfter
      * @param \DateTime $joinedBefore
-     * @param int $offset
-     * @param int $limit
-     * @return UserInterface[]|array
+     * @param bool $paginated
+     * @return \Zend\Paginator\Paginator|UserInterface[]
      */
-    public function findSiteMembers($siteId, $types = UserType::ANY, $active = false, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null, $offset = 0, $limit = 0);
+    public function findSiteMembers($siteId, $types = UserType::ANY, $active = false, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null, $paginated = false);
     
     /**
      * Returns number of members of the site

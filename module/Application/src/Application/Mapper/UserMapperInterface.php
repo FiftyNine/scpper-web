@@ -21,11 +21,10 @@ interface UserMapperInterface extends SimpleMapperInterface
      * @param \DateTime $lastActive
      * @param \DateTime $joinedAfter
      * @param \DateTime $joinedBefore
-     * @param int $offset
-     * @param int $limit
-     * @return UserInterface[]|array
+     * @param bool $paginated
+     * @return \Zend\Paginator\Paginator|UserInterface[]
      */
-    public function findSiteMembers($siteId, $types = UserType::ANY, \DateTime $lastActive = null, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null, $offset = 0, $limit = 0);
+    public function findSiteMembers($siteId, $types = UserType::ANY, \DateTime $lastActive = null, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null, $paginated = false);
       
     /**
      * Returns number of members of the site

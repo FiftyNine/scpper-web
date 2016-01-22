@@ -36,6 +36,26 @@ hr {
     margin-bottom: 25px;
 }
 
+table {
+    margin-bottom: 10px;
+}
+
+table.table-preview > tbody > tr:last-child {
+    border-bottom: 1px solid #ddd;
+}
+
+table > tbody > tr > th:first-child {
+    width: 40%;
+}
+
+.btn-table {
+    background-color: #f9f9f9;
+}
+
+.text-condensed {
+    letter-spacing: -2px;
+}
+
 /* Index */
 
 div.main-container {
@@ -119,7 +139,7 @@ div.google-visualization-tooltip {
 }
 
 /* Legacy stuff */
-
+/*
 .btn-success {
   background-color: #57a900;
   background-image: -moz-linear-gradient(top, #70d900, #57a900);
@@ -142,3 +162,4 @@ div.google-visualization-tooltip {
 .btn-success:active, .btn-success.active {
   background-color: #57a900;
 }
+*/

@@ -29,6 +29,21 @@ interface UserInterface
     public function getDeleted();
     
     /**
+     * @return int
+     */
+    public function getVoteCount();
+    
+    /**
+     * @return int
+     */
+    public function getRevisionCount();    
+    
+    /**
+     * @return int
+     */
+    public function getPageCount();    
+    
+    /**
      * 
      * @return array()
      */

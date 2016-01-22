@@ -81,13 +81,15 @@ class UserDbSqlMapper extends ZendDbSqlMapper implements UserMapperInterface
             \DateTime $lastActive = null, 
             \DateTime $joinedAfter = null, 
             \DateTime $joinedBefore = null, 
-            $offset = 0, 
-            $limit = 0
+            $paginated = false
     )
     {
         $sql = new Sql($this->dbAdapter);
         $select = $this->buildMemberSelect($sql, $siteId, $types, $lastActive, $joinedAfter, $joinedBefore);
-        return $this->fetchResultSet($sql, $select, $offset, $limit);
+        if ($paginated) {
+            return $this->getPaginator($select);
+        }
+        return $this->fetchResultSet($sql, $select);
     }
 
     /**

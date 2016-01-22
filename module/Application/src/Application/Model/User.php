@@ -29,6 +29,21 @@ class User implements UserInterface
      * @var bool
      */
     protected $deleted;    
+
+    /**
+     * @var int
+     */
+    protected $voteCount;
+    
+    /**
+     * @var int
+     */
+    protected $revisionCount;
+
+    /**
+     * @var int
+     */
+    protected $pageCount;    
     
     /**
      * @var array[SiteId => JoinDate]
@@ -86,6 +101,45 @@ class User implements UserInterface
     {
         $this->name = $value;
     }
+
+    /**
+     * @return int
+     */
+    public function getVoteCount()
+    {
+        return $this->voteCount;
+    }
+    
+    public function setVoteCount($value) 
+    {
+        $this->voteCount = $value;
+    }    
+    
+    /**
+     * @return int
+     */
+    public function getRevisionCount()
+    {
+        return $this->revisionCount;
+    }
+    
+    public function setRevisionCount($value) 
+    {
+        $this->revisionCount = $value;
+    }        
+    
+    /**
+     * @return int
+     */
+    public function getPageCount()
+    {
+        return $this->pageCount;
+    }
+    
+    public function setPageCount($value) 
+    {
+        $this->pageCount = $value;
+    }        
     
     /**     
      * {@inheritDoc}

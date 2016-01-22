@@ -1,5 +1,6 @@
 <?php
 $this->headScript()->appendFile('/js/scpper_charts.js');
+$this->headScript()->appendFile('/js/scpper_recent.js');
 $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 
 $form = $this->intervalForm;
@@ -9,13 +10,15 @@ $fromDate = $form->get('from-date');
 $toDate = $form->get('to-date');
 $submit = $form->get('submit');
 $submit->setValue('Show');
+$site = $this->site;
 ?>
 
 <?php $this->headScript()->captureStart(); ?>
-// Initialize global variables for graphs
-changeChartsData.siteId = <?php echo $this->site->getWikidotId(); ?>;
-changeChartsData.fromDate = "<?php echo $fromDate->getValue(); ?>";
-changeChartsData.toDate = "<?php echo $toDate->getValue(); ?>";
+// Initialize global variables
+var changeData = {};
+changeData.siteId = <?php echo $site->getWikidotId(); ?>;
+changeData.fromDate = "<?php echo $fromDate->getValue(); ?>";
+changeData.toDate = "<?php echo $toDate->getValue(); ?>";
 
 // Call google graphing API
 google.charts.load('current', {packages: ['corechart']});
@@ -75,6 +78,34 @@ function printInfoLabel($data)
             </div>
         </div>
     </div>
+    <div class="row top-buffer">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="table-container" id="members-list">
+                <table class="table table-striped table-preview">
+                    <tr>                        
+                        <th>User</th>
+                        <th>Votes</th>
+                        <th>Revisions</th>
+                        <th>Pages</th>
+                        <th>Joined</th>
+                    </tr>
+                    <?php $members = $this->members['members'];?>
+                    <?php foreach ($members as $user): ?>
+                    <tr>
+                        <td><a href="#"><?php echo $user->getDisplayName(); ?></a></td>                                                
+                        <td><?php echo $user->getVoteCount(); ?></td>
+                        <td><?php echo $user->getRevisionCount(); ?></td>
+                        <td><?php echo $user->getPageCount(); ?></td>
+                        <td><?php echo $user->getMembership()[$site->getWikidotId()]->format('Y-m-d'); ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </table>
+                <div class="text-center">
+                    <a class="btn btn-default btn-table" id="show-members" href="javascript:;" role="button">Show more</a>               
+                </div>
+            </div>
+        </div>
+    </div>    
 </div>
 <!-- PAGES -->
 <h1>Pages</h1>
@@ -135,4 +166,13 @@ function printInfoLabel($data)
             </div>
         </div>
     </div>
+</div>
+<div id="table-error-row" hidden>
+    <table>
+    <tr>
+        <td colspan="100">
+            Failed to retrieve data
+        </td>
+    </tr>
+    </table>
 </div>
