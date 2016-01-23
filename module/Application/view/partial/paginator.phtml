@@ -5,6 +5,7 @@ See http://developer.yahoo.com/ypatterns/pattern.php?pattern=searchpagination
 <?php if ($this->pageCount): ?>
 <nav class="text-center">
     <ul class="pagination">
+        <?php if ((int) $this->pageCount > 1): ?>
         <!-- First page link -->
         <li class="text-condensed">
             <?php if ($this->current !== 1): ?>
@@ -59,6 +60,21 @@ See http://developer.yahoo.com/ypatterns/pattern.php?pattern=searchpagination
               <span class="disabled">&gt;&gt;</span>
             <?php endif; ?>
         </li>
+        <?php endif; ?>
+        <!-- Entries per page selector -->
+        <li class="form-inline per-page-block">
+            <div class="form-group">                    
+                <label for="perPage" class="control-label">Per page</label>
+                <select class="form-control per-page-control" name="perPage">
+                    <?php $pageSizes = array(10, 25, 50, 100, 1000); ?>
+                    <?php foreach ($pageSizes as $size): ?>
+                    <option <?php if ($size === $this->itemCountPerPage) {echo "selected";} ?> >
+                        <?php echo $size ?>
+                    </option>
+                    <?php endforeach; ?>
+                </select>                     
+            </div>    
+        </li>        
     </ul>
 </nav>
 <?php endif; ?>

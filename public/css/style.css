@@ -36,11 +36,11 @@ hr {
     margin-bottom: 25px;
 }
 
-table {
+.table {
     margin-bottom: 10px;
 }
 
-table.table-preview > tbody > tr:last-child {
+table.table-striped > tbody > tr:last-child {
     border-bottom: 1px solid #ddd;
 }
 
@@ -55,6 +55,29 @@ table > tbody > tr > th:first-child {
 .text-condensed {
     letter-spacing: -2px;
 }
+
+hr {
+    border-color: #dddddd;
+}
+
+.pagination {
+    margin-top: 5px;
+}
+
+.per-page-block {
+    margin-left: 25px;
+    display: inline-block;
+}
+
+.per-page-block label {
+    font-weight: normal;
+}
+
+.per-page-block select {
+    margin-left: 5px;
+    padding: 0px;
+}
+
 
 /* Index */
 
@@ -75,10 +98,6 @@ table.tile-table td {
     border-radius:4px;
     -moz-border-radius:4px;        
     padding: 15px;
-}
-
-hr {
-    border-color: #dddddd;
 }
 
 /* Changes */

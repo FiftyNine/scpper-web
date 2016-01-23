@@ -22,7 +22,8 @@ function fetchPaginator(containerId, url, payload)
            var container = $(containerId);
            var pages = {};
            container.html(result.content);
-           pages = container.find("ul.pagination > li > a").on('click', {container: containerId, url: url}, fetchPaginatorIndex);
+           container.find("ul.pagination > li > a").on('click', {container: containerId, url: url}, fetchPaginatorIndex);
+           container.find(".per-page-control").on('change', {container: containerId, url: url}, changePaginatorSize);
        } else {
            showTableError(containerId);           
        }
@@ -31,11 +32,19 @@ function fetchPaginator(containerId, url, payload)
     });
 }
 
+function changePaginatorSize(event)
+{
+    var payload = $.extend({}, changeData);
+    payload.page = 1;
+    payload.perPage = $(this).val();
+    fetchPaginator(event.data.container, event.data.url, payload);
+}
+
 function fetchPaginatorIndex(event)
 {
     var payload = $.extend({}, changeData);
     payload.page = $(this).attr('data-page');
-    payload.perPage = 10;    
+    payload.perPage = $(event.data.container+" select.per-page-control").val();
     fetchPaginator(event.data.container, event.data.url, payload);
 }
 
