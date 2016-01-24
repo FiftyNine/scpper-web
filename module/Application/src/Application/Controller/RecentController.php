@@ -82,6 +82,11 @@ class RecentController extends AbstractActionController
         $maxRating = new Aggregate(DbViewPages::CLEANRATING, Aggregate::MAX, 'MaxRating');
         $avgRating = new Aggregate(DbViewPages::CLEANRATING, Aggregate::AVERAGE, 'AvgRating');
         $ratings = $this->services->getPageService()->getAggregatedValues($siteId, array($maxRating, $avgRating), $from, $to);
+        $pages = $this->services->getPageService()->findSitePages($siteId, PageType::ANY, $from, $to, array(DbViewPages::CREATIONDATE => Order::ASCENDING), true);
+        $pages->setCurrentPageNumber(1);
+        $pages->setItemCountPerPage(3);
+        $table = PaginatedTableFactory::createPagesTable($pages, true);
+        $table->getColumns()->setOrder(DbViewPages::CREATIONDATE);        
         $result = array(
             'header' => array(
                 'pages' => $this->services->getPageService()->countSitePages($siteId, PageType::ANY, $from, $to),
@@ -91,7 +96,8 @@ class RecentController extends AbstractActionController
                 'translations' => $this->services->getPageService()->countSitePages($siteId, PageType::TRANSLATION, $from, $to),
                 'highest rating' => $ratings[0]['MaxRating'],
                 'average rating' => $ratings[0]['AvgRating']
-            )
+            ),
+            'table' => $table
         );
         return $result;
     }    
@@ -282,7 +288,7 @@ class RecentController extends AbstractActionController
             if ($renderer) {
                 $result['success'] = true;                
                 $result['content'] = $renderer(
-                    'partial/paginatedTable.phtml', 
+                    'partial/tables/table.phtml', 
                     array(
                         'table' => $table, 
                         'data' => array('siteId' => $siteId)
@@ -292,4 +298,44 @@ class RecentController extends AbstractActionController
         }        
         return new JsonModel($result);
     }
+    
+    public function pagesAction()
+    {
+        $result = array('success' => false);
+        $siteId = -1;
+        $from = null;
+        $to = null;
+        if ($this->getCommonParams($siteId, $from, $to)) {
+            $page = (int)$this->params()->fromQuery("page", 1);
+            $perPage = (int)$this->params()->fromQuery("perPage", 10);
+            $orderBy = $this->params()->fromQuery('orderBy', DbViewPages::CREATIONDATE);
+            if (!DbViewPages::hasField($orderBy)) {
+                $orderBy = DbViewPages::CREATIONDATE;                
+            }
+            $order = $this->params()->fromQuery('ascending', true);
+            if ($order) {
+                $order = Order::ASCENDING;
+            } else {
+                $order = Order::DESCENDING;
+            }
+            $pages = $this->services->getPageService()->findSitePages($siteId, PageType::ANY, $from, $to, array($orderBy => $order), true);
+            $pages->setCurrentPageNumber($page);
+            $pages->setItemCountPerPage($perPage);
+            $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
+            $table = PaginatedTableFactory::createPagesTable($pages, false);
+            $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);
+            if ($renderer) {
+                $result['success'] = true;                
+                $result['content'] = $renderer(
+                    'partial/tables/table.phtml', 
+                    array(
+                        'table' => $table, 
+                        'data' => array()
+                    )
+                );
+            }
+        }        
+        return new JsonModel($result);
+    }
+    
 }

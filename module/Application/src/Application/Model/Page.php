@@ -41,6 +41,24 @@ class Page implements PageInterface
     protected $creationDate;
     
     /**
+     *
+     * @var int
+     */    
+    protected $rating;
+    
+    /**
+     *
+     * @var int
+     */    
+    protected $cleanRating;
+    
+    /**
+     *
+     * @var int
+     */        
+    protected $revisionCount;
+    
+    /**
      * {@inheritDoc}
      */
     public function getSiteId()
@@ -117,4 +135,43 @@ class Page implements PageInterface
     {
         $this->creationDate = $value;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCleanRating() 
+    {
+        return $this->cleanRating;
+    }
+
+    public function setCleanRating($value)
+    {
+        $this->cleanRating = $value;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getRating() 
+    {
+        return $this->rating;
+    }
+
+    public function setRating($value)
+    {
+        $this->rating = $value;
+    }    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getRevisionCount() 
+    {
+        return $this->revisionCount;
+    }
+    
+    public function setRevisionCount($value)
+    {
+        $this->revisionCount = $value;
+    }    
 }

@@ -45,9 +45,9 @@ class PageService implements PageServiceInterface
     /**
      * {@inheritDoc}
      */
-    public function findSitePages($siteId, $type = PageType::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null, $offset = 0, $limit = 0)
+    public function findSitePages($siteId, $type = PageType::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null, $order = null, $paginated = false)
     {
-        return $this->mapper->findSitePages($siteId, $type, $createdAfter, $createdBefore, $offset, $limit);
+        return $this->mapper->findSitePages($siteId, $type, $createdAfter, $createdBefore, $order, $paginated);
     }
     
     /**

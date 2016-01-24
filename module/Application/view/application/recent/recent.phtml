@@ -84,7 +84,7 @@ function printInfoLabel($data)
                 <?php 
                     $membersTable = $this->members['table'];
                     echo $this->partial(
-                        'partial/paginatedTable.phtml', 
+                        'partial/tables/table.phtml', 
                         array(
                             'table' => $membersTable,
                             'data' => array('siteId' => $site->getWikidotId()),
@@ -117,6 +117,25 @@ function printInfoLabel($data)
             </div>
         </div>
     </div>
+    <div class="row top-buffer">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="table-container" id="pages-list">
+                <?php 
+                    $pagesTable = $this->pages['table'];
+                    echo $this->partial(
+                        'partial/tables/table.phtml', 
+                        array(
+                            'table' => $pagesTable,
+                            'data' => array(),
+                        )
+                    );
+                ?>
+                <div class="text-center">
+                    <a class="btn btn-default btn-table" id="show-pages" href="javascript:;" role="button">Show more</a>               
+                </div>
+            </div>
+        </div>
+    </div>        
 </div>
 <!-- REVISIONS -->
 <h1>Revisions</h1>

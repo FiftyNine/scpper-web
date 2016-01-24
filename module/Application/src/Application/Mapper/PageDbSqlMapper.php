@@ -48,11 +48,24 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
      * 
      * {@inheritDoc}
      */
-    public function findSitePages($siteId, $type = PageType::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null, $offset = 0, $limit = 0)
+    public function findSitePages(
+            $siteId, 
+            $type = PageType::ANY, 
+            \DateTime $createdAfter = null, 
+            \DateTime $createdBefore = null, 
+            $order = null, 
+            $paginated = false
+    )
     {
         $sql = new Sql($this->dbAdapter);
         $select = $this->buildPageSelect($sql, $siteId, $type, $createdAfter, $createdBefore);
-        return $this->fetchResultSet($sql, $select, $offset, $limit);        
+        if (is_array($order)) {
+            $this->orderSelect($select, $order);
+        }
+        if ($paginated) {
+            return $this->getPaginator($select);
+        }        
+        return $this->fetchResultSet($sql, $select);
     }
     
     /**

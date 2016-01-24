@@ -6,8 +6,8 @@ interface PageMapperInterface extends SimpleMapperInterface
 {
     /**
      * Returns number of site pages
-     * @param int $siteId
-     * @param int $type PageType::constant
+     * @param int $siteId Id of a site
+     * @param int $type Type of page (constant from Application\Utils\PageType)
      * @param \DateTime $createdAfter Only pages created after date
      * @param \DateTime $createdBefore Only pages created before date
      * @return int
@@ -16,13 +16,15 @@ interface PageMapperInterface extends SimpleMapperInterface
     
     /**
      * Returns site pages
-     * @param int $siteId
-     * @param int $type PageType::constant
+     * @param int $siteId Id of a site
+     * @param int $type Type of page (constant from Application\Utils\PageType)
      * @param \DateTime $createdAfter Only pages created after date
      * @param \DateTime $createdBefore Only pages created before date
-     * @return array|PageInterface[]
+     * @param array(string => int) $order Associative array of field names and sorting orders (constants from \Application\Utils\Order)
+     * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
+     * @return \Zend\Paginator\Paginator|PageInterface[]
      */
-    public function findSitePages($siteId, $type = PageType::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null, $offset = 0, $limit = 0);
+    public function findSitePages($siteId, $type = PageType::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null, $order = null, $paginated = false);
     
     /**
      * Get an aggregated results from pages

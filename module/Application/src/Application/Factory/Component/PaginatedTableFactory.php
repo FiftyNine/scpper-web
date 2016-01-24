@@ -9,6 +9,7 @@
 namespace Application\Factory\Component;
 
 use Application\Utils\DbConsts\DbViewMembership;
+use Application\Utils\DbConsts\DbViewPages;
 
 /**
  * Description of PaginatedTableFactory
@@ -17,6 +18,22 @@ use Application\Utils\DbConsts\DbViewMembership;
  */
 class PaginatedTableFactory 
 {
+    static public function createPagesTable($paginator, $preview = false)
+    {
+        $table = new \Application\Component\PaginatedTable\Table(
+            array(
+                DbViewPages::TITLE => 'Page',
+                DbViewPages::CLEANRATING => 'Rating',
+                DbViewPages::REVISIONS => 'Revisions',
+                DbViewPages::CREATIONDATE => 'Posted'
+            ), 
+            $paginator, 
+            'partial/tables/pages.phtml', 
+            $preview
+        );        
+        return $table;
+    }
+    
     static public function createMembersTable($paginator, $preview = false)
     {
         $table = new \Application\Component\PaginatedTable\Table(
@@ -28,9 +45,9 @@ class PaginatedTableFactory
                 DbViewMembership::JOINDATE => 'Joined',
             ), 
             $paginator, 
-            'partial/membersTableBody.phtml', 
+            'partial/tables/members.phtml', 
             $preview
         );        
         return $table;
-    }
+    }    
 }

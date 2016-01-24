@@ -28,6 +28,21 @@ interface PageInterface
      * @return int
      */
     public function getCategoryId();
+
+    /**
+     * @return int
+     */
+    public function getRating();
+    
+    /**
+     * @return int
+     */
+    public function getCleanRating();
+    
+    /**
+     * @return int
+     */
+    public function getRevisionCount();
     
     /**
      * 

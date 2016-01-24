@@ -77,6 +77,7 @@ function fetchPaginatorFirst(event)
 function initRecent()
 {
     $('#show-members').on('click', {container: "#members-list", url: "/recent/members"}, fetchPaginatorFirst);    
+    $('#show-pages').on('click', {container: "#pages-list", url: "/recent/pages"}, fetchPaginatorFirst);    
 }
 
 $(document).ready(initRecent);
