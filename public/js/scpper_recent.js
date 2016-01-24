@@ -20,10 +20,10 @@ function fetchPaginator(containerId, url, payload)
     }).done(function (result) {
        if (result.success) {
            var container = $(containerId);
-           var pages = {};
            container.html(result.content);
            container.find("ul.pagination > li > a").on('click', {container: containerId, url: url}, fetchPaginatorIndex);
            container.find(".per-page-control").on('change', {container: containerId, url: url}, changePaginatorSize);
+           container.find("th").on('click', {container: containerId, url: url}, changePaginatorOrder);
        } else {
            showTableError(containerId);           
        }
@@ -32,19 +32,37 @@ function fetchPaginator(containerId, url, payload)
     });
 }
 
-function changePaginatorSize(event)
+function changePaginatorOrder(event)
 {
     var payload = $.extend({}, changeData);
     payload.page = 1;
+    payload.perPage = $(event.data.container+' select.per-page-control').val();        
+    payload.orderBy = $(this).attr('data-name');
+    payload.ascending = $(this).attr('data-ascending') === "1" ? "0": "1";
+    fetchPaginator(event.data.container, event.data.url, payload);
+}
+
+function changePaginatorSize(event)
+{
+    var payload = $.extend({}, changeData);
+    var orderCol = null;
+    payload.page = 1;
     payload.perPage = $(this).val();
+    orderCol = $(event.data.container+' th.ordered');
+    payload.orderBy = orderCol.attr('data-name');
+    payload.ascending = orderCol.attr('data-ascending');    
     fetchPaginator(event.data.container, event.data.url, payload);
 }
 
 function fetchPaginatorIndex(event)
 {
     var payload = $.extend({}, changeData);
+    var orderCol = null;
     payload.page = $(this).attr('data-page');
-    payload.perPage = $(event.data.container+" select.per-page-control").val();
+    payload.perPage = $(event.data.container+' select.per-page-control').val();    
+    orderCol = $(event.data.container+' th.ordered');
+    payload.orderBy = orderCol.attr('data-name');
+    payload.ascending = orderCol.attr('data-ascending');
     fetchPaginator(event.data.container, event.data.url, payload);
 }
 
@@ -58,7 +76,7 @@ function fetchPaginatorFirst(event)
 
 function initRecent()
 {
-    $('#show-members').on('click', {container: "#members-list", url: "/recent/members"}, fetchPaginatorFirst);
+    $('#show-members').on('click', {container: "#members-list", url: "/recent/members"}, fetchPaginatorFirst);    
 }
 
 $(document).ready(initRecent);

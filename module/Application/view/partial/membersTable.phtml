@@ -1,11 +1,47 @@
-<?php $members = $this->members;?>
-<table class="table table-striped">
-    <tr>                        
-        <th>User</th>
-        <th>Votes</th>
-        <th>Revisions</th>
-        <th>Pages</th>
-        <th>Joined</th>
+<?php 
+    $members = $this->members;
+    $columns = array(
+        'User' => \Application\Utils\DbConsts\DbViewMembership::DISPLAYNAME,
+        'Votes' => \Application\Utils\DbConsts\DbViewMembership::VOTES,
+        'Revisions' => \Application\Utils\DbConsts\DbViewMembership::REVISIONS,
+        'Pages' => \Application\Utils\DbConsts\DbViewMembership::PAGES,
+        'Joined' => \Application\Utils\DbConsts\DbViewMembership::JOINDATE,
+    );
+?>
+
+<table class="table table-striped 
+    <?php 
+        if ($this->preview) {
+            echo "table-preview";
+        } else {
+            echo "table-sortable";             
+        } 
+    ?>
+    "
+>
+    <tr>
+        <?php foreach ($columns as $text => $name): ?>
+        <th 
+            data-name="<?php echo $name; ?>" 
+            <?php 
+                if ($this->orderBy === $name) {
+                    echo 'data-ascending="'.$this->ascending.'" ';
+                    echo 'class="ordered"';
+                } 
+            ?>
+        >
+            <?php 
+                echo $text; 
+                if ($this->orderBy === $name) {
+                    if ($this->ascending) {
+                        echo "&nbsp;&UpArrow;";
+                    } else {
+                        echo "&nbsp;&DownArrow;";
+                    }
+                }
+            ?>            
+        </th>           
+        <?php endforeach;?>
     </tr>    
     <?php foreach ($members as $user): ?>
     <tr>
@@ -17,4 +53,8 @@
     </tr>
     <?php endforeach; ?>
 </table>
-<?php echo $this->paginationControl($members, 'Sliding', 'partial/paginator'); ?>
+<?php 
+    if (!$this->preview) {
+        echo $this->paginationControl($members, 'Sliding', 'partial/paginator'); 
+    }
+?>

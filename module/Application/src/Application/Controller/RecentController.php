@@ -23,6 +23,7 @@ use Application\Utils\DbConsts\DbViewRevisions;
 use Application\Utils\DbConsts\DbViewVotes;
 use Application\Utils\Aggregate;
 use Application\Utils\DateAggregate;
+use Application\Utils\Order;
 
 /**
  * Description of RecentController
@@ -51,6 +52,81 @@ class RecentController extends AbstractActionController
         $fromDate = \DateTime::createFromFormat('Y-m-d', $from);
         $toDate = \DateTime::createFromFormat('Y-m-d', $to);        
         return $from && $to && $siteId > 0;
+    }
+    
+    protected function getMembersData($siteId, $from, $to)
+    {
+        $members = $this->services->getUserService()->findSiteMembers($siteId, UserType::ANY, false, $from, $to, array(DbViewMembership::JOINDATE => Order::ASCENDING), true);
+        $members->setCurrentPageNumber(1);
+        $members->setItemCountPerPage(3);
+        $result = array(
+            'header' => array(
+                'users' => $this->services->getUserService()->countSiteMembers($siteId, UserType::ANY, false, $from, $to)
+            ),
+            'list' => array(
+                'voters' => $this->services->getUserService()->countSiteMembers($siteId, UserType::VOTER, false, $from, $to),
+                'contributors' => $this->services->getUserService()->countSiteMembers($siteId, UserType::CONTRIBUTOR, false, $from, $to),
+                'posters' => $this->services->getUserService()->countSiteMembers($siteId, UserType::POSTER, false, $from, $to),
+                'still active' => $this->services->getUserService()->countSiteMembers($siteId, UserType::ANY, true, $from, $to),
+            ),
+            'members' => array(
+                'data' => $members,
+                'orderBy' => DbViewMembership::JOINDATE,
+                'ascending' => true
+            )
+        );
+        return $result;
+    }
+    
+    protected function getPagesData($siteId, $from, $to)
+    {
+        $maxRating = new Aggregate(DbViewPages::CLEANRATING, Aggregate::MAX, 'MaxRating');
+        $avgRating = new Aggregate(DbViewPages::CLEANRATING, Aggregate::AVERAGE, 'AvgRating');
+        $ratings = $this->services->getPageService()->getAggregatedValues($siteId, array($maxRating, $avgRating), $from, $to);
+        $result = array(
+            'header' => array(
+                'pages' => $this->services->getPageService()->countSitePages($siteId, PageType::ANY, $from, $to),
+            ),
+            'list' => array(
+                'originals' => $this->services->getPageService()->countSitePages($siteId, PageType::ORIGINAL, $from, $to),
+                'translations' => $this->services->getPageService()->countSitePages($siteId, PageType::TRANSLATION, $from, $to),
+                'highest rating' => $ratings[0]['MaxRating'],
+                'average rating' => $ratings[0]['AvgRating']
+            )
+        );
+        return $result;
+    }    
+    
+    protected function getRevisionsData($siteId, $from, $to)
+    {
+        $pageIdGroup = new Aggregate(DbViewRevisions::PAGEID, Aggregate::NONE, 'Tmp', true);
+        $edited = $this->services->getRevisionService()->getAggregatedValues($siteId, array($pageIdGroup), $from, $to);
+        $userIdGroup = new Aggregate(DbViewRevisions::USERID, Aggregate::NONE, 'Tmp', true);
+        $editors = $this->services->getRevisionService()->getAggregatedValues($siteId, array($userIdGroup), $from, $to);
+        $result = array(
+            'header' => array(
+                'revisions' => $this->services->getRevisionService()->countSiteRevisions($siteId, $from, $to)
+            ),
+            'list' => array(
+                'edited pages' => count($edited),
+                'editors' => count($editors)
+            )
+        );                    
+        return $result;
+    }        
+
+    protected function getVotesData($siteId, $from, $to)
+    {
+        $result = array(
+            'header' => array(
+                'votes' => $this->services->getVoteService()->countSiteVotes($siteId, VoteType::ANY, $from, $to),
+            ),
+            'list' => array(
+                'positive' => $this->services->getVoteService()->countSiteVotes($siteId, VoteType::POSITIVE, $from, $to),
+                'negative' => $this->services->getVoteService()->countSiteVotes($siteId, VoteType::NEGATIVE, $from, $to),
+            )
+        );
+        return $result;
     }
     
     public function __construct(HubServiceInterface $hubService, FormInterface $dateIntervalForm)
@@ -87,62 +163,12 @@ class RecentController extends AbstractActionController
         $result = array(            
             'intervalForm' => $this->dateIntervalForm,
             'site' => $site,
-            // Users
-            'members' => array(
-                'header' => array(
-                    'users' => $this->services->getUserService()->countSiteMembers($siteId, UserType::ANY, false, $from, $to)
-                ),
-                'list' => array(
-                    'voters' => $this->services->getUserService()->countSiteMembers($siteId, UserType::VOTER, false, $from, $to),
-                    'contributors' => $this->services->getUserService()->countSiteMembers($siteId, UserType::CONTRIBUTOR, false, $from, $to),
-                    'posters' => $this->services->getUserService()->countSiteMembers($siteId, UserType::POSTER, false, $from, $to),
-                    'still active' => $this->services->getUserService()->countSiteMembers($siteId, UserType::ANY, true, $from, $to),
-                )
-            ),            
-            // Pages
-            'pages' => array(
-                'header' => array(
-                    'pages' => $this->services->getPageService()->countSitePages($siteId, PageType::ANY, $from, $to),
-                ),
-                'list' => array(
-                    'originals' => $this->services->getPageService()->countSitePages($siteId, PageType::ORIGINAL, $from, $to),
-                    'translations' => $this->services->getPageService()->countSitePages($siteId, PageType::TRANSLATION, $from, $to),
-                )
-            ),
-            // Votes
-            'votes' => array(
-                'header' => array(
-                    'votes' => $this->services->getVoteService()->countSiteVotes($siteId, VoteType::ANY, $from, $to),
-                ),
-                'list' => array(
-                    'positive' => $this->services->getVoteService()->countSiteVotes($siteId, VoteType::POSITIVE, $from, $to),
-                    'negative' => $this->services->getVoteService()->countSiteVotes($siteId, VoteType::NEGATIVE, $from, $to),
-                )
-            ),            
-            // Revisions            
-            'revisions' => array(
-                'header' => array(
-                    'revisions' => $this->services->getRevisionService()->countSiteRevisions($siteId, $from, $to)
-                ),
-                'list' => array(
-                )
-            ),                        
+            'members' => $this->getMembersData($siteId, $from, $to),
+            'pages' => $this->getPagesData($siteId, $from, $to),
+            'revisions' => $this->getRevisionsData($siteId, $from, $to),
+            'votes' => $this->getVotesData($siteId, $from, $to),
         );
-        $maxRating = new Aggregate(DbViewPages::CLEANRATING, Aggregate::MAX, 'MaxRating');
-        $avgRating = new Aggregate(DbViewPages::CLEANRATING, Aggregate::AVERAGE, 'AvgRating');
-        $temp = $this->services->getPageService()->getAggregatedValues($siteId, array($maxRating, $avgRating), $from, $to);
-        $result['pages']['list']['highest rating'] = $temp[0]['MaxRating'];
-        $result['pages']['list']['average rating'] = $temp[0]['AvgRating'];
-        $pageIdGroup = new Aggregate(DbViewRevisions::PAGEID, Aggregate::NONE, 'Tmp', true);
-        $temp = $this->services->getRevisionService()->getAggregatedValues($siteId, array($pageIdGroup), $from, $to);
-        $result['revisions']['list']['edited pages'] = count($temp);
-        $userIdGroup = new Aggregate(DbViewRevisions::USERID, Aggregate::NONE, 'Tmp', true);
-        $temp = $this->services->getRevisionService()->getAggregatedValues($siteId, array($userIdGroup), $from, $to);
-        $result['revisions']['list']['editors'] = count($temp);        
-        $members = $this->services->getUserService()->findSiteMembers($siteId, UserType::ANY, false, $from, $to, true);
-        $members->setCurrentPageNumber(1);
-        $members->setItemCountPerPage(3);
-        $result['members']['members'] = $members;
+        DbViewMembership::hasField('a');
         return new ViewModel($result);
     }
     
@@ -239,13 +265,32 @@ class RecentController extends AbstractActionController
         if ($this->getCommonParams($siteId, $from, $to)) {
             $page = (int)$this->params()->fromQuery("page", 1);
             $perPage = (int)$this->params()->fromQuery("perPage", 10);
-            $members = $this->services->getUserService()->findSiteMembers($siteId, UserType::ANY, false, $from, $to, true);
+            $orderBy = $this->params()->fromQuery('orderBy', DbViewMembership::JOINDATE);            
+            if (!DbViewMembership::hasField($orderBy)) {
+                $orderBy = DbViewMembership::JOINDATE;                
+            }
+            $order = $this->params()->fromQuery('ascending', true);
+            if ($order) {
+                $order = Order::ASCENDING;
+            } else {
+                $order = Order::DESCENDING;
+            }
+            $members = $this->services->getUserService()->findSiteMembers($siteId, UserType::ANY, false, $from, $to, array($orderBy => $order), true);
             $members->setCurrentPageNumber($page);
             $members->setItemCountPerPage($perPage);
             $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
             if ($renderer) {
                 $result['success'] = true;                
-                $result['content'] = $renderer('partial/membersTable.phtml', array('members' => $members, 'siteId' => $siteId));
+                $result['content'] = $renderer(
+                    'partial/membersTable.phtml', 
+                    array(
+                        'members' => $members, 
+                        'siteId' => $siteId, 
+                        'preview' => false,
+                        'orderBy' => $orderBy,
+                        'ascending' => $order === Order::ASCENDING
+                    )
+                );
             }
         }        
         return new JsonModel($result);

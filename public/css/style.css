@@ -48,6 +48,10 @@ table > tbody > tr > th:first-child {
     width: 40%;
 }
 
+table.table-sortable > tbody > tr > th {
+    cursor: pointer;
+}
+
 .btn-table {
     background-color: #f9f9f9;
 }

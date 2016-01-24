@@ -75,12 +75,12 @@ class UserService implements UserServiceInterface
      * 
      * {@inheritDoc}
      */
-    public function findSiteMembers($siteId, $types = UserType::ANY, $active = false, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null, $paginated = false)
+    public function findSiteMembers($siteId, $types = UserType::ANY, $active = false, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null, $order = null, $paginated = false)
     {        
         $lastActive = null;
         if ($active) {
             $lastActive = $this->getActiveDate();
         }
-        return $this->mapper->findSiteMembers($siteId, $types, $lastActive, $joinedAfter, $joinedBefore, $paginated);
+        return $this->mapper->findSiteMembers($siteId, $types, $lastActive, $joinedAfter, $joinedBefore, $order, $paginated);
     }    
 }

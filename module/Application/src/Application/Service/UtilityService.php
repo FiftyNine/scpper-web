@@ -154,6 +154,23 @@ class UtilityService implements UtilityServiceInterface
             foreach ($columns as $column) {
                 $logger->info(vsprintf("    const %s = '%s';", array(strtoupper($column), $column)));
             }
+            $logger->info('');
+            $hasConst = '
+    static public function hasField($field) 
+    {
+        if (!is_string($field)) {
+            return false;
+        }
+        $field = strtoupper($field);
+        $reflect = new \ReflectionClass(__CLASS__);
+        foreach ($reflect->getConstants() as $name => $value) {
+            if (strtoupper($value) === $field) {
+                return true;
+            }
+        };
+        return false;
+    }';
+            $logger->info($hasConst);
             $logger->info('}');
             $logger = null;
             chmod($filename, 0777);

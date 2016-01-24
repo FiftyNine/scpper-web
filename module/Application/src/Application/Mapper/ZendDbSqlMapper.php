@@ -9,6 +9,7 @@ use Zend\Db\Sql\Select;
 use Zend\Db\Adapter\Driver\ResultInterface;
 use Zend\Db\ResultSet\HydratingResultSet;
 use Zend\EventManager\EventManagerAwareInterface;
+use Application\Utils\Order;
 
 class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterface
 {
@@ -58,8 +59,9 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
         if ($select instanceof Select) {
             $platform = $this->dbAdapter->getPlatform();
             $query = $select->getSqlString($platform);
-        } else 
+        } else {
             $query = json_encode($select);
+        }
         $this->getEventManager()->trigger(\Application\Utils\Events::LOG_SQL_QUERY, $this, compact('query'));               
     }
     
@@ -193,6 +195,17 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
         $select->columns($columns, false);    
         return $select;
     }    
+
+    protected function orderSelect(Select $select, $order)
+    {
+        $newOrder = array(); // We run this place now
+        foreach ($order as $name => $type) {
+            $newOrder[] = $name.' '.Order::getTypeSql($type);
+        }
+        $select->order($newOrder);
+        return $select;
+    }
+
 
     /**
      * Returns paginator object encapsulating a select query

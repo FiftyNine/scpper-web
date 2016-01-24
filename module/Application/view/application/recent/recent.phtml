@@ -81,25 +81,19 @@ function printInfoLabel($data)
     <div class="row top-buffer">
         <div class="col-md-8 col-md-offset-2">
             <div class="table-container" id="members-list">
-                <table class="table table-striped table-preview">
-                    <tr>                        
-                        <th>User</th>
-                        <th>Votes</th>
-                        <th>Revisions</th>
-                        <th>Pages</th>
-                        <th>Joined</th>
-                    </tr>
-                    <?php $members = $this->members['members'];?>
-                    <?php foreach ($members as $user): ?>
-                    <tr>
-                        <td><a href="#"><?php echo $user->getDisplayName(); ?></a></td>                                                
-                        <td><?php echo $user->getVoteCount(); ?></td>
-                        <td><?php echo $user->getRevisionCount(); ?></td>
-                        <td><?php echo $user->getPageCount(); ?></td>
-                        <td><?php echo $user->getMembership()[$site->getWikidotId()]->format('Y-m-d'); ?></td>
-                    </tr>
-                    <?php endforeach; ?>
-                </table>
+                <?php 
+                    $members = $this->members['members']['data'];
+                    echo $this->partial(
+                        'partial/membersTable.phtml', 
+                        array(
+                            'members' => $members,
+                            'siteId' => $site->getWikidotId(),
+                            'preview' => true,
+                            'orderBy' => $this->members['members']['orderBy'],
+                            'ascending' => $this->members['members']['ascending']
+                        )
+                    );
+                ?>
                 <div class="text-center">
                     <a class="btn btn-default btn-table" id="show-members" href="javascript:;" role="button">Show more</a>               
                 </div>
