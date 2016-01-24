@@ -82,15 +82,12 @@ function printInfoLabel($data)
         <div class="col-md-8 col-md-offset-2">
             <div class="table-container" id="members-list">
                 <?php 
-                    $members = $this->members['members']['data'];
+                    $membersTable = $this->members['table'];
                     echo $this->partial(
-                        'partial/membersTable.phtml', 
+                        'partial/paginatedTable.phtml', 
                         array(
-                            'members' => $members,
-                            'siteId' => $site->getWikidotId(),
-                            'preview' => true,
-                            'orderBy' => $this->members['members']['orderBy'],
-                            'ascending' => $this->members['members']['ascending']
+                            'table' => $membersTable,
+                            'data' => array('siteId' => $site->getWikidotId()),
                         )
                     );
                 ?>

@@ -14,6 +14,7 @@ use Zend\View\Model\JsonModel;
 use Zend\Form\FormInterface;
 use Application\Service\HubServiceInterface;
 use Application\Form\DateIntervalForm;
+use Application\Factory\Component\PaginatedTableFactory;
 use Application\Utils\UserType;
 use Application\Utils\PageType;
 use Application\Utils\VoteType;
@@ -59,6 +60,8 @@ class RecentController extends AbstractActionController
         $members = $this->services->getUserService()->findSiteMembers($siteId, UserType::ANY, false, $from, $to, array(DbViewMembership::JOINDATE => Order::ASCENDING), true);
         $members->setCurrentPageNumber(1);
         $members->setItemCountPerPage(3);
+        $table = PaginatedTableFactory::createMembersTable($members, true);
+        $table->getColumns()->setOrder(DbViewMembership::JOINDATE);
         $result = array(
             'header' => array(
                 'users' => $this->services->getUserService()->countSiteMembers($siteId, UserType::ANY, false, $from, $to)
@@ -69,11 +72,7 @@ class RecentController extends AbstractActionController
                 'posters' => $this->services->getUserService()->countSiteMembers($siteId, UserType::POSTER, false, $from, $to),
                 'still active' => $this->services->getUserService()->countSiteMembers($siteId, UserType::ANY, true, $from, $to),
             ),
-            'members' => array(
-                'data' => $members,
-                'orderBy' => DbViewMembership::JOINDATE,
-                'ascending' => true
-            )
+            'table' => $table,
         );
         return $result;
     }
@@ -168,7 +167,6 @@ class RecentController extends AbstractActionController
             'revisions' => $this->getRevisionsData($siteId, $from, $to),
             'votes' => $this->getVotesData($siteId, $from, $to),
         );
-        DbViewMembership::hasField('a');
         return new ViewModel($result);
     }
     
@@ -279,16 +277,15 @@ class RecentController extends AbstractActionController
             $members->setCurrentPageNumber($page);
             $members->setItemCountPerPage($perPage);
             $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
+            $table = PaginatedTableFactory::createMembersTable($members, false);
+            $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);
             if ($renderer) {
                 $result['success'] = true;                
                 $result['content'] = $renderer(
-                    'partial/membersTable.phtml', 
+                    'partial/paginatedTable.phtml', 
                     array(
-                        'members' => $members, 
-                        'siteId' => $siteId, 
-                        'preview' => false,
-                        'orderBy' => $orderBy,
-                        'ascending' => $order === Order::ASCENDING
+                        'table' => $table, 
+                        'data' => array('siteId' => $siteId)
                     )
                 );
             }

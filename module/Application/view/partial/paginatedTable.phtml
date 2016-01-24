@@ -1,0 +1,53 @@
+<?php  
+    $table = $this->table; 
+    $cols = $table->getColumns();
+?>
+<table class="table table-striped 
+    <?php 
+        if ($table->isPreview()) {
+            echo "table-preview";
+        } else {
+            echo "table-sortable";             
+        } 
+    ?>
+    "
+>
+    <tr>
+        <?php foreach ($cols as $index => $col): ?>
+        <th 
+            data-name="<?php echo $col->getName(); ?>" 
+            <?php 
+                if ($cols->getOrderBy() === $index) {
+                    echo 'data-ascending="'.$cols->isAscending().'" ';
+                    echo 'class="ordered"';
+                } 
+            ?>
+        >
+            <?php 
+                echo $col->getDescription(); 
+                if ($cols->getOrderBy() === $index) {
+                    if ($cols->isAscending()) {
+                        echo "&nbsp;&UpArrow;";
+                    } else {
+                        echo "&nbsp;&DownArrow;";
+                    }
+                }
+            ?>            
+        </th>           
+        <?php endforeach;?>
+    </tr>
+    <?php 
+        echo $this->partial(
+            $table->getBodyView(), 
+            array(
+                'rows' => $table->getPaginator(),
+                'data' => $this->data
+            )
+        ); 
+    ?>
+</table>
+<?php 
+    if (!$table->isPreview()) {
+        echo $this->paginationControl($table->getPaginator(), 'Sliding', 'partial/paginator'); 
+    }
+?>

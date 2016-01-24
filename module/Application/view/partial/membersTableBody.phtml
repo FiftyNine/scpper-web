@@ -1,0 +1,9 @@
+<?php foreach ($this->rows as $user): ?>
+<tr>
+    <td><a href="#"><?php echo $user->getDisplayName(); ?></a></td>
+    <td><?php echo $user->getVoteCount(); ?></td>
+    <td><?php echo $user->getRevisionCount(); ?></td>
+    <td><?php echo $user->getPageCount(); ?></td>
+    <td><?php echo $user->getMembership()[$this->data['siteId']]->format('Y-m-d'); ?></td>
+</tr>
+<?php endforeach; ?>
