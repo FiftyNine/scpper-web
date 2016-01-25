@@ -45,6 +45,26 @@ interface PageInterface
     public function getRevisionCount();
     
     /**
+     * @return RevisionInterface[]
+     */
+    public function getRevisions();
+    
+    /**
+     * @return int
+     */
+    public function getVoteCount();
+    
+    /**
+     * @return VoteInterface[]
+     */
+    public function getVotes();
+    
+    /**
+     * @return AuthorshipInterface[]
+     */    
+    public function getAuthors();
+    
+    /**
      * 
      * @return \DateTime
      */

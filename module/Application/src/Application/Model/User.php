@@ -3,9 +3,16 @@
 namespace Application\Model;
 
 use Application\Model\UserInterface;
+use Application\Mapper\PageMapperInterface;
 
 class User implements UserInterface
-{
+{    
+    /**
+     *
+     * @var PageMapperInterface
+     */
+    protected $pageMapper;
+    
     /**
      *
      * @var int
@@ -49,6 +56,11 @@ class User implements UserInterface
      * @var array[SiteId => JoinDate]
      */
     protected $membership = array();
+    
+    public function __construct(PageMapperInterface $pageMapper) 
+    {
+        $this->pageMapper = $pageMapper;
+    }
     
     /**
      * {@inheritDoc}

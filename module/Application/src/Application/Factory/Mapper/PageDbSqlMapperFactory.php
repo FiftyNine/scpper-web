@@ -21,7 +21,10 @@ class PageDbSqlMapperFactory implements FactoryInterface
         ));
         $hydrator->setNamingStrategy($namingStrat);
         $hydrator->addStrategy(DbViewPages::CREATIONDATE, new \Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy('Y-m-d H:i:s'));
-        $prototype = new Page();
+        $authorMapper = $serviceLocator->get('AuthorshipMapper');
+        $revisionMapper = $serviceLocator->get('RevisionMapper');
+        $voteMapper = $serviceLocator->get('VoteMapper');
+        $prototype = new Page($authorMapper, $revisionMapper, $voteMapper);
         return new PageDbSqlMapper($dbAdapter, $hydrator, $prototype, DbViewPages::TABLE, DbViewPages::PAGEID);
     }
 }

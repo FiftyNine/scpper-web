@@ -48,7 +48,7 @@ table > tbody > tr > th:first-child {
     width: 40%;
 }
 
-table.table-sortable > tbody > tr > th {
+table.table-sortable > tbody > tr > th.can-order {
     cursor: pointer;
 }
 

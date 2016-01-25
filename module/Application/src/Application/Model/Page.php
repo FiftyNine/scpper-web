@@ -2,8 +2,30 @@
 
 namespace Application\Model;
 
+use Application\Mapper\AuthorshipMapperInterface;
+use Application\Mapper\RevisionMapperInterface;
+use Application\Mapper\VoteMapperInterface;
+
 class Page implements PageInterface
 {
+    /**
+     *
+     * @var \Application\Mapper\AuthorMapperInterface
+     */
+    protected $authorMapper;
+
+    /**
+     *
+     * @var \Application\Mapper\RevisionMapperInterface
+     */
+    protected $revisionMapper;
+    
+    /**
+     *
+     * @var \Application\Mapper\VoteMapperInterface
+     */
+    protected $voteMapper;    
+    
     /**
      *
      * @var int
@@ -57,6 +79,46 @@ class Page implements PageInterface
      * @var int
      */        
     protected $revisionCount;
+
+    /**
+     * 
+     * @var RevisionInterface[]
+     */
+    protected $revisions;
+
+    /**
+     *
+     * @var int
+     */        
+    protected $voteCount;
+
+    /**
+     * 
+     * @var VoteInterface[]
+     */
+    protected $votes;
+
+    /**
+     *
+     * @var AuthorshipInterface[]
+     */        
+    protected $authors;
+    
+    /**
+     * Constructor
+     * 
+     * @param Application\Mapper\UserMapperInterface $userMapper
+     */
+    public function __construct(
+            AuthorshipMapperInterface $authorMapper, 
+            RevisionMapperInterface $revisionMapper,
+            VoteMapperInterface $voteMapper
+    ) 
+    {        
+        $this->authorMapper = $authorMapper;
+        $this->revisionMapper = $revisionMapper;
+        $this->voteMapper = $voteMapper;
+    }
     
     /**
      * {@inheritDoc}
@@ -167,11 +229,57 @@ class Page implements PageInterface
      */
     public function getRevisionCount() 
     {
-        return $this->revisionCount;
+        if (isset($this->revisions)) {
+            return count($this->revisions);
+        } else {
+            return $this->revisionCount;
+        }
     }
     
     public function setRevisionCount($value)
     {
         $this->revisionCount = $value;
+    }
+
+    public function getRevisions() 
+    {
+        /*if (!isset($this->revisions)) {
+            $this->revisions = $this->revisionMapper->findRevisionsOfPage($this->getId());
+        }*/
+        return $this->revisions;
     }    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getAuthors() 
+    {
+        if (!isset($this->authors)) {
+            $this->authors = $this->authorMapper->findAuthorshipsOfPage($this->getId());
+        }
+        return $this->authors;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getVoteCount() 
+    {
+        if (isset($this->votes)) {
+            return count($this->votes);
+        } else {
+            return $this->voteCount;
+        }        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getVotes() 
+    {
+        /*if (!isset($this->votes)) {
+            $this->votes = $this->voteMapper->findVotesOnPage($this);
+        }*/
+        return $this->revisions;        
+    }
 }

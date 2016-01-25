@@ -91,11 +91,31 @@ return array(
             'PageMapper' => 'Application\Factory\Mapper\PageDbSqlMapperFactory',
             'RevisionMapper' => 'Application\Factory\Mapper\RevisionDbSqlMapperFactory',
             'VoteMapper' => 'Application\Factory\Mapper\VoteDbSqlMapperFactory',
+            'AuthorshipMapper' => 'Application\Factory\Mapper\AuthorshipDbSqlMapperFactory',
             // Zend
             'translator' => 'Zend\Mvc\Service\TranslatorServiceFactory',            
-            'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',                       
+            'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',         
+            'LazyServiceFactory' => 'Zend\ServiceManager\Proxy\LazyServiceFactoryFactory',
         ),
+        'delegators' => array(
+            'SiteMapper' => array('LazyServiceFactory'),
+            'UserMapper' => array('LazyServiceFactory'),
+            'PageMapper' => array('LazyServiceFactory'),
+            'RevisionMapper' => array('LazyServiceFactory'),
+            'VoteMapper' => array('LazyServiceFactory'),            
+            'AuthorshipMapper' => array('LazyServiceFactory'),            
+        ),        
     ),
+    'lazy_services' => array(
+        'class_map' => array(
+            'SiteMapper' => 'Application\Mapper\ZendDbSqlMapper',
+            'UserMapper' => 'Application\Mapper\UserDbSqlMapper',
+            'PageMapper' => 'Application\Mapper\PageDbSqlMapper',
+            'RevisionMapper' => 'Application\Mapper\RevisionDbSqlMapper',
+            'VoteMapper' => 'Application\Mapper\VoteDbSqlMapper',
+            'AuthorshipMapper' => 'Application\Mapper\AuthorshipDbSqlMapper',
+        ),
+    ),    
     'translator' => array(
         'locale' => 'en_US',
         'translation_file_patterns' => array(

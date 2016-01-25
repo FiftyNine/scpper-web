@@ -47,11 +47,9 @@ class Columns implements \IteratorAggregate
         if (!is_array($columns)) {
             return;
         }
-        foreach ($columns as $key => $value) {
-            if (is_string($key) && is_string($value)) {
-                $this->addColumn($key, $value);
-            } elseif ($value instanceof Column) {
-                $this->columns[] = $value;
+        foreach ($columns as $col) {
+            if ($col instanceof Column) {
+                $this->columns[] = $col;
             }
         }
     }
@@ -84,9 +82,9 @@ class Columns implements \IteratorAggregate
      * @param string $description
      * @return \Application\Component\PaginatedTable\Column
      */
-    public function addColumn($name, $description)
+    public function addColumn($name, $orderName)
     {
-        return $this->columns[] = new Column($name, $description);        
+        return $this->columns[] = new Column($name, $orderName);        
     }    
     
     /**
@@ -117,7 +115,7 @@ class Columns implements \IteratorAggregate
         if (is_string($column)) {
             $column = strtoupper($column);
             foreach ($this->columns as $index => $col) {
-                if (strtoupper($col->getName()) === $column) {
+                if ($col->canOrder() && strtoupper($col->getOrderName()) === $column) {
                     $column = $index;
                     break;
                 }

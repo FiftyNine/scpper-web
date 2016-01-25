@@ -23,7 +23,7 @@ function fetchPaginator(containerId, url, payload)
            container.html(result.content);
            container.find("ul.pagination > li > a").on('click', {container: containerId, url: url}, fetchPaginatorIndex);
            container.find(".per-page-control").on('change', {container: containerId, url: url}, changePaginatorSize);
-           container.find("th").on('click', {container: containerId, url: url}, changePaginatorOrder);
+           container.find("th.can-order").on('click', {container: containerId, url: url}, changePaginatorOrder);
        } else {
            showTableError(containerId);           
        }

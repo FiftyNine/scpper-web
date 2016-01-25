@@ -25,19 +25,17 @@ class Column
      *
      * @var string
      */
-    protected $description;
+    protected $orderName;
     
-    public function __construct($name, $description)
+    public function __construct($name, $orderName = '')
     {
         if (is_string($name)) {
             $this->name = $name;
         } else {
-            $this->name = '';
+            $this->name = 'Column';
         }
-        if (is_string($description)) {
-            $this->description = $description;
-        } else {
-            $this->description = 'Column';
+        if (is_string($orderName) && $orderName) {
+            $this->orderName = $orderName;
         }
     }
     
@@ -54,8 +52,17 @@ class Column
      * 
      * @return string
      */
-    public function getDescription()
+    public function getOrderName()
     {
-        return $this->description;
+        return $this->orderName;
+    }
+    
+    /**
+     * Shows whether table can be order by this column
+     * @return bool
+     */
+    public function canOrder()
+    {
+        return isset($this->orderName);
     }
 }

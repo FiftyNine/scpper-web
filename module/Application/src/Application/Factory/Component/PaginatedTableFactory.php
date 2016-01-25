@@ -8,6 +8,7 @@
 
 namespace Application\Factory\Component;
 
+use Application\Component\PaginatedTable\Column;
 use Application\Utils\DbConsts\DbViewMembership;
 use Application\Utils\DbConsts\DbViewPages;
 
@@ -22,10 +23,11 @@ class PaginatedTableFactory
     {
         $table = new \Application\Component\PaginatedTable\Table(
             array(
-                DbViewPages::TITLE => 'Page',
-                DbViewPages::CLEANRATING => 'Rating',
-                DbViewPages::REVISIONS => 'Revisions',
-                DbViewPages::CREATIONDATE => 'Posted'
+                new Column('Page', DbViewPages::TITLE),
+                new Column('Rating', DbViewPages::CLEANRATING),
+                new Column('Revisions', DbViewPages::REVISIONS),
+                new Column('Poster', DbViewPages::CREATIONDATE),
+                new Column('Authors')
             ), 
             $paginator, 
             'partial/tables/pages.phtml', 
@@ -38,11 +40,11 @@ class PaginatedTableFactory
     {
         $table = new \Application\Component\PaginatedTable\Table(
             array(
-                DbViewMembership::DISPLAYNAME => 'User',
-                DbViewMembership::VOTES => 'Votes',
-                DbViewMembership::REVISIONS => 'Revisions',
-                DbViewMembership::PAGES => 'Pages',
-                DbViewMembership::JOINDATE => 'Joined',
+                new Column('User', DbViewMembership::DISPLAYNAME),
+                new Column('Votes', DbViewMembership::VOTES),
+                new Column('Revisions', DbViewMembership::REVISIONS),
+                new Column('Pages', DbViewMembership::PAGES),
+                new Column('Joined', DbViewMembership::JOINDATE)
             ), 
             $paginator, 
             'partial/tables/members.phtml', 

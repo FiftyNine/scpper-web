@@ -4,5 +4,21 @@
     <td><?php echo $page->getCleanRating(); ?></td>
     <td><?php echo $page->getRevisionCount(); ?></td>
     <td><?php echo $page->getCreationDate()->format('Y-m-d'); ?></td>
+    <td>
+        <?php 
+            $authors = $page->getAuthors();
+            $one = 1 === count($authors);
+            foreach ($authors as $author): ?>
+                <a href="#">
+                <?php echo $author->getUser()->getDisplayName(); ?>
+                </a>
+                <?php 
+                    if (!$one || $author->getRole() !== \Application\Utils\AuthorRole::AUTHOR) {
+                        printf("&nbsp;(%s)", \Application\Utils\AuthorRole::ROLE_DESCRIPTIONS[$author->getRole()]);
+                    }
+                ?>
+                </br>
+            <?php endforeach; ?>
+    </td>
 </tr>
 <?php endforeach; ?>

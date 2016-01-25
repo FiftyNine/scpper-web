@@ -29,7 +29,7 @@ class UserDbSqlMapperFactory implements FactoryInterface
         $baseHydrator->setNamingStrategy($namingStrat);
         $hydrator->add($baseHydrator);
         $hydrator->add(new UserMembershipHydrator());
-        $prototype = new User();
+        $prototype = new User($serviceLocator->get('PageMapper'));
         return new UserDbSqlMapper($dbAdapter, $hydrator, $prototype, 'users', 'WikidotId');
     }
 }

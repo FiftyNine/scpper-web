@@ -15,24 +15,36 @@
     <tr>
         <?php foreach ($cols as $index => $col): ?>
         <th 
-            data-name="<?php echo $col->getName(); ?>" 
             <?php 
-                if ($cols->getOrderBy() === $index) {
-                    echo 'data-ascending="'.$cols->isAscending().'" ';
-                    echo 'class="ordered"';
-                } 
+            $thisOrder = $col->canOrder() && ($cols->getOrderBy() === $index);
+            $classes = array();
+            $attributes = array();
+            if ($col->canOrder()) {
+                $classes[] = 'can-order';
+                $attributes[] = 'data-name="'.$col->getOrderName().'"';
+                if ($thisOrder) {
+                    $classes[] = 'ordered';
+                    $attributes[] = 'data-ascending="'.$cols->isAscending().'"';
+                }
+            }
+            if ($classes) {
+                echo 'class="'.implode(' ', $classes).'" ';
+            }
+            foreach ($attributes as $attr) {
+                echo $attr.' ';
+            }
             ?>
         >
-            <?php 
-                echo $col->getDescription(); 
-                if ($cols->getOrderBy() === $index) {
+            <?php
+                echo $col->getName(); 
+                if ($thisOrder) {
                     if ($cols->isAscending()) {
                         echo "&nbsp;&UpArrow;";
                     } else {
                         echo "&nbsp;&DownArrow;";
                     }
                 }
-            ?>            
+            ?>
         </th>           
         <?php endforeach;?>
     </tr>
