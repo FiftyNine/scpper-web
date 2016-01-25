@@ -5,7 +5,6 @@ namespace Application\Mapper;
 use Zend\Db\Sql\Sql;
 use Application\Utils\PageType;
 use Application\Utils\DbConsts\DbViewPages;
-use Application\Utils\DbConsts\DbViewPageStatus;
 
 class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
 {
@@ -20,9 +19,8 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
         $select = $sql->select()
                       ->from(array('p' => DbViewPages::TABLE))
                       ->where(array('p.'.DbViewPages::SITEID.' = ?' => $siteId));
-        if ($type !== PageType::ANY) {
-            $select->join(array('s' => DbViewPageStatus::TABLE), 'p.'.DbViewPages::PAGEID.' = s.'.DbViewPageStatus::PAGEID, array())
-                   ->where(array('s.'.DbViewPageStatus::STATUSID.' = ?' => $type));
+        if ($type !== PageType::ANY) {            
+                   $select->where(array('p.'.DbViewPages::STATUSID.' = ?' => $type));
         }
         if ($createdAfter) {
             $select->where(array('p.'.DbViewPages::CREATIONDATE.' >= ?' => $createdAfter->format(self::DATETIME_FORMAT)));

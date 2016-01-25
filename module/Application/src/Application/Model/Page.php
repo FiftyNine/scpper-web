@@ -2,12 +2,19 @@
 
 namespace Application\Model;
 
+use Application\Mapper\PageMapperInterface;
 use Application\Mapper\AuthorshipMapperInterface;
 use Application\Mapper\RevisionMapperInterface;
 use Application\Mapper\VoteMapperInterface;
 
 class Page implements PageInterface
 {
+    /**
+     *
+     * @var \Application\Mapper\PageMapperInterface
+     */
+    protected $pageMapper;    
+    
     /**
      *
      * @var \Application\Mapper\AuthorMapperInterface
@@ -105,16 +112,35 @@ class Page implements PageInterface
     protected $authors;
     
     /**
+     * @var int
+     */
+    protected $status;
+    
+    /**
+     *
+     * @var int
+     */
+    protected $originalId;
+
+    /**
+     *
+     * @var PageInterface
+     */
+    protected $original;
+
+    /**
      * Constructor
      * 
      * @param Application\Mapper\UserMapperInterface $userMapper
      */
     public function __construct(
+            PageMapperInterface $pageMapper,
             AuthorshipMapperInterface $authorMapper, 
             RevisionMapperInterface $revisionMapper,
             VoteMapperInterface $voteMapper
     ) 
     {        
+        $this->pageMapper = $pageMapper;
         $this->authorMapper = $authorMapper;
         $this->revisionMapper = $revisionMapper;
         $this->voteMapper = $voteMapper;
@@ -282,4 +308,42 @@ class Page implements PageInterface
         }*/
         return $this->revisions;        
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getOriginal() 
+    {   
+        if ($this->originalId === $this->getId()) {
+            return $this;
+        }
+        if (!isset($this->original)) {
+            $this->original = $this->pageMapper->find($this->originalId);
+        }
+        $this->original;
+    }
+
+    public function getOriginalId()
+    {
+        return $this->originalId;
+    }
+    
+    public function setOriginalId($value)
+    {
+        $this->originalId = $value;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getStatus() 
+    {
+        return $this->status;
+    }
+    
+    public function setStatus($value)
+    {
+        $this->status = $value;
+    }
+
 }

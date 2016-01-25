@@ -25,8 +25,8 @@ class PaginatedTableFactory
             array(
                 new Column('Page', DbViewPages::TITLE),
                 new Column('Rating', DbViewPages::CLEANRATING),
-                new Column('Revisions', DbViewPages::REVISIONS),
-                new Column('Poster', DbViewPages::CREATIONDATE),
+                new Column('Status', DbViewPages::STATUS),
+                new Column('Posted', DbViewPages::CREATIONDATE),
                 new Column('Authors')
             ), 
             $paginator, 

@@ -69,4 +69,15 @@ interface PageInterface
      * @return \DateTime
      */
     public function getCreationDate();
+    
+    /**
+     * @return int
+     */
+    public function getStatus();
+    
+    /**
+     * @return PageInterface
+     */
+    public function getOriginal();
+    
 }

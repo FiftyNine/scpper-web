@@ -18,6 +18,9 @@ class DbViewPages
     const RATING = 'Rating';
     const CLEANRATING = 'CleanRating';
     const REVISIONS = 'Revisions';
+    const STATUSID = 'StatusId';
+    const STATUS = 'Status';
+    const ORIGINALID = 'OriginalId';
 
 
     static public function hasField($field) 

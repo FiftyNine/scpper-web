@@ -17,14 +17,17 @@ class PageDbSqlMapperFactory implements FactoryInterface
         $namingStrat = new \Zend\Stdlib\Hydrator\NamingStrategy\MapNamingStrategy(array(
             DbViewPages::PAGEID => 'id',
             DbViewPages::PAGENAME => 'name',
-            DbViewPages::REVISIONS => 'revisionCount'
+            DbViewPages::REVISIONS => 'revisionCount',
+            DbViewPages::STATUSID => 'status',
+            DbViewPages::STATUS => ''
         ));
         $hydrator->setNamingStrategy($namingStrat);
         $hydrator->addStrategy(DbViewPages::CREATIONDATE, new \Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy('Y-m-d H:i:s'));
+        $pageMapper = $serviceLocator->get('PageMapper');
         $authorMapper = $serviceLocator->get('AuthorshipMapper');
         $revisionMapper = $serviceLocator->get('RevisionMapper');
         $voteMapper = $serviceLocator->get('VoteMapper');
-        $prototype = new Page($authorMapper, $revisionMapper, $voteMapper);
+        $prototype = new Page($pageMapper, $authorMapper, $revisionMapper, $voteMapper);
         return new PageDbSqlMapper($dbAdapter, $hydrator, $prototype, DbViewPages::TABLE, DbViewPages::PAGEID);
     }
 }

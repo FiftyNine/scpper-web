@@ -2,7 +2,7 @@
 <tr>
     <td><a href="#"><?php echo $page->getTitle(); ?></a></td>
     <td><?php echo $page->getCleanRating(); ?></td>
-    <td><?php echo $page->getRevisionCount(); ?></td>
+    <td><?php echo \Application\Utils\PageType::DESCRIPTIONS[$page->getStatus()]; ?></td>
     <td><?php echo $page->getCreationDate()->format('Y-m-d'); ?></td>
     <td>
         <?php 
