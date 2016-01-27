@@ -2,38 +2,53 @@
 
 namespace Application\Service;
 
-use Application\Mapper\UserMapperInterface;
+use Application\Mapper\SimpleMapperInterface;
+use Application\Mapper\MembershipMapperInterface;
 use Application\Utils\UserType;
 
 class UserService implements UserServiceInterface
-{    
-    const ACTIVITY_SPAN = 6; // Months
+{        
     
     /**
      *
      * @var UserMapperInterface
      */
-    protected $mapper;
+    protected $userMapper;
     
+    /**
+     *
+     * @var MembershipMapperInterface
+     */
+    protected $membershipMapper;    
+    
+    public function __construct(
+            SimpleMapperInterface $userMapper,
+            MembershipMapperInterface $membershipMapper
+    ) 
+    {
+        $this->userMapper = $userMapper;
+        $this->membershipMapper = $membershipMapper;
+    }
+
+    /**
+     * Get a date after which user counts as active
+     * @return \DateTime
+     */
     protected function getActiveDate()
     {
         $lastActive = new \DateTime();
-        $lastActive->sub(new \DateInterval(sprintf("P%dM", array(self::ACTIVITY_SPAN))));
+        $interval = new \DateInterval(sprintf("P%dM", UserType::ACTIVITY_SPAN));
+        $lastActive->sub($interval);
         return $lastActive;
     }
-    
-    public function __construct(UserMapperInterface $mapper) 
-    {
-        $this->mapper = $mapper;
-    }
-    
+        
     /**
      * 
      * {@inheritDoc}
      */
     public function find($id) 
     {
-        return $this->mapper->find($id);
+        return $this->userMapper->find($id);
     }
 
     /**
@@ -42,7 +57,7 @@ class UserService implements UserServiceInterface
      */
     public function findAll()
     {
-        return $this->mapper->findAll();
+        return $this->userMapper->findAll();
     }
     
     /**
@@ -55,7 +70,7 @@ class UserService implements UserServiceInterface
         if ($active) {            
             $lastActive = $this->getActiveDate();
         }
-        return $this->mapper->countSiteMembers($siteId, $types, $lastActive, $joinedAfter, $joinedBefore);
+        return $this->membershipMapper->countSiteMembers($siteId, $types, $lastActive, $joinedAfter, $joinedBefore);
     }
 
     /**
@@ -68,7 +83,7 @@ class UserService implements UserServiceInterface
         if ($active) {
             $lastActive = $this->getActiveDate();
         }
-        return $this->mapper->getAggregatedValues($siteId, $aggregates, $types, $lastActive, $joinedAfter, $joinedBefore);
+        return $this->membershipMapper->getAggregatedValues($siteId, $aggregates, $types, $lastActive, $joinedAfter, $joinedBefore);
     }
     
     /**
@@ -81,6 +96,6 @@ class UserService implements UserServiceInterface
         if ($active) {
             $lastActive = $this->getActiveDate();
         }
-        return $this->mapper->findSiteMembers($siteId, $types, $lastActive, $joinedAfter, $joinedBefore, $order, $paginated);
+        return $this->membershipMapper->findSiteMembers($siteId, $types, $lastActive, $joinedAfter, $joinedBefore, $order, $paginated);
     }    
 }

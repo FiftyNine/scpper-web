@@ -29,30 +29,27 @@ interface UserInterface
     public function getDeleted();
     
     /**
-     * @return int
+     * @return \Application\Model\UserActivityInterface[]
      */
-    public function getVoteCount();
+    public function getActivities();
     
     /**
-     * @return int
+     * Returns a list of user activities on a specified site
+     * @param int $siteId
+     * @return \Application\Model\UserActivityInterface
+     * @throws \InvalidArgumentException
      */
-    public function getRevisionCount();    
+    public function getActivityOnSite($siteId);
     
     /**
-     * @return int
+     * @return \Application\Model\MembershipInterface[]
      */
-    public function getPageCount();    
+    public function getMemberships();
     
     /**
-     * 
-     * @return array()
+     * Returns information about membership on site or null if user is not a member
+     * @param int $siteId
+     * @return \Application\Model\UserActivityInterface
      */
-    public function getMembership();
-    
-    /**
-     * Adds a membership to the list
-     * @param int $siteId 
-     * @param \DateTime|string $joinDate Date of joining or string formatted as 'Y-m-d'
-     */
-    public function addMembership($siteId, $joinDate);
+    public function getMembershipOfSite($siteId);    
 }

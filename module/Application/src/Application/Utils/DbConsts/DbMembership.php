@@ -9,7 +9,6 @@ class DbMembership
     const SITEID = 'SiteId';
     const USERID = 'UserId';
     const JOINDATE = 'JoinDate';
-    const LASTACTIVITY = 'LastActivity';
     const SUMMARYRATING = 'SummaryRating';
     const ADJUSTEDRATING = 'AdjustedRating';
     const ADJUSTEDWEIGHT = 'AdjustedWeight';

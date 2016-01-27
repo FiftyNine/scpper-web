@@ -3,63 +3,76 @@
 namespace Application\Model;
 
 use Application\Model\UserInterface;
-use Application\Mapper\PageMapperInterface;
+use Application\Mapper\UserActivityMapperInterface;
+use Application\Mapper\MembershipMapperInterface;
 
 class User implements UserInterface
 {    
     /**
      *
-     * @var PageMapperInterface
+     * @var \Application\Mapper\UserActivityMapperInterface
      */
-    protected $pageMapper;
-    
+    protected $activityMapper;
+
     /**
      *
+     * @var \Application\Mapper\MembershipMapperInterface
+     */
+    protected $membershipMapper;
+    
+    /**
      * @var int
      */
     protected $id;
     
     /**
-     *
      * @var string
      */
     protected $name;
     
     /**
-     *
      * @var string
      */
     protected $displayName;
     
     /**
-     *
      * @var bool
      */
-    protected $deleted;    
+    protected $deleted;  
+    
+    /**
+     * An associative array of [SiteId => UserActivityInterface]
+     * @var array[int]\Application\Model\UserActivityInterface
+     */
+    protected $activitiesBySite = array();
+    
+    /**
+     * @var UserActivityInterface[] 
+     */
+    protected $activities;
 
     /**
-     * @var int
+     * An associative array of [SiteId => MembershipInterface]
+     * @var array[int]\Application\Model\MembershipInterface
      */
-    protected $voteCount;
+    protected $membershipsBySite = array();
     
     /**
-     * @var int
+     * @var MembershipInterface[] 
      */
-    protected $revisionCount;
-
-    /**
-     * @var int
-     */
-    protected $pageCount;    
+    protected $memberships;
     
     /**
-     * @var array[SiteId => JoinDate]
+     * Constructor
+     * @param UserActivityMapperInterface $activityMapper
      */
-    protected $membership = array();
-    
-    public function __construct(PageMapperInterface $pageMapper) 
+    public function __construct(
+            UserActivityMapperInterface $activityMapper,
+            MembershipMapperInterface $membershipMapper
+    ) 
     {
-        $this->pageMapper = $pageMapper;
+        $this->activityMapper = $activityMapper;
+        $this->membershipMapper = $membershipMapper;
     }
     
     /**
@@ -114,63 +127,57 @@ class User implements UserInterface
         $this->name = $value;
     }
 
-    /**
-     * @return int
+    /**     
+     * {@inheritDoc}
      */
-    public function getVoteCount()
+    public function getActivities()
     {
-        return $this->voteCount;
+        if (!isset($this->activities)) {
+            $this->activities = $this->activityMapper->findUserActivities($this->getId());
+            foreach ($this->activities as $activity) {                
+                $this->activitiesBySite[$activity->getSiteId()] = $activity;
+            }            
+        }
+        return $this->activities;
     }
-    
-    public function setVoteCount($value) 
-    {
-        $this->voteCount = $value;
-    }    
-    
-    /**
-     * @return int
-     */
-    public function getRevisionCount()
-    {
-        return $this->revisionCount;
-    }
-    
-    public function setRevisionCount($value) 
-    {
-        $this->revisionCount = $value;
-    }        
-    
-    /**
-     * @return int
-     */
-    public function getPageCount()
-    {
-        return $this->pageCount;
-    }
-    
-    public function setPageCount($value) 
-    {
-        $this->pageCount = $value;
-    }        
     
     /**     
      * {@inheritDoc}
      */
-    public function getMembership()
+    public function getActivityOnSite($siteId)
     {
-        return $this->membership;
+        if (!array_key_exists($siteId, $this->activitiesBySite)) {
+            $this->activitiesBySite[$siteId] = $this->activityMapper->findUserActivity($this->getId(), $siteId);
+        }
+        return $this->activitiesBySite[$siteId];
     }
-       
-    /**
+    
+    /**     
      * {@inheritDoc}
      */
-    public function addMembership($siteId, $joinDate)
-    {    
-        if (is_string($joinDate)) {
-            $joinDate = \DateTime::createFromFormat('Y-m-d H:i:s', $joinDate);
+    public function getMemberships()
+    {
+        if (!isset($this->memberships)) {
+            $this->memberships = $this->membershipMapper->findMembershipsOfUser($this->getId());
+            foreach ($this->memberships as $membership) {
+                $this->membershipsBySite[$membership->getSiteId()] = $membership;
+            }            
         }
-        if ($joinDate instanceof \DateTime) {
-            $this->membership[$siteId] = $joinDate;
+        return $this->memberships;
+    }
+
+    /**     
+     * {@inheritDoc}
+     */
+    public function getMembershipOfSite($siteId) 
+    {
+        if (!isset($this->memberships)) {
+            $this->getMemberships();
+        }
+        if (array_key_exists($siteId, $this->membershipsBySite)) {
+            return $this->membershipsBySite[$siteId];
+        } else {
+            return null;
         }
     }
 }

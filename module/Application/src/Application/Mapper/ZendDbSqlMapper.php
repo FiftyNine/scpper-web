@@ -99,6 +99,20 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
     }
 
     /**
+     * Returns a single object created from query
+     * @param Sql $sql
+     * @param Select $select
+     */
+    protected function fetchObject(Sql $sql, Select $select)
+    {
+        $result = $this->fetch($sql, $select);
+        if ($result && $result->getAffectedRows() === 1) {
+          return $this->hydrator->hydrate($result->current(), $this->objectPrototype);
+        }
+        throw new \InvalidArgumentException("Object not found or more than one object found");
+    }
+    
+    /**
      * Returns a collection of hydrated objects or false on error
      * @param Sql $sql
      * @param Select $select
@@ -256,22 +270,30 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
         
         $result = $this->fetch($sql, $select);
         if ($result && $result->getAffectedRows()) {
-          return $this->hydrator->hydrate($result->current(), $this->objectPrototype);
+          return $this->hydrator->hydrate($result->current(), clone $this->objectPrototype);
         }
-        throw new \InvalidArgumentException("Object of table {$this->table} with id = {$id} not found");
+        try {
+            return $this->fetchObject($sql, $select);
+        } catch (\InvalidArgumentException $ex) {
+            throw new \InvalidArgumentException("Object of table {$this->table} with id = {$id} not found");
+        }        
     }
 
     /**
      * 
      * {@inheritDoc}
      */
-    public function findAll($offset = 0, $limit = 0) {
+    public function findAll($paginated = true) {
         $sql = new Sql($this->dbAdapter);        
         $select = $sql->select($this->table);
-        $result = $this->fetchResultSet($sql, $select, $offset, $limit);
+        if ($paginated) {
+            $result = $this->getPaginator($select);
+        } else {
+            $result = $this->fetchResultSet($sql, $select);
+        }
         if (!$result) {
             $result = array();
-        }
+        }                    
         return $result;
     }
     

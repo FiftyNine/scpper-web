@@ -16,11 +16,10 @@ interface SimpleMapperInterface
     /**
      * Returns all available objects
      * 
-     * @param int $offset Offset from the beginning
-     * @param int $limit Maximum number of rows to fetch (<=0 for all rows)
-     * @return ResultSet
+     * @param bool $paginated
+     * @return ResultSet|\Zend\Paginator\Paginator
      */
-    public function findAll($offset = 0, $limit = 0);
+    public function findAll($paginated = true);
     
     /**
      * Returns number of all available objects

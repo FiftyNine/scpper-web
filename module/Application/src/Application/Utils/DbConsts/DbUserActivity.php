@@ -11,6 +11,7 @@ class DbUserActivity
     const VOTES = 'Votes';
     const REVISIONS = 'Revisions';
     const PAGES = 'Pages';
+    const LASTACTIVITY = 'LastActivity';
 
 
     static public function hasField($field) 

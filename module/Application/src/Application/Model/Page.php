@@ -127,11 +127,13 @@ class Page implements PageInterface
      * @var PageInterface
      */
     protected $original;
-
+ 
     /**
      * Constructor
-     * 
-     * @param Application\Mapper\UserMapperInterface $userMapper
+     * @param PageMapperInterface $pageMapper
+     * @param AuthorshipMapperInterface $authorMapper
+     * @param RevisionMapperInterface $revisionMapper
+     * @param VoteMapperInterface $voteMapper
      */
     public function __construct(
             PageMapperInterface $pageMapper,

@@ -8,7 +8,7 @@
 
 namespace Application\Model;
 
-use Application\Mapper\UserMapperInterface;
+use Application\Mapper\SimpleMapperInterface;
 use Application\Mapper\PageMapperInterface;
 
 /**
@@ -24,7 +24,7 @@ class Authorship implements AuthorshipInterface
     protected $pageMapper;
     
     /**
-     * @var \Application\Mapper\UserMapperInterface 
+     * @var \Application\Mapper\SimpleMapperInterface 
      */
     protected $userMapper;
     
@@ -60,10 +60,13 @@ class Authorship implements AuthorshipInterface
     
     /**
      * Constructor
-     * @param UserMapperInterface $userMapper
+     * @param SimpleMapperInterface $userMapper
      * @param PageMapperInterface $pageMapper
      */
-    public function __construct(UserMapperInterface $userMapper, PageMapperInterface $pageMapper) 
+    public function __construct(
+            SimpleMapperInterface $userMapper, 
+            PageMapperInterface $pageMapper
+    ) 
     {
         $this->pageMapper = $pageMapper;
         $this->userMapper = $userMapper;

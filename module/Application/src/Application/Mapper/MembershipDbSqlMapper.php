@@ -1,14 +1,29 @@
 <?php
 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 namespace Application\Mapper;
 
 use Zend\Db\Sql\Sql;
-use Zend\Db\Sql\Select;
-use Application\Utils\UserType;
 use Application\Utils\DbConsts\DbViewMembership;
+use Application\Utils\UserType;
 
-class UserDbSqlMapper extends ZendDbSqlMapper implements UserMapperInterface
+/**
+ * Description of MembershipDbSqlMapper
+ *
+ * @author Alexander
+ */
+class MembershipDbSqlMapper extends ZendDbSqlMapper implements MembershipMapperInterface
 {
+    const COLUMNS = array(
+        DbViewMembership::USERID,
+        DbViewMembership::SITEID,
+        DbViewMembership::JOINDATE
+    );
     
     /**
      * Builds a select statement to get members of the site
@@ -87,6 +102,7 @@ class UserDbSqlMapper extends ZendDbSqlMapper implements UserMapperInterface
     {
         $sql = new Sql($this->dbAdapter);
         $select = $this->buildMemberSelect($sql, $siteId, $types, $lastActive, $joinedAfter, $joinedBefore);
+        $select->columns(self::COLUMNS);
         if (is_array($order)) {
             $this->orderSelect($select, $order);
         }
@@ -113,15 +129,17 @@ class UserDbSqlMapper extends ZendDbSqlMapper implements UserMapperInterface
         $select = $this->buildMemberSelect($sql, $siteId, $types, $lastActive, $joinedAfter, $joinedBefore);
         $this->aggregateSelect($select, $aggregates);
         return $this->fetchArray($sql, $select);
-    }
-    
-    /**
-     * 
-     * {@inheritDoc}
-     */    
-    public function findUserMembership($user) 
-    {
-        
-    }
+    }   
 
+    /**
+     * {@inheritdoc}
+     */
+    public function findUserMemberships($userId) 
+    {
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select(DbViewMembership::TABLE)
+                ->columns(self::COLUMNS)
+                ->where(array(DbViewMembership::USERID.' = ?' => $userId));
+        return $this->fetchResultSet($sql, $select);        
+    }
 }

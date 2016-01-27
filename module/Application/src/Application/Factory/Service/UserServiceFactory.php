@@ -10,7 +10,8 @@ class UserServiceFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator) 
     {
-        $mapper = $serviceLocator->get('UserMapper');
-        return new UserService($mapper);
+        $userMapper = $serviceLocator->get('UserMapper');
+        $membershipMapper = $serviceLocator->get('MembershipMapper');
+        return new UserService($userMapper, $membershipMapper);
     }
 }

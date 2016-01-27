@@ -143,7 +143,7 @@ class RecentController extends AbstractActionController
     public function recentAction()
     {        
         $siteId = $this->services->getUtilityService()->getSiteId();
-        $site = $this->services->getSiteService()->find($siteId);
+        $site = $this->services->getSiteService()->find($siteId);        
         $fromControl = $this->dateIntervalForm->get(DateIntervalForm::FROM_DATE_NAME);
         $toControl= $this->dateIntervalForm->get(DateIntervalForm::TO_DATE_NAME);
         $lastDate = $site->getLastUpdate();

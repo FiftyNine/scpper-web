@@ -2,22 +2,21 @@
 
 namespace Application\Utils\DbConsts;
 
-class DbViewMembership
+class DbViewUserActivity
 {
-    const TABLE = 'view_membership';
-    const __ID = '__Id';
-    const SITEID = 'SiteId';
-    const SITENATIVENAME = 'SiteNativeName';
-    const SITE = 'Site';
-    const SITEENGLISHNAME = 'SiteEnglishName';
+    const TABLE = 'view_user_activity';
     const USERID = 'UserId';
+    const USERDISPLAYNAME = 'UserDisplayName';
     const USERNAME = 'UserName';
-    const DISPLAYNAME = 'DisplayName';
-    const JOINDATE = 'JoinDate';
-    const LASTACTIVITY = 'LastActivity';
+    const DELETED = 'Deleted';
+    const SITEID = 'SiteId';
     const VOTES = 'Votes';
     const REVISIONS = 'Revisions';
     const PAGES = 'Pages';
+    const LASTACTIVITY = 'LastActivity';
+    const SITEENGLISHNAME = 'SiteEnglishName';
+    const SITENAME = 'SiteName';
+    const SITE = 'Site';
 
 
     static public function hasField($field) 

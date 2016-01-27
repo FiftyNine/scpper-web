@@ -31,7 +31,7 @@ interface UserServiceInterface
      * @param \DateTime $joinedBefore Only users who joined before the date
      * @param array(string => int) $order Associative array of field names and sorting orders (constants from \Application\Utils\Order)
      * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
-     * @return \Zend\Paginator\Paginator|UserInterface[]
+     * @return \Zend\Paginator\Paginator|MembershipInterface[]
      */    
     public function findSiteMembers($siteId, $types = UserType::ANY, $active = false, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null, $order = null, $paginated = false);
     

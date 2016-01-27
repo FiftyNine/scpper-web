@@ -44,6 +44,7 @@ class PaginatedTableFactory
                 new Column('Votes', DbViewMembership::VOTES),
                 new Column('Revisions', DbViewMembership::REVISIONS),
                 new Column('Pages', DbViewMembership::PAGES),
+                new Column('Active', DbViewMembership::LASTACTIVITY),
                 new Column('Joined', DbViewMembership::JOINDATE)
             ), 
             $paginator, 

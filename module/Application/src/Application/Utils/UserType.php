@@ -14,7 +14,9 @@ namespace Application\Utils;
  * @author Alexander
  */
 class UserType 
-{           
+{
+    const ACTIVITY_SPAN = 6; // Months
+    
     const ANY = 0;    
     const VOTER = 1;
     const CONTRIBUTOR = 2;

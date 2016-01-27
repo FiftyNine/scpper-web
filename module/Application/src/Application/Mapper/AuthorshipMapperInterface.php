@@ -12,7 +12,7 @@ namespace Application\Mapper;
  *
  * @author Alexander
  */
-interface AuthorshipMapperInterface 
+interface AuthorshipMapperInterface extends SimpleMapperInterface
 {
     /**
      * Returns all authorship entries for a specified page

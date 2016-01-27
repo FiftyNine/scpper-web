@@ -92,6 +92,8 @@ return array(
             'RevisionMapper' => 'Application\Factory\Mapper\RevisionDbSqlMapperFactory',
             'VoteMapper' => 'Application\Factory\Mapper\VoteDbSqlMapperFactory',
             'AuthorshipMapper' => 'Application\Factory\Mapper\AuthorshipDbSqlMapperFactory',
+            'UserActivityMapper' => 'Application\Factory\Mapper\UserActivityDbSqlMapperFactory',
+            'MembershipMapper' => 'Application\Factory\Mapper\MembershipDbSqlMapperFactory',
             // Zend
             'translator' => 'Zend\Mvc\Service\TranslatorServiceFactory',            
             'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',         
@@ -104,16 +106,20 @@ return array(
             'RevisionMapper' => array('LazyServiceFactory'),
             'VoteMapper' => array('LazyServiceFactory'),            
             'AuthorshipMapper' => array('LazyServiceFactory'),            
+            'UserActivityMapper' => array('LazyServiceFactory'),            
+            'MembershipMapper' => array('LazyServiceFactory'),            
         ),        
     ),
     'lazy_services' => array(
         'class_map' => array(
             'SiteMapper' => 'Application\Mapper\ZendDbSqlMapper',
-            'UserMapper' => 'Application\Mapper\UserDbSqlMapper',
+            'UserMapper' => 'Application\Mapper\ZendDbSqlMapper',
             'PageMapper' => 'Application\Mapper\PageDbSqlMapper',
             'RevisionMapper' => 'Application\Mapper\RevisionDbSqlMapper',
             'VoteMapper' => 'Application\Mapper\VoteDbSqlMapper',
             'AuthorshipMapper' => 'Application\Mapper\AuthorshipDbSqlMapper',
+            'UserActivityMapper' => 'Application\Mapper\UserActivityDbSqlMapper',
+            'MembershipMapper' => 'Application\Mapper\MembershipDbSqlMapper',
         ),
     ),    
     'translator' => array(
