@@ -158,6 +158,7 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
             }
         }
         // Workaround for group aggregates 
+        /*
         foreach($result as &$row) {
             foreach ($row as $key => $value) {
                 if (substr($key, -strlen(self::GROUP_SUFFIX)) === self::GROUP_SUFFIX) {
@@ -167,6 +168,7 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
                 }
             }
         }
+         */
         return $result;                
     }
     
@@ -200,11 +202,18 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
         $columns = array();
         foreach ($aggregates as $aggregate) {
             $aggName = $aggregate->getAggregateName();
-            if ($aggregate->getGroup()) {
-                $aggName = $aggName.self::GROUP_SUFFIX;
-                $select->group($aggName);
+            if ($aggregate->getGroup()) {                
+                if ($aggName) {
+                    $select->group($aggName);                    
+                } else {
+                    $select->group($aggregate->getAggregateExpression());
+                }
             }
-            $columns[$aggName] = $aggregate->getAggregateExpression();
+            if ($aggName) {
+                $columns[$aggName] = $aggregate->getAggregateExpression();
+            } else {
+                $columns[] = $aggregate->getAggregateExpression();
+            }
         }
         $select->columns($columns, false);    
         return $select;
@@ -226,9 +235,12 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
      * @param Select $select
      * @return \Zend\Paginator\Paginator
      */
-    protected function getPaginator(Select $select)
+    protected function getPaginator(Select $select, $asArray = false)
     {
-        $resultSet = new \Zend\Db\ResultSet\HydratingResultSet($this->hydrator, $this->objectPrototype);
+        $resultSet = null;
+        if (!$asArray) {
+            $resultSet = new \Zend\Db\ResultSet\HydratingResultSet($this->hydrator, $this->objectPrototype);
+        }
         $adapter = new \Zend\Paginator\Adapter\DbSelect($select, $this->dbAdapter, $resultSet);
         $paginator = new \Zend\Paginator\Paginator($adapter);
         return $paginator;        

@@ -76,8 +76,10 @@ function fetchPaginatorFirst(event)
 
 function initRecent()
 {
-    $('#show-members').on('click', {container: "#members-list", url: "/recent/members"}, fetchPaginatorFirst);    
-    $('#show-pages').on('click', {container: "#pages-list", url: "/recent/pages"}, fetchPaginatorFirst);    
+    $('#show-members').on('click', {container: "#members-list", url: "/recent/members"}, fetchPaginatorFirst);
+    $('#show-pages').on('click', {container: "#pages-list", url: "/recent/pages"}, fetchPaginatorFirst);
+    $('#show-editors').on('click', {container: "#editors-list", url: "/recent/editors"}, fetchPaginatorFirst);
+    $('#show-voters').on('click', {container: "#voters-list", url: "/recent/voters"}, fetchPaginatorFirst);    
 }
 
 $(document).ready(initRecent);

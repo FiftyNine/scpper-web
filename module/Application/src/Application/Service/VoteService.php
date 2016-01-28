@@ -37,8 +37,8 @@ class VoteService implements VoteServiceInterface
     /**
      * {@inheritDoc}
      */
-    public function getAggregatedValues($siteId, $aggregates, \DateTime $castAfter, \DateTime $castBefore)
+    public function getAggregatedValues($siteId, $aggregates, \DateTime $castAfter, \DateTime $castBefore, $order = null, $paginated = false)
     {
-        return $this->mapper->getAggregatedValues($siteId, $aggregates, $castAfter, $castBefore);
+        return $this->mapper->getAggregatedValues($siteId, $aggregates, $castAfter, $castBefore, $order, $paginated);
     }
 }

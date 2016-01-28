@@ -11,6 +11,7 @@ namespace Application\Factory\Component;
 use Application\Component\PaginatedTable\Column;
 use Application\Utils\DbConsts\DbViewMembership;
 use Application\Utils\DbConsts\DbViewPages;
+use Application\Utils\DbConsts\DbViewRevisions;
 
 /**
  * Description of PaginatedTableFactory
@@ -51,6 +52,37 @@ class PaginatedTableFactory
             'partial/tables/members.phtml', 
             $preview
         );        
+        return $table;
+    }    
+    
+    static public function createEditorsTable($paginator, $preview = false)
+    {
+        $table = new \Application\Component\PaginatedTable\Table(
+            array(
+                new Column('User', DbViewRevisions::USERDISPLAYNAME),
+                new Column('Revisions', 'Revisions'),
+                new Column('Percent of total'),
+            ),
+            $paginator,
+            'partial/tables/editors.phtml', 
+            $preview
+        );
+        return $table;
+    }
+    
+    static public function createVotersTable($paginator, $preview = false)
+    {
+        $table = new \Application\Component\PaginatedTable\Table(
+            array(
+                new Column('User', DbViewRevisions::USERDISPLAYNAME),
+                new Column('Votes', 'Votes'),
+                new Column('Positive'),
+                new Column('Negative'),
+            ),
+            $paginator,
+            'partial/tables/voters.phtml', 
+            $preview
+        );
         return $table;
     }    
 }

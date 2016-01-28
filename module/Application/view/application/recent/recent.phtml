@@ -156,6 +156,27 @@ function printInfoLabel($data)
             </div>
         </div>
     </div>
+    <div class="row top-buffer">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="table-container" id="editors-list">
+                <?php 
+                    $revisionsTable = $this->revisions['table'];
+                    echo $this->partial(
+                        'partial/tables/table.phtml', 
+                        array(
+                            'table' => $revisionsTable,
+                            'data' => array(
+                                'total' => $this->revisions['header']['revisions']
+                            ),
+                        )
+                    );
+                ?>
+                <div class="text-center">
+                    <a class="btn btn-default btn-table" id="show-editors" href="javascript:;" role="button">Show more</a>               
+                </div>
+            </div>
+        </div>
+    </div>            
 </div>
 <!-- VOTES -->
 <h1>Votes</h1>
@@ -176,6 +197,26 @@ function printInfoLabel($data)
             </div>
         </div>
     </div>
+    <div class="row top-buffer">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="table-container" id="voters-list">
+                <?php 
+                    $votersTable = $this->votes['table'];
+                    echo $this->partial(
+                        'partial/tables/table.phtml', 
+                        array(
+                            'table' => $votersTable,
+                            'data' => array(
+                            ),
+                        )
+                    );
+                ?>
+                <div class="text-center bottom-buffer">
+                    <a class="btn btn-default btn-table" id="show-voters" href="javascript:;" role="button">Show more</a>               
+                </div>
+            </div>
+        </div>
+    </div>                
 </div>
 <div id="table-error-row" hidden>
     <table>

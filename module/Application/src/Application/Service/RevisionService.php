@@ -44,8 +44,8 @@ class RevisionService implements RevisionServiceInterface
     /**
      * {@inheritDoc}
      */    
-    public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore)
+    public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore, $order = null, $paginated = false)
     {
-        return $this->mapper->getAggregatedValues($siteId, $aggregates, $createdAfter, $createdBefore);
+        return $this->mapper->getAggregatedValues($siteId, $aggregates, $createdAfter, $createdBefore, $order, $paginated);
     }                        
 }

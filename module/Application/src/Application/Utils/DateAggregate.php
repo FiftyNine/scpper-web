@@ -30,15 +30,11 @@ class DateAggregate implements QueryAggregateInterface
     protected $aggregateName;
     protected $group;
     
-    public function __construct($propertyName, $aggregateType = self::DAY, $aggregateName = '') 
+    public function __construct($propertyName, $aggregateName, $aggregateType = self::DAY) 
     {
-        $this->propertyName = $propertyName;
+        $this->propertyName = $propertyName;        
+        $this->aggregateName = $aggregateName;            
         $this->aggregateType = $aggregateType;
-        if ($aggregateName !== '') {
-            $this->aggregateName = $aggregateName;            
-        } else {
-            $this->aggregateName = $propertyName;
-        }
     }
     
     public function getAggregateExpression()

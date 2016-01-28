@@ -34,11 +34,17 @@ class RevisionDbSqlMapper extends ZendDbSqlMapper implements RevisionMapperInter
     /**
      * {@inheritDoc}
      */    
-    public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore)
+    public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore, $order = null, $paginated = false)
     {
         $sql = new Sql($this->dbAdapter);
         $select = $this->buildRevisionSelect($sql, $siteId, $createdAfter, $createdBefore);
         $this->aggregateSelect($select, $aggregates);
+        if (is_array($order)) {
+            $this->orderSelect($select, $order);
+        }
+        if ($paginated) {
+            return $this->getPaginator($select, true);
+        }
         return $this->fetchArray($sql, $select);
     }
 }

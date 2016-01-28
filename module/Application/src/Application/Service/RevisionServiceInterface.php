@@ -39,7 +39,9 @@ interface RevisionServiceInterface
      * @param \Application\Utils\QueryAggregateInterface[] $aggregates
      * @param \DateTime $createdAfter
      * @param \DateTime $createdBefore
+     * @param array(string => int) $order Associative array of field names and sorting orders (constants from \Application\Utils\Order)
+     * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
      * @return array(array(string => mixed))
      */
-    public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore);    
+    public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore, $order = null, $paginated = false);    
 }

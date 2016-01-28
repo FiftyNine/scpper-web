@@ -1,0 +1,7 @@
+<?php foreach ($this->rows as $editor): ?>
+<tr>
+    <td><a href="#"><?php echo $editor[\Application\Utils\DbConsts\DbViewRevisions::USERDISPLAYNAME]; ?></a></td>
+    <td><?php echo $editor['Revisions'] ?></td>
+    <td><?php echo number_format($editor['Revisions']/$this->data['total']*100, 2); ?></td>
+</tr>
+<?php endforeach; ?>

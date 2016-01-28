@@ -1,0 +1,8 @@
+<?php foreach ($this->rows as $voter): ?>
+<tr>
+    <td><a href="#"><?php echo $voter[\Application\Utils\DbConsts\DbViewVotes::USERDISPLAYNAME]; ?></a></td>
+    <td><?php echo $voter['Votes'] ?></td>
+    <td><?php echo ($voter['Votes']+$voter['Sum'])/2; ?></td>
+    <td><?php echo ($voter['Votes']-$voter['Sum'])/2; ?></td>
+</tr>
+<?php endforeach; ?>

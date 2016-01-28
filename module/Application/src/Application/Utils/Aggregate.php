@@ -43,15 +43,11 @@ class Aggregate implements QueryAggregateInterface
      * @param string $aggregateName
      * @param bool $group
      */
-    public function __construct($propertyName, $aggregateType, $aggregateName = '', $group = false) 
+    public function __construct($propertyName, $aggregateType, $aggregateName = null, $group = false) 
     {
         $this->propertyName = $propertyName;
         $this->aggregateType = $aggregateType;
-        if ($aggregateName !== '') {
-            $this->aggregateName = $aggregateName;            
-        } else {
-            $this->aggregateName = $propertyName;
-        }
+        $this->aggregateName = $aggregateName;
         $this->group = $group;
     }
     
@@ -71,13 +67,7 @@ class Aggregate implements QueryAggregateInterface
     
     public function getAggregateName()
     {
-        if (isset($this->aggregateName)) {
-            return $this->aggregateName;
-        } else if ($this->getAggregateType() !== self::COUNT) {
-            return $this->propertyName;
-        } else {
-            return 'Count';
-        }
+        return $this->aggregateName;
     }
     
     public function getGroup()

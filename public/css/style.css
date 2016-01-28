@@ -31,6 +31,10 @@ body {
     margin-top:30px; 
 }
 
+.bottom-buffer { 
+    margin-bottom:30px; 
+}
+
 hr {
     margin-top: 0px;
     margin-bottom: 25px;

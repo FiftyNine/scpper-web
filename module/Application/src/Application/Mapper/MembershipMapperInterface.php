@@ -34,7 +34,7 @@ interface MembershipMapperInterface extends SimpleMapperInterface
      * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
      * @return \Zend\Paginator\Paginator|MembershipInterface[]
      */
-    public function findSiteMembers($siteId, $types = UserType::ANY, \DateTime $lastActive = null, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null, $order = null, $paginated = false);    
+    public function findSiteMembers($siteId, $types = UserType::ANY, \DateTime $lastActive = null, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null, $order = null, $paginated = false);
                   
     /**
      * Returns number of members of the site
@@ -58,5 +58,5 @@ interface MembershipMapperInterface extends SimpleMapperInterface
      * @param \DateTime $joinedBefore Only users who joined before the date
      * @return array(array(string => mixed)) Array of FieldName => Value pairs
      */
-    public function getAggregatedValues($siteId, $aggregates, $types = UserType::ANY, \DateTime $lastActive = null, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null);    
+    public function getAggregatedValues($siteId, $aggregates, $types = UserType::ANY, \DateTime $lastActive = null, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null);
 }

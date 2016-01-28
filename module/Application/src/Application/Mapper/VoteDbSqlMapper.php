@@ -40,11 +40,17 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
      * 
      * {@inheritDoc}
      */    
-    public function getAggregatedValues($siteId, $aggregates, \DateTime $castAfter, \DateTime $castBefore)
+    public function getAggregatedValues($siteId, $aggregates, \DateTime $castAfter, \DateTime $castBefore, $order = null, $paginated = false)
     {
         $sql = new Sql($this->dbAdapter);
         $select = $this->buildVoteSelect($sql, $siteId, VoteType::ANY, $castAfter, $castBefore);
         $this->aggregateSelect($select, $aggregates);
+        if (is_array($order)) {
+            $this->orderSelect($select, $order);
+        }
+        if ($paginated) {
+            return $this->getPaginator($select, true);
+        }        
         return $this->fetchArray($sql, $select);
     }
 }
