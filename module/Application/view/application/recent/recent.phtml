@@ -1,7 +1,9 @@
 <?php
 $this->headScript()->appendFile('/js/scpper_charts.js');
 $this->headScript()->appendFile('/js/scpper_recent.js');
+$this->headScript()->appendFile('/js/jquery-ui/jquery-ui.min.js');
 $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
+$this->headLink()->prependStylesheet($this->basePath('css/jquery-ui.min.css'));
 
 $form = $this->intervalForm;
 $form->setAttribute('action', $this->url('recent'));
@@ -15,10 +17,13 @@ $site = $this->site;
 
 <?php $this->headScript()->captureStart(); ?>
 // Initialize global variables
-var changeData = {};
-changeData.siteId = <?php echo $site->getWikidotId(); ?>;
-changeData.fromDate = "<?php echo $fromDate->getValue(); ?>";
-changeData.toDate = "<?php echo $toDate->getValue(); ?>";
+var chartsData = {};
+chartsData.siteId = <?php echo $site->getWikidotId(); ?>;
+chartsData.fromDate = "<?php echo $fromDate->getValue(); ?>";
+chartsData.toDate = "<?php echo $toDate->getValue(); ?>";
+// Variables for pagination and date controls
+paginatorData = chartsData;
+lastUpdate = <?php echo '"'.$site->getLastUpdate()->format('Y-m-d').'"'; ?>;
 
 // Call google graphing API
 google.charts.load('current', {packages: ['corechart']});

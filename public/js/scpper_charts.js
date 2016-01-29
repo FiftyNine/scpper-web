@@ -1,3 +1,21 @@
+var chartsData = {
+    siteId: -1,
+    fromDate: '1899-01-01',
+    toDate: '1899-01-01'
+};
+
+function isIE() {
+  var ms_ie = false;
+    var ua = window.navigator.userAgent;
+    var old_ie = ua.indexOf('MSIE ');
+    var new_ie = ua.indexOf('Trident/');
+
+    if ((old_ie > -1) || (new_ie > -1)) {
+        ms_ie = true;
+    }
+    return ms_ie;
+}
+
 function roundToDay(datetime) {
     var newDate = new Date(datetime);
     newDate.setHours(0);
@@ -96,8 +114,17 @@ function drawTimeLineCharts(result, barLabel, barTitle, barId, lineLabel, lineTi
         return;
     } 
     // Convert returned values from string to date
+    var date = null;
+    var dateStr = '';
     for (var i=0; i<result.data.length; i++) {
-        var date = new Date(result.data[i][0]);
+        dateStr = result.data[i][0];
+        if (isIE()) {
+            // holy shit fuck IE
+            date = new Date(dateStr.substring(0, dateStr.length-5));
+        } else {
+            date = new Date(dateStr);
+        }
+        
         result.data[i][0] = date;            
     }
     // Prepare data for bar chart
@@ -122,7 +149,7 @@ function drawMemberCharts() {
     $.ajax({
         url: "/recent/getMemberChartData",
         type: "get",
-        data: changeData
+        data: chartsData
     })
     .done(function (result) {
         drawTimeLineCharts(result, 'Joined', 'New members', 'members-joined', 'Members', 'Total members', 'members-total', '#94C282');
@@ -137,7 +164,7 @@ function drawPageCharts() {
     $.ajax({
         url: "/recent/getPageChartData",
         type: "get",
-        data: changeData
+        data: chartsData
     })
     .done(function (result) {
         drawTimeLineCharts(result, 'Created', 'New pages', 'pages-created', 'Pages', 'Total pages', 'pages-total', '#6DAECF');
@@ -152,7 +179,7 @@ function drawRevisionCharts() {
     $.ajax({
         url: "/recent/getRevisionChartData",
         type: "get",
-        data: changeData
+        data: chartsData
     })
     .done(function (result) {
         drawTimeLineCharts(result, 'Created', 'New revisions', 'revisions-created', 'Revisions', 'Total revisions', 'revisions-total', '#DB9191');
@@ -167,7 +194,7 @@ function drawVoteCharts() {
     $.ajax({
         url: "/recent/getVoteChartData",
         type: "get",
-        data: changeData
+        data: chartsData
     })
     .done(function (result) {
         drawTimeLineCharts(result, 'Votes', 'New votes', 'votes-cast', 'Votes', 'Total votes', 'votes-total', '#E0A96E');
@@ -180,7 +207,7 @@ function drawVoteCharts() {
 }
 
 function drawChangeCharts() {
-    if (changeData.siteId < 0)
+    if (chartsData.siteId < 0)
         return;
     drawMemberCharts();
     drawPageCharts();

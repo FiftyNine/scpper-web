@@ -16,31 +16,31 @@ class DateIntervalForm extends Form
         parent::__construct($name, $options);
         
         $this->add(array(
-            'type' => 'Zend\Form\Element\Date',
+            'type' => 'Zend\Form\Element\Text',
             'name' => self::FROM_DATE_NAME,
             'options' => array(
                     'label' => 'From',
-                    'format' => 'Y-m-d'
+//                    'format' => 'Y-m-d'
             ),
             'attributes' => array(
-                    'class' => 'form-control',
-                    'min' => '2000-01-01',
-                    'max' => '2020-01-01',
-                    'step' => '1', // days; default step interval is 1 day
+                    'class' => 'form-control datepicker',
+//                    'min' => '2000-01-01',
+//                    'max' => '2020-01-01',
+//                    'step' => '1', // days; default step interval is 1 day
             )
         ));
         $this->add(array(
-            'type' => 'Zend\Form\Element\Date',
+            'type' => 'Zend\Form\Element\Text',
             'name' => self::TO_DATE_NAME,
             'options' => array(
                     'label' => 'To',
-                    'format' => 'Y-m-d'
+//                    'format' => 'Y-m-d'
             ),
             'attributes' => array(
-                    'class' => 'form-control',
-                    'min' => '2000-01-01',
-                    'max' => '2020-01-01',
-                    'step' => '1', // days; default step interval is 1 day
+                    'class' => 'form-control datepicker',
+  //                  'min' => '2000-01-01',
+//                    'max' => '2020-01-01',
+//                    'step' => '1', // days; default step interval is 1 day
             )
         ));
         $this->add(array(

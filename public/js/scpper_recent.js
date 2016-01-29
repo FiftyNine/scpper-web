@@ -4,6 +4,14 @@
  * and open the template in the editor.
  */
 
+var paginatorData = {
+    siteId: -1,
+    fromDate: '1899-01-01',
+    toDate: '1899-01-01'
+};
+
+var lastUpdate = null;
+
 function showTableError(containerId)
 {
     var container = $(containerId);
@@ -34,7 +42,7 @@ function fetchPaginator(containerId, url, payload)
 
 function changePaginatorOrder(event)
 {
-    var payload = $.extend({}, changeData);
+    var payload = $.extend({}, paginatorData);
     payload.page = 1;
     payload.perPage = $(event.data.container+' select.per-page-control').val();        
     payload.orderBy = $(this).attr('data-name');
@@ -44,7 +52,7 @@ function changePaginatorOrder(event)
 
 function changePaginatorSize(event)
 {
-    var payload = $.extend({}, changeData);
+    var payload = $.extend({}, paginatorData);
     var orderCol = null;
     payload.page = 1;
     payload.perPage = $(this).val();
@@ -56,7 +64,7 @@ function changePaginatorSize(event)
 
 function fetchPaginatorIndex(event)
 {
-    var payload = $.extend({}, changeData);
+    var payload = $.extend({}, paginatorData);
     var orderCol = null;
     payload.page = $(this).attr('data-page');
     payload.perPage = $(event.data.container+' select.per-page-control').val();    
@@ -68,7 +76,7 @@ function fetchPaginatorIndex(event)
 
 function fetchPaginatorFirst(event)
 {
-    var payload = $.extend({}, changeData);
+    var payload = $.extend({}, paginatorData);
     payload.page = 1;
     payload.perPage = 10;
     fetchPaginator(event.data.container, event.data.url, payload);
@@ -80,6 +88,7 @@ function initRecent()
     $('#show-pages').on('click', {container: "#pages-list", url: "/recent/pages"}, fetchPaginatorFirst);
     $('#show-editors').on('click', {container: "#editors-list", url: "/recent/editors"}, fetchPaginatorFirst);
     $('#show-voters').on('click', {container: "#voters-list", url: "/recent/voters"}, fetchPaginatorFirst);    
+    $('.datepicker').datepicker({autoSize: true, dateFormat: "yy-mm-dd", maxDate: lastUpdate});
 }
 
 $(document).ready(initRecent);
