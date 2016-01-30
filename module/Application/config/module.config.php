@@ -83,8 +83,7 @@ return array(
             'Application\Service\VoteServiceInterface' => 'Application\Factory\Service\VoteServiceFactory',
             'Application\Service\UtilityServiceInterface' => 'Application\Factory\Service\UtilityServiceFactory',
             'Application\Service\HubServiceInterface' => 'Application\Factory\Service\HubServiceFactory',
-            'EventLogger' => 'Application\Factory\Service\FileEventLoggerFactory',
-            'Zend\Db\Adapter\Adapter' => 'Application\Factory\Service\DbAdapterFactory',
+            'EventLogger' => 'Application\Factory\Service\FileEventLoggerFactory',            
             // Mappers
             'SiteMapper' => 'Application\Factory\Mapper\SiteDbSqlMapperFactory',
             'UserMapper' => 'Application\Factory\Mapper\UserDbSqlMapperFactory',
@@ -94,9 +93,10 @@ return array(
             'AuthorshipMapper' => 'Application\Factory\Mapper\AuthorshipDbSqlMapperFactory',
             'UserActivityMapper' => 'Application\Factory\Mapper\UserActivityDbSqlMapperFactory',
             'MembershipMapper' => 'Application\Factory\Mapper\MembershipDbSqlMapperFactory',
-            // Zend
+            // Overrides
             'translator' => 'Zend\Mvc\Service\TranslatorServiceFactory',            
-            'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',         
+            'Zend\Db\Adapter\Adapter' => 'Application\Factory\Service\DbAdapterFactory',
+            'navigation' => 'Application\Factory\Service\NavigationFactory', // Zend\Navigation\Service\DefaultNavigationFactory',         
             'LazyServiceFactory' => 'Zend\ServiceManager\Proxy\LazyServiceFactoryFactory',
         ),
         'delegators' => array(
@@ -167,8 +167,8 @@ return array(
     'navigation' => array(
         'default' => array(
             array(
-                'label' => 'Main',
-                'route' => 'home',
+                'label' => 'Wiki',
+                'route' => 'home',                
             ),
             array(
                 'label' => 'Recent',

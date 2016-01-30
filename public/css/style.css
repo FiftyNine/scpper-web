@@ -15,6 +15,12 @@ div.container a.brand {
     padding: 8px 20px 12px 40px;
 }
 
+@media (min-width: 979px) {
+  ul.nav li.dropdown:hover > ul.dropdown-menu {
+    display: block;
+  }
+}
+
 /* General */
 
 body {
@@ -62,6 +68,10 @@ table.table-sortable > tbody > tr > th.can-order {
 
 .text-condensed {
     letter-spacing: -2px;
+}
+
+.text-bold {
+    font-weight: bold;
 }
 
 hr {

@@ -28,51 +28,17 @@
 
     </head>
     <body>
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="<?php echo $this->url('home') ?>"><img src="<?php echo $this->basePath('img/logo.png') ?>" alt="ScpperDB" height="50px"/>&nbsp;ScpperDB</a>
-                </div>
-                <div class="collapse navbar-collapse">
-                    <?php
-                    echo $this->navigation('navigation')                               
-                              ->menu()
-                              ->setMinDepth(0)
-                              ->setMaxDepth(0)
-                              ->setUlClass('nav navbar-nav');
-                    ?>                  
-                    <div class="form-inline form-horizontal navbar-form navbar-right scpper-navbar-text">
-                    <?php
-                    $siteForm = $this->siteForm;
-                    $siteForm->prepare();                    
-                    $siteForm->setAttribute('action', $this->url('select-site'));
-                    $siteSelector = $siteForm->get('current-site');
-                    echo $this->form()->openTag($siteForm);
-                    ?>
-                        <div class="form-group"> 
-                            <div class="col-sm-2">
-                                <?php echo $this->formLabel($siteSelector); ?>
-                            </div>                                
-                            <div class="col-sm-10">
-                                <?php echo $this->formElement($siteSelector); ?>
-                            </div>
-                        </div>
-                    <?php echo $this->form()->closeTag(); ?>
-                    </div>
-                </div><!--/.nav-collapse -->
-            </div>
-        </nav>
+        <?php 
+            echo $this->navigation('navigation')
+                ->menu()
+                ->setPartial('partial/navbar.phtml');               
+        ?>
         <div class="container">
-            <?php     
+            <?php     /*
             echo $this->navigation('navigation')
                       ->breadcrumbs()
                       ->setMinDepth(0)
-                      ->setPartial('partial/breadcrumb.phtml'); ?>
+                      ->setPartial('partial/breadcrumb.phtml'); */ ?>
             <?php echo $this->content; ?>
             <hr>
             <footer>                

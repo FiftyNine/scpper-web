@@ -3,11 +3,9 @@
 namespace Application\Service;
 
 use Zend\Db\Adapter\AdapterInterface;
-use Zend\View\Model\ViewModel;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Http\Header\SetCookie;
-use Application\Form\SiteForm;
 use Application\Model\SiteInterface;
 
 class UtilityService implements UtilityServiceInterface
@@ -19,12 +17,6 @@ class UtilityService implements UtilityServiceInterface
     
     const SITE_ID_COOKIE = 'SiteId';
     /**#@-*/            
-    
-    /**
-     *
-     * @var SiteForm
-     */
-    protected $siteForm;
     
     /**
      *
@@ -50,9 +42,8 @@ class UtilityService implements UtilityServiceInterface
      */
     protected $dbAdapter;
     
-    public function __construct(SiteServiceInterface $siteService, SiteForm $siteForm, Request $request, AdapterInterface $dbAdapter)
+    public function __construct(SiteServiceInterface $siteService, Request $request, AdapterInterface $dbAdapter)
     {
-        $this->siteForm = $siteForm;
         $this->siteService = $siteService;
         $this->dbAdapter = $dbAdapter;
         $cookies = $request->getHeaders('Cookie');
@@ -66,29 +57,7 @@ class UtilityService implements UtilityServiceInterface
         foreach ($sites as $site) {
             $this->sites[$site->getWikidotId()] = $site;
         }        
-    }
-    
-    /**
-     * 
-     * {@inheritDoc}
-     */
-    public function attachSiteSelectorForm(ViewModel $viewModel)
-    {
-        $siteSelector = $this->siteForm->get(SiteForm::SITE_SELECTOR_NAME);
-        $options = array();
-        foreach($this->sites as $site) {
-            $options[$site->getWikidotId()] = $site->getEnglishName();
-        }
-        $siteSelector->setOptions(array(
-           'value_options' => $options
-        ));
-        if (array_key_exists($this->siteId, $options)) {
-            $siteSelector->setValue($this->siteId);
-        }        
-        $viewModel->setVariables(array(
-            'siteForm' => $this->siteForm,
-        ));        
-    }
+    }  
     
     /**
      * 
@@ -96,19 +65,17 @@ class UtilityService implements UtilityServiceInterface
      */
     public function selectSite(Request $request, Response $response)
     {
-        if (!$request->isPost()) {
+        if (!$request->isGet()) {
             return false;
         }
-        $this->siteForm->setData($request->getPost());            
-        $siteSelector = $this->siteForm->get(SiteForm::SITE_SELECTOR_NAME);
-        $siteId = (int)$siteSelector->getValue();        
+        $siteId = $request->getQuery('siteId', self::ENGLISH_SITE_ID);
         if (!array_key_exists($siteId, $this->sites)) {           
            $siteId = self::ENGLISH_SITE_ID; 
         }
         // Just in case
         $this->siteId = $siteId;
         $cookie = new SetCookie(self::SITE_ID_COOKIE, $siteId, time()+30*24*60*60); // now + 1 month
-        $response->getHeaders()->addHeader($cookie);                
+        $response->getHeaders()->addHeader($cookie);
         return true;
     }
     

@@ -15,10 +15,9 @@ class UtilityServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator) {
         $siteService = $serviceLocator->get('Application\Service\SiteServiceInterface');
-        $siteForm = $serviceLocator->get('FormElementManager')->get('Application\Form\SiteForm');
         $request = $serviceLocator->get('Request');
         $dbAdapter = $serviceLocator->get('Zend\Db\Adapter\Adapter');
-        return new UtilityService($siteService, $siteForm, $request, $dbAdapter);
+        return new UtilityService($siteService, $request, $dbAdapter);
     }
 }
 

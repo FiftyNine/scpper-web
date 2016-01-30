@@ -46,8 +46,8 @@ class Module
     
     public function attachLayoutForms($event)
     {
-        $viewModel = $event->getViewModel();        
-        $utils = $event->getApplication()->getServiceManager()->get('Application\Service\UtilityServiceInterface');
-        $utils->attachSiteSelectorForm($viewModel);
+        // $viewModel = $event->getViewModel();        
+        // $utils = $event->getApplication()->getServiceManager()->get('Application\Service\UtilityServiceInterface');
+        // $utils->attachSiteSelectorForm($viewModel);
     }        
 }
