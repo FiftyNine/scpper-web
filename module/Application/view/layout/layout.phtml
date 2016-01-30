@@ -28,22 +28,34 @@
 
     </head>
     <body>
-        <?php 
+        <?php
             echo $this->navigation('navigation')
                 ->menu()
                 ->setPartial('partial/navbar.phtml');               
         ?>
-        <div class="container">
+        <div class="container" id="main">
             <?php     /*
             echo $this->navigation('navigation')
                       ->breadcrumbs()
                       ->setMinDepth(0)
                       ->setPartial('partial/breadcrumb.phtml'); */ ?>
-            <?php echo $this->content; ?>
-            <hr>
-            <footer>                
+            <div id="content">
+                <?php echo $this->content; ?>
+            </div>            
+            <footer>
+                <hr>
+                <span class="small-text">
+                    SCP Foundation and all related works were created by 
+                    <a href="http://scp-wiki.net">SCP creative community</a>  
+                    and are available under 
+                    <a href="https://creativecommons.org/licenses/by-sa/3.0/deed">CC BY-SA 3.0 license</a>
+                </span>
+                <br>
+                <span class="small-text">
+                    Website by Alexander "FiftyNine" Krivopalov
+                </span>
             </footer>
-        </div> <!-- /container -->
+        </div> <!-- /container -->                
         <?php echo $this->inlineScript() ?>
     </body>
 </html>

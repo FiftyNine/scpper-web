@@ -23,14 +23,36 @@ div.container a.brand {
 
 /* General */
 
+html, body, #main, #content { height: 100%; }
+/* body > .container { height: auto; min-height: 100%; } */
+
+#content { padding-bottom: 4em; }
+
+footer {
+ clear: both;
+ position: relative;
+ z-index: 10;
+ height: 4em;
+ margin-top: -4em;
+ text-align: center;
+}
+
+footer > hr {
+    margin-bottom: 5px;
+}
+
 body {
-    padding-top: 60px;
-    padding-bottom: 40px;
+    padding-top: 60px;    
 }
 
 .small-text {
     font-size: smaller;
     color: #AAAAAA;
+}
+
+.small-text > a {
+    color: #AAAAAA;
+    text-decoration: underline;
 }
 
 .top-buffer { 
@@ -43,7 +65,7 @@ body {
 
 hr {
     margin-top: 0px;
-    margin-bottom: 25px;
+    border-color: #dddddd;
 }
 
 .table {
@@ -74,10 +96,6 @@ table.table-sortable > tbody > tr > th.can-order {
     font-weight: bold;
 }
 
-hr {
-    border-color: #dddddd;
-}
-
 .pagination {
     margin-top: 5px;
 }
@@ -99,7 +117,7 @@ hr {
 
 /* Index */
 
-div.main-container {
+div.tiles {
     display: flex; 
     justify-content: center;
 }
