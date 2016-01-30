@@ -108,11 +108,11 @@ function drawLineChart(rawData, label, title, id, color) {
 
 function drawTimeLineCharts(result, barLabel, barTitle, barId, lineLabel, lineTitle, lineId, color) {
     // Define the chart to be drawn
-    if (!result.success || result.data.length === 0) {
+    if (!result.success || result.data.length < 2) {
         setFailedBackground(barId);
         removeChartContainer(lineId);        
         return;
-    } 
+    }
     // Convert returned values from string to date
     var date = null;
     var dateStr = '';
