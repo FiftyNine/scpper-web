@@ -1,18 +1,18 @@
 <div class="tiles">
     <table class="tile-table text-center">
-        <tr>
-            <td colspan="2">
+        <tr>                    
+            <td colspan="2" class="tile tile-header" onclick="window.location.assign('<?php echo $this->site->getUrl(); ?>')">
                 <span class="h1">
-                    <a href="<?php echo $this->site->getUrl(); ?>"><?php echo $this->site->getEnglishName(); ?></a>
+                    <?php echo $this->site->getEnglishName(); ?>
                 </span>
                 <br>
                 <span class="small-text">
                     Updated <?php echo $this->site->getLastUpdate()->format('Y-m-d H:i:s'); ?>
                 </span>
-            </td>
+            </td>                
         </tr>
         <tr>
-            <td>
+            <td class="tile background-green">
                 <h2><?php echo $this->members; ?> members</h2>
                 <ul class="list-unstyled">
                     <li><?php echo $this->active; ?> active</li>
@@ -20,7 +20,7 @@
                     <li><?php echo $this->posters; ?> posters</li>
                 </ul>
             </td>
-            <td>
+            <td class="tile background-blue">
                 <h2><?php echo $this->pages; ?> pages</h2>
                 <ul class="list-unstyled">
                     <li> <?php echo $this->originals; ?> originals </li>
@@ -29,16 +29,16 @@
             </td>            
         </tr>
         <tr>
-            <td>
+            <td class="tile background-red">
                 <h2><?php echo $this->votes; ?> votes</h2>
                 <ul class="list-unstyled">
                     <li><?php echo $this->positive; ?> positive</li>
                     <li><?php echo $this->negative; ?> negative</li>
-                </ul>                            
-            </td>
-            <td>
-                <h2><?php echo $this->revisions; ?> revisions</h2>
+                </ul>        
             </td>            
+            <td class="tile background-orange">
+                <h2><?php echo $this->revisions; ?> revisions</h2>
+            </td>                        
         </tr>        
     </table>
 </div>

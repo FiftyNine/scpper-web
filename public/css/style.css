@@ -114,6 +114,21 @@ table.table-sortable > tbody > tr > th.can-order {
     padding: 0px;
 }
 
+.background-green {
+    background-color: #E5F5DF;
+}
+
+.background-blue {
+    background-color: #d9edf7;
+}
+
+.background-red {
+    background-color: #f2dede;
+}
+
+.background-orange {
+    background-color: #F7E3CD;
+}
 
 /* Index */
 
@@ -129,11 +144,57 @@ table.tile-table {
     border-collapse: separate;        
 }
 
-table.tile-table td {
+td.tile {    
+    height: 10em;
+    display: table-cell;    
     border: 1px solid #ddd;
     border-radius:4px;
-    -moz-border-radius:4px;        
-    padding: 15px;
+    padding: 0px;
+    -moz-border-radius:4px;
+    cursor:pointer;
+    vertical-align: middle;
+}
+
+td.tile:active {
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+          box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);    
+}
+
+td.tile-header {
+    height: 7em;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f4f1d7+0,ede2a3+100 */
+    background: #f4f1d7; /* Old browsers */
+    background: -moz-linear-gradient(top,  #f4f1d7 0%, #ede2a3 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #f4f1d7 0%,#ede2a3 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #f4f1d7 0%,#ede2a3 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f1d7', endColorstr='#ede2a3',GradientType=0 ); /* IE6-9 */
+}
+
+td.tile-header:hover {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f9f3b6+0,ede2a3+100 */
+    background: #f9f3b6; /* Old browsers */
+    background: -moz-linear-gradient(top,  #f9f3b6 0%, #ede2a3 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #f9f3b6 0%,#ede2a3 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #f9f3b6 0%,#ede2a3 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9f3b6', endColorstr='#ede2a3',GradientType=0 ); /* IE6-9 */    
+}
+
+.tile.background-green:hover {
+    background-color: #CAEBBE;
+}
+
+.tile.background-blue:hover {
+    background-color: #BFE1F2;
+}
+
+.tile.background-red:hover {
+    background-color: #E8C8C8;
+}
+
+.tile.background-orange:hover {
+    background-color: #F0D4B6;
 }
 
 /* Changes */
@@ -144,22 +205,6 @@ table.tile-table td {
    border-radius: 6px; 
    border-style: solid; 
    margin-top: 15px;
-}
-
-.background-green {
-    background-color: #E5F5DF;
-}
-
-.background-blue {
-    background-color: #d9edf7;
-}
-
-.background-red {
-    background-color: #f2dede;
-}
-
-.background-orange {
-    background-color: #F7E3CD;
 }
 
 .info-box > hr {
