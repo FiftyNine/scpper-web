@@ -4,14 +4,24 @@
  * and open the template in the editor.
  */
 
-var paginatorData = {
-    siteId: -1,
-    fromDate: '1899-01-01',
-    toDate: '1899-01-01'
-};
+function isIE() {
+  var ms_ie = false;
+    var ua = window.navigator.userAgent;
+    var old_ie = ua.indexOf('MSIE ');
+    var new_ie = ua.indexOf('Trident/');
 
-var lastUpdate = null;
+    if ((old_ie > -1) || (new_ie > -1)) {
+        ms_ie = true;
+    }
+    return ms_ie;
+}
 
+/*** TABLE FUNCTIONS ***/
+
+/**
+ * 
+ * @param {string} containerId
+ */
 function showTableError(containerId)
 {
     var container = $(containerId);
@@ -20,6 +30,12 @@ function showTableError(containerId)
     table.append($("#table-error-row > table > tbody").html());    
 }
 
+/**
+ * 
+ * @param {string} containerId
+ * @param {string} url
+ * @param {object} payload
+ */
 function fetchPaginator(containerId, url, payload)
 {
     $.ajax({
@@ -29,9 +45,9 @@ function fetchPaginator(containerId, url, payload)
        if (result.success) {
            var container = $(containerId);
            container.html(result.content);
-           container.find("ul.pagination > li > a").on('click', {container: containerId, url: url}, fetchPaginatorIndex);
-           container.find(".per-page-control").on('change', {container: containerId, url: url}, changePaginatorSize);
-           container.find("th.can-order").on('click', {container: containerId, url: url}, changePaginatorOrder);
+           container.find("ul.pagination > li > a").on('click', {container: containerId, url: url, payload: payload}, fetchPaginatorIndex);
+           container.find(".per-page-control").on('change', {container: containerId, url: url, payload: payload}, changePaginatorSize);
+           container.find("th.can-order").on('click', {container: containerId, url: url, payload: payload}, changePaginatorOrder);
        } else {
            showTableError(containerId);           
        }
@@ -40,9 +56,14 @@ function fetchPaginator(containerId, url, payload)
     });
 }
 
+/**
+ * 
+ * @param {object} event
+ * @returns {undefined}
+ */
 function changePaginatorOrder(event)
 {
-    var payload = $.extend({}, paginatorData);
+    var payload = event.data.payload;
     payload.page = 1;
     payload.perPage = $(event.data.container+' select.per-page-control').val();        
     payload.orderBy = $(this).attr('data-name');
@@ -50,9 +71,13 @@ function changePaginatorOrder(event)
     fetchPaginator(event.data.container, event.data.url, payload);
 }
 
+/**
+ * 
+ * @param {object} event
+ */
 function changePaginatorSize(event)
 {
-    var payload = $.extend({}, paginatorData);
+    var payload = event.data.payload;
     var orderCol = null;
     payload.page = 1;
     payload.perPage = $(this).val();
@@ -62,9 +87,13 @@ function changePaginatorSize(event)
     fetchPaginator(event.data.container, event.data.url, payload);
 }
 
+/**
+ * 
+ * @param {object} event
+ */
 function fetchPaginatorIndex(event)
 {
-    var payload = $.extend({}, paginatorData);
+    var payload = event.data.payload;
     var orderCol = null;
     payload.page = $(this).attr('data-page');
     payload.perPage = $(event.data.container+' select.per-page-control').val();    
@@ -74,22 +103,12 @@ function fetchPaginatorIndex(event)
     fetchPaginator(event.data.container, event.data.url, payload);
 }
 
+/**
+ * 
+ * @param {object} event
+ */
 function fetchPaginatorFirst(event)
 {
-    var payload = $.extend({}, paginatorData);
-    payload.page = 1;
-    payload.perPage = 10;
-    fetchPaginator(event.data.container, event.data.url, payload);
+    fetchPaginator(event.data.container, event.data.url, event.data.payload);
 }
-
-function initRecent()
-{
-    $('#show-members').on('click', {container: "#members-list", url: "/recent/members"}, fetchPaginatorFirst);
-    $('#show-pages').on('click', {container: "#pages-list", url: "/recent/pages"}, fetchPaginatorFirst);
-    $('#show-editors').on('click', {container: "#editors-list", url: "/recent/editors"}, fetchPaginatorFirst);
-    $('#show-voters').on('click', {container: "#voters-list", url: "/recent/voters"}, fetchPaginatorFirst);    
-    $('.datepicker').datepicker({autoSize: true, dateFormat: "yy-mm-dd", maxDate: lastUpdate});
-}
-
-$(document).ready(initRecent);
 

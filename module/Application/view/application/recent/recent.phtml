@@ -1,6 +1,5 @@
 <?php
 $this->headScript()->appendFile('/js/scpper_charts.js');
-$this->headScript()->appendFile('/js/scpper_recent.js');
 $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.min.js');
 $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 $this->headLink()->prependStylesheet($this->basePath('css/jquery-ui.min.css'));
@@ -16,18 +15,30 @@ $site = $this->site;
 ?>
 
 <?php $this->headScript()->captureStart(); ?>
+
 // Initialize global variables
 var chartsData = {};
 chartsData.siteId = <?php echo $site->getWikidotId(); ?>;
 chartsData.fromDate = "<?php echo $fromDate->getValue(); ?>";
 chartsData.toDate = "<?php echo $toDate->getValue(); ?>";
-// Variables for pagination and date controls
-paginatorData = chartsData;
-lastUpdate = <?php echo '"'.$site->getLastUpdate()->format('Y-m-d').'"'; ?>;
+// Variables for pagination
+paginatorData = $.extend({page: 1, perPage: 10}, chartsData);
+
+function initRecent()
+{
+    $('#show-members').on('click', {container: "#members-list", url: "/recent/members", payload: paginatorData}, fetchPaginatorFirst);
+    $('#show-pages').on('click', {container: "#pages-list", url: "/recent/pages", payload: paginatorData}, fetchPaginatorFirst);
+    $('#show-editors').on('click', {container: "#editors-list", url: "/recent/editors", payload: paginatorData}, fetchPaginatorFirst);
+    $('#show-voters').on('click', {container: "#voters-list", url: "/recent/voters", payload: paginatorData}, fetchPaginatorFirst);    
+    $('.datepicker').datepicker({autoSize: true, dateFormat: "yy-mm-dd", maxDate: "<?php echo $site->getLastUpdate()->format('Y-m-d');?>"});
+}
+
+$(document).ready(initRecent);
 
 // Call google graphing API
 google.charts.load('current', {packages: ['corechart']});
-google.charts.setOnLoadCallback(drawChangeCharts);
+google.charts.setOnLoadCallback(function () {drawChangeCharts(chartsData);});
+
 <?php $this->headScript()->captureEnd(); ?>
 <div class="form-inline">
     <?php

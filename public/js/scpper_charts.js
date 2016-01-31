@@ -1,21 +1,3 @@
-var chartsData = {
-    siteId: -1,
-    fromDate: '1899-01-01',
-    toDate: '1899-01-01'
-};
-
-function isIE() {
-  var ms_ie = false;
-    var ua = window.navigator.userAgent;
-    var old_ie = ua.indexOf('MSIE ');
-    var new_ie = ua.indexOf('Trident/');
-
-    if ((old_ie > -1) || (new_ie > -1)) {
-        ms_ie = true;
-    }
-    return ms_ie;
-}
-
 function roundToDay(datetime) {
     var newDate = new Date(datetime);
     newDate.setHours(0);
@@ -206,7 +188,7 @@ function drawVoteCharts() {
 
 }
 
-function drawChangeCharts() {
+function drawChangeCharts(chartsData) {
     if (chartsData.siteId < 0)
         return;
     drawMemberCharts();

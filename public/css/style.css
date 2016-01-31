@@ -135,12 +135,13 @@ table.table-sortable > tbody > tr > th.can-order {
 div.tiles {
     display: flex; 
     justify-content: center;
+    align-items: center;
 }
 
 table.tile-table {
     width: 60%; 
     table-layout: fixed;
-    border-spacing: 10px;    
+    border-spacing: 25px;    
     border-collapse: separate;        
 }
 
