@@ -9,17 +9,23 @@ $(document).ready(init);
 
 <?php $this->headScript()->captureEnd(); ?>
 <h1><?php echo $this->memberCount; ?> members</h1>
-<div id='user-list'>
-    <?php
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-container" id="user-list">
+            <?php
 
-    $usersTable = $this->usersTable;
+            $usersTable = $this->usersTable;
 
-    echo $this->partial(
-        'partial/tables/table.phtml', 
-        array(
-            'table' => $usersTable,
-            'data' => array('siteId' => $this->site->getWikidotId()),
-        )
-    );
-    ?>
+            echo $this->partial(
+                'partial/tables/table.phtml', 
+                array(
+                    'table' => $usersTable,
+                    'data' => array('siteId' => $this->site->getWikidotId()),
+                )
+            );    
+            ?>
+            </div>
+        </div>
+    </div>
 </div>
