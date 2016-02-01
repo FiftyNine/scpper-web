@@ -10,6 +10,7 @@ namespace Application\Mapper;
 
 use Zend\Db\Sql\Sql;
 use Application\Utils\DbConsts\DbViewUserActivity;
+use Application\Utils\DbSelectColumns;
 
 /**
  * Description of UserActivityDbSqlMapper
@@ -17,16 +18,7 @@ use Application\Utils\DbConsts\DbViewUserActivity;
  * @author Alexander
  */
 class UserActivityDbSqlMapper extends ZendDbSqlMapper implements UserActivityMapperInterface
-{
-    const COLUMNS = array(
-        DbViewUserActivity::USERID,
-        DbViewUserActivity::SITEID,
-        DbViewUserActivity::VOTES,
-        DbViewUserActivity::REVISIONS,
-        DbViewUserActivity::PAGES,
-        DbViewUserActivity::LASTACTIVITY,
-    );
-    
+{    
     /**
      * {@inheritDoc}
      */
@@ -34,7 +26,7 @@ class UserActivityDbSqlMapper extends ZendDbSqlMapper implements UserActivityMap
     {
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select(DbViewUserActivity::TABLE)
-                ->columns(self::COLUMNS)
+                ->columns(DbSelectColumns::USER_ACTIVITY)
                 ->where(array(
                     DbViewUserActivity::USERID.' = ?' => $userId,
                     DbViewUserActivity::SITEID.' = ?' => $siteId,
@@ -49,7 +41,7 @@ class UserActivityDbSqlMapper extends ZendDbSqlMapper implements UserActivityMap
     {
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select(DbViewUserActivity::TABLE)
-                ->columns(self::COLUMNS)
+                ->columns(DbSelectColumns::USER_ACTIVITY)
                 ->where(array(
                     DbViewUserActivity::USERID.' = ?' => $userId
                 ));

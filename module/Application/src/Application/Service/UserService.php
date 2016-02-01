@@ -2,7 +2,7 @@
 
 namespace Application\Service;
 
-use Application\Mapper\SimpleMapperInterface;
+use Application\Mapper\UserMapperInterface;
 use Application\Mapper\MembershipMapperInterface;
 use Application\Utils\UserType;
 
@@ -22,7 +22,7 @@ class UserService implements UserServiceInterface
     protected $membershipMapper;    
     
     public function __construct(
-            SimpleMapperInterface $userMapper,
+            UserMapperInterface $userMapper,
             MembershipMapperInterface $membershipMapper
     ) 
     {
@@ -98,4 +98,12 @@ class UserService implements UserServiceInterface
         }
         return $this->membershipMapper->findSiteMembers($siteId, $types, $lastActive, $joinedAfter, $joinedBefore, $order, $paginated);
     }    
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function findUsersOfSite($siteId, $order = null, $paginated = false)
+    {
+        return $this->userMapper->findUsersOfSite($siteId, $order, $paginated);
+    }
 }

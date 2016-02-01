@@ -157,18 +157,6 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
                 }
             }
         }
-        // Workaround for group aggregates 
-        /*
-        foreach($result as &$row) {
-            foreach ($row as $key => $value) {
-                if (substr($key, -strlen(self::GROUP_SUFFIX)) === self::GROUP_SUFFIX) {
-                    $newKey = substr($key, 0, strlen($key)-strlen(self::GROUP_SUFFIX));
-                    $row[$newKey] = $value;
-                    unset($row[$key]);
-                }
-            }
-        }
-         */
         return $result;                
     }
     

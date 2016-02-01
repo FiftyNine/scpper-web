@@ -67,6 +67,31 @@ return array(
                     ),
                 ),                
             ),            
+            'users' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/users',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Users',
+                        'action'     => 'users',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/:action',
+                            'constraints' => array(                                
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\Users',
+                            ),
+                        ),
+                    ),
+                ),                                
+            ),            
         ),
     ),
     'service_manager' => array(
@@ -93,11 +118,20 @@ return array(
             'AuthorshipMapper' => 'Application\Factory\Mapper\AuthorshipDbSqlMapperFactory',
             'UserActivityMapper' => 'Application\Factory\Mapper\UserActivityDbSqlMapperFactory',
             'MembershipMapper' => 'Application\Factory\Mapper\MembershipDbSqlMapperFactory',
+            // Model object prototypes
+            'SitePrototype' => 'Application\Factory\Prototype\SitePrototypeFactory',
+            'UserPrototype' => 'Application\Factory\Prototype\UserPrototypeFactory',
+            'PagePrototype' => 'Application\Factory\Prototype\PagePrototypeFactory',
+            'RevisionPrototype' => 'Application\Factory\Prototype\RevisionPrototypeFactory',
+            'VotePrototype' => 'Application\Factory\Prototype\VotePrototypeFactory',
+            'AuthorshipPrototype' => 'Application\Factory\Prototype\AuthorshipPrototypeFactory',
+            'UserActivityPrototype' => 'Application\Factory\Prototype\UserActivityPrototypeFactory',
+            'MembershipPrototype' => 'Application\Factory\Prototype\MembershipPrototypeFactory',
             // Overrides
             'translator' => 'Zend\Mvc\Service\TranslatorServiceFactory',            
             'Zend\Db\Adapter\Adapter' => 'Application\Factory\Service\DbAdapterFactory',
             'navigation' => 'Application\Factory\Service\NavigationFactory', // Zend\Navigation\Service\DefaultNavigationFactory',         
-            'LazyServiceFactory' => 'Zend\ServiceManager\Proxy\LazyServiceFactoryFactory',
+            'LazyServiceFactory' => 'Zend\ServiceManager\Proxy\LazyServiceFactoryFactory',            
         ),
         'delegators' => array(
             'SiteMapper' => array('LazyServiceFactory'),
@@ -113,7 +147,7 @@ return array(
     'lazy_services' => array(
         'class_map' => array(
             'SiteMapper' => 'Application\Mapper\ZendDbSqlMapper',
-            'UserMapper' => 'Application\Mapper\ZendDbSqlMapper',
+            'UserMapper' => 'Application\Mapper\UserDbSqlMapper',
             'PageMapper' => 'Application\Mapper\PageDbSqlMapper',
             'RevisionMapper' => 'Application\Mapper\RevisionDbSqlMapper',
             'VoteMapper' => 'Application\Mapper\VoteDbSqlMapper',
@@ -136,6 +170,7 @@ return array(
         'factories' => array(
             'Application\Controller\Index' => 'Application\Factory\Controller\IndexControllerFactory',
             'Application\Controller\Recent' => 'Application\Factory\Controller\RecentControllerFactory',
+            'Application\Controller\Users' => 'Application\Factory\Controller\UsersControllerFactory',
         ),
     ),
     'view_manager' => array(
@@ -174,6 +209,10 @@ return array(
                 'label' => 'Recent',
                 'route' => 'recent',
             ),
+            array(
+                'label' => 'Users',
+                'route' => 'users',
+            ),            
         )
     )
 );

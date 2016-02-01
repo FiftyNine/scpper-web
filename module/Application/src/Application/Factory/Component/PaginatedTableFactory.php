@@ -9,9 +9,11 @@
 namespace Application\Factory\Component;
 
 use Application\Component\PaginatedTable\Column;
+use Application\Utils\DbConsts\DbViewUsers;
 use Application\Utils\DbConsts\DbViewMembership;
 use Application\Utils\DbConsts\DbViewPages;
 use Application\Utils\DbConsts\DbViewRevisions;
+use Application\Utils\DbConsts\DbViewUserActivity;
 
 /**
  * Description of PaginatedTableFactory
@@ -85,4 +87,22 @@ class PaginatedTableFactory
         );
         return $table;
     }    
+    
+    static public function createUsersTable($paginator)
+    {
+        $table = new \Application\Component\PaginatedTable\Table(
+            array(
+                new Column('User', DbViewUsers::TABLE.'_'.DbViewUsers::DISPLAYNAME),
+                new Column('Votes', DbViewUserActivity::TABLE.'_'.DbViewUserActivity::VOTES),
+                new Column('Revisions', DbViewUserActivity::TABLE.'_'.DbViewUserActivity::REVISIONS),
+                new Column('Pages', DbViewUserActivity::TABLE.'_'.DbViewUserActivity::PAGES),
+                new Column('Active', DbViewUserActivity::TABLE.'_'.DbViewUserActivity::LASTACTIVITY),
+                new Column('Joined', DbViewMembership::TABLE.'_'.DbViewMembership::JOINDATE)
+            ),
+            $paginator,
+            'partial/tables/users.phtml', 
+            false
+        );
+        return $table;        
+    }
 }

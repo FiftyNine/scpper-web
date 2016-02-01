@@ -152,6 +152,14 @@ class User implements UserInterface
         return $this->activitiesBySite[$siteId];
     }
     
+    /**
+     * {@inheritdoc}
+     */
+    public function setActivity(UserActivityInterface $activity) 
+    {
+        $this->activitiesBySite[$activity->getSiteId()] = $activity;
+    }
+    
     /**     
      * {@inheritDoc}
      */
@@ -171,13 +179,24 @@ class User implements UserInterface
      */
     public function getMembershipOfSite($siteId) 
     {
-        if (!isset($this->memberships)) {
-            $this->getMemberships();
-        }
-        if (array_key_exists($siteId, $this->membershipsBySite)) {
+/*        if (!array_key_exists($siteId, $this->membershipsBySite)) {
+            if (!isset($this->memberships)) {
+                $this->getMemberships();
+            }
+        }*/
+        if (array_key_exists($siteId, $this->membershipsBySite)) {            
             return $this->membershipsBySite[$siteId];
-        } else {
+        } else {        
             return null;
         }
     }
+    
+    /**     
+     * {@inheritDoc}
+     */    
+    public function setMembership(MembershipInterface $membership) 
+    {
+        $this->membershipsBySite[$membership->getSiteId()] = $membership;
+    }
+
 }

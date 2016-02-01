@@ -45,6 +45,15 @@ interface UserServiceInterface
      * @return int
      */
     public function countSiteMembers($siteId, $types = UserType::ANY, $active = false, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null);
+
+    /**
+     * Returns a list of all users who are members of site or has any kind of activity on the site
+     * @param int $siteId
+     * @param array[string]int $order
+     * @param bool $paginated
+     * @return UserInterface[]|Paginator
+     */
+    public function findUsersOfSite($siteId, $order = null, $paginated = false);
     
     /**
      * Get an aggregated results from users

@@ -1,0 +1,25 @@
+<?php $this->headScript()->captureStart(); ?>
+
+function init()
+{
+    assignPaginatorEvents('#user-list', '/users/userList', {siteId: <?php echo $this->site->getWikidotId();?>});
+}
+
+$(document).ready(init);
+
+<?php $this->headScript()->captureEnd(); ?>
+<h1><?php echo $this->memberCount; ?> members</h1>
+<div id='user-list'>
+    <?php
+
+    $usersTable = $this->usersTable;
+
+    echo $this->partial(
+        'partial/tables/table.phtml', 
+        array(
+            'table' => $usersTable,
+            'data' => array('siteId' => $this->site->getWikidotId()),
+        )
+    );
+    ?>
+</div>

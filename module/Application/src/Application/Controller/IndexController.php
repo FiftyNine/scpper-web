@@ -50,20 +50,13 @@ class IndexController extends AbstractActionController
         $result['negative'] = $result['votes']-$result['positive'];
         return new ViewModel($result);
     }    
-    
+        
     public function selectSiteAction()
     {
         $request = $this->getRequest();
         $response = $this->getResponse();
         $this->services->getUtilityService()->selectSite($request, $response);
-        return $this->redirect()->toRoute('home');
-        /*$referer = $request->getHeader('Referer');
-        if ($referer) {
-             return $this->redirect()->toUrl($referer->getUri());
-        } else {
-            return $this->redirect()->toRoute('home');
-        } 
-         */       
+        return $this->redirect()->toRoute('home');       
     }
     
     public function generateConstsAction()

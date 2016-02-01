@@ -9,8 +9,10 @@
 namespace Application\Mapper;
 
 use Zend\Db\Sql\Sql;
+use Zend\Db\Sql\Select;
 use Application\Utils\DbConsts\DbViewMembership;
 use Application\Utils\UserType;
+use Application\Utils\DbSelectColumns;
 
 /**
  * Description of MembershipDbSqlMapper
@@ -18,13 +20,7 @@ use Application\Utils\UserType;
  * @author Alexander
  */
 class MembershipDbSqlMapper extends ZendDbSqlMapper implements MembershipMapperInterface
-{
-    const COLUMNS = array(
-        DbViewMembership::USERID,
-        DbViewMembership::SITEID,
-        DbViewMembership::JOINDATE
-    );
-    
+{    
     /**
      * Builds a select statement to get members of the site
      * @param Sql $sql
@@ -102,7 +98,7 @@ class MembershipDbSqlMapper extends ZendDbSqlMapper implements MembershipMapperI
     {
         $sql = new Sql($this->dbAdapter);
         $select = $this->buildMemberSelect($sql, $siteId, $types, $lastActive, $joinedAfter, $joinedBefore);
-        $select->columns(self::COLUMNS);
+        $select->columns(DbSelectColumns::MEMBERSHIP);
         if (is_array($order)) {
             $this->orderSelect($select, $order);
         }
@@ -138,7 +134,7 @@ class MembershipDbSqlMapper extends ZendDbSqlMapper implements MembershipMapperI
     {
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select(DbViewMembership::TABLE)
-                ->columns(self::COLUMNS)
+                ->columns(DbSelectColumns::MEMBERSHIP)
                 ->where(array(DbViewMembership::USERID.' = ?' => $userId));
         return $this->fetchResultSet($sql, $select);        
     }

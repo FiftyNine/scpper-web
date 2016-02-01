@@ -11,7 +11,6 @@ namespace Application\Factory\Mapper;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\Hydrator\ClassMethods;
-use Application\Model\Authorship;
 use Application\Mapper\AuthorshipDbSqlMapper;
 use Application\Utils\DbConsts\DbViewAuthors;
 
@@ -29,9 +28,7 @@ class AuthorshipDbSqlMapperFactory implements FactoryInterface
             DbViewAuthors::ROLEID => 'role'
         ));
         $hydrator->setNamingStrategy($names);
-        $userMapper = $serviceLocator->get('UserMapper');        
-        $pageMapper = $serviceLocator->get('PageMapper');
-        $prototype = new Authorship($userMapper, $pageMapper);
+        $prototype = $serviceLocator->get('AuthorshipPrototype');
         return new AuthorshipDbSqlMapper($dbAdapter, $hydrator, $prototype, DbViewAuthors::TABLE, '');
     }
 }

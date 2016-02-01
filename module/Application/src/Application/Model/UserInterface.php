@@ -2,6 +2,9 @@
 
 namespace Application\Model;
 
+use Application\Model\UserActivityInterface;
+use Application\Model\MembershipInterface;
+
 interface UserInterface
 {
     /**
@@ -42,6 +45,12 @@ interface UserInterface
     public function getActivityOnSite($siteId);
     
     /**
+     * Sets a list of activities for a specified site
+     * @param \Application\Model\UserActivityInterface $activity
+     */
+    public function setActivity(UserActivityInterface $activity);
+    
+    /**
      * @return \Application\Model\MembershipInterface[]
      */
     public function getMemberships();
@@ -49,7 +58,13 @@ interface UserInterface
     /**
      * Returns information about membership on site or null if user is not a member
      * @param int $siteId
-     * @return \Application\Model\UserActivityInterface
+     * @return \Application\Model\MembershipInterface
      */
     public function getMembershipOfSite($siteId);    
+    
+    /**
+     * Sets a membership for a specified site
+     * @param \Application\Model\MembershipInterface $membership
+     */
+    public function setMembership(MembershipInterface $membership);
 }

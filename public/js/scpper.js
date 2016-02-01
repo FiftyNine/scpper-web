@@ -44,16 +44,29 @@ function fetchPaginator(containerId, url, payload)
     }).done(function (result) {
        if (result.success) {
            var container = $(containerId);
-           container.html(result.content);
-           container.find("ul.pagination > li > a").on('click', {container: containerId, url: url, payload: payload}, fetchPaginatorIndex);
-           container.find(".per-page-control").on('change', {container: containerId, url: url, payload: payload}, changePaginatorSize);
-           container.find("th.can-order").on('click', {container: containerId, url: url, payload: payload}, changePaginatorOrder);
+           container.html(result.content);           
+           assignPaginatorEvents(containerId, url, payload);
        } else {
            showTableError(containerId);           
        }
     }).fail(function () {
         showTableError(containerId);           
     });
+}
+
+/**
+ * 
+ * @param {type} containerId
+ * @param {type} url
+ * @param {type} payload
+ * @returns {undefined}
+ */
+function assignPaginatorEvents(containerId, url, payload)
+{
+    var container = $(containerId);
+    container.find("ul.pagination > li > a").on('click', {container: containerId, url: url, payload: payload}, fetchPaginatorIndex);
+    container.find(".per-page-control").on('change', {container: containerId, url: url, payload: payload}, changePaginatorSize);
+    container.find("th.can-order").on('click', {container: containerId, url: url, payload: payload}, changePaginatorOrder);    
 }
 
 /**

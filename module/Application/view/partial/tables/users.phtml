@@ -1,0 +1,26 @@
+<?php $siteId = $this->data['siteId']; ?>
+<?php foreach ($this->rows as $user): ?>
+<tr>
+    <td>
+        <?php if ($user->getDeleted()): ?> <del> <?php endif;?>
+        <a href="#">            
+            <?php echo $user->getDisplayName(); ?>
+        </a>
+        <?php if ($user->getDeleted()): ?> </del> <?php endif;?>
+    </td>
+    <td><?php echo $user->getActivityOnSite($siteId)->getVoteCount(); ?></td>
+    <td><?php echo $user->getActivityOnSite($siteId)->getRevisionCount(); ?></td>
+    <td><?php echo $user->getActivityOnSite($siteId)->getAuthorshipCount(); ?></td>
+    <td><?php if ($user->getActivityOnSite($siteId)->isActive()) {echo '&check;';} ?></td>    
+    <td>
+        <?php   
+            $member = $user->getMembershipOfSite($siteId);            
+            if ($member != null) {
+                echo $member->getJoinDate()->format('Y-m-d'); 
+            } else {
+                echo '&cross;';
+            }
+        ?>        
+    </td>
+</tr>
+<?php endforeach; ?>

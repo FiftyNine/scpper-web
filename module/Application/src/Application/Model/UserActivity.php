@@ -9,6 +9,7 @@
 namespace Application\Model;
 
 use Application\Mapper\SimpleMapperInterface;
+use Application\Mapper\UserMapperInterface;
 use Application\Mapper\AuthorshipMapperInterface;
 use Application\Mapper\VoteMapperInterface;
 use Application\Mapper\RevisionMapperInterface;
@@ -19,7 +20,7 @@ use Application\Utils\UserType;
  *
  * @author Alexander
  */
-class UserActivity 
+class UserActivity implements UserActivityInterface
 {
     /***** Data providers *****/
     
@@ -111,14 +112,14 @@ class UserActivity
     /**
      * Constructor
      * @param SimpleMapperInterface $siteMapper
-     * @param SimpleMapperInterface $userMapper
+     * @param UserMapperInterface $userMapper
      * @param VoteMapperInterface $voteMapper
      * @param RevisionMapperInterface $revisionMapper
      * @param AuthorshipMapperInterface $authorMapper
      */
     public function __construct(
         SimpleMapperInterface $siteMapper,
-        SimpleMapperInterface $userMapper,        
+        UserMapperInterface $userMapper,        
         VoteMapperInterface $voteMapper,
         RevisionMapperInterface $revisionMapper,
         AuthorshipMapperInterface $authorMapper
@@ -157,7 +158,7 @@ class UserActivity
      */
     public function getSiteId()
     {
-        return $this->userId;
+        return $this->siteId;
     }
     
     /**

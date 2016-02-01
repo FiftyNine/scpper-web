@@ -10,10 +10,12 @@ namespace Application\Factory\Mapper;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Stdlib\Hydrator\ClassMethods;
-use Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy;
+use Application\Hydrator\MembershipDbHydrator;
+use Application\Hydrator\UserActivityDbHydrator;
+use Application\Hydrator\UserSiteDbHydrator;
 use Application\Utils\DbConsts\DbViewMembership;
-use Application\Model\Membership;
+use Application\Utils\DbConsts\DbViewUserActivity;
+use Application\Utils\DbConsts\DbViewUsers;
 use Application\Mapper\MembershipDbSqlMapper;
 
 /**
@@ -24,13 +26,17 @@ use Application\Mapper\MembershipDbSqlMapper;
 class MembershipDbSqlMapperFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator) {
-        $dbAdapter = $serviceLocator->get('Zend\Db\Adapter\Adapter');
-        $hydrator = new ClassMethods(); 
-        $hydrator->addStrategy(DbViewMembership::JOINDATE, new DateTimeFormatterStrategy('Y-m-d H:i:s'));
-        $siteMapper = $serviceLocator->get('SiteMapper');        
-        $userMapper = $serviceLocator->get('UserMapper');        
-        $prototype = new Membership($siteMapper, $userMapper);
-        return new MembershipDbSqlMapper($dbAdapter, $hydrator, $prototype, DbViewMembership::TABLE, '');                        
+        $dbAdapter = $serviceLocator->get('Zend\Db\Adapter\Adapter');        
+        // Prototypes
+        $membershipPrototype = $serviceLocator->get('MembershipPrototype');
+        $activityPrototype = $serviceLocator->get('UserActivityPrototype');
+        $userPrototype = $serviceLocator->get('UserPrototype');
+        // Hydrators
+        $mainHydrator = new MembershipDbHydrator();
+        $membershipHydrator = new MembershipDbHydrator(DbViewMembership::TABLE);        
+        $activityHydrator = new UserActivityDbHydrator(DbViewUserActivity::TABLE);        
+        $userHydrator = new UserSiteDbHydrator($membershipHydrator, $membershipPrototype, $activityHydrator, $activityPrototype, DbViewUsers::TABLE);
+        return new MembershipDbSqlMapper($dbAdapter, $mainHydrator, $membershipPrototype, DbViewMembership::TABLE, '', $userHydrator, $userPrototype);                        
     }
 
 }

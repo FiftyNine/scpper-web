@@ -9,6 +9,7 @@
 namespace Application\Model;
 
 use Application\Mapper\SimpleMapperInterface;
+use Application\Mapper\UserMapperInterface;
 
 /**
  * Description of Membership
@@ -20,7 +21,7 @@ class Membership implements MembershipInterface
     /***** Mappers *****/
     
     /**
-     * @var \Application\Mapper\SimpleMapperInterface
+     * @var \Application\Mapper\UserMapperInterface
      */
     protected $userMapper;
 
@@ -63,7 +64,7 @@ class Membership implements MembershipInterface
      */
     public function __construct(
         SimpleMapperInterface $siteMapper,
-        SimpleMapperInterface $userMapper
+        UserMapperInterface $userMapper
     ) 
     {
         $this->siteMapper = $siteMapper;
@@ -147,7 +148,7 @@ class Membership implements MembershipInterface
     /**
      * @param \DateTime $joinDate
      */
-    public function setJoinDate(\DateTime $joinDate)
+    public function setJoinDate(\DateTime $joinDate = null)
     {
         $this->joinDate = $joinDate;
     }    
