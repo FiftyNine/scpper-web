@@ -217,7 +217,7 @@ class RecentController extends AbstractActionController
             $count = new Aggregate('*', Aggregate::COUNT, 'Number');
             $dateAgg = new DateAggregate(DbViewMembership::JOINDATE, 'Period');
             $dateAgg->setBestAggregateType($fromDate, $toDate);
-            $joins = $this->services->getUserService()->getAggregatedValues($siteId, array($count, $dateAgg), UserType::ANY, false, $fromDate, $toDate);
+            $joins = $this->services->getUserService()->getMembershipAggregated($siteId, array($count, $dateAgg), UserType::ANY, false, $fromDate, $toDate);
             foreach($joins as $join) {
                 $result['data'][] = array($join['Period']->format(\DateTime::ISO8601), $join['Number']);
             }

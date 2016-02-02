@@ -14,6 +14,8 @@ use Zend\View\Model\JsonModel;
 use Application\Service\HubServiceInterface;
 use Application\Utils\Order;
 use Application\Utils\DbConsts\DbViewMembership;
+use Application\Utils\DbConsts\DbViewUserActivity;
+use Application\Utils\Aggregate;
 
 /**
  * Description of UsersController
@@ -55,12 +57,19 @@ class UsersController extends AbstractActionController
     public function usersAction()
     {
         $siteId = $this->services->getUtilityService()->getSiteId();
-        $site = $this->services->getSiteService()->find($siteId);                
-        $memberCount = $this->services->getUserService()->countSiteMembers($siteId);
+        $site = $this->services->getSiteService()->find($siteId);
+/*        $memberCount = $this->services->getUserService()->countSiteMembers($siteId);
+        $voterCount = $this->services->getUserService()->getActivitiesAggregatedValue($siteId, array(DbViewUserActivity::VOTES.' > 0'), new Aggregate('*', Aggregate::COUNT));
+        $editorCount = $this->services->getUserService()->getActivitiesAggregatedValue($siteId, array(DbViewUserActivity::REVISIONS.' > 0'), new Aggregate('*', Aggregate::COUNT));
+        $posterCount = $this->services->getUserService()->getActivitiesAggregatedValue($siteId, array(DbViewUserActivity::PAGES.' > 0'), new Aggregate('*', Aggregate::COUNT));
+ */
         $table = $this->getUsersTable($siteId, DbViewMembership::TABLE.'_'.DbViewMembership::JOINDATE, Order::DESCENDING, 1, 10);
         $result = array(
             'site' => $site,
-            'memberCount' => $memberCount,
+/*            'memberCount' => $memberCount,
+            'voterCount' => $voterCount,
+            'editorCount' => $editorCount,
+            'posterCount' => $posterCount,*/
             'usersTable' => $table
         );
         return new ViewModel($result);

@@ -4,6 +4,9 @@ namespace Application\Service;
 
 use Application\Mapper\UserMapperInterface;
 use Application\Mapper\MembershipMapperInterface;
+use Application\Mapper\UserActivityMapperInterface;
+use Application\Utils\QueryAggregateInterface;
+use Application\Utils\DbConsts\DbViewUserActivity;
 use Application\Utils\UserType;
 
 class UserService implements UserServiceInterface
@@ -21,13 +24,21 @@ class UserService implements UserServiceInterface
      */
     protected $membershipMapper;    
     
+    /**
+     *
+     * @var UserActivityMapperInterface
+     */
+    protected $activityMapper;
+    
     public function __construct(
             UserMapperInterface $userMapper,
-            MembershipMapperInterface $membershipMapper
+            MembershipMapperInterface $membershipMapper,
+            UserActivityMapperInterface $activityMapper
     ) 
     {
         $this->userMapper = $userMapper;
         $this->membershipMapper = $membershipMapper;
+        $this->activityMapper = $activityMapper;
     }
 
     /**
@@ -77,7 +88,7 @@ class UserService implements UserServiceInterface
      * 
      * {@inheritDoc}
      */
-    public function getAggregatedValues($siteId, $aggregates, $types = UserType::ANY, $active = false, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null)
+    public function getMembershipAggregated($siteId, $aggregates, $types = UserType::ANY, $active = false, \DateTime $joinedAfter = null, \DateTime $joinedBefore = null)
     {
         $lastActive = null;
         if ($active) {
@@ -105,5 +116,23 @@ class UserService implements UserServiceInterface
     public function findUsersOfSite($siteId, $order = null, $paginated = false)
     {
         return $this->userMapper->findUsersOfSite($siteId, $order, $paginated);
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getActivitiesAggregated($siteId, $conditions, $aggregates, $order = null, $paginated = false)
+    {
+        $conditions[DbViewUserActivity::SITEID.' = ?'] = $siteId;
+        return $this->activityMapper->getAggregatedValues($conditions, $aggregates, $order, $paginated);
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getActivitiesAggregatedValue($siteId, $conditions, QueryAggregateInterface $aggregate)
+    {
+        $conditions[DbViewUserActivity::SITEID.' = ?'] = $siteId;
+        return $this->activityMapper->getAggregatedValue($conditions, $aggregate);
     }
 }

@@ -8,7 +8,13 @@ function init()
 $(document).ready(init);
 
 <?php $this->headScript()->captureEnd(); ?>
-<h1><?php echo $this->memberCount; ?> members</h1>
+<span class="h1">
+    <a href="<?php echo $this->site->getUrl(); ?>">
+       <?php echo $this->site->getEnglishName(); ?>
+    </a>        
+</span>
+<p class="small-text">Updated <?php echo $this->site->getLastUpdate()->format('Y-m-d H:i'); ?></p>
+<h3>Users (<?php echo $this->usersTable->getPaginator()->getTotalItemCount();?> total)</h3>
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -29,3 +35,16 @@ $(document).ready(init);
         </div>
     </div>
 </div>
+<?php
+/*
+ *         <div class="col-md-2 info-box background-green">
+            <ul class="list-unstyled">
+                <li> <?php echo $this->memberCount; ?> members </li>
+                <li> <?php echo $this->voterCount; ?> voters </li>
+                <li> <?php echo $this->editorCount; ?> editors </li>
+                <li> <?php echo $this->posterCount; ?> posters </li>
+            </ul>    
+        </div>        
+
+ */
+?>
