@@ -48,6 +48,11 @@ interface AuthorSummaryInterface
      * @return int
      */    
     function getTotalRating();
+
+    /**
+     * @return int
+     */    
+    function getAverageRating();
     
     /**
      * @return int

@@ -1,5 +1,9 @@
-<?php foreach ($this->rows as $page): ?>
+<?php 
+    $i=1;
+    foreach ($this->rows as $page): 
+?>
 <tr>
+    <td><?php echo $this->rows->getAbsoluteItemNumber($i); $i++; ?></td>
     <td><a href="#"><?php echo $page->getTitle(); ?></a></td>
     <td><?php echo $page->getCleanRating(); ?></td>
     <td><?php echo \Application\Utils\PageType::DESCRIPTIONS[$page->getStatus()]; ?></td>

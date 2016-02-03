@@ -28,6 +28,7 @@ class PaginatedTableFactory
     {
         $table = new \Application\Component\PaginatedTable\Table(
             array(
+                new Column('#'),
                 new Column('Page', DbViewPages::TITLE),
                 new Column('Rating', DbViewPages::CLEANRATING, false),
                 new Column('Status', DbViewPages::STATUS),
@@ -45,6 +46,7 @@ class PaginatedTableFactory
     {
         $table = new \Application\Component\PaginatedTable\Table(
             array(
+                new Column('#'),
                 new Column('User', DbViewMembership::DISPLAYNAME),
                 new Column('Votes', DbViewMembership::VOTES, false),
                 new Column('Revisions', DbViewMembership::REVISIONS, false),
@@ -63,6 +65,7 @@ class PaginatedTableFactory
     {
         $table = new \Application\Component\PaginatedTable\Table(
             array(
+                new Column('#'),
                 new Column('User', DbViewRevisions::USERDISPLAYNAME),
                 new Column('Revisions', 'Revisions', false),
                 new Column('Percent of total'),
@@ -78,6 +81,7 @@ class PaginatedTableFactory
     {
         $table = new \Application\Component\PaginatedTable\Table(
             array(
+                new Column('#'),
                 new Column('User', DbViewRevisions::USERDISPLAYNAME),
                 new Column('Votes', 'Votes', false),
                 new Column('Positive'),
@@ -94,6 +98,7 @@ class PaginatedTableFactory
     {
         $table = new \Application\Component\PaginatedTable\Table(
             array(
+                new Column('#'),
                 new Column('User', DbViewUsers::TABLE.'_'.DbViewUsers::DISPLAYNAME),
                 new Column('Votes', DbViewUserActivity::TABLE.'_'.DbViewUserActivity::VOTES, false),
                 new Column('Revisions', DbViewUserActivity::TABLE.'_'.DbViewUserActivity::REVISIONS, false),
@@ -112,12 +117,13 @@ class PaginatedTableFactory
     {
         $table = new \Application\Component\PaginatedTable\Table(
             array(
+                new Column('#'),
                 new Column('User', DbViewAuthors::USERDISPLAYNAME),
                 new Column('Pages', AuthorSummaryConsts::PAGES, false),
                 new Column('Originals', AuthorSummaryConsts::ORIGINALS, false),
                 new Column('Translations', AuthorSummaryConsts::TRANSLATIONS, false),
                 new Column('Rating', AuthorSummaryConsts::TOTAL_RATING, false),
-                new Column('Average'),
+                new Column('Average', AuthorSummaryConsts::AVERAGE_RATING, false),
                 new Column('Highest', AuthorSummaryConsts::HIGHEST_RATING, false)
             ),
             $paginator,

@@ -1,5 +1,9 @@
-<?php foreach ($this->rows as $member): ?>
+<?php 
+    $i=1;
+    foreach ($this->rows as $member): 
+?>
 <tr>
+    <td><?php echo $this->rows->getAbsoluteItemNumber($i); $i++; ?></td>
     <td><a href="#"><?php echo $member->getUser()->getDisplayName(); ?></a></td>
     <td><?php echo $member->getActivity()->getVoteCount(); ?></td>
     <td><?php echo $member->getActivity()->getRevisionCount(); ?></td>

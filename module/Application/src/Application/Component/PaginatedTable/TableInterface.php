@@ -35,5 +35,5 @@ interface TableInterface
     /**
      * @return bool
      */
-    public function isPreview();
+    public function isPreview();    
 }

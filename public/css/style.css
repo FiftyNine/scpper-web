@@ -76,7 +76,7 @@ table.table-striped > tbody > tr:last-child {
     border-bottom: 1px solid #ddd;
 }
 
-table > tbody > tr > th:first-child {
+table > tbody > tr > th:nth-child(2) {
     width: 40%;
 }
 

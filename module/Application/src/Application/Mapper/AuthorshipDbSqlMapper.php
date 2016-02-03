@@ -50,6 +50,7 @@ class AuthorshipDbSqlMapper extends ZendDbSqlMapper implements AuthorshipMapperI
                         AuthorSummaryConsts::ORIGINALS => new Expression(sprintf('SUM(CASE WHEN %s = %d THEN 1 ELSE 0 END)', DbViewAuthors::STATUSID, PageType::ORIGINAL)),
                         AuthorSummaryConsts::TRANSLATIONS => new Expression(sprintf('SUM(CASE WHEN %s = %d THEN 1 ELSE 0 END)', DbViewAuthors::STATUSID, PageType::TRANSLATION)),
                         AuthorSummaryConsts::TOTAL_RATING => new Expression(sprintf('SUM(%s)', DbViewAuthors::RATING)),
+                        AuthorSummaryConsts::AVERAGE_RATING => new Expression(sprintf('SUM(%s)/COUNT(*)', DbViewAuthors::RATING)),
                         AuthorSummaryConsts::HIGHEST_RATING => new Expression(sprintf('MAX(%s)', DbViewAuthors::RATING))
                 ))
                 ->group(array(

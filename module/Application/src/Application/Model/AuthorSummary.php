@@ -57,6 +57,11 @@ class AuthorSummary implements AuthorSummaryInterface
     /**
      * @var int
      */
+    protected $averageRating;
+    
+    /**
+     * @var int
+     */
     protected $highestRating;
 
     /**
@@ -118,6 +123,14 @@ class AuthorSummary implements AuthorSummaryInterface
     /**
      * @return int
      */    
+    public function getAverageRating() 
+    {
+        return $this->averageRating;
+    }
+        
+    /**
+     * @return int
+     */    
     function getHighestRating()
     {
         return $this->highestRating;
@@ -157,7 +170,12 @@ class AuthorSummary implements AuthorSummaryInterface
     {
         $this->totalRating = $totalRating;
     }
-
+    
+    public function setAverageRating($averageRating) 
+    {
+        $this->averageRating = $averageRating;
+    }
+    
     public function setHighestRating($highestRating) 
     {
         $this->highestRating = $highestRating;

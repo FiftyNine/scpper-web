@@ -19,5 +19,6 @@ class AuthorSummaryConsts
     const ORIGINALS = 'OriginalCount';
     const TRANSLATIONS = 'TranslationCount';
     const TOTAL_RATING = 'TotalRating';
+    const AVERAGE_RATING = 'AverageRating';
     const HIGHEST_RATING = 'HighestRating';
 }

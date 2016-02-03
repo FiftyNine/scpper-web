@@ -1,6 +1,10 @@
-<?php $siteId = $this->data['siteId']; ?>
+<?php 
+    $i=1;
+    $siteId = $this->data['siteId']; 
+?>
 <?php foreach ($this->rows as $user): ?>
 <tr>
+    <td><?php echo $this->rows->getAbsoluteItemNumber($i); $i++; ?></td>
     <td>
         <?php if ($user->getDeleted()): ?> <del> <?php endif;?>
         <a href="#">            

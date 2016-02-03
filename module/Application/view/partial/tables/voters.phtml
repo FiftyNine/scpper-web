@@ -1,5 +1,9 @@
-<?php foreach ($this->rows as $voter): ?>
+<?php 
+    $i=1;
+    foreach ($this->rows as $voter): 
+?>
 <tr>
+    <td><?php echo $this->rows->getAbsoluteItemNumber($i); $i++; ?></td>
     <td><a href="#"><?php echo $voter[\Application\Utils\DbConsts\DbViewVotes::USERDISPLAYNAME]; ?></a></td>
     <td><?php echo $voter['Votes'] ?></td>
     <td><?php echo ($voter['Votes']+$voter['Sum'])/2; ?></td>

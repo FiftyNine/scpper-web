@@ -30,7 +30,7 @@ class Table implements TableInterface
      *
      * @var string
      */
-    protected $bodyView;
+    protected $bodyView;    
     
     /**
      *
@@ -68,14 +68,13 @@ class Table implements TableInterface
     public function getBodyView() 
     {
         return $this->bodyView;
-    }
-
+    }    
+    
     /**
      * {@inheritDoc}
      */        
     public function isPreview() 
     {
         return $this->preview;        
-    }
-
+    }    
 }
