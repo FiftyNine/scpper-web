@@ -27,7 +27,19 @@ class Column
      */
     protected $orderName;
     
-    public function __construct($name, $orderName = '')
+    /**
+     *
+     * @var bool
+     */
+    protected $defaultAscending;
+    
+    /**
+     * 
+     * @param string $name
+     * @param string $orderName
+     * @param bool $defaultAsc
+     */    
+    public function __construct($name, $orderName = '', $defaultAsc = true)
     {
         if (is_string($name)) {
             $this->name = $name;
@@ -37,6 +49,7 @@ class Column
         if (is_string($orderName) && $orderName) {
             $this->orderName = $orderName;
         }
+        $this->defaultAscending = $defaultAsc;
     }
     
     /**
@@ -64,5 +77,13 @@ class Column
     public function canOrder()
     {
         return isset($this->orderName);
+    }
+    
+    /**
+     * Show if default order for this column is ascending
+     */
+    public function isDefaultAscending()
+    {
+        return $this->defaultAscending;
     }
 }

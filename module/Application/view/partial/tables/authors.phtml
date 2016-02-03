@@ -1,0 +1,19 @@
+<?php foreach ($this->rows as $author): ?>
+<?php $user = $author->getUser(); ?>
+<tr>
+    <td>
+        <?php if ($user->getDeleted()): ?> <del> <?php endif;?>
+        <a href="#">            
+            <?php echo $user->getDisplayName(); ?>
+        </a>
+        <?php if ($user->getDeleted()): ?> </del> <?php endif;?>
+    </td>
+    <td><?php echo $author->getPageCount(); ?></td>
+    <td><?php echo $author->getOriginalCount(); ?></td>
+    <td><?php echo $author->getTranslationCount(); ?></td>
+    <td><?php echo $author->getTotalRating(); ?></td>    
+    <td><?php echo number_format($author->getTotalRating()/$author->getPageCount(), 1); ?></td>
+    <td><?php echo $author->getHighestRating(); ?></td>
+</tr>
+<?php endforeach; ?>
+

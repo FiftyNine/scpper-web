@@ -13,6 +13,7 @@ class UserServiceFactory implements FactoryInterface
         $userMapper = $serviceLocator->get('UserMapper');
         $membershipMapper = $serviceLocator->get('MembershipMapper');
         $activityMapper = $serviceLocator->get('UserActivityMapper');
-        return new UserService($userMapper, $membershipMapper, $activityMapper);
+        $authorshipMapper = $serviceLocator->get('AuthorshipMapper');
+        return new UserService($userMapper, $membershipMapper, $activityMapper, $authorshipMapper);
     }
 }

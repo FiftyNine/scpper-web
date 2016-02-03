@@ -102,12 +102,20 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
      * Returns a single object created from query
      * @param Sql $sql
      * @param Select $select
+     * @param HydratorInterface $hydrator
+     * @param object $prototype
      */
-    protected function fetchObject(Sql $sql, Select $select)
+    protected function fetchObject(Sql $sql, Select $select, HydratorInterface $hydrator = null, $prototype = null)
     {
+        if (!$hydrator) {
+            $hydrator = $this->hydrator;
+        }
+        if (!$prototype) {
+            $prototype = $this->objectPrototype;
+        }        
         $result = $this->fetch($sql, $select);
         if ($result && $result->getAffectedRows() === 1) {
-          return $this->hydrator->hydrate($result->current(), $this->objectPrototype);
+          return $hydrator->hydrate($result->current(), $prototype);
         }
         throw new \InvalidArgumentException("Object not found or more than one object found");
     }
@@ -116,15 +124,21 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
      * Returns a collection of hydrated objects or false on error
      * @param Sql $sql
      * @param Select $select
-     * @param type $offset
-     * @param type $limit
+     * @param HydratorInterface $hydrator
+     * @param object $prototype
      * @return boolean|ResultSet
      */
-    protected function fetchResultSet(Sql $sql, Select $select, $offset = 0, $limit = 0)
+    protected function fetchResultSet(Sql $sql, Select $select, HydratorInterface $hydrator = null, $prototype = null)
     {
-        $result = $this->fetch($sql, $select, $offset, $limit);
+        if (!$hydrator) {
+            $hydrator = $this->hydrator;
+        }
+        if (!$prototype) {
+            $prototype = $this->objectPrototype;
+        }
+        $result = $this->fetch($sql, $select);
         if ($result) {
-            $resultSet = new HydratingResultSet($this->hydrator, $this->objectPrototype);            
+            $resultSet = new HydratingResultSet($hydrator, $prototype);            
             return $resultSet->initialize($result);            
         }
         return false;
@@ -223,12 +237,18 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
      * @param Select $select
      * @return \Zend\Paginator\Paginator
      */
-    protected function getPaginator(Select $select, $asArray = false)
+    protected function getPaginator(Select $select, $asArray = false, HydratorInterface $hydrator = null, $prototype = null)
     {
-        $resultSet = null;
+        $resultSet = null;        
         if (!$asArray) {
-            $resultSet = new \Zend\Db\ResultSet\HydratingResultSet($this->hydrator, $this->objectPrototype);
-        }
+            if (!$hydrator) {
+                $hydrator = $this->hydrator;
+            }
+            if (!$prototype) {
+                $prototype = $this->objectPrototype;
+            }            
+            $resultSet = new \Zend\Db\ResultSet\HydratingResultSet($hydrator, $prototype);
+        }        
         $adapter = new \Zend\Paginator\Adapter\DbSelect($select, $this->dbAdapter, $resultSet);
         $paginator = new \Zend\Paginator\Paginator($adapter);
         return $paginator;        
@@ -283,9 +303,12 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
      * 
      * {@inheritDoc}
      */
-    public function findAll($paginated = true) {
+    public function findAll($conditions = null, $paginated = true) {
         $sql = new Sql($this->dbAdapter);        
         $select = $sql->select($this->table);
+        if (is_array($conditions)) {
+            $select->where($conditions);
+        }
         if ($paginated) {
             $result = $this->getPaginator($select);
         } else {

@@ -18,10 +18,11 @@ interface UserServiceInterface
     
     /**
      * Returns all users
-     * 
+     * @param array[string]string
+     * @param bool $paginated
      * @return array|UserInterface[]
      */
-    public function findAll();
+    public function findAll($conditions = null, $paginated = false);
     
     /**
      * Returns all users who are members of the site
@@ -90,4 +91,13 @@ interface UserServiceInterface
      * @return mixed
      */
     public function getActivitiesAggregatedValue($siteId, $conditions, QueryAggregateInterface $aggregate);
+    
+    /**
+     * 
+     * @param int $site
+     * @param array[string]int $order
+     * @param bool $paginated
+     * @return Zend\Paginator\Paginator|AuthorSummaryInterface[]
+     */
+    public function findAuthorSummaries($siteId, $order = null, $paginated = false);
 }

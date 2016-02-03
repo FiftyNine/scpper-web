@@ -24,7 +24,9 @@
                 $attributes[] = 'data-name="'.$col->getOrderName().'"';
                 if ($thisOrder) {
                     $classes[] = 'ordered';
-                    $attributes[] = 'data-ascending="'.$cols->isAscending().'"';
+                    $attributes[] = 'data-ascending="'.($cols->isAscending()?'1':'0').'"';
+                } else {
+                    $attributes[] = 'data-ascending="'.($col->isDefaultAscending()?'0':'1').'"';
                 }
             }
             if ($classes) {

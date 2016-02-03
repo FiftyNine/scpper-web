@@ -4,6 +4,7 @@ namespace Application\Service;
 
 use Application\Mapper\UserMapperInterface;
 use Application\Mapper\MembershipMapperInterface;
+use Application\Mapper\AuthorshipMapperInterface;
 use Application\Mapper\UserActivityMapperInterface;
 use Application\Utils\QueryAggregateInterface;
 use Application\Utils\DbConsts\DbViewUserActivity;
@@ -30,15 +31,23 @@ class UserService implements UserServiceInterface
      */
     protected $activityMapper;
     
+    /**
+     *
+     * @var AuthorshipMapperInterface
+     */
+    protected $authorshipMapper;    
+    
     public function __construct(
             UserMapperInterface $userMapper,
             MembershipMapperInterface $membershipMapper,
-            UserActivityMapperInterface $activityMapper
+            UserActivityMapperInterface $activityMapper,
+            AuthorshipMapperInterface $authorshipMapper
     ) 
     {
         $this->userMapper = $userMapper;
         $this->membershipMapper = $membershipMapper;
         $this->activityMapper = $activityMapper;
+        $this->authorshipMapper = $authorshipMapper;
     }
 
     /**
@@ -66,9 +75,9 @@ class UserService implements UserServiceInterface
      * 
      * {@inheritDoc}
      */
-    public function findAll()
+    public function findAll($conditions = null, $paginated = false)
     {
-        return $this->userMapper->findAll();
+        return $this->userMapper->findAll($conditions, $paginated);
     }
     
     /**
@@ -134,5 +143,13 @@ class UserService implements UserServiceInterface
     {
         $conditions[DbViewUserActivity::SITEID.' = ?'] = $siteId;
         return $this->activityMapper->getAggregatedValue($conditions, $aggregate);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function findAuthorSummaries($siteId, $order = null, $paginated = false)
+    {
+        return $this->authorshipMapper->getAuthorSummaries($siteId, $order, $paginated);
     }
 }

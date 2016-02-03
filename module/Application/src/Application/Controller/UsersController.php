@@ -13,9 +13,9 @@ use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Application\Service\HubServiceInterface;
 use Application\Utils\Order;
+use Application\Utils\DbConsts\DbViewUsers;
 use Application\Utils\DbConsts\DbViewMembership;
-use Application\Utils\DbConsts\DbViewUserActivity;
-use Application\Utils\Aggregate;
+use Application\Utils\AuthorSummaryConsts;
 
 /**
  * Description of UsersController
@@ -48,6 +48,37 @@ class UsersController extends AbstractActionController
         $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);        
         return $table;
     }
+
+    /**
+     * Get a paginated table with authors for a selected site
+     * @param int $siteId
+     * @param string $orderBy
+     * @param int $order
+     * @param int $page
+     * @param int $perPage
+     * @return \Application\Component\PaginatedTable\TableInterface;
+     */
+    protected function getAuthorsTable($siteId, $orderBy, $order, $page, $perPage)
+    {
+        $authors = $this->services->getUserService()->findAuthorSummaries($siteId, array($orderBy => $order), true);
+        $authors->setItemCountPerPage($perPage);
+        $authors->setCurrentPageNumber($page);
+        $userIds = array();
+        $authorById = array();
+        foreach ($authors as $author) {            
+            $userIds[] = $author->getUserId();
+            $authorById[$author->getUserId()] = $author;
+        }
+        $users = $this->services->getUserService()->findAll(array(
+            sprintf('%s IN (%s)',  DbViewUsers::USERID, implode(',', $userIds))
+        ));
+        foreach ($users as $user) {
+            $authorById[$user->getId()]->setUser($user);
+        }
+        $table = \Application\Factory\Component\PaginatedTableFactory::createAuthorsTable($authors);
+        $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);        
+        return $table;
+    }
     
     public function __construct(HubServiceInterface $hubService) 
     {
@@ -58,19 +89,12 @@ class UsersController extends AbstractActionController
     {
         $siteId = $this->services->getUtilityService()->getSiteId();
         $site = $this->services->getSiteService()->find($siteId);
-/*        $memberCount = $this->services->getUserService()->countSiteMembers($siteId);
-        $voterCount = $this->services->getUserService()->getActivitiesAggregatedValue($siteId, array(DbViewUserActivity::VOTES.' > 0'), new Aggregate('*', Aggregate::COUNT));
-        $editorCount = $this->services->getUserService()->getActivitiesAggregatedValue($siteId, array(DbViewUserActivity::REVISIONS.' > 0'), new Aggregate('*', Aggregate::COUNT));
-        $posterCount = $this->services->getUserService()->getActivitiesAggregatedValue($siteId, array(DbViewUserActivity::PAGES.' > 0'), new Aggregate('*', Aggregate::COUNT));
- */
-        $table = $this->getUsersTable($siteId, DbViewMembership::TABLE.'_'.DbViewMembership::JOINDATE, Order::DESCENDING, 1, 10);
+        $users = $this->getUsersTable($siteId, DbViewMembership::TABLE.'_'.DbViewMembership::JOINDATE, Order::DESCENDING, 1, 10);
+        $authors = $this->getAuthorsTable($siteId, AuthorSummaryConsts::PAGES, Order::DESCENDING, 1, 10);
         $result = array(
             'site' => $site,
-/*            'memberCount' => $memberCount,
-            'voterCount' => $voterCount,
-            'editorCount' => $editorCount,
-            'posterCount' => $posterCount,*/
-            'usersTable' => $table
+            'usersTable' => $users,
+            'authorsTable' => $authors
         );
         return new ViewModel($result);
     }
@@ -102,4 +126,31 @@ class UsersController extends AbstractActionController
         }
         return new JsonModel($result);        
     }
+    
+    public function authorListAction()
+    {
+        $result = array('success' => false);
+        $siteId = (int)$this->params()->fromQuery('siteId', $this->services->getUtilityService()->getSiteId());
+        $page = (int)$this->params()->fromQuery('page', 1);
+        $perPage = (int)$this->params()->fromQuery('perPage', 10);
+        $orderBy = $this->params()->fromQuery('orderBy', AuthorSummaryConsts::PAGES);
+        $order = $this->params()->fromQuery('ascending', false);
+        if ($order) {
+            $order = Order::ASCENDING;
+        } else {
+            $order = Order::DESCENDING;
+        }
+        $table = $this->getAuthorsTable($siteId, $orderBy, $order, $page, $perPage);
+        $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
+        if ($renderer) {
+            $result['success'] = true;                
+            $result['content'] = $renderer(
+                'partial/tables/table.phtml', 
+                array(
+                    'table' => $table, 
+                )
+            );
+        }
+        return new JsonModel($result);        
+    }    
 }

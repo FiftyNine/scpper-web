@@ -107,6 +107,11 @@ class UserActivity implements UserActivityInterface
      */    
     protected $lastActivity;
     
+    /**
+     * @var \Application\Model\AuthorSummaryInterface
+     */
+    protected $authorSummary;
+    
     /***** Methods *****/
     
     /**
@@ -313,5 +318,24 @@ class UserActivity implements UserActivityInterface
     public function setLastActivity(\DateTime $lastActivity = null) 
     {
         $this->lastActivity = $lastActivity;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAuthorSummary() 
+    {
+        if (!isset($this->authorSummary)) {
+            $this->authorMapper->getAuthorSummary($this->getUserId(), $this->getSiteId());
+        }
+    }
+
+    /**
+     * @param \Application\Model\AuthorSummaryInterface $authorSummary
+     */
+    public function setAuthorSummary(AuthorSummaryInterface $authorSummary) 
+    {
+        $this->authorSummary = $authorSummary;
     }    
+    
 }

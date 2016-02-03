@@ -3,6 +3,7 @@
 function init()
 {
     assignPaginatorEvents('#user-list', '/users/userList', {siteId: <?php echo $this->site->getWikidotId();?>});
+    assignPaginatorEvents('#author-list', '/users/authorList', {siteId: <?php echo $this->site->getWikidotId();?>});
 }
 
 $(document).ready(init);
@@ -14,10 +15,10 @@ $(document).ready(init);
     </a>        
 </span>
 <p class="small-text">Updated <?php echo $this->site->getLastUpdate()->format('Y-m-d H:i'); ?></p>
-<h3>Users (<?php echo $this->usersTable->getPaginator()->getTotalItemCount();?> total)</h3>
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+            <h3>Users (<?php echo $this->usersTable->getPaginator()->getTotalItemCount();?> total)</h3>
             <div class="table-container" id="user-list">
             <?php
 
@@ -34,6 +35,24 @@ $(document).ready(init);
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Authors (<?php echo $this->authorsTable->getPaginator()->getTotalItemCount();?> total)</h3>            
+            <div class="table-container" id="author-list">
+            <?php
+
+            $authorsTable = $this->authorsTable;
+
+            echo $this->partial(
+                'partial/tables/table.phtml', 
+                array(
+                    'table' => $authorsTable,
+                )
+            );    
+            ?>
+            </div>
+        </div>
+    </div>    
 </div>
 <?php
 /*

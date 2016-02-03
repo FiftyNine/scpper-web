@@ -70,6 +70,11 @@ interface UserActivityInterface
     public function getLastActivity();
     
     /**
+     * @return \Application\Model\AuthorSummaryInterface
+     */
+    public function getAuthorSummary();
+    
+    /**
      * @return boolean
      */
     public function isActive();
