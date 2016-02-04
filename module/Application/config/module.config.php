@@ -117,6 +117,31 @@ return array(
                     ),
                 ),                                
             ),            
+            'editors' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/editors',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Editors',
+                        'action'     => 'editors',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/:action',
+                            'constraints' => array(                                
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\Editors',
+                            ),
+                        ),
+                    ),
+                ),                                
+            ),            
         ),
     ),
     'service_manager' => array(
@@ -197,6 +222,7 @@ return array(
             'Application\Controller\Recent' => 'Application\Factory\Controller\RecentControllerFactory',
             'Application\Controller\Users' => 'Application\Factory\Controller\UsersControllerFactory',
             'Application\Controller\Pages' => 'Application\Factory\Controller\PagesControllerFactory',
+            'Application\Controller\Editors' => 'Application\Factory\Controller\EditorsControllerFactory',
         ),
     ),
     'view_manager' => array(
@@ -243,6 +269,10 @@ return array(
                 'label' => 'Pages',
                 'route' => 'pages',
             ),
+            array(
+                'label' => 'Editors',
+                'route' => 'editors',
+            ),            
         )
     )
 );

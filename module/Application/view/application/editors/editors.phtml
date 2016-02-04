@@ -1,0 +1,38 @@
+<?php $this->headScript()->captureStart(); ?>
+
+function init()
+{
+    assignPaginatorEvents('#editor-list', '/editors/editorList', {siteId: <?php echo $this->site->getWikidotId();?>});
+}
+
+$(document).ready(init);
+
+<?php $this->headScript()->captureEnd(); ?>
+<span class="h1">
+    <a href="<?php echo $this->site->getUrl(); ?>">
+       <?php echo $this->site->getEnglishName(); ?>
+    </a>        
+</span>
+<p class="small-text">Updated <?php echo $this->site->getLastUpdate()->format('Y-m-d H:i'); ?></p>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Editors (<?php echo $this->table->getPaginator()->getTotalItemCount();?> total)</h3>
+            <div class="table-container" id="editor-list">
+            <?php
+            $table = $this->table;
+
+            echo $this->partial(
+                'partial/tables/table.phtml', 
+                array(
+                    'table' => $table,
+                    'data' => array(
+                        'total' => $this->total
+                    )
+                )
+            );    
+            ?>
+            </div>
+        </div>
+    </div>
+</div>
