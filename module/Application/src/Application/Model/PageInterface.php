@@ -42,6 +42,16 @@ interface PageInterface
     /**
      * @return int
      */
+    public function getContributorRating();
+    
+    /**
+     * @return int
+     */
+    public function getAdjustedRating();
+    
+    /**
+     * @return int
+     */
     public function getRevisionCount();
     
     /**

@@ -10,6 +10,8 @@ class DbPageSummary
     const RATING = 'Rating';
     const CLEANRATING = 'CleanRating';
     const REVISIONS = 'Revisions';
+    const CONTRIBUTORRATING = 'ContributorRating';
+    const ADJUSTEDRATING = 'AdjustedRating';
 
 
     static public function hasField($field) 

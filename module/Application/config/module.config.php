@@ -92,6 +92,31 @@ return array(
                     ),
                 ),                                
             ),            
+            'pages' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/pages',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Pages',
+                        'action'     => 'pages',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/:action',
+                            'constraints' => array(                                
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\Pages',
+                            ),
+                        ),
+                    ),
+                ),                                
+            ),            
         ),
     ),
     'service_manager' => array(
@@ -171,6 +196,7 @@ return array(
             'Application\Controller\Index' => 'Application\Factory\Controller\IndexControllerFactory',
             'Application\Controller\Recent' => 'Application\Factory\Controller\RecentControllerFactory',
             'Application\Controller\Users' => 'Application\Factory\Controller\UsersControllerFactory',
+            'Application\Controller\Pages' => 'Application\Factory\Controller\PagesControllerFactory',
         ),
     ),
     'view_manager' => array(
@@ -212,7 +238,11 @@ return array(
             array(
                 'label' => 'Users',
                 'route' => 'users',
-            ),            
+            ),
+            array(
+                'label' => 'Pages',
+                'route' => 'pages',
+            ),
         )
     )
 );

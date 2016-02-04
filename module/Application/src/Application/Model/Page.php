@@ -84,6 +84,18 @@ class Page implements PageInterface
     /**
      *
      * @var int
+     */    
+    protected $contributorRating;
+    
+    /**
+     *
+     * @var int
+     */    
+    protected $adjustedRating;
+    
+    /**
+     *
+     * @var int
      */        
     protected $revisionCount;
 
@@ -251,7 +263,33 @@ class Page implements PageInterface
     {
         $this->rating = $value;
     }    
-    
+
+    /**
+     * {@inheritDoc}
+     */    
+    public function getContributorRating() 
+    {
+        return $this->contributorRating;
+    }
+
+    public function setContributorRating($contributorRating) 
+    {
+        $this->contributorRating = $contributorRating;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAdjustedRating() 
+    {
+        return $this->adjustedRating;
+    }
+
+    public function setAdjustedRating($adjustedRating) 
+    {
+        $this->adjustedRating = $adjustedRating;
+    }
+        
     /**
      * {@inheritDoc}
      */

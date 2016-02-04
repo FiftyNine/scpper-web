@@ -37,6 +37,9 @@
             }
             ?>
         >
+            <?php if ($col->getTooltip()): ?>
+            <abbr title="<?php echo $col->getTooltip(); ?>">
+            <?php endif; ?>            
             <?php
                 echo $col->getName(); 
                 if ($thisOrder) {
@@ -47,6 +50,9 @@
                     }
                 }
             ?>
+            <?php if ($col->getTooltip()): ?>
+            </abbr>
+            <?php endif; ?>                            
         </th>           
         <?php endforeach;?>
     </tr>

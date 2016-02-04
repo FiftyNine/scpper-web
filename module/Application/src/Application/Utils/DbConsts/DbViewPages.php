@@ -17,6 +17,8 @@ class DbViewPages
     const CREATIONDATE = 'CreationDate';
     const RATING = 'Rating';
     const CLEANRATING = 'CleanRating';
+    const CONTRIBUTORRATING = 'ContributorRating';
+    const ADJUSTEDRATING = 'AdjustedRating';
     const REVISIONS = 'Revisions';
     const STATUSID = 'StatusId';
     const STATUS = 'Status';

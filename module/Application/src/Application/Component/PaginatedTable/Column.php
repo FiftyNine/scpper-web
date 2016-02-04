@@ -25,6 +25,12 @@ class Column
      *
      * @var string
      */
+    protected $tooltip;
+    
+    /**
+     *
+     * @var string
+     */
     protected $orderName;
     
     /**
@@ -39,7 +45,7 @@ class Column
      * @param string $orderName
      * @param bool $defaultAsc
      */    
-    public function __construct($name, $orderName = '', $defaultAsc = true)
+    public function __construct($name, $orderName = '', $defaultAsc = true, $tooltip = '')
     {
         if (is_string($name)) {
             $this->name = $name;
@@ -50,6 +56,7 @@ class Column
             $this->orderName = $orderName;
         }
         $this->defaultAscending = $defaultAsc;
+        $this->tooltip = $tooltip;
     }
     
     /**
@@ -81,9 +88,19 @@ class Column
     
     /**
      * Show if default order for this column is ascending
+     * @return bool
      */
     public function isDefaultAscending()
     {
         return $this->defaultAscending;
+    }
+    
+    /**
+     * Tooltip
+     * @return string
+     */
+    public function getTooltip()
+    {
+        return $this->tooltip;
     }
 }

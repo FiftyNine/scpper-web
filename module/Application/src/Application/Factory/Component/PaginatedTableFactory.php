@@ -30,7 +30,9 @@ class PaginatedTableFactory
             array(
                 new Column('#'),
                 new Column('Page', DbViewPages::TITLE),
-                new Column('Rating', DbViewPages::CLEANRATING, false),
+                new Column('Rating', DbViewPages::CLEANRATING, false, 'Clean rating - only counts votes from members of the site'),
+                new Column('Rating (C)', DbViewPages::CONTRIBUTORRATING, false, 'Contributors rating - only counts votes from members who have at least one successful page'),
+                new Column('Rating (A)', DbViewPages::ADJUSTEDRATING, false, 'Adjusted rating - only counts votes from active members'),
                 new Column('Status', DbViewPages::STATUS),
                 new Column('Posted', DbViewPages::CREATIONDATE),
                 new Column('Authors')
@@ -51,7 +53,7 @@ class PaginatedTableFactory
                 new Column('Votes', DbViewMembership::VOTES, false),
                 new Column('Revisions', DbViewMembership::REVISIONS, false),
                 new Column('Pages', DbViewMembership::PAGES, false),
-                new Column('Active', DbViewMembership::LASTACTIVITY, false),
+                new Column('Active', DbViewMembership::LASTACTIVITY, false, 'User either posted a page, edited one, or cast at least one vote in the last 6 months'),
                 new Column('Joined', DbViewMembership::JOINDATE)
             ), 
             $paginator, 
@@ -68,7 +70,7 @@ class PaginatedTableFactory
                 new Column('#'),
                 new Column('User', DbViewRevisions::USERDISPLAYNAME),
                 new Column('Revisions', 'Revisions', false),
-                new Column('Percent of total'),
+                new Column('%', null, false, 'Relative to all revisions made during selected period'),
             ),
             $paginator,
             'partial/tables/editors.phtml', 
@@ -103,7 +105,7 @@ class PaginatedTableFactory
                 new Column('Votes', DbViewUserActivity::TABLE.'_'.DbViewUserActivity::VOTES, false),
                 new Column('Revisions', DbViewUserActivity::TABLE.'_'.DbViewUserActivity::REVISIONS, false),
                 new Column('Pages', DbViewUserActivity::TABLE.'_'.DbViewUserActivity::PAGES, false),
-                new Column('Active', DbViewUserActivity::TABLE.'_'.DbViewUserActivity::LASTACTIVITY),
+                new Column('Active', DbViewUserActivity::TABLE.'_'.DbViewUserActivity::LASTACTIVITY, true, 'User either posted a page, edited one, or cast at least one vote in the last 6 months'),
                 new Column('Joined', DbViewMembership::TABLE.'_'.DbViewMembership::JOINDATE, false)
             ),
             $paginator,
@@ -122,9 +124,9 @@ class PaginatedTableFactory
                 new Column('Pages', AuthorSummaryConsts::PAGES, false),
                 new Column('Originals', AuthorSummaryConsts::ORIGINALS, false),
                 new Column('Translations', AuthorSummaryConsts::TRANSLATIONS, false),
-                new Column('Rating', AuthorSummaryConsts::TOTAL_RATING, false),
-                new Column('Average', AuthorSummaryConsts::AVERAGE_RATING, false),
-                new Column('Highest', AuthorSummaryConsts::HIGHEST_RATING, false)
+                new Column('Rating', AuthorSummaryConsts::TOTAL_RATING, false, 'Summary clean rating of all pages posted by user'),
+                new Column('Average', AuthorSummaryConsts::AVERAGE_RATING, false, 'Average clean rating of a page posted by user'),
+                new Column('Highest', AuthorSummaryConsts::HIGHEST_RATING, false, 'Highest clean rating of a page posted by user')
             ),
             $paginator,
             'partial/tables/authors.phtml', 
