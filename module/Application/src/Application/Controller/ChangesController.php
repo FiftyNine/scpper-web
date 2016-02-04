@@ -31,7 +31,7 @@ use Application\Utils\Order;
  *
  * @author Alexander
  */
-class RecentController extends AbstractActionController
+class ChangesController extends AbstractActionController
 {
     /**
      *
@@ -61,8 +61,10 @@ class RecentController extends AbstractActionController
     protected function getVotersPaginator($siteId, $from, $to, $orderBy, $order, $page, $perPage)
     {
         $aggregates = array(
+            new Aggregate(DbViewVotes::USERID, Aggregate::NONE, null, true),           
             new Aggregate(DbViewVotes::USERNAME, Aggregate::NONE, null, true),
             new Aggregate(DbViewVotes::USERDISPLAYNAME, Aggregate::NONE, null, true),
+            new Aggregate(DbViewVotes::USERDELETED, Aggregate::NONE, null, true),            
             new Aggregate('*', Aggregate::COUNT, 'Votes'),
             new Aggregate(DbViewVotes::VALUE, Aggregate::SUM, 'Sum'),
         );
@@ -171,7 +173,7 @@ class RecentController extends AbstractActionController
         $this->dateIntervalForm = $dateIntervalForm;
     }
 
-    public function recentAction()
+    public function changesAction()
     {        
         $siteId = $this->services->getUtilityService()->getSiteId();
         $site = $this->services->getSiteService()->find($siteId);        

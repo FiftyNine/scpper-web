@@ -1,10 +1,17 @@
 <?php 
     $i=1;
     foreach ($this->rows as $voter): 
+        $deleted = $voter[\Application\Utils\DbConsts\DbViewVotes::USERDELETED]; 
 ?>
 <tr>
     <td><?php echo $this->rows->getAbsoluteItemNumber($i); $i++; ?></td>
-    <td><a href="#"><?php echo $voter[\Application\Utils\DbConsts\DbViewVotes::USERDISPLAYNAME]; ?></a></td>
+    <td>
+        <?php if ($deleted): ?><del><?php endif; ?>        
+        <a href="#">            
+            <?php echo $voter[\Application\Utils\DbConsts\DbViewVotes::USERDISPLAYNAME]; ?>
+        </a>
+        <?php if ($deleted): ?></del><?php endif; ?>
+    </td>
     <td><?php echo $voter['Votes'] ?></td>
     <td><?php echo ($voter['Votes']+$voter['Sum'])/2; ?></td>
     <td><?php echo ($voter['Votes']-$voter['Sum'])/2; ?></td>

@@ -42,13 +42,13 @@ return array(
                     )
                 )            
             ),
-            'recent' => array(
+            'changes' => array(
                 'type' => 'Literal',
                 'options' => array(
-                    'route' => '/recent',
+                    'route' => '/changes',
                     'defaults' => array(
-                        'controller' => 'Application\Controller\Recent',
-                        'action' => 'recent',
+                        'controller' => 'Application\Controller\Changes',
+                        'action' => 'changes',
                     )
                 ),
                 'may_terminate' => true,
@@ -61,7 +61,7 @@ return array(
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ),
                             'defaults' => array(
-                                'controller' => 'Application\Controller\Recent',
+                                'controller' => 'Application\Controller\Changes',
                             ),
                         ),
                     ),
@@ -137,6 +137,31 @@ return array(
                             ),
                             'defaults' => array(
                                 'controller' => 'Application\Controller\Revisions',
+                            ),
+                        ),
+                    ),
+                ),                                
+            ),            
+            'votes' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/votes',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Votes',
+                        'action'     => 'votes',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/:action',
+                            'constraints' => array(                                
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\Votes',
                             ),
                         ),
                     ),
@@ -219,10 +244,11 @@ return array(
     'controllers' => array(
         'factories' => array(
             'Application\Controller\Index' => 'Application\Factory\Controller\IndexControllerFactory',
-            'Application\Controller\Recent' => 'Application\Factory\Controller\RecentControllerFactory',
+            'Application\Controller\Changes' => 'Application\Factory\Controller\ChangesControllerFactory',
             'Application\Controller\Users' => 'Application\Factory\Controller\UsersControllerFactory',
             'Application\Controller\Pages' => 'Application\Factory\Controller\PagesControllerFactory',
             'Application\Controller\Revisions' => 'Application\Factory\Controller\RevisionsControllerFactory',
+            'Application\Controller\Votes' => 'Application\Factory\Controller\VotesControllerFactory',
         ),
     ),
     'view_manager' => array(
@@ -258,10 +284,6 @@ return array(
                 'route' => 'home',                
             ),
             array(
-                'label' => 'Recent',
-                'route' => 'recent',
-            ),
-            array(
                 'label' => 'Users',
                 'route' => 'users',
             ),
@@ -273,6 +295,15 @@ return array(
                 'label' => 'Revisions',
                 'route' => 'revisions',
             ),            
+            array(
+                'label' => 'Votes',
+                'route' => 'votes',
+            ),            
+            array(
+                'label' => 'Changes',
+                'route' => 'changes',
+            ),
+            
         )
     )
 );

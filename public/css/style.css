@@ -170,11 +170,7 @@ td.tile:active {
 td.tile-header {
     height: 7em;
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f4f1d7+0,ede2a3+100 */
-    background: #f4f1d7; /* Old browsers */
-    background: -moz-linear-gradient(top,  #f4f1d7 0%, #ede2a3 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top,  #f4f1d7 0%,#ede2a3 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom,  #f4f1d7 0%,#ede2a3 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f1d7', endColorstr='#ede2a3',GradientType=0 ); /* IE6-9 */
+    background: #FAF7D7; /* Old browsers */
 }
 
 td.tile-header:hover {

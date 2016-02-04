@@ -26,5 +26,5 @@ interface VoteMapperInterface extends SimpleMapperInterface
      * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
      * @return array(array(string => mixed))
      */
-    public function getAggregatedValues($siteId, $aggregates, \DateTime $castAfter, \DateTime $castBefore, $order = null, $paginated = false);
+    public function getAggregatedValues($siteId, $aggregates, \DateTime $castAfter = null, \DateTime $castBefore = null, $order = null, $paginated = false);
 }

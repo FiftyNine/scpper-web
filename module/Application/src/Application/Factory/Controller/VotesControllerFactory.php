@@ -10,20 +10,19 @@ namespace Application\Factory\Controller;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Application\Controller\RecentController;
+use Application\Controller\VotesController;
 
 /**
- * Description of RecentControllerFactory
+ * Description of UsersControllerFactory
  *
  * @author Alexander
  */
-class RecentControllerFactory implements FactoryInterface
+class VotesControllerFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator) 
     {
         $realLocator = $serviceLocator->getServiceLocator();
-        $hubService = $realLocator->get('Application\Service\HubServiceInterface');
-        $form = $realLocator->get('FormElementManager')->get('Application\Form\DateIntervalForm');
-        return new RecentController($hubService, $form);
+        $hubService = $realLocator->get('Application\Service\HubServiceInterface');        
+        return new VotesController($hubService);
     }
 }

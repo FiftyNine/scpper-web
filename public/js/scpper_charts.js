@@ -129,7 +129,7 @@ function drawTimeLineCharts(result, barLabel, barTitle, barId, lineLabel, lineTi
 
 function drawMemberCharts() {
     $.ajax({
-        url: "/recent/getMemberChartData",
+        url: "/changes/getMemberChartData",
         type: "get",
         data: chartsData
     })
@@ -144,7 +144,7 @@ function drawMemberCharts() {
 
 function drawPageCharts() {
     $.ajax({
-        url: "/recent/getPageChartData",
+        url: "/changes/getPageChartData",
         type: "get",
         data: chartsData
     })
@@ -159,7 +159,7 @@ function drawPageCharts() {
 
 function drawRevisionCharts() {
     $.ajax({
-        url: "/recent/getRevisionChartData",
+        url: "/changes/getRevisionChartData",
         type: "get",
         data: chartsData
     })
@@ -174,7 +174,7 @@ function drawRevisionCharts() {
 
 function drawVoteCharts() {
     $.ajax({
-        url: "/recent/getVoteChartData",
+        url: "/changes/getVoteChartData",
         type: "get",
         data: chartsData
     })

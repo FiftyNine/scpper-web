@@ -1,3 +1,17 @@
+<?php $this->headScript()->captureStart(); ?>
+
+function init()
+{
+    $('#members').on('click', function() {window.location.assign('/users');});
+    $('#pages').on('click', function() {window.location.assign('/pages');});
+    $('#revisions').on('click', function() {window.location.assign('/revisions');});
+    $('#votes').on('click', function() {window.location.assign('/votes');});
+}
+
+$(document).ready(init);
+
+<?php $this->headScript()->captureEnd(); ?>
+
 <div class="tiles">
     <table class="tile-table text-center">
         <tr>                    
@@ -12,7 +26,7 @@
             </td>                
         </tr>
         <tr>
-            <td class="tile background-green">
+            <td class="tile background-green" id="members">
                 <h2><?php echo $this->members; ?> members</h2>
                 <ul class="list-unstyled">
                     <li><?php echo $this->active; ?> active</li>
@@ -20,7 +34,7 @@
                     <li><?php echo $this->posters; ?> posters</li>
                 </ul>
             </td>
-            <td class="tile background-blue">
+            <td class="tile background-blue" id="pages">
                 <h2><?php echo $this->pages; ?> pages</h2>
                 <ul class="list-unstyled">
                     <li> <?php echo $this->originals; ?> originals </li>
@@ -29,14 +43,14 @@
             </td>            
         </tr>
         <tr>
-            <td class="tile background-red">
+            <td class="tile background-red" id="votes">
                 <h2><?php echo $this->votes; ?> votes</h2>
                 <ul class="list-unstyled">
                     <li><?php echo $this->positive; ?> positive</li>
                     <li><?php echo $this->negative; ?> negative</li>
                 </ul>        
             </td>            
-            <td class="tile background-orange">
+            <td class="tile background-orange" id="revisions">
                 <h2><?php echo $this->revisions; ?> revisions</h2>
             </td>                        
         </tr>        

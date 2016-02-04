@@ -5,7 +5,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 $this->headLink()->prependStylesheet($this->basePath('css/jquery-ui.min.css'));
 
 $form = $this->intervalForm;
-$form->setAttribute('action', $this->url('recent'));
+$form->setAttribute('action', $this->url('changes'));
 //$form->setAttribute('method', 'GET');
 $fromDate = $form->get('from-date');
 $toDate = $form->get('to-date');
@@ -26,10 +26,10 @@ paginatorData = $.extend({page: 1, perPage: 10}, chartsData);
 
 function initRecent()
 {
-    $('#show-members').on('click', {container: "#members-list", url: "/recent/members", payload: paginatorData}, fetchPaginatorFirst);
-    $('#show-pages').on('click', {container: "#pages-list", url: "/recent/pages", payload: paginatorData}, fetchPaginatorFirst);
-    $('#show-editors').on('click', {container: "#editors-list", url: "/recent/editors", payload: paginatorData}, fetchPaginatorFirst);
-    $('#show-voters').on('click', {container: "#voters-list", url: "/recent/voters", payload: paginatorData}, fetchPaginatorFirst);    
+    $('#show-members').on('click', {container: "#members-list", url: "/changes/members", payload: paginatorData}, fetchPaginatorFirst);
+    $('#show-pages').on('click', {container: "#pages-list", url: "/changes/pages", payload: paginatorData}, fetchPaginatorFirst);
+    $('#show-editors').on('click', {container: "#editors-list", url: "/changes/editors", payload: paginatorData}, fetchPaginatorFirst);
+    $('#show-voters').on('click', {container: "#voters-list", url: "/changes/voters", payload: paginatorData}, fetchPaginatorFirst);    
     $('.datepicker').datepicker({autoSize: true, dateFormat: "yy-mm-dd", maxDate: "<?php echo $site->getLastUpdate()->format('Y-m-d');?>"});
 }
 
