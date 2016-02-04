@@ -2,7 +2,7 @@
 
 function init()
 {
-    assignPaginatorEvents('#editor-list', '/editors/editorList', {siteId: <?php echo $this->site->getWikidotId();?>});
+    assignPaginatorEvents('#editor-list', '/revisions/editorList', {siteId: <?php echo $this->site->getWikidotId();?>});
 }
 
 $(document).ready(init);

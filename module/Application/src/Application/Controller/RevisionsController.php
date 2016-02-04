@@ -22,7 +22,7 @@ use Application\Utils\DbConsts\DbViewRevisions;
  *
  * @author Alexander
  */
-class EditorsController extends AbstractActionController
+class RevisionsController extends AbstractActionController
 {
     /**
      *
@@ -59,7 +59,7 @@ class EditorsController extends AbstractActionController
         $this->services = $services;
     }
     
-    public function editorsAction()
+    public function revisionsAction()
     {
         $siteId = $this->services->getUtilityService()->getSiteId();
         $site = $this->services->getSiteService()->find($siteId);

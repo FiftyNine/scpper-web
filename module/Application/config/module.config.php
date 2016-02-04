@@ -117,13 +117,13 @@ return array(
                     ),
                 ),                                
             ),            
-            'editors' => array(
+            'revisions' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
-                    'route'    => '/editors',
+                    'route'    => '/revisions',
                     'defaults' => array(
-                        'controller' => 'Application\Controller\Editors',
-                        'action'     => 'editors',
+                        'controller' => 'Application\Controller\Revisions',
+                        'action'     => 'revisions',
                     ),
                 ),
                 'may_terminate' => true,
@@ -136,7 +136,7 @@ return array(
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ),
                             'defaults' => array(
-                                'controller' => 'Application\Controller\Editors',
+                                'controller' => 'Application\Controller\Revisions',
                             ),
                         ),
                     ),
@@ -222,7 +222,7 @@ return array(
             'Application\Controller\Recent' => 'Application\Factory\Controller\RecentControllerFactory',
             'Application\Controller\Users' => 'Application\Factory\Controller\UsersControllerFactory',
             'Application\Controller\Pages' => 'Application\Factory\Controller\PagesControllerFactory',
-            'Application\Controller\Editors' => 'Application\Factory\Controller\EditorsControllerFactory',
+            'Application\Controller\Revisions' => 'Application\Factory\Controller\RevisionsControllerFactory',
         ),
     ),
     'view_manager' => array(
@@ -270,8 +270,8 @@ return array(
                 'route' => 'pages',
             ),
             array(
-                'label' => 'Editors',
-                'route' => 'editors',
+                'label' => 'Revisions',
+                'route' => 'revisions',
             ),            
         )
     )

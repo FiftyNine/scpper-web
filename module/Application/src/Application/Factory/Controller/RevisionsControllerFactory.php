@@ -10,19 +10,19 @@ namespace Application\Factory\Controller;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Application\Controller\EditorsController;
+use Application\Controller\RevisionsController;
 
 /**
  * Description of UsersControllerFactory
  *
  * @author Alexander
  */
-class EditorsControllerFactory implements FactoryInterface
+class RevisionsControllerFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator) 
     {
         $realLocator = $serviceLocator->getServiceLocator();
         $hubService = $realLocator->get('Application\Service\HubServiceInterface');        
-        return new EditorsController($hubService);
+        return new RevisionsController($hubService);
     }
 }
