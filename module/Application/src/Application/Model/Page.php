@@ -2,6 +2,7 @@
 
 namespace Application\Model;
 
+use Application\Mapper\SimpleMapperInterface;
 use Application\Mapper\PageMapperInterface;
 use Application\Mapper\AuthorshipMapperInterface;
 use Application\Mapper\RevisionMapperInterface;
@@ -9,6 +10,11 @@ use Application\Mapper\VoteMapperInterface;
 
 class Page implements PageInterface
 {
+    /**
+     * @var \Application\Mapper\SimpleMapperInterface
+     */
+    protected $siteMapper;
+    
     /**
      *
      * @var \Application\Mapper\PageMapperInterface
@@ -38,6 +44,12 @@ class Page implements PageInterface
      * @var int
      */
     protected $siteId;
+    
+    /**
+     *
+     * @var \Application\Model\SiteInterface
+     */
+    protected $site;
     
     /**
      *
@@ -139,6 +151,11 @@ class Page implements PageInterface
      * @var PageInterface
      */
     protected $original;
+    
+    /**
+     * @var PageInterface[]
+     */
+    protected $translations;
  
     /**
      * Constructor
@@ -148,12 +165,14 @@ class Page implements PageInterface
      * @param VoteMapperInterface $voteMapper
      */
     public function __construct(
+            SimpleMapperInterface $siteMapper,
             PageMapperInterface $pageMapper,
             AuthorshipMapperInterface $authorMapper, 
             RevisionMapperInterface $revisionMapper,
             VoteMapperInterface $voteMapper
     ) 
-    {        
+    { 
+        $this->siteMapper = $siteMapper;
         $this->pageMapper = $pageMapper;
         $this->authorMapper = $authorMapper;
         $this->revisionMapper = $revisionMapper;
@@ -171,6 +190,17 @@ class Page implements PageInterface
     public function setSiteId($value)
     {
         $this->siteId = $value;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getSite() 
+    {
+        if (!isset($this->site)) {
+            $this->site = $this->siteMapper->find($this->getSiteId());
+        }
+        return $this->site;
     }
     
     /**
@@ -343,10 +373,10 @@ class Page implements PageInterface
      */
     public function getVotes() 
     {
-        /*if (!isset($this->votes)) {
-            $this->votes = $this->voteMapper->findVotesOnPage($this);
-        }*/
-        return $this->revisions;        
+        if (!isset($this->votes)) {
+            $this->votes = $this->voteMapper->findVotesOnPage($this->getId());
+        }
+        return $this->votes;        
     }
 
     /**
@@ -358,11 +388,25 @@ class Page implements PageInterface
             return $this;
         }
         if (!isset($this->original)) {
+            if (!$this->originalId) {
+                return null;
+            }
             $this->original = $this->pageMapper->find($this->originalId);
         }
-        $this->original;
+        return $this->original;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function getTranslations()
+    {
+       if (!isset($this->translations)) {
+           $this->translations = $this->pageMapper->findTranslations($this->getId());
+       }
+       return $this->translations;
+    }
+    
     public function getOriginalId()
     {
         return $this->originalId;

@@ -70,6 +70,18 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
      * 
      * {@inheritDoc}
      */
+    public function findTranslations($pageId)
+    {
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select(DbViewPages::TABLE)
+                ->where(array(DbViewPages::ORIGINALID.' = ?' => $pageId));
+        return $this->fetchResultSet($sql, $select);
+    }
+    
+    /**
+     * 
+     * {@inheritDoc}
+     */
     public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore)   
     {
         $sql = new Sql($this->dbAdapter);

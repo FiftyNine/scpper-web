@@ -27,6 +27,13 @@ interface PageMapperInterface extends SimpleMapperInterface
     public function findSitePages($siteId, $type = PageType::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null, $order = null, $paginated = false);
     
     /**
+     * Find translation of a page from other wikis
+     * @param int $pageId
+     * @return PageInterface[]
+     */
+    public function findTranslations($pageId);
+    
+    /**
      * Get an aggregated results from pages
      * P.e. Get a number of pages, average rating etc.
      * 

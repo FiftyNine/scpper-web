@@ -25,5 +25,19 @@ class AuthorRole
         self::REWRITE_AUTHOR => 'Rewrite author',
         self::TRANSLATOR => 'Translator',
         self::CONTRIBUTOR => 'Contributor',
-    );            
+    );
+    
+    /**
+     * Get description for a role
+     * @param int $role
+     * @throws \InvalidArgumentException
+     */
+    static public function getDescription($role)
+    {        
+        if (array_key_exists($role, self::ROLE_DESCRIPTIONS)) {
+            return self::ROLE_DESCRIPTIONS[$role];
+        } else {
+            throw new \InvalidArgumentException("Unknown author role - $role");
+        }        
+    }
 }

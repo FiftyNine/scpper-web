@@ -3,11 +3,16 @@
 namespace Application\Model;
 
 interface PageInterface
-{
+{       
     /**
      * @return int
      */
     public function getSiteId();
+ 
+    /**
+     * @return Application\Model\SiteInterface
+     */
+    public function getSite();
     
     /**
      * @return int
@@ -90,4 +95,8 @@ interface PageInterface
      */
     public function getOriginal();
     
+    /**
+     * @return PageInterface[]
+     */
+    public function getTranslations();
 }

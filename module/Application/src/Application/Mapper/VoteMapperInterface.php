@@ -16,6 +16,13 @@ interface VoteMapperInterface extends SimpleMapperInterface
     public function countSiteVotes($siteId, $type = VoteType::ANY, \DateTime $castAfter = null, \DateTime $castBefore = null);
     
     /**
+     * Return votes for a certain page
+     * @param int $pageId
+     * @return VoteInterface[]
+     */
+    public function findVotesOnPage($pageId);    
+    
+    /**
      * Get an aggregated results from votes, grouped by period when cast
      * P.e. Get a number of votes
      * @param int $siteId

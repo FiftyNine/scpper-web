@@ -15,4 +15,18 @@ class PageType
         self::TRANSLATION => 'Translation',
         self::REWRITE => 'Rewrite'
     );
+    
+    /**
+     * Get description for page status
+     * @param int $status
+     * @throws \InvalidArgumentException
+     */
+    static public function getDescription($status)
+    {
+        if (array_key_exists($status, self::DESCRIPTIONS)) {
+            return self::DESCRIPTIONS[$status];
+        } else {
+            throw new \InvalidArgumentException("Unknown author role - $status");
+        }                
+    }
 }

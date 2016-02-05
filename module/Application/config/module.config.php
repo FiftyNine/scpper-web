@@ -167,6 +167,19 @@ return array(
                     ),
                 ),                                
             ),            
+            'page' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route'    => '/page/:pageId',
+                    'constraints' => array(                                
+                        'pageId'     => '[1-9][0-9]*',
+                    ),                    
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Page',
+                        'action'     => 'page',
+                    ),
+                ),
+            ),
         ),
     ),
     'service_manager' => array(
@@ -249,6 +262,7 @@ return array(
             'Application\Controller\Pages' => 'Application\Factory\Controller\PagesControllerFactory',
             'Application\Controller\Revisions' => 'Application\Factory\Controller\RevisionsControllerFactory',
             'Application\Controller\Votes' => 'Application\Factory\Controller\VotesControllerFactory',
+            'Application\Controller\Page' => 'Application\Factory\Controller\PageControllerFactory',
         ),
     ),
     'view_manager' => array(

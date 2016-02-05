@@ -21,10 +21,11 @@ class PagePrototypeFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator) 
     {
+        $siteMapper = $serviceLocator->get('SiteMapper');
         $pageMapper = $serviceLocator->get('PageMapper');
         $authorMapper = $serviceLocator->get('AuthorshipMapper');
         $revisionMapper = $serviceLocator->get('RevisionMapper');
         $voteMapper = $serviceLocator->get('VoteMapper');
-        return new Page($pageMapper, $authorMapper, $revisionMapper, $voteMapper);
+        return new Page($siteMapper, $pageMapper, $authorMapper, $revisionMapper, $voteMapper);
     }
 }
