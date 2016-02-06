@@ -19,26 +19,30 @@ Posted: <strong><?php echo $page->getCreationDate()->format('Y-m-d H:i') ?></str
 <br>
 Contributors: 
 <strong>
-    <?php 
-        $authors = $page->getAuthors();
-        $one = 1 === count($authors);
-        $i = 0;
-    ?>
-    <?php foreach ($authors as $author): ?>        
-        <a href="#">
-            <?php echo $author->getUser()->getDisplayName(); ?>
-        </a>
+    <?php $authors = $page->getAuthors(); ?>
+    <?php if (!$authors || count($authors)===0): ?>
+        <em>Unknown</em>
+    <?php else: ?>    
         <?php
-            if (!$one || $author->getRole() !== \Application\Utils\AuthorRole::AUTHOR) {
-                printf("(%s)", \Application\Utils\AuthorRole::getDescription($author->getRole()));
-            }
-            if (!$one && $i<count($authors)-1) { 
-                echo ', '; 
-
-            }
+            $one = 1 === count($authors);
+            $i = 0;
         ?>
-        <?php $i++; ?>
-    <?php endforeach; ?>
+        <?php foreach ($authors as $author): ?>        
+            <a href="#">
+                <?php echo $author->getUser()->getDisplayName(); ?>
+            </a>
+            <?php
+                if (!$one || $author->getRole() !== \Application\Utils\AuthorRole::AUTHOR) {
+                    printf("(%s)", \Application\Utils\AuthorRole::getDescription($author->getRole()));
+                }
+                if (!$one && $i<count($authors)-1) { 
+                    echo ', '; 
+
+                }
+            ?>
+            <?php $i++; ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
 </strong>
 <br>
 <?php
@@ -74,6 +78,8 @@ Rating: <strong><?php echo $page->getCleanRating(); ?> (<?php printf('%+d / %d',
 Contributor rating: <strong><?php echo $page->getContributorRating(); ?> (<?php printf('%+d / %d', $contribPos, $contribNeg) ?>)</strong>
 <br>
 Adjusted rating: <strong><?php echo $page->getAdjustedRating(); ?> (<?php printf('%+d / %d', $adjPos, $adjNeg) ?>)</strong>
+<br>
+Rank: <strong>#<?php echo $page->getRank() ?></strong>
 <br>
 Status: <strong><?php echo \Application\Utils\PageType::getDescription($page->getStatus()); ?></strong>
 <br>

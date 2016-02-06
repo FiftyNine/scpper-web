@@ -158,6 +158,12 @@ class Page implements PageInterface
     protected $translations;
  
     /**
+     *
+     * @var int
+     */
+    protected $rank;
+    
+    /**
      * Constructor
      * @param PageMapperInterface $pageMapper
      * @param AuthorshipMapperInterface $authorMapper
@@ -430,4 +436,19 @@ class Page implements PageInterface
         $this->status = $value;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function getRank()
+    {
+        if (!isset($this->rank)) {
+            $this->rank = $this->pageMapper->findPageRank($this->getId());
+        }
+        return $this->rank;
+    }
+
+    public function setRank($rank)
+    {
+        $this->rank = $rank;
+    }
 }

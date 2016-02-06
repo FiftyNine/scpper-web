@@ -3,6 +3,7 @@
 namespace Application\Mapper;
 
 use Zend\Db\Sql\Sql;
+use Zend\Db\Sql\Expression;
 use Application\Utils\PageType;
 use Application\Utils\DbConsts\DbViewPages;
 
@@ -32,7 +33,6 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
     }
     
     /**
-     * 
      * {@inheritDoc}
      */
     public function countSitePages($siteId, $type = PageType::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null) 
@@ -43,7 +43,6 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
     }
     
     /**
-     * 
      * {@inheritDoc}
      */
     public function findSitePages(
@@ -67,7 +66,6 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
     }
     
     /**
-     * 
      * {@inheritDoc}
      */
     public function findTranslations($pageId)
@@ -77,9 +75,30 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
                 ->where(array(DbViewPages::ORIGINALID.' = ?' => $pageId));
         return $this->fetchResultSet($sql, $select);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function findPageRank($pageId)
+    {
+        $sql = new Sql($this->dbAdapter);        
+        $subSelect = $sql->select(DbViewPages::TABLE)
+                ->columns(array(new Expression('COUNT(*)')))
+                ->where(array(
+                    DbViewPages::CLEANRATING.' > p.'.DbViewPages::CLEANRATING,
+                    DbViewPages::SITEID.' = p.'.DbViewPages::SITEID,
+                ));
+        $select = $sql->select(array('p' => DbViewPages::TABLE))
+                ->columns(array('Rank' => $subSelect), false)
+                ->where(array(DbViewPages::PAGEID.' = ?' => $pageId));
+        $res = $this->fetchArray($sql, $select);
+        if (count($res) === 1) {
+            return $res[0]['Rank'];
+        }
+        return -1;
+    }
     
     /**
-     * 
      * {@inheritDoc}
      */
     public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore)   

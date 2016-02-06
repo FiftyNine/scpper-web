@@ -99,4 +99,9 @@ interface PageInterface
      * @return PageInterface[]
      */
     public function getTranslations();
+    
+    /**
+     * @return int
+     */
+    public function getRank();
 }

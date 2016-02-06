@@ -34,6 +34,13 @@ interface PageMapperInterface extends SimpleMapperInterface
     public function findTranslations($pageId);
     
     /**
+     * Find page's rank on the site
+     * @param int pageId
+     * @return int
+     */
+    public function findPageRank($pageId);
+    
+    /**
      * Get an aggregated results from pages
      * P.e. Get a number of pages, average rating etc.
      * 

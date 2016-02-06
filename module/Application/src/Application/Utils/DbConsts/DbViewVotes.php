@@ -18,6 +18,9 @@ class DbViewVotes
     const USERDELETED = 'UserDeleted';
     const VALUE = 'Value';
     const DATETIME = 'DateTime';
+    const FROMMEMBER = 'FromMember';
+    const FROMCONTRIBUTOR = 'FromContributor';
+    const FROMACTIVE = 'FromActive';
 
 
     static public function hasField($field) 
