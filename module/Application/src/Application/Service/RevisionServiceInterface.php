@@ -32,6 +32,14 @@ interface RevisionServiceInterface
     public function countSiteRevisions($siteId, \DateTime $createdAfter = null, \DateTime $createdBefore = null);
     
     /**
+     * Returns revisions of a page
+     * @param int $pageId
+     * @param bool $paginated
+     * @return RevisionInterface[]|\Zend\Paginator\Paginator     
+     */
+    public function findRevisionsOfPage($pageId, $paginated = false);
+    
+    /**
      * Get an aggregated votes from revisions, grouped by creation date
      * P.e. Get a number of votes
      * 

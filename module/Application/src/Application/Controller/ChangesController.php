@@ -68,7 +68,7 @@ class ChangesController extends AbstractActionController
             new Aggregate('*', Aggregate::COUNT, 'Votes'),
             new Aggregate(DbViewVotes::VALUE, Aggregate::SUM, 'Sum'),
         );
-        $voters = $this->services->getVoteService()->getAggregatedValues($siteId, $aggregates, $from, $to, array($orderBy => $order), true);
+        $voters = $this->services->getVoteService()->getAggregatedForSite($siteId, $aggregates, $from, $to, array($orderBy => $order), true);
         $voters->setCurrentPageNumber($page);
         $voters->setItemCountPerPage($perPage);
         return $voters;
@@ -282,7 +282,7 @@ class ChangesController extends AbstractActionController
             $count = new Aggregate('*', Aggregate::COUNT, 'Number');
             $dateAgg = new DateAggregate(DbViewVotes::DATETIME, 'Period');
             $dateAgg->setBestAggregateType($fromDate, $toDate);            
-            $votes = $this->services->getVoteService()->getAggregatedValues($siteId, array($count, $dateAgg), $fromDate, $toDate);            
+            $votes = $this->services->getVoteService()->getAggregatedForSite($siteId, array($count, $dateAgg), $fromDate, $toDate);            
             foreach($votes as $vote) {
                 $result['data'][] = array($vote['Period']->format(\DateTime::ISO8601), $vote['Number']);
             }

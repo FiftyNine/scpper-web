@@ -24,7 +24,7 @@ chartsData.toDate = "<?php echo $toDate->getValue(); ?>";
 // Variables for pagination
 paginatorData = $.extend({page: 1, perPage: 10}, chartsData);
 
-function initRecent()
+function init()
 {
     $('#show-members').on('click', {container: "#members-list", url: "/changes/members", payload: paginatorData}, fetchPaginatorFirst);
     $('#show-pages').on('click', {container: "#pages-list", url: "/changes/pages", payload: paginatorData}, fetchPaginatorFirst);
@@ -33,7 +33,7 @@ function initRecent()
     $('.datepicker').datepicker({autoSize: true, dateFormat: "yy-mm-dd", maxDate: "<?php echo $site->getLastUpdate()->format('Y-m-d');?>"});
 }
 
-$(document).ready(initRecent);
+$(document).ready(init);
 
 // Call google graphing API
 google.charts.load('current', {packages: ['corechart']});

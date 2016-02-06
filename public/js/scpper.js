@@ -4,6 +4,12 @@
  * and open the template in the editor.
  */
 
+if (!Array.prototype.last){
+    Array.prototype.last = function(){
+        return this[this.length - 1];
+    };
+};
+
 function isIE() {
   var ms_ie = false;
     var ua = window.navigator.userAgent;

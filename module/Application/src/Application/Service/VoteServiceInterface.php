@@ -34,5 +34,24 @@ interface VoteServiceInterface
      * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
      * @return array(array(string => mixed))
      */
-    public function getAggregatedValues($siteId, $aggregates, \DateTime $castAfter = null, \DateTime $castBefore = null, $order = null, $paginated = false);
+    public function getAggregatedForSite($siteId, $aggregates, \DateTime $castAfter = null, \DateTime $castBefore = null, $order = null, $paginated = false);
+    
+    /**
+     * Get an aggregated results from votes
+     * P.e. Get a number of votes
+     * @param int $pageId
+     * @param \Application\Utils\QueryAggregateInterface[] $aggregates
+     * @param bool onlyClean
+     * @return array[array[string]mixed]
+     */
+    public function getAggregatedForPage($pageId, $aggregates, $onlyClean = false);
+    
+    /**
+     * Get an aggregated results from votes
+     * P.e. Get a number of votes
+     * @param int $userId
+     * @param \Application\Utils\QueryAggregateInterface[] $aggregates
+     * @return array[array[string]mixed]
+     */
+    public function getAggregatedForUser($userId, $aggregates);
 }

@@ -40,6 +40,14 @@ class RevisionService implements RevisionServiceInterface
     {
         return $this->mapper->countSiteRevisions($siteId, $createdAfter, $createdBefore);
     }
+ 
+    /**
+     * {@inheritDoc}
+     */ 
+    public function findRevisionsOfPage($pageId, $paginated = false)
+    {
+        return $this->mapper->findRevisionsOfPage($pageId, $paginated);
+    }
     
     /**
      * {@inheritDoc}

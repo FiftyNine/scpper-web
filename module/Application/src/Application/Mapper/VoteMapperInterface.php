@@ -23,9 +23,8 @@ interface VoteMapperInterface extends SimpleMapperInterface
     public function findVotesOnPage($pageId);    
     
     /**
-     * Get an aggregated results from votes, grouped by period when cast
-     * P.e. Get a number of votes
-     * @param int $siteId
+     * Get an aggregated results from votes
+     * @param array[string]string
      * @param \Application\Utils\QueryAggregateInterface[] $aggregates
      * @param \DateTime $castAfter
      * @param \DateTime $castBefore
@@ -33,5 +32,5 @@ interface VoteMapperInterface extends SimpleMapperInterface
      * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
      * @return array(array(string => mixed))
      */
-    public function getAggregatedValues($siteId, $aggregates, \DateTime $castAfter = null, \DateTime $castBefore = null, $order = null, $paginated = false);
+    public function getAggregatedValues($conditions, $aggregates, \DateTime $castAfter = null, \DateTime $castBefore = null, $order = null, $paginated = false);
 }

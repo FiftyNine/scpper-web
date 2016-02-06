@@ -170,7 +170,7 @@ return array(
             'page' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route'    => '/page/:pageId',
+                    'route'    => '/page[/:pageId]',
                     'constraints' => array(                                
                         'pageId'     => '[1-9][0-9]*',
                     ),                    
@@ -179,6 +179,21 @@ return array(
                         'action'     => 'page',
                     ),
                 ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/:action',
+                            'constraints' => array(                                
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\Page',
+                            ),
+                        ),
+                    ),
+                ),                                                
             ),
         ),
     ),

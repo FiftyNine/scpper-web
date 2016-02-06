@@ -239,6 +239,24 @@ div.google-visualization-tooltip {
     background-image: url("/img/chartfail.png");
 }
 
+/** Page **/
+
+#page-top {
+    display: flex; 
+    flex-direction: row; 
+    align-items: flex-start
+}
+
+#page-summary {
+    align-self: flex-start; 
+    max-width: 40%;
+}
+
+#page-chart {
+    flex: 1; 
+    align-self: stretch;
+}
+
 /* Legacy stuff */
 /*
 .btn-success {

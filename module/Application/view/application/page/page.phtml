@@ -1,4 +1,19 @@
 <?php $page = $this->page; ?>
+<?php
+$this->headScript()->appendFile('/js/scpper_charts.js');
+$this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
+?>
+<?php $this->headScript()->captureStart(); ?>
+
+// Initialize global variables
+var pageId = <?php echo $page->getId() ?>;
+
+// Call google graphing API
+google.charts.load('current', {packages: ['corechart']});
+google.charts.setOnLoadCallback(function () {drawPageRatingChart(pageId);});
+
+<?php $this->headScript()->captureEnd(); ?>
+
 <p>
     <span class="h2">
         <a href="<?php printf("%s/%s", $page->getSite()->getUrl(), $page->getName())?>">
@@ -15,129 +30,139 @@
         Updated <?php echo $page->getSite()->getLastUpdate()->format('Y-m-d H:i') ?>
     </span>    
 </p>
-Posted: <strong><?php echo $page->getCreationDate()->format('Y-m-d H:i') ?></strong>    
-<br>
-Contributors: 
-<strong>
-    <?php $authors = $page->getAuthors(); ?>
-    <?php if (!$authors || count($authors)===0): ?>
-        <em>Unknown</em>
-    <?php else: ?>    
-        <?php
-            $one = 1 === count($authors);
-            $i = 0;
-        ?>
-        <?php foreach ($authors as $author): ?>        
-            <a href="#">
-                <?php echo $author->getUser()->getDisplayName(); ?>
-            </a>
-            <?php
-                if (!$one || $author->getRole() !== \Application\Utils\AuthorRole::AUTHOR) {
-                    printf("(%s)", \Application\Utils\AuthorRole::getDescription($author->getRole()));
-                }
-                if (!$one && $i<count($authors)-1) { 
-                    echo ', '; 
-
-                }
-            ?>
-            <?php $i++; ?>
-        <?php endforeach; ?>
-    <?php endif; ?>
-</strong>
-<br>
-<?php
-    $cleanPos = 0; $cleanNeg = 0;
-    $contribPos = 0; $contribNeg = 0;
-    $adjPos = 0; $adjNeg = 0;
-    foreach ($page->getVotes() as $vote) {        
-        if ($vote->getFromMember()) {
-            if ($vote->getValue() > 0) {
-                $cleanPos++;
-            } else {
-                $cleanNeg--;
-            }
-        }
-        if ($vote->getFromContributor()) {
-            if ($vote->getValue() > 0) {
-                $contribPos++;
-            } else {
-                $contribNeg--;
-            }
-        }        
-        if ($vote->getFromActive()) {
-            if ($vote->getValue() > 0) {
-                $adjPos++;
-            } else {
-                $adjNeg--;
-            }
-        }        
-    }
-?>
-Rating: <strong><?php echo $page->getCleanRating(); ?> (<?php printf('%+d / %d', $cleanPos, $cleanNeg) ?>)</strong>
-<br>
-Contributor rating: <strong><?php echo $page->getContributorRating(); ?> (<?php printf('%+d / %d', $contribPos, $contribNeg) ?>)</strong>
-<br>
-Adjusted rating: <strong><?php echo $page->getAdjustedRating(); ?> (<?php printf('%+d / %d', $adjPos, $adjNeg) ?>)</strong>
-<br>
-Rank: <strong>#<?php echo $page->getRank() ?></strong>
-<br>
-Status: <strong><?php echo \Application\Utils\PageType::getDescription($page->getStatus()); ?></strong>
-<br>
-<?php if (($page->getStatus() === \Application\Utils\PageType::ORIGINAL) && count($page->getTranslations()) > 0): ?>
-    Translations of this page:
-    <ul>
-        <?php foreach ($page->getTranslations() as $trans): ?>
-        <li>
-            <a href="#"> <?php echo $trans->getTitle();?> </a> 
-            on
-            <em>
-                <?php echo $trans->getSite()->getEnglishName(); ?>
-            </em>
-            by
-            <em>
-                <?php $i=0; foreach ($trans->getAuthors() as $auth): ?>
-                    <?php if ($i>0): ?>, <?php endif; ?>
-                    <a href="#"> 
-                        <?php echo $auth->getUser()->getDisplayName(); ?>
-                    </a>                    
-                <?php $i++; endforeach; ?>
-            </em>
-            at
-            <em>
-                <?php echo sprintf('%+d', $trans->getCleanRating()) ?>
-            </em>
-        </li>
-        <?php endforeach; ?>
-    </ul>
-<?php else: ?>
-    <?php $orig = $page->getOriginal(); ?>
-    <?php if ($orig !== null): ?>
-        Original page:
-        <a href="#"><?php echo $orig->getTitle();?></a> 
-        on
-        <em>
-            <?php echo $orig->getSite()->getEnglishName(); ?>
-        </em>
-        by
-        <em>
-            <?php $i=0; $one=count($orig->getAuthors())===1; foreach ($orig->getAuthors() as $auth): ?>
-                <?php if ($i>0): ?>, <?php endif; ?>
-                <a href="#"> 
-                    <?php echo $auth->getUser()->getDisplayName(); ?>
-                </a>
-                <?php if (!$one || $auth->getRole() !== \Application\Utils\AuthorRole::AUTHOR) {
-                  printf('(%s)', \Application\Utils\AuthorRole::getDescription($auth->getRole())); } 
+<hr>
+<div id="page-top">
+    <div id="page-summary">
+        Posted: <strong><?php echo $page->getCreationDate()->format('Y-m-d H:i') ?></strong>    
+        <br>
+        Contributors: 
+        <strong>
+            <?php $authors = $page->getAuthors(); ?>
+            <?php if (!$authors || count($authors)===0): ?>
+                <em>Unknown</em>
+            <?php else: ?>    
+                <?php
+                    $one = 1 === count($authors);
+                    $i = 0;
                 ?>
-            <?php $i++; endforeach; ?>
-        </em>
-        at
-        <em>
-            <?php echo sprintf('%+d', $orig->getCleanRating()) ?>
-        </em>    
-    <?php else: ?>
-        Original page not found
-    <?php endif; ?>     
-<?php endif; ?>
+                <?php foreach ($authors as $author): ?>        
+                    <a href="#">
+                        <?php echo $author->getUser()->getDisplayName(); ?>
+                    </a>
+                    <?php
+                        if (!$one || $author->getRole() !== \Application\Utils\AuthorRole::AUTHOR) {
+                            printf("(%s)", \Application\Utils\AuthorRole::getDescription($author->getRole()));
+                        }
+                        if (!$one && $i<count($authors)-1) { 
+                            echo ', '; 
 
+                        }
+                    ?>
+                    <?php $i++; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </strong>
+        <br>
+        <?php
+            $cleanPos = 0; $cleanNeg = 0;
+            $contribPos = 0; $contribNeg = 0;
+            $adjPos = 0; $adjNeg = 0;
+            foreach ($page->getVotes() as $vote) {        
+                if ($vote->getFromMember()) {
+                    if ($vote->getValue() > 0) {
+                        $cleanPos++;
+                    } else {
+                        $cleanNeg--;
+                    }
+                }
+                if ($vote->getFromContributor()) {
+                    if ($vote->getValue() > 0) {
+                        $contribPos++;
+                    } else {
+                        $contribNeg--;
+                    }
+                }        
+                if ($vote->getFromActive()) {
+                    if ($vote->getValue() > 0) {
+                        $adjPos++;
+                    } else {
+                        $adjNeg--;
+                    }
+                }        
+            }
+        ?>
+        Rating: <strong><?php echo $page->getCleanRating(); ?> (<?php printf('%+d / %d', $cleanPos, $cleanNeg) ?>)</strong>
+        <br>
+        Contributor rating: <strong><?php echo $page->getContributorRating(); ?> (<?php printf('%+d / %d', $contribPos, $contribNeg) ?>)</strong>
+        <br>
+        Adjusted rating: <strong><?php echo $page->getAdjustedRating(); ?> (<?php printf('%+d / %d', $adjPos, $adjNeg) ?>)</strong>
+        <br>
+        Rank: <strong>#<?php echo $page->getRank() ?></strong>
+        <br>
+        Status: <strong><?php echo \Application\Utils\PageType::getDescription($page->getStatus()); ?></strong>
+        <br>
+        <?php if ($page->getStatus() === \Application\Utils\PageType::ORIGINAL): ?>
+            <?php if (count($page->getTranslations()) > 0): ?>
+            Translations of this page:
+            <ul>
+                <?php foreach ($page->getTranslations() as $trans): ?>
+                <li>
+                    <a href="#"> <?php echo $trans->getTitle();?> </a> 
+                    on
+                    <em>
+                        <?php echo $trans->getSite()->getEnglishName(); ?>
+                    </em>
+                    by
+                    <em>
+                        <?php $i=0; foreach ($trans->getAuthors() as $auth): ?>
+                            <?php if ($i>0): ?>, <?php endif; ?>
+                            <a href="#"> 
+                                <?php echo $auth->getUser()->getDisplayName(); ?>
+                            </a>                    
+                        <?php $i++; endforeach; ?>
+                    </em>
+                    at
+                    <em>
+                        <?php echo sprintf('%+d', $trans->getCleanRating()) ?>
+                    </em>
+                </li>
+                <?php endforeach; ?>
+            </ul>
+            <?php endif; ?>
+        <?php else: ?>
+            <?php $orig = $page->getOriginal(); ?>
+            <?php if ($orig !== null): ?>
+                Original page:
+                <a href="#"><?php echo $orig->getTitle();?></a> 
+                on
+                <em>
+                    <?php echo $orig->getSite()->getEnglishName(); ?>
+                </em>
+                by
+                <em>
+                    <?php $i=0; $one=count($orig->getAuthors())===1; foreach ($orig->getAuthors() as $auth): ?>
+                        <?php if ($i>0): ?>, <?php endif; ?>
+                        <a href="#"> 
+                            <?php echo $auth->getUser()->getDisplayName(); ?>
+                        </a>
+                        <?php if (!$one || $auth->getRole() !== \Application\Utils\AuthorRole::AUTHOR) {
+                          printf('(%s)', \Application\Utils\AuthorRole::getDescription($auth->getRole())); } 
+                        ?>
+                    <?php $i++; endforeach; ?>
+                </em>
+                at
+                <em>
+                    <?php echo sprintf('%+d', $orig->getCleanRating()) ?>
+                </em>    
+            <?php else: ?>
+                Original page not found
+            <?php endif; ?>     
+        <?php endif; ?>
+    </div>
+    <div id="page-chart">
+        <div class="chart-container" id="rating-chart">
+        </div>            
+    </div>
+</div>
 
    

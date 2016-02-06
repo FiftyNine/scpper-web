@@ -10,7 +10,7 @@ class RevisionDbSqlMapper extends ZendDbSqlMapper implements RevisionMapperInter
     protected function buildRevisionSelect(Sql $sql, $siteId, \DateTime $createdAfter = null, \DateTime $createdBefore = null)
     {
         $select = $sql->select()
-                      ->from(array("r" => DbViewRevisions::TABLE))
+                      ->from(array('r' => DbViewRevisions::TABLE))
                       ->where(array('r.'.DbViewRevisions::SITEID.' = ?' => $siteId));
         if ($createdAfter && $createdAfter->getTimestamp() <= time()) {
             $select->where(array('r.'.DbViewRevisions::DATETIME.' >= ?' => $createdAfter->format(self::DATETIME_FORMAT)));
@@ -22,7 +22,7 @@ class RevisionDbSqlMapper extends ZendDbSqlMapper implements RevisionMapperInter
    }
     
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function countSiteRevisions($siteId, \DateTime $createdAfter = null, \DateTime $createdBefore = null) 
     {
@@ -32,7 +32,22 @@ class RevisionDbSqlMapper extends ZendDbSqlMapper implements RevisionMapperInter
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     */    
+    public function findRevisionsOfPage($pageId, $paginated = false)
+    {
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select(DbViewRevisions::TABLE)
+                ->where(array(DbViewRevisions::PAGEID.' = ?' => $pageId))
+                ->order(DbViewRevisions::REVISIONINDEX.' DESC');
+        if ($paginated) {
+            return $this->getPaginator($select);
+        }
+        return $this->fetchResultSet($sql, $select);
+    }
+    
+    /**
+     * {@inheritdoc}
      */    
     public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter = null, \DateTime $createdBefore = null, $order = null, $paginated = false)
     {

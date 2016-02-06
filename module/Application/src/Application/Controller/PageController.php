@@ -12,10 +12,9 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Application\Service\HubServiceInterface;
-use Application\Factory\Component\PaginatedTableFactory;
-use Application\Utils\DbConsts\DbViewPages;
-use Application\Utils\PageType;
-use Application\Utils\Order;
+use Application\Utils\Aggregate;
+use Application\Utils\DateAggregate;
+use Application\Utils\DbConsts\DbViewVotes;
 
 /**
  * Description of PageController
@@ -44,6 +43,28 @@ class PageController extends AbstractActionController
         }
         return new ViewModel(array(
            'page' => $page,
+        ));
+    }
+    
+    public function ratingChartAction()
+    {
+        $pageId = (int)$this->params()->fromQuery('pageId');
+        $byDate = new DateAggregate(DbViewVotes::DATETIME, 'Date');
+        $count = new Aggregate('*', Aggregate::COUNT, 'Votes');
+        $votes = $this->services->getVoteService()->getAggregatedForPage($pageId, array($byDate, $count), true);
+        $resVotes = array();
+        foreach ($votes as $vote) {
+            $resVotes[] = array($vote['Date']->format(\DateTime::ISO8601), $vote['Votes']);
+        }
+        $revisions = $this->services->getRevisionService()->findRevisionsOfPage($pageId);
+        $resRevisions = array();
+        foreach ($revisions as $rev) {
+            $resRevisions[] = array($rev->getDateTime()->format(\DateTime::ISO8601), $rev);
+        }
+        return new JsonModel(array(
+            'success' => true,
+            'votes' => $resVotes,
+            'revisions' => $resRevisions,
         ));
     }
 }

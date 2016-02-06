@@ -49,7 +49,7 @@ class VotesController extends AbstractActionController
             new Aggregate('*', Aggregate::COUNT, 'Votes'),
             new Aggregate(DbViewVotes::VALUE, Aggregate::SUM, 'Sum'),
         );
-        $voters = $this->services->getVoteService()->getAggregatedValues($siteId, $aggregates, null, null, array($orderBy => $order), true);
+        $voters = $this->services->getVoteService()->getAggregatedForSite($siteId, $aggregates, null, null, array($orderBy => $order), true);
         $voters->setCurrentPageNumber($page);
         $voters->setItemCountPerPage($perPage);
         $table = PaginatedTableFactory::createVotersTable($voters);

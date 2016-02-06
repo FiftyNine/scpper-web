@@ -1,3 +1,12 @@
+function convertDate(dateString) {
+    if (isIE()) {
+        // holy shit fuck IE
+        return new Date(dateString.substring(0, dateString.length-5));
+    } else {
+        return new Date(dateString);
+    }        
+}
+
 function roundToDay(datetime) {
     var newDate = new Date(datetime);
     newDate.setHours(0);
@@ -5,6 +14,7 @@ function roundToDay(datetime) {
     newDate.setSeconds(0);
     return newDate;
 }
+
 function roundToWeek(datetime) {
     var newDate = roundToDay(datetime);
     newDate.setDate(newDate.getDate()-newDate.getDay());    
@@ -16,6 +26,8 @@ function roundToMonth(datetime) {
     newDate.setDate(0);
     return newDate;
 }
+
+/** Changes charts **/
 
 function getDateGroupTooltip(date, group) {
     var period = '';            
@@ -96,18 +108,8 @@ function drawTimeLineCharts(result, barLabel, barTitle, barId, lineLabel, lineTi
         return;
     }
     // Convert returned values from string to date
-    var date = null;
-    var dateStr = '';
     for (var i=0; i<result.data.length; i++) {
-        dateStr = result.data[i][0];
-        if (isIE()) {
-            // holy shit fuck IE
-            date = new Date(dateStr.substring(0, dateStr.length-5));
-        } else {
-            date = new Date(dateStr);
-        }
-        
-        result.data[i][0] = date;            
+        result.data[i][0] = convertDate(result.data[i][0]);
     }
     // Prepare data for bar chart
     var barData = $.extend(true, [], result.data);
@@ -127,7 +129,7 @@ function drawTimeLineCharts(result, barLabel, barTitle, barId, lineLabel, lineTi
     drawLineChart(lineData, lineLabel, lineTitle, lineId, color);
 }
 
-function drawMemberCharts() {
+function drawMemberCharts(chartsData) {
     $.ajax({
         url: "/changes/getMemberChartData",
         type: "get",
@@ -142,7 +144,7 @@ function drawMemberCharts() {
     });
 }
 
-function drawPageCharts() {
+function drawPageCharts(chartsData) {
     $.ajax({
         url: "/changes/getPageChartData",
         type: "get",
@@ -157,7 +159,7 @@ function drawPageCharts() {
     });
 }
 
-function drawRevisionCharts() {
+function drawRevisionCharts(chartsData) {
     $.ajax({
         url: "/changes/getRevisionChartData",
         type: "get",
@@ -172,7 +174,7 @@ function drawRevisionCharts() {
     });
 }
 
-function drawVoteCharts() {
+function drawVoteCharts(chartsData) {
     $.ajax({
         url: "/changes/getVoteChartData",
         type: "get",
@@ -191,8 +193,87 @@ function drawVoteCharts() {
 function drawChangeCharts(chartsData) {
     if (chartsData.siteId < 0)
         return;
-    drawMemberCharts();
-    drawPageCharts();
-    drawRevisionCharts();
-    drawVoteCharts();
+    drawMemberCharts(chartsData);
+    drawPageCharts(chartsData);
+    drawRevisionCharts(chartsData);
+    drawVoteCharts(chartsData);
+}
+
+/** Page rating chart **/
+
+function drawPageRatingChart(pageId) {
+    $.ajax({
+        url: "/page/ratingChart",
+        type: "get",
+        data: {pageId: pageId}
+    })
+    .done(function (result) {
+        // Define the chart to be drawn
+        if (!result.success || result.votes.length < 2) {
+            setFailedBackground('rating-chart');    
+            return;
+        }
+        // Convert returned values from string to date
+        for (var i=0; i<result.votes.length; i++) {
+            result.votes[i][0] = convertDate(result.votes[i][0]);
+        }
+        for (var i=0; i<result.revisions.length; i++) {
+            result.revisions[i][0] = convertDate(result.revisions[i][0]);
+        }        
+        // Prepare data for line chart
+        var rating = $.extend(true, [], result.votes);        
+        for (var i=1; i<rating.length; i++) {
+            rating[i][1] = rating[i-1][1]+rating[i][1];
+        }
+        var revisions = [];
+        for (var i=0; i<result.revisions.length; i++) {
+            if (result.revisions[i][0] > result.votes[0][0] && result.revisions[i][0] < result.votes[result.votes.length-1][0]) {
+                revisions.push([result.revisions[i][0], null, result.revisions[i][1].index.toString(), result.revisions[i][1].comments]);
+            }
+        }
+        // Draw line chart
+        var lineData = new google.visualization.DataTable();
+        lineData.addColumn({type: 'date', label: 'Time'});
+        lineData.addColumn({type: 'number', label: 'Rating'});
+        lineData.addRows(rating);
+        var pointData = new google.visualization.DataTable();
+        pointData.addColumn({type: 'date', label: 'Time'});
+        pointData.addColumn({type: 'number', label: 'Rating'});
+        pointData.addColumn({type: 'string', role: 'annotation'});
+        pointData.addColumn({type: 'string', role: 'annotationText'});
+        pointData.addRows(revisions);
+        var data = google.visualization.data.join(lineData, pointData, 'full', [[0, 0], [1, 1]], [], [2, 3]);
+        var last = 0;
+        for (var i=1; i<data.getNumberOfRows(); i++) {
+            if (data.getValue(i, 1)) {
+                if (i-last > 1) {
+                    for (var j=last+1; j<i; j++) {
+                        var ratio = (data.getValue(j, 0)-data.getValue(last, 0))/(data.getValue(i, 0)-data.getValue(last, 0));
+                        var interp = Math.round((data.getValue(last, 1)+(data.getValue(i, 1)-data.getValue(last, 1))*ratio));
+                        data.setValue(j, 1, interp);
+                    }
+                }
+                last = i;
+            }
+        }
+        var options = {
+            title: 'Rating',
+            annotations: {
+              textStyle: {
+                fontSize: 14,
+                bold: true,
+                // The color of the text.
+                color: '#DB9191',
+              },            
+            },
+            chartArea: {width: '80%', height: '80%'},
+            legend: 'none',
+            colors: ['#E0A96E']
+        };    
+        var chart = new google.visualization.LineChart(document.getElementById('rating-chart'));
+        chart.draw(data, options);    
+    })
+    .fail(function () {
+        setFailedBackground('rating-chart');
+    });
 }

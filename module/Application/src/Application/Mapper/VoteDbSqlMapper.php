@@ -8,19 +8,20 @@ use Application\Utils\DbConsts\DbViewVotes;
 
 class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
 {
-    protected function buildVoteSelect(Sql $sql, $siteId, $type = VoteType::ANY, \DateTime $castAfter = null, \DateTime $castBefore = null)
+    protected function buildVoteSelect(Sql $sql, $conditions, $type = VoteType::ANY, \DateTime $castAfter = null, \DateTime $castBefore = null)
     {
-        $select = $sql->select()
-                      ->from(array('v' => DbViewVotes::TABLE))
-                      ->where(array('v.'.DbViewVotes::SITEID.' = ?' => $siteId));
+        $select = $sql->select(DbViewVotes::TABLE);
+        if ($conditions) {
+            $select->where($conditions);
+        }
         if ($type !== VoteType::ANY) {
-            $select->where(array('v.'.DbViewVotes::VALUE.' = ?' => $type));
+            $select->where(array(DbViewVotes::VALUE.' = ?' => $type));
         }
         if ($castAfter) {
-            $select->where(array('v.'.DbViewVotes::DATETIME.' >= ?' => $castAfter->format(self::DATETIME_FORMAT)));
+            $select->where(array(DbViewVotes::DATETIME.' >= ?' => $castAfter->format(self::DATETIME_FORMAT)));
         }
         if ($castBefore) {
-            $select->where(array('v.'.DbViewVotes::DATETIME.' <= ?' => $castBefore->format(self::DATETIME_FORMAT)));
+            $select->where(array(DbViewVotes::DATETIME.' <= ?' => $castBefore->format(self::DATETIME_FORMAT)));
         }
         return $select;
     }
@@ -32,7 +33,7 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
     public function countSiteVotes($siteId, $type = VoteType::ANY, \DateTime $castAfter = null, \DateTime $castBefore = null) 
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $this->buildVoteSelect($sql, $siteId, $type, $castAfter, $castBefore);
+        $select = $this->buildVoteSelect($sql, array(DbViewVotes::SITEID.' = ?' => $siteId), $type, $castAfter, $castBefore);
         return $this->fetchCount($sql, $select);
     }
 
@@ -50,10 +51,10 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
     /**
      * {@inheritDoc}
      */
-    public function getAggregatedValues($siteId, $aggregates, \DateTime $castAfter = null, \DateTime $castBefore = null, $order = null, $paginated = false)
+    public function getAggregatedValues($conditions, $aggregates, \DateTime $castAfter = null, \DateTime $castBefore = null, $order = null, $paginated = false)
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $this->buildVoteSelect($sql, $siteId, VoteType::ANY, $castAfter, $castBefore);
+        $select = $this->buildVoteSelect($sql, $conditions, VoteType::ANY, $castAfter, $castBefore);
         $this->aggregateSelect($select, $aggregates);
         if (is_array($order)) {
             $this->orderSelect($select, $order);

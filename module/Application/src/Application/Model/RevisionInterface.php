@@ -4,15 +4,33 @@ namespace Application\Model;
 
 interface RevisionInterface
 {
-    public function getRevisionId();
+    /**
+     * @return int
+     */
+    public function getId();
     
+    /**
+     * @return int
+     */
     public function getPageId();
     
-    public function getRevisionIndex();
+    /**
+     * @return int
+     */
+    public function getIndex();
     
+    /**
+     * @return int
+     */
     public function getUserId();
     
+    /**
+     * @return \DateTime
+     */
     public function getDateTime();
     
+    /**
+     * @return string|null
+     */
     public function getComments();
 }
