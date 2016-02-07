@@ -1,14 +1,18 @@
 <?php $this->headScript()->captureStart(); ?>
 
-function init()
-{
-    $('#members').on('click', function() {window.location.assign('/users');});
-    $('#pages').on('click', function() {window.location.assign('/pages');});
-    $('#revisions').on('click', function() {window.location.assign('/revisions');});
-    $('#votes').on('click', function() {window.location.assign('/votes');});
-}
+// Anonymous self-executing function not to clutter global scope with temporary stuff
+(function () {
 
-$(document).ready(init);
+    function init()
+    {
+        $('#members').on('click', function() {window.location.assign('/users');});
+        $('#pages').on('click', function() {window.location.assign('/pages');});
+        $('#revisions').on('click', function() {window.location.assign('/revisions');});
+        $('#votes').on('click', function() {window.location.assign('/votes');});
+    }
+
+    $(document).ready(init);
+}());
 
 <?php $this->headScript()->captureEnd(); ?>
 

@@ -1,12 +1,17 @@
 <?php $this->headScript()->captureStart(); ?>
 
-function init()
-{
-    assignPaginatorEvents('#user-list', '/users/userList', {siteId: <?php echo $this->site->getWikidotId();?>});
-    assignPaginatorEvents('#author-list', '/users/authorList', {siteId: <?php echo $this->site->getWikidotId();?>});
-}
+// Anonymous self-executing function not to clutter global scope with temporary stuff
+(function () {
 
-$(document).ready(init);
+    function init()
+    {
+        scpper.tables.assignPaginatorEvents('#user-list', '/users/userList', {siteId: <?php echo $this->site->getWikidotId();?>});
+        scpper.tables.assignPaginatorEvents('#author-list', '/users/authorList', {siteId: <?php echo $this->site->getWikidotId();?>});
+    }
+
+    $(document).ready(init);
+    
+}());
 
 <?php $this->headScript()->captureEnd(); ?>
 <span class="h1">

@@ -5,12 +5,17 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 ?>
 <?php $this->headScript()->captureStart(); ?>
 
-// Initialize global variables
-var pageId = <?php echo $page->getId() ?>;
+// Anonymous self-executing function not to clutter global scope with temporary stuff
+(function () {
 
-// Call google graphing API
-google.charts.load('current', {packages: ['corechart']});
-google.charts.setOnLoadCallback(function () {drawPageRatingChart(pageId);});
+    // Initialize global variables
+    var pageId = <?php echo $page->getId() ?>;
+
+    // Call google graphing API
+    google.charts.load('current', {packages: ['corechart']});
+    google.charts.setOnLoadCallback(function () {scpper.charts.page.go(pageId);});
+
+}());
 
 <?php $this->headScript()->captureEnd(); ?>
 

@@ -16,28 +16,32 @@ $site = $this->site;
 
 <?php $this->headScript()->captureStart(); ?>
 
-// Initialize global variables
-var chartsData = {};
-chartsData.siteId = <?php echo $site->getWikidotId(); ?>;
-chartsData.fromDate = "<?php echo $fromDate->getValue(); ?>";
-chartsData.toDate = "<?php echo $toDate->getValue(); ?>";
-// Variables for pagination
-paginatorData = $.extend({page: 1, perPage: 10}, chartsData);
+// Anonymous self-executing function not to clutter global scope with temporary stuff
+(function() {
 
-function init()
-{
-    $('#show-members').on('click', {container: "#members-list", url: "/changes/members", payload: paginatorData}, fetchPaginatorFirst);
-    $('#show-pages').on('click', {container: "#pages-list", url: "/changes/pages", payload: paginatorData}, fetchPaginatorFirst);
-    $('#show-editors').on('click', {container: "#editors-list", url: "/changes/editors", payload: paginatorData}, fetchPaginatorFirst);
-    $('#show-voters').on('click', {container: "#voters-list", url: "/changes/voters", payload: paginatorData}, fetchPaginatorFirst);    
-    $('.datepicker').datepicker({autoSize: true, dateFormat: "yy-mm-dd", maxDate: "<?php echo $site->getLastUpdate()->format('Y-m-d');?>"});
-}
+    // Initialize global variables
+    var chartsData = {};
+    chartsData.siteId = <?php echo $site->getWikidotId(); ?>;
+    chartsData.fromDate = "<?php echo $fromDate->getValue(); ?>";
+    chartsData.toDate = "<?php echo $toDate->getValue(); ?>";
+    // Variables for pagination
+    paginatorData = $.extend({page: 1, perPage: 10}, chartsData);
 
-$(document).ready(init);
+    function init()
+    {
+        $('#show-members').on('click', {container: "#members-list", url: "/changes/members", payload: paginatorData}, scpper.tables.fetchPaginatorFirst);
+        $('#show-pages').on('click', {container: "#pages-list", url: "/changes/pages", payload: paginatorData}, scpper.tables.fetchPaginatorFirst);
+        $('#show-editors').on('click', {container: "#editors-list", url: "/changes/editors", payload: paginatorData}, scpper.tables.fetchPaginatorFirst);
+        $('#show-voters').on('click', {container: "#voters-list", url: "/changes/voters", payload: paginatorData}, scpper.tables.fetchPaginatorFirst);    
+        $('.datepicker').datepicker({autoSize: true, dateFormat: "yy-mm-dd", maxDate: "<?php echo $site->getLastUpdate()->format('Y-m-d');?>"});
+    }
 
-// Call google graphing API
-google.charts.load('current', {packages: ['corechart']});
-google.charts.setOnLoadCallback(function () {drawChangeCharts(chartsData);});
+    $(document).ready(init);
+
+    // Call google graphing API
+    google.charts.load('current', {packages: ['corechart']});
+    google.charts.setOnLoadCallback(function () {scpper.charts.changes.go(chartsData);});
+}());
 
 <?php $this->headScript()->captureEnd(); ?>
 <div class="form-inline">
