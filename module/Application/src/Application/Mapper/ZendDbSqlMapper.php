@@ -303,7 +303,7 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
      * 
      * {@inheritDoc}
      */
-    public function findAll($conditions = null, $paginated = true) {
+    public function findAll($conditions = null, $paginated = false) {
         $sql = new Sql($this->dbAdapter);        
         $select = $sql->select($this->table);
         if (is_array($conditions)) {

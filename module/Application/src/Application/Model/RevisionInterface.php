@@ -25,6 +25,11 @@ interface RevisionInterface
     public function getUserId();
     
     /**
+     * @return \Application\Model\UserInterface;
+     */
+    public function getUser();
+    
+    /**
      * @return \DateTime
      */
     public function getDateTime();

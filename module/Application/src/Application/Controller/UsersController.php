@@ -69,9 +69,8 @@ class UsersController extends AbstractActionController
             $userIds[] = $author->getUserId();
             $authorById[$author->getUserId()] = $author;
         }
-        $users = $this->services->getUserService()->findAll(array(
-            sprintf('%s IN (%s)',  DbViewUsers::USERID, implode(',', $userIds))
-        ));
+        $users = $this->services->getUserService()->findAll(
+            array(sprintf('%s IN (%s)',  DbViewUsers::USERID, implode(',', $userIds))));
         foreach ($users as $user) {
             $authorById[$user->getId()]->setUser($user);
         }

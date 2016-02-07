@@ -21,6 +21,7 @@ class RevisionPrototypeFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator) 
     {
-        return new Revision();
+        $userMapper = $serviceLocator->get('UserMapper');
+        return new Revision($userMapper);
     }
 }

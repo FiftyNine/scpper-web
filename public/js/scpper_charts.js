@@ -202,16 +202,17 @@ scpper.charts.page = {
     },
     
     preparePointData: function (revisions) {
-        var points = [];
+        var points = [];        
         for (var i=0; i<revisions.length; i++) {
-            points.push([revisions[i][0], null, revisions[i][1].index.toString(), revisions[i][1].comments]);
+            var annotationText = revisions[i][1].user.displayName+': "'+revisions[i][1].comments+'"';
+            points.push([revisions[i][0], null, revisions[i][1].index.toString(), annotationText]);
         }
         // Draw line chart
         var pointData = new google.visualization.DataTable();
         pointData.addColumn({type: 'date', label: 'Time'});
         pointData.addColumn({type: 'number', label: 'Rating'});
         pointData.addColumn({type: 'string', role: 'annotation'});
-        pointData.addColumn({type: 'string', role: 'annotationText'});
+        pointData.addColumn({type: 'string', role: 'annotationText', p: {html: true}});
         pointData.addRows(points);
         return pointData;
     },
@@ -248,7 +249,7 @@ scpper.charts.page = {
             },
             chartArea: {width: '80%', height: '80%'},
             legend: 'none',
-            colors: ['#E0A96E']
+            colors: ['#E0A96E'],      
         };            
     },
     

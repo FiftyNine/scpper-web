@@ -2,8 +2,17 @@
 
 namespace Application\Model;
 
+use Application\Mapper\UserMapperInterface;
+use Application\Model\UserInterface;
+
 class Revision implements RevisionInterface, \JsonSerializable
 {
+    /**
+     *
+     * @var Application\Mapper\UserMapperInterface;
+     */
+    protected $userMapper;
+    
     /**
      * @var string
      */
@@ -33,6 +42,21 @@ class Revision implements RevisionInterface, \JsonSerializable
      * @var int
      */    
     protected $userId;
+    
+    /**
+     *
+     * @var Application\Model\UserInterface
+     */
+    protected $user;
+    
+    /**
+     * Constructor
+     * @param UserMapperInterface $userMapper
+     */
+    public function __construct(UserMapperInterface $userMapper)
+    {
+        $this->userMapper = $userMapper;
+    }
     
     /**
      * {@inheritdoc}
@@ -82,6 +106,22 @@ class Revision implements RevisionInterface, \JsonSerializable
         return $this->userId;
     }
     
+    /**
+     * {@inheritdoc}
+     */
+    public function getUser()
+    {
+        if (!isset($this->user)) {
+            $this->user = $this->userMapper->find($this->getUserId());
+        }
+        return $this->user;
+    }
+    
+    public function setUser(UserInterface $user)
+    {
+        $this->user = $user;
+    }
+    
     public function setComments($comments)
     {
         $this->comments = $comments;
@@ -120,7 +160,12 @@ class Revision implements RevisionInterface, \JsonSerializable
         return array(
             'index' => $this->getIndex(),
             //'date' => $this->getDateTime()->format(\DateTime::ISO8601),
-            'comments' => $this->getComments(),         
+            'comments' => $this->getComments(),
+            'user' => array(
+                'id' => $this->getUserId(),
+                'name' => $this->getUser()->getName(),
+                'displayName' => $this->getUser()->getDisplayName()
+            )
         );
     }
 

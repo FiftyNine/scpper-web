@@ -10,6 +10,7 @@ class RevisionServiceFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator) {
         $mapper = $serviceLocator->get('RevisionMapper');
-        return new RevisionService($mapper);
+        $userMapper = $serviceLocator->get('UserMapper');
+        return new RevisionService($mapper, $userMapper);
     }
 }
