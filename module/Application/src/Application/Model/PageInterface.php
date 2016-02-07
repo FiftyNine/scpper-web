@@ -75,6 +75,11 @@ interface PageInterface
     public function getVotes();
     
     /**
+     * @return array[string]
+     */
+    public function getTags();
+    
+    /**
      * @return AuthorshipInterface[]
      */    
     public function getAuthors();

@@ -6,6 +6,7 @@ use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Expression;
 use Application\Utils\PageType;
 use Application\Utils\DbConsts\DbViewPages;
+use Application\Utils\DbConsts\DbViewTags;
 
 class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
 {
@@ -96,6 +97,23 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
             return $res[0]['Rank'];
         }
         return -1;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function findPageTags($pageId)
+    {
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select(DbViewTags::TABLE)
+                ->columns(array(DbViewTags::TAG))
+                ->where(array(DbViewTags::PAGEID.' = ?' => $pageId));
+        $tags = $this->fetchArray($sql, $select);
+        $result = array();
+        foreach ($tags as $tag) {
+            $result[] = $tag[DbViewTags::TAG];
+        }
+        return $result;
     }
     
     /**

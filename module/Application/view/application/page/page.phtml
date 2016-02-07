@@ -163,11 +163,12 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
                 Original page not found
             <?php endif; ?>     
         <?php endif; ?>
+        <strong>Tags</strong>: <em><?php echo implode(', ', $page->getTags()); ?></em>
     </div>
     <div id="page-chart">
         <div class="chart-container" id="rating-chart">
         </div>            
-    </div>
+    </div>    
 </div>
 
    

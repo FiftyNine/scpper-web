@@ -164,6 +164,11 @@ class Page implements PageInterface
     protected $rank;
     
     /**
+     * @var array[string]
+     */
+    protected $tags;
+    
+    /**
      * Constructor
      * @param PageMapperInterface $pageMapper
      * @param AuthorshipMapperInterface $authorMapper
@@ -451,4 +456,16 @@ class Page implements PageInterface
     {
         $this->rank = $rank;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTags()
+    {
+        if (!isset($this->tags)) {
+            $this->tags = $this->pageMapper->findPageTags($this->getId());
+        }
+        return $this->tags;
+    }
+
 }

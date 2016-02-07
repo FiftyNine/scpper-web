@@ -41,6 +41,13 @@ interface PageMapperInterface extends SimpleMapperInterface
     public function findPageRank($pageId);
     
     /**
+     * Find page tags
+     * @param $pageId
+     * @return string[]
+     */
+    public function findPageTags($pageId);
+    
+    /**
      * Get an aggregated results from pages
      * P.e. Get a number of pages, average rating etc.
      * 
