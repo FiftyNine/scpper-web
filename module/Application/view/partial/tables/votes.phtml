@@ -1,0 +1,22 @@
+<?php 
+    $i=1;
+    foreach ($this->rows as $vote): 
+?>
+<?php $user = $vote->getUser(); ?>
+<tr>
+    <td><?php echo $this->rows->getAbsoluteItemNumber($i); $i++; ?></td>
+    <td>
+        <?php if ($user->getDeleted()): ?> <del> <?php endif;?>
+        <a href="#">            
+            <?php echo $user->getDisplayName(); ?>
+        </a>
+        <?php if ($user->getDeleted()): ?> </del> <?php endif;?>
+    </td>
+    <td><?php if ($vote->getFromMember()) {echo '&check;';} ?></td>
+    <td><?php if ($vote->getFromContributor()) {echo '&check;';} ?></td>
+    <td><?php if ($vote->getFromActive()) {echo '&check;';} ?></td>
+    <td><?php echo $vote->getDateTime()->format('Y-m-d H:i'); ?></td>
+</tr>
+<?php endforeach; ?>
+
+

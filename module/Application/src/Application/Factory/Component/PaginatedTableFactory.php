@@ -13,6 +13,7 @@ use Application\Utils\DbConsts\DbViewUsers;
 use Application\Utils\DbConsts\DbViewMembership;
 use Application\Utils\DbConsts\DbViewPages;
 use Application\Utils\DbConsts\DbViewRevisions;
+use Application\Utils\DbConsts\DbViewVotes;
 use Application\Utils\DbConsts\DbViewUserActivity;
 use Application\Utils\DbConsts\DbViewAuthors;
 use Application\Utils\AuthorSummaryConsts;
@@ -139,13 +140,31 @@ class PaginatedTableFactory
     {
         $table = new \Application\Component\PaginatedTable\Table(
             array(
-                new Column('#', false),
+                new Column('#', DbViewRevisions::REVISIONINDEX, false),
                 new Column('User', DbViewRevisions::USERDISPLAYNAME),                
                 new Column('Comment'),
                 new Column('Time', DbViewRevisions::DATETIME, false),
             ),
             $paginator,
             'partial/tables/revisions.phtml', 
+            false
+        );
+        return $table;        
+    }
+    
+    static public function createVotesTable($paginator)
+    {
+        $table = new \Application\Component\PaginatedTable\Table(
+            array(
+                new Column('#'),
+                new Column('User', DbViewVotes::USERDISPLAYNAME),                
+                new Column('Member', DbViewVotes::FROMMEMBER, false, 'Vote from a member of the wiki'),
+                new Column('Contributor', DbViewVotes::FROMCONTRIBUTOR, false, 'Vote from a member who authored at least one successful page'),
+                new Column('Active', DbViewVotes::FROMACTIVE, false, 'Vote from an active member of the wiki'),
+                new Column('Time', DbViewVotes::DATETIME, false, 'Not the exact time but rather upper estimate'),
+            ),
+            $paginator,
+            'partial/tables/votes.phtml', 
             false
         );
         return $table;        

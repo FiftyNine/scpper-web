@@ -10,6 +10,7 @@ class VoteServiceFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator) {
         $mapper = $serviceLocator->get('VoteMapper');
-        return new VoteService($mapper);
+        $userMapper = $serviceLocator->get('UserMapper');
+        return new VoteService($mapper, $userMapper);
     }
 }

@@ -15,6 +15,11 @@ interface VoteInterface
     public function getUserId();
     
     /**
+     * @return Application\Model\UserInterface
+     */
+    public function getUser();
+    
+    /**
      * @return int
      */
     public function getValue();

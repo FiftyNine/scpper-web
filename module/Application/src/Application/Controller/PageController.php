@@ -32,12 +32,38 @@ class PageController extends AbstractActionController
      */    
     protected $services;
 
+    /**
+     * Returns a paginated table with revisions
+     * @param int $pageId
+     * @param int $orderBy
+     * @param string $order
+     * @param int $page
+     * @param int $perPage
+     * @return Application\Component\PaginatedTable\TableInterface
+     */
     protected function getRevisionsTable($pageId, $orderBy, $order, $page, $perPage)
     {
-        $revisions = $this->services->getRevisionService()->findRevisionsOfPage($pageId, true, $page, $perPage);
+        $revisions = $this->services->getRevisionService()->findRevisionsOfPage($pageId, array($orderBy => $order), true, $page, $perPage);
         $table = PaginatedTableFactory::createRevisionsTable($revisions);
         $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);        
         return $table;        
+    }
+
+    /**
+     * Returns a paginated table with votes
+     * @param int $pageId
+     * @param string $orderBy
+     * @param int $order
+     * @param int $page
+     * @param int $perPage
+     * @return Application\Component\PaginatedTable\TableInterface
+     */
+    protected function getVotesTable($pageId, $orderBy, $order, $page, $perPage)
+    {
+        $votes = $this->services->getVoteService()->findVotesOnPage($pageId, array($orderBy => $order), true, $page, $perPage);
+        $table = PaginatedTableFactory::createVotesTable($votes);
+        $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);
+        return $table;
     }
     
     public function __construct(HubServiceInterface $services) 
@@ -54,7 +80,8 @@ class PageController extends AbstractActionController
         }
         return new ViewModel(array(
             'page' => $page,
-            'revisions' => $this->getRevisionsTable($pageId, DbViewRevisions::REVISIONINDEX, Order::DESCENDING, 1, 10)
+            'revisions' => $this->getRevisionsTable($pageId, DbViewRevisions::REVISIONINDEX, Order::DESCENDING, 1, 10),
+            'votes' => $this->getVotesTable($pageId, DbViewVotes::DATETIME, Order::DESCENDING, 1, 10)
         ));
     }
     
@@ -93,6 +120,33 @@ class PageController extends AbstractActionController
             $order = Order::DESCENDING;
         }    
         $table = $this->getRevisionsTable($pageId, $orderBy, $order, $page, $perPage);
+        $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
+        if ($renderer) {
+            $result['success'] = true;                
+            $result['content'] = $renderer(
+                'partial/tables/table.phtml', 
+                array(
+                    'table' => $table, 
+                    'data' => array()
+                )
+            );
+        }
+        return new JsonModel($result);                
+    }
+    
+    public function voteListAction()
+    {
+        $pageId = (int)$this->params()->fromQuery('pageId');
+        $page = (int)$this->params()->fromQuery('page', 1);
+        $perPage = (int)$this->params()->fromQuery('perPage', 10);
+        $orderBy = $this->params()->fromQuery('orderBy', DbViewVotes::DATETIME);
+        $order = $this->params()->fromQuery('ascending', true);
+        if ($order) {
+            $order = Order::ASCENDING;
+        } else {
+            $order = Order::DESCENDING;
+        }    
+        $table = $this->getVotesTable($pageId, $orderBy, $order, $page, $perPage);
         $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
         if ($renderer) {
             $result['success'] = true;                

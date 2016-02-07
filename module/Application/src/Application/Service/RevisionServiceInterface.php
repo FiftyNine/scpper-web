@@ -34,12 +34,13 @@ interface RevisionServiceInterface
     /**
      * Returns revisions of a page
      * @param int $pageId
-     * @param bool $paginated
+     * @param array[string]int $order
+     * @param bool $paginated     
      * @param int $page
      * @param int $perPage
      * @return RevisionInterface[]|\Zend\Paginator\Paginator     
      */
-    public function findRevisionsOfPage($pageId, $paginated = false, $page = -1, $perPage = -1);
+    public function findRevisionsOfPage($pageId, $order = null, $paginated = false, $page = -1, $perPage = -1);
     
     /**
      * Get an aggregated votes from revisions, grouped by creation date

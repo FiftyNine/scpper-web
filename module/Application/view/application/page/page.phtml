@@ -14,6 +14,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
     function init()
     {
         scpper.tables.assignPaginatorEvents('#revision-list', '/page/revisionList', {pageId: pageId});
+        scpper.tables.assignPaginatorEvents('#vote-list', '/page/voteList', {pageId: pageId});
     }
 
     $(document).ready(init);    
@@ -181,12 +182,26 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 <h4><?php echo $this->page->getRevisionCount();?> revisions</h4>
 <div class="table-container" id="revision-list">
 <?php
-$table = $this->revisions;
+$revTable = $this->revisions;
 
 echo $this->partial(
     'partial/tables/table.phtml',
     array(
-        'table' => $table,
+        'table' => $revTable,
+        'data' => array(),
+    )
+);
+?>
+</div>
+<h4><?php echo $this->page->getVoteCount();?> votes</h4>
+<div class="table-container" id="vote-list">
+<?php
+$voteTable = $this->votes;
+
+echo $this->partial(
+    'partial/tables/table.phtml',
+    array(
+        'table' => $voteTable,
         'data' => array(),
     )
 );

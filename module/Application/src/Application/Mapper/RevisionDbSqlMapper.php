@@ -34,12 +34,14 @@ class RevisionDbSqlMapper extends ZendDbSqlMapper implements RevisionMapperInter
     /**
      * {@inheritdoc}
      */    
-    public function findRevisionsOfPage($pageId, $paginated = false)
+    public function findRevisionsOfPage($pageId, $order = null, $paginated = false)
     {
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select(DbViewRevisions::TABLE)
-                ->where(array(DbViewRevisions::PAGEID.' = ?' => $pageId))
-                ->order(DbViewRevisions::REVISIONINDEX.' DESC');
+                ->where(array(DbViewRevisions::PAGEID.' = ?' => $pageId));
+        if (is_array($order)) {
+            $this->orderSelect($select, $order);
+        }
         if ($paginated) {
             return $this->getPaginator($select);
         }

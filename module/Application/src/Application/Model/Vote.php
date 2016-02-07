@@ -2,8 +2,17 @@
 
 namespace Application\Model;
 
+use Application\Model\UserInterface;
+use Application\Mapper\UserMapperInterface;
+
 class Vote implements VoteInterface
 {
+    /**
+     *
+     * @var Application\Mapper\UserMapperInterface;
+     */
+    protected $userMapper;    
+    
     /**
      *
      * @var \DateTime
@@ -47,6 +56,21 @@ class Vote implements VoteInterface
     protected $fromActive;
     
     /**
+     *
+     * @var Application\Model\UserInterface
+     */
+    protected $user;
+        
+    /**
+     * Constructor
+     * @param UserMapperInterface $userMapper
+     */    
+    public function __construct(UserMapperInterface $userMapper)
+    {
+        $this->userMapper = $userMapper;
+    }
+    
+    /**
      * {@inheritdoc}
      */
     public function getDateTime()
@@ -70,6 +94,17 @@ class Vote implements VoteInterface
         return $this->userId;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getUser()
+    {
+        if (!isset($this->user)) {
+            $this->user = $this->userMapper->find($this->getUserId());
+        }
+        return $this->user;
+    }
+        
     /**
      * {@inheritdoc}
      */
@@ -117,6 +152,11 @@ class Vote implements VoteInterface
         $this->userId = $userId;
     }
 
+    public function setUser(UserInterface $user)
+    {
+        $this->user = $user;
+    }
+        
     public function setValue($value)
     {
         $this->value = $value;
@@ -136,4 +176,6 @@ class Vote implements VoteInterface
     {
         $this->fromActive = $fromActive;
     }
+    
+    
 }

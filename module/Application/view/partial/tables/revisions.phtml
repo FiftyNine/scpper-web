@@ -10,7 +10,7 @@
         <?php if ($user->getDeleted()): ?> </del> <?php endif;?>
     </td>
     <td><?php echo $rev->getComments(); ?></td>
-    <td style="white-space: nowrap"><?php echo $rev->getDateTime()->format('Y-m-d H:i'); ?></td>
+    <td><?php echo $rev->getDateTime()->format('Y-m-d H:i'); ?></td>
 </tr>
 <?php endforeach; ?>
 

@@ -56,9 +56,9 @@ class RevisionService implements RevisionServiceInterface
     /**
      * {@inheritDoc}
      */ 
-    public function findRevisionsOfPage($pageId, $paginated = false, $page = -1, $perPage = -1)
+    public function findRevisionsOfPage($pageId, $order = null, $paginated = false, $page = -1, $perPage = -1)
     {
-        $result = $this->mapper->findRevisionsOfPage($pageId, $paginated);
+        $result = $this->mapper->findRevisionsOfPage($pageId, $order, $paginated);
         if ($paginated && $result && $page >= 0 && $perPage > 0) {            
             $result->setCurrentPageNumber($page);
             $result->setItemCountPerPage($perPage);

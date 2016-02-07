@@ -15,10 +15,11 @@ interface RevisionMapperInterface extends SimpleMapperInterface
     /**
      * Returns revisions of a page
      * @param int $pageId
+     * @param array[string]int
      * @param bool $paginated
      * @return RevisionInterface[]|\Zend\Paginator\Paginator
      */
-    public function findRevisionsOfPage($pageId, $paginated = false);
+    public function findRevisionsOfPage($pageId, $order = null, $paginated = false);
     
     /**
      * Get an aggregated results from revisions

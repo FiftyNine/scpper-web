@@ -18,9 +18,11 @@ interface VoteMapperInterface extends SimpleMapperInterface
     /**
      * Return votes for a certain page
      * @param int $pageId
-     * @return VoteInterface[]
+     * @param array[string]int
+     * @param bool $paginated
+     * @return Zend\Paginator\Paginator|VoteInterface[]
      */
-    public function findVotesOnPage($pageId);    
+    public function findVotesOnPage($pageId, $order = null, $paginated = false);
     
     /**
      * Get an aggregated results from votes

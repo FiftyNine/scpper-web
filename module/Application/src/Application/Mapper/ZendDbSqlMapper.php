@@ -239,6 +239,7 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
      */
     protected function getPaginator(Select $select, $asArray = false, HydratorInterface $hydrator = null, $prototype = null)
     {
+        $this->logQuery($select);
         $resultSet = null;        
         if (!$asArray) {
             if (!$hydrator) {
