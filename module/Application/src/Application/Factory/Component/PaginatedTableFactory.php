@@ -134,4 +134,20 @@ class PaginatedTableFactory
         );
         return $table;        
     }
+    
+    static public function createRevisionsTable($paginator)
+    {
+        $table = new \Application\Component\PaginatedTable\Table(
+            array(
+                new Column('#', false),
+                new Column('User', DbViewRevisions::USERDISPLAYNAME),                
+                new Column('Comment'),
+                new Column('Time', DbViewRevisions::DATETIME, false),
+            ),
+            $paginator,
+            'partial/tables/revisions.phtml', 
+            false
+        );
+        return $table;        
+    }    
 }

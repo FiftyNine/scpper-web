@@ -19,23 +19,17 @@
     </a>        
 </span>
 <p class="small-text">Updated <?php echo $this->site->getLastUpdate()->format('Y-m-d H:i'); ?></p>
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h3>Pages (<?php echo $this->table->getPaginator()->getTotalItemCount();?> total)</h3>
-            <div class="table-container" id="page-list">
-            <?php
-            $table = $this->table;
+<h3>Pages (<?php echo $this->table->getPaginator()->getTotalItemCount();?> total)</h3>
+<div class="table-container" id="page-list">
+<?php
+$table = $this->table;
 
-            echo $this->partial(
-                'partial/tables/table.phtml', 
-                array(
-                    'table' => $table,
-                    'data' => array('siteId' => $this->site->getWikidotId()),
-                )
-            );    
-            ?>
-            </div>
-        </div>
-    </div>
+echo $this->partial(
+    'partial/tables/table.phtml', 
+    array(
+        'table' => $table,
+        'data' => array('siteId' => $this->site->getWikidotId()),
+    )
+);    
+?>
 </div>

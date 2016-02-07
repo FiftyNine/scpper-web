@@ -19,56 +19,32 @@
        <?php echo $this->site->getEnglishName(); ?>
     </a>        
 </span>
-<p class="small-text">Updated <?php echo $this->site->getLastUpdate()->format('Y-m-d H:i'); ?></p>
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h3>Users (<?php echo $this->usersTable->getPaginator()->getTotalItemCount();?> total)</h3>
-            <div class="table-container" id="user-list">
-            <?php
-
-            $usersTable = $this->usersTable;
-
-            echo $this->partial(
-                'partial/tables/table.phtml', 
-                array(
-                    'table' => $usersTable,
-                    'data' => array('siteId' => $this->site->getWikidotId()),
-                )
-            );    
-            ?>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <h3>Authors (<?php echo $this->authorsTable->getPaginator()->getTotalItemCount();?> total)</h3>            
-            <div class="table-container" id="author-list">
-            <?php
-
-            $authorsTable = $this->authorsTable;
-
-            echo $this->partial(
-                'partial/tables/table.phtml', 
-                array(
-                    'table' => $authorsTable,
-                )
-            );    
-            ?>
-            </div>
-        </div>
-    </div>    
-</div>
+<h3>Users (<?php echo $this->usersTable->getPaginator()->getTotalItemCount();?> total)</h3>
+<div class="table-container" id="user-list">
 <?php
-/*
- *         <div class="col-md-2 info-box background-green">
-            <ul class="list-unstyled">
-                <li> <?php echo $this->memberCount; ?> members </li>
-                <li> <?php echo $this->voterCount; ?> voters </li>
-                <li> <?php echo $this->editorCount; ?> editors </li>
-                <li> <?php echo $this->posterCount; ?> posters </li>
-            </ul>    
-        </div>        
 
- */
+$usersTable = $this->usersTable;
+
+echo $this->partial(
+    'partial/tables/table.phtml', 
+    array(
+        'table' => $usersTable,
+        'data' => array('siteId' => $this->site->getWikidotId()),
+    )
+);    
 ?>
+</div>
+<h3>Authors (<?php echo $this->authorsTable->getPaginator()->getTotalItemCount();?> total)</h3>            
+<div class="table-container" id="author-list">
+<?php
+
+$authorsTable = $this->authorsTable;
+
+echo $this->partial(
+    'partial/tables/table.phtml', 
+    array(
+        'table' => $authorsTable,
+    )
+);    
+?>
+</div>

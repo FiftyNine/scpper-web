@@ -23,26 +23,27 @@ div.container a.brand {
 
 /* General */
 
-html, body, #main, #content { height: 100%; }
-/* body > .container { height: auto; min-height: 100%; } */
-
-#content { padding-bottom: 4em; }
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 4em;
+  padding-top: 60px;
+}
 
 footer {
- clear: both;
- position: relative;
- z-index: 10;
- height: 4em;
- margin-top: -4em;
- text-align: center;
+  position: absolute;
+  text-align: center;
+  bottom: 0;
+  height: 4em;
+  width: 100%;
+  margin: auto;
 }
 
 footer > hr {
     margin-bottom: 5px;
-}
-
-body {
-    padding-top: 60px;    
 }
 
 .small-text {

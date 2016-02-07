@@ -12,9 +12,12 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Application\Service\HubServiceInterface;
+use Application\Factory\Component\PaginatedTableFactory;
 use Application\Utils\Aggregate;
 use Application\Utils\DateAggregate;
+use Application\Utils\Order;
 use Application\Utils\DbConsts\DbViewVotes;
+use Application\Utils\DbConsts\DbViewRevisions;
 
 /**
  * Description of PageController
@@ -29,6 +32,14 @@ class PageController extends AbstractActionController
      */    
     protected $services;
 
+    protected function getRevisionsTable($pageId, $orderBy, $order, $page, $perPage)
+    {
+        $revisions = $this->services->getRevisionService()->findRevisionsOfPage($pageId, true, $page, $perPage);
+        $table = PaginatedTableFactory::createRevisionsTable($revisions);
+        $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);        
+        return $table;        
+    }
+    
     public function __construct(HubServiceInterface $services) 
     {
         $this->services = $services;
@@ -42,7 +53,8 @@ class PageController extends AbstractActionController
             return $this->notFoundAction();
         }
         return new ViewModel(array(
-           'page' => $page,
+            'page' => $page,
+            'revisions' => $this->getRevisionsTable($pageId, DbViewRevisions::REVISIONINDEX, Order::DESCENDING, 1, 10)
         ));
     }
     
@@ -66,5 +78,32 @@ class PageController extends AbstractActionController
             'votes' => $resVotes,
             'revisions' => $resRevisions,
         ));
+    }
+    
+    public function revisionListAction()
+    {
+        $pageId = (int)$this->params()->fromQuery('pageId');
+        $page = (int)$this->params()->fromQuery('page', 1);
+        $perPage = (int)$this->params()->fromQuery('perPage', 10);
+        $orderBy = $this->params()->fromQuery('orderBy', DbViewRevisions::REVISIONINDEX);
+        $order = $this->params()->fromQuery('ascending', true);
+        if ($order) {
+            $order = Order::ASCENDING;
+        } else {
+            $order = Order::DESCENDING;
+        }    
+        $table = $this->getRevisionsTable($pageId, $orderBy, $order, $page, $perPage);
+        $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
+        if ($renderer) {
+            $result['success'] = true;                
+            $result['content'] = $renderer(
+                'partial/tables/table.phtml', 
+                array(
+                    'table' => $table, 
+                    'data' => array()
+                )
+            );
+        }
+        return new JsonModel($result);                
     }
 }

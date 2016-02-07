@@ -1,0 +1,16 @@
+<?php foreach ($this->rows as $rev): ?>
+<?php $user = $rev->getUser(); ?>
+<tr>
+    <td><?php echo $rev->getIndex(); ?></td>
+    <td>
+        <?php if ($user->getDeleted()): ?> <del> <?php endif;?>
+        <a href="#">            
+            <?php echo $user->getDisplayName(); ?>
+        </a>
+        <?php if ($user->getDeleted()): ?> </del> <?php endif;?>
+    </td>
+    <td><?php echo $rev->getComments(); ?></td>
+    <td style="white-space: nowrap"><?php echo $rev->getDateTime()->format('Y-m-d H:i'); ?></td>
+</tr>
+<?php endforeach; ?>
+

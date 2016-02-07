@@ -11,6 +11,13 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
     // Initialize global variables
     var pageId = <?php echo $page->getId() ?>;
 
+    function init()
+    {
+        scpper.tables.assignPaginatorEvents('#revision-list', '/page/revisionList', {pageId: pageId});
+    }
+
+    $(document).ready(init);    
+    
     // Call google graphing API
     google.charts.load('current', {packages: ['corechart']});
     google.charts.setOnLoadCallback(function () {scpper.charts.page.go(pageId);});
@@ -22,35 +29,35 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 <p>
     <span class="h2">
         <a href="<?php printf("%s/%s", $page->getSite()->getUrl(), $page->getName())?>">
-            <?php echo $page->getTitle(); ?> 
+            <?php echo $page->getTitle(); ?>
         </a>
     </span>
     <br>
-    on 
+    on
     <a href="<?php echo $page->getSite()->getUrl() ?>">
         <?php echo $page->getSite()->getEnglishName() ?>
     </a>
     <br>
     <span class="small-text">
         Updated <?php echo $page->getSite()->getLastUpdate()->format('Y-m-d H:i') ?>
-    </span>    
+    </span>
 </p>
 <hr>
 <div id="page-top">
     <div id="page-summary">
-        Posted: <strong><?php echo $page->getCreationDate()->format('Y-m-d H:i') ?></strong>    
+        Posted: <strong><?php echo $page->getCreationDate()->format('Y-m-d H:i') ?></strong>
         <br>
-        Contributors: 
+        Contributors:
         <strong>
             <?php $authors = $page->getAuthors(); ?>
             <?php if (!$authors || count($authors)===0): ?>
                 <em>Unknown</em>
-            <?php else: ?>    
+            <?php else: ?>
                 <?php
                     $one = 1 === count($authors);
                     $i = 0;
                 ?>
-                <?php foreach ($authors as $author): ?>        
+                <?php foreach ($authors as $author): ?>
                     <a href="#">
                         <?php echo $author->getUser()->getDisplayName(); ?>
                     </a>
@@ -58,8 +65,8 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
                         if (!$one || $author->getRole() !== \Application\Utils\AuthorRole::AUTHOR) {
                             printf("(%s)", \Application\Utils\AuthorRole::getDescription($author->getRole()));
                         }
-                        if (!$one && $i<count($authors)-1) { 
-                            echo ', '; 
+                        if (!$one && $i<count($authors)-1) {
+                            echo ', ';
 
                         }
                     ?>
@@ -72,7 +79,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
             $cleanPos = 0; $cleanNeg = 0;
             $contribPos = 0; $contribNeg = 0;
             $adjPos = 0; $adjNeg = 0;
-            foreach ($page->getVotes() as $vote) {        
+            foreach ($page->getVotes() as $vote) {
                 if ($vote->getFromMember()) {
                     if ($vote->getValue() > 0) {
                         $cleanPos++;
@@ -86,14 +93,14 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
                     } else {
                         $contribNeg--;
                     }
-                }        
+                }
                 if ($vote->getFromActive()) {
                     if ($vote->getValue() > 0) {
                         $adjPos++;
                     } else {
                         $adjNeg--;
                     }
-                }        
+                }
             }
         ?>
         Rating: <strong><?php echo $page->getCleanRating(); ?> (<?php printf('%+d / %d', $cleanPos, $cleanNeg) ?>)</strong>
@@ -112,7 +119,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
             <ul>
                 <?php foreach ($page->getTranslations() as $trans): ?>
                 <li>
-                    <a href="#"> <?php echo $trans->getTitle();?> </a> 
+                    <a href="#"> <?php echo $trans->getTitle();?> </a>
                     on
                     <em>
                         <?php echo $trans->getSite()->getEnglishName(); ?>
@@ -121,9 +128,9 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
                     <em>
                         <?php $i=0; foreach ($trans->getAuthors() as $auth): ?>
                             <?php if ($i>0): ?>, <?php endif; ?>
-                            <a href="#"> 
+                            <a href="#">
                                 <?php echo $auth->getUser()->getDisplayName(); ?>
-                            </a>                    
+                            </a>
                         <?php $i++; endforeach; ?>
                     </em>
                     at
@@ -138,7 +145,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
             <?php $orig = $page->getOriginal(); ?>
             <?php if ($orig !== null): ?>
                 Original page:
-                <a href="#"><?php echo $orig->getTitle();?></a> 
+                <a href="#"><?php echo $orig->getTitle();?></a>
                 on
                 <em>
                     <?php echo $orig->getSite()->getEnglishName(); ?>
@@ -147,28 +154,41 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
                 <em>
                     <?php $i=0; $one=count($orig->getAuthors())===1; foreach ($orig->getAuthors() as $auth): ?>
                         <?php if ($i>0): ?>, <?php endif; ?>
-                        <a href="#"> 
+                        <a href="#">
                             <?php echo $auth->getUser()->getDisplayName(); ?>
                         </a>
                         <?php if (!$one || $auth->getRole() !== \Application\Utils\AuthorRole::AUTHOR) {
-                          printf('(%s)', \Application\Utils\AuthorRole::getDescription($auth->getRole())); } 
+                          printf('(%s)', \Application\Utils\AuthorRole::getDescription($auth->getRole())); }
                         ?>
                     <?php $i++; endforeach; ?>
                 </em>
                 at
                 <em>
                     <?php echo sprintf('%+d', $orig->getCleanRating()) ?>
-                </em>    
+                </em>
             <?php else: ?>
                 Original page not found
-            <?php endif; ?>     
+            <?php endif; ?>
         <?php endif; ?>
         <strong>Tags</strong>: <em><?php echo implode(', ', $page->getTags()); ?></em>
     </div>
     <div id="page-chart">
         <div class="chart-container" id="rating-chart">
         </div>
-    </div>    
+    </div>
 </div>
+<hr>
+<h4><?php echo $this->page->getRevisionCount();?> revisions</h4>
+<div class="table-container" id="revision-list">
+<?php
+$table = $this->revisions;
 
-   
+echo $this->partial(
+    'partial/tables/table.phtml',
+    array(
+        'table' => $table,
+        'data' => array(),
+    )
+);
+?>
+</div>
