@@ -191,12 +191,15 @@ scpper.charts.page = {
     
     prepareLineData: function (votes) {
         var rating = $.extend(true, [], votes);        
+        rating[0].push(true);
         for (var i=1; i<rating.length; i++) {
             rating[i][1] = rating[i-1][1]+rating[i][1];
+            rating[i].push(true);
         }
         var lineData = new google.visualization.DataTable();
         lineData.addColumn({type: 'date', label: 'Time'});
         lineData.addColumn({type: 'number', label: 'Rating'});
+        lineData.addColumn({type: 'boolean', role: 'certainty'});
         lineData.addRows(rating);
         return lineData;
     },
@@ -205,20 +208,21 @@ scpper.charts.page = {
         var points = [];        
         for (var i=0; i<revisions.length; i++) {
             var annotationText = revisions[i][1].user.displayName+': "'+revisions[i][1].comments+'"';
-            points.push([revisions[i][0], null, revisions[i][1].index.toString(), annotationText]);
+            points.push([revisions[i][0], null, false, revisions[i][1].index.toString(), annotationText]);
         }
         // Draw line chart
         var pointData = new google.visualization.DataTable();
         pointData.addColumn({type: 'date', label: 'Time'});
         pointData.addColumn({type: 'number', label: 'Rating'});
+        pointData.addColumn({type: 'boolean', role: 'certainty'});
         pointData.addColumn({type: 'string', role: 'annotation'});
-        pointData.addColumn({type: 'string', role: 'annotationText', p: {html: true}});
+        pointData.addColumn({type: 'string', role: 'annotationText'});
         pointData.addRows(points);
         return pointData;
     },
     
     mergeData: function(lineData, pointData) {
-        var data = google.visualization.data.join(lineData, pointData, 'full', [[0, 0], [1, 1]], [], [2, 3]);
+        var data = google.visualization.data.join(lineData, pointData, 'full', [[0, 0], [1, 1], [2, 2]], [], [3, 4]);
         data.setValue(0, 1, 0);
         var last = 0;
         for (var i=1; i<data.getNumberOfRows(); i++) {
@@ -228,6 +232,9 @@ scpper.charts.page = {
                         var ratio = (data.getValue(j, 0)-data.getValue(last, 0))/(data.getValue(i, 0)-data.getValue(last, 0));
                         var interp = Math.round((data.getValue(last, 1)+(data.getValue(i, 1)-data.getValue(last, 1))*ratio));
                         data.setValue(j, 1, interp);
+                        if (data.getValue(last, 2) && data.getValue(i, 2)) {
+                            data.setValue(j, 2, true);
+                        }
                     }
                 }
                 last = i;
