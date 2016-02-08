@@ -59,7 +59,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
                     $i = 0;
                 ?>
                 <?php foreach ($authors as $author): ?>
-                    <a href="#">
+                    <a href="<?php echo $author->getUser()->getUrl();?>">
                         <?php echo $author->getUser()->getDisplayName(); ?>
                     </a>
                     <?php
@@ -110,7 +110,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
         <br>
         Adjusted rating: <strong><?php echo $page->getAdjustedRating(); ?> (<?php printf('%+d / %d', $adjPos, $adjNeg) ?>)</strong>
         <br>
-        Rank: <strong>#<?php echo $page->getRank() ?></strong>
+        Rank: <strong>#<?php echo $page->getRank()+1 ?></strong>
         <br>
         Status: <strong><?php echo \Application\Utils\PageType::getDescription($page->getStatus()); ?></strong>
         <br>
@@ -120,7 +120,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
             <ul>
                 <?php foreach ($page->getTranslations() as $trans): ?>
                 <li>
-                    <a href="#"> <?php echo $trans->getTitle();?> </a>
+                    <a href="<?php echo $trans->getUrl(); ?>"> <?php echo $trans->getTitle();?> </a>
                     on
                     <em>
                         <?php echo $trans->getSite()->getEnglishName(); ?>
@@ -129,7 +129,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
                     <em>
                         <?php $i=0; foreach ($trans->getAuthors() as $auth): ?>
                             <?php if ($i>0): ?>, <?php endif; ?>
-                            <a href="#">
+                            <a href="<?php echo $auth->getUser()->getUrl();?>">
                                 <?php echo $auth->getUser()->getDisplayName(); ?>
                             </a>
                         <?php $i++; endforeach; ?>
@@ -141,12 +141,14 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
                 </li>
                 <?php endforeach; ?>
             </ul>
+            <?php else: ?>
+            <br>
             <?php endif; ?>
         <?php else: ?>
             <?php $orig = $page->getOriginal(); ?>
             <?php if ($orig !== null): ?>
-                Original page:
-                <a href="#"><?php echo $orig->getTitle();?></a>
+                <strong>Original page:</strong>
+                <a href="<?php echo $orig->getUrl(); ?>"><?php echo $orig->getTitle();?></a>
                 on
                 <em>
                     <?php echo $orig->getSite()->getEnglishName(); ?>
@@ -155,7 +157,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
                 <em>
                     <?php $i=0; $one=count($orig->getAuthors())===1; foreach ($orig->getAuthors() as $auth): ?>
                         <?php if ($i>0): ?>, <?php endif; ?>
-                        <a href="#">
+                        <a href="<?php echo $auth->getUser()->getUrl();?>">
                             <?php echo $auth->getUser()->getDisplayName(); ?>
                         </a>
                         <?php if (!$one || $auth->getRole() !== \Application\Utils\AuthorRole::AUTHOR) {
@@ -170,6 +172,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
             <?php else: ?>
                 Original page not found
             <?php endif; ?>
+            <br>
         <?php endif; ?>
         <strong>Tags</strong>: <em><?php echo implode(', ', $page->getTags()); ?></em>
     </div>

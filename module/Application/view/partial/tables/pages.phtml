@@ -4,7 +4,11 @@
 ?>
 <tr>
     <td><?php echo $this->rows->getAbsoluteItemNumber($i); $i++; ?></td>
-    <td><a href="#"><?php echo $page->getTitle(); ?></a></td>
+    <td>
+        <a href="<?php echo $page->getUrl(); ?>">
+            <?php echo $page->getTitle(); ?>
+        </a>
+    </td>
     <td><?php echo $page->getCleanRating(); ?></td>
     <td><?php echo $page->getContributorRating(); ?></td>
     <td><?php echo $page->getAdjustedRating(); ?></td>
@@ -16,7 +20,7 @@
             $one = 1 === count($authors);
         ?>
         <?php foreach ($authors as $author): ?>
-            <a href="#">
+            <a href="<?php echo $author->getUser()->getUrl();?>">
                 <?php echo $author->getUser()->getDisplayName(); ?>
             </a>
             <?php 

@@ -109,4 +109,9 @@ interface PageInterface
      * @return int
      */
     public function getRank();
+    
+    /**
+     * @return string
+     */
+    public function getUrl();
 }

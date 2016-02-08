@@ -48,6 +48,7 @@ class ChangesController extends AbstractActionController
     protected function getEditorsPaginator($siteId, $from, $to, $orderBy, $order, $page, $perPage)
     {
         $aggregates = array(
+            new Aggregate(DbViewRevisions::USERID, Aggregate::NONE, null, true),
             new Aggregate(DbViewRevisions::USERWIKIDOTNAME, Aggregate::NONE, null, true),
             new Aggregate(DbViewRevisions::USERDISPLAYNAME, Aggregate::NONE, null, true),
             new Aggregate('*', Aggregate::COUNT, 'Revisions'),

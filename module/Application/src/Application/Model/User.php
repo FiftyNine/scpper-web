@@ -193,7 +193,15 @@ class User implements UserInterface
     
     /**     
      * {@inheritDoc}
-     */    
+     */
+    public function getUrl()
+    {
+        return sprintf('/user/%d', $this->getId());
+    }
+    
+    /**     
+     * {@inheritDoc}
+     */
     public function setMembership(MembershipInterface $membership) 
     {
         $this->membershipsBySite[$membership->getSiteId()] = $membership;

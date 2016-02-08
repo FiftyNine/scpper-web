@@ -63,6 +63,11 @@ interface UserInterface
     public function getMembershipOfSite($siteId);    
     
     /**
+     * @return string
+     */
+    public function getUrl();
+    
+    /**
      * Sets a membership for a specified site
      * @param \Application\Model\MembershipInterface $membership
      */

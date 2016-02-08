@@ -4,7 +4,11 @@
 ?>
 <tr>
     <td><?php echo $this->rows->getAbsoluteItemNumber($i); $i++; ?></td>
-    <td><a href="#"><?php echo $editor[\Application\Utils\DbConsts\DbViewRevisions::USERDISPLAYNAME]; ?></a></td>
+    <td>
+        <a href="<?php printf('/user/%d', $editor[\Application\Utils\DbConsts\DbViewRevisions::USERID]);?>">
+            <?php echo $editor[\Application\Utils\DbConsts\DbViewRevisions::USERDISPLAYNAME]; ?>
+        </a>
+    </td>
     <td><?php echo $editor['Revisions'] ?></td>
     <td><?php echo number_format($editor['Revisions']/$this->data['total']*100, 2); ?></td>
 </tr>

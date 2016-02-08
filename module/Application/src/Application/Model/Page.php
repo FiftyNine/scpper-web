@@ -468,4 +468,11 @@ class Page implements PageInterface
         return $this->tags;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getUrl()
+    {
+        return sprintf('/page/%d', $this->getId());
+    }
 }

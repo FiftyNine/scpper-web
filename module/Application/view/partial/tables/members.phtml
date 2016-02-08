@@ -4,7 +4,11 @@
 ?>
 <tr>
     <td><?php echo $this->rows->getAbsoluteItemNumber($i); $i++; ?></td>
-    <td><a href="#"><?php echo $member->getUser()->getDisplayName(); ?></a></td>
+    <td>
+        <a href="<?php echo $member->getUser()->getUrl();?>">
+            <?php echo $member->getUser()->getDisplayName(); ?>
+        </a>
+    </td>
     <td><?php echo $member->getActivity()->getVoteCount(); ?></td>
     <td><?php echo $member->getActivity()->getRevisionCount(); ?></td>
     <td><?php echo $member->getActivity()->getAuthorshipCount(); ?></td>

@@ -1,11 +1,11 @@
 <?php foreach ($this->rows as $rev): ?>
 <?php $user = $rev->getUser(); ?>
 <tr>
-    <td><?php echo $rev->getIndex(); ?></td>
+    <td><?php echo $rev->getIndex()+1; ?></td>
     <td>
         <?php if ($user->getDeleted()): ?> <del> <?php endif;?>
-        <a href="#">            
-            <?php echo $user->getDisplayName(); ?>
+        <a href="<?php echo $user->getUrl();?>">
+            <?php echo $user->getDisplayName();?>
         </a>
         <?php if ($user->getDeleted()): ?> </del> <?php endif;?>
     </td>

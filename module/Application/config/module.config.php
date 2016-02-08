@@ -195,6 +195,34 @@ return array(
                     ),
                 ),                                                
             ),
+            'user' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route'    => '/user[/:userId]',
+                    'constraints' => array(                                
+                        'pageId'     => '[1-9][0-9]*',
+                    ),                    
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\User',
+                        'action'     => 'user',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/:action',
+                            'constraints' => array(                                
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\User',
+                            ),
+                        ),
+                    ),
+                ),                                                
+            ),            
         ),
     ),
     'service_manager' => array(
@@ -278,6 +306,7 @@ return array(
             'Application\Controller\Revisions' => 'Application\Factory\Controller\RevisionsControllerFactory',
             'Application\Controller\Votes' => 'Application\Factory\Controller\VotesControllerFactory',
             'Application\Controller\Page' => 'Application\Factory\Controller\PageControllerFactory',
+            'Application\Controller\User' => 'Application\Factory\Controller\UserControllerFactory',
         ),
     ),
     'view_manager' => array(
@@ -331,8 +360,7 @@ return array(
             array(
                 'label' => 'Changes',
                 'route' => 'changes',
-            ),
-            
+            ),            
         )
     )
 );
