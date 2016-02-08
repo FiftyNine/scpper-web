@@ -38,6 +38,14 @@ interface AuthorshipMapperInterface extends SimpleMapperInterface
     public function getAuthorSummary($userId, $siteId);
     
     /**
+     * Returns user's rank (by total rating) on the specified wiki
+     * @param int $userId
+     * @param int $siteId
+     * @return int
+     */
+    public function findUserRank($userId, $siteId);
+    
+    /**
      * Returns summary of information about site authors
      * @param int $siteId
      * @param array[string]int $order

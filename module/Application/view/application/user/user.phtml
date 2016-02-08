@@ -2,8 +2,53 @@
     $user = $this->user;
     $site = $this->site;
 ?>
-<h3>
-    <a href="http://www.wikidot.com/user:info/<?php echo $user->getName();?>">
-        <?php echo $this->user->getDisplayName();?>
+<p>
+    <span class="h2">
+        <a href="http://www.wikidot.com/user:info/<?php echo $user->getName();?>">
+            <?php echo $this->user->getDisplayName();?>
+        </a>
+    </span>
+    <br>
+    on
+    <a href="<?php echo $site->getUrl() ?>">
+        <?php echo $site->getEnglishName() ?>
     </a>
-</h3>
+    <br>
+    <span class="small-text">
+        Updated <?php echo $site->getLastUpdate()->format('Y-m-d H:i') ?>
+    </span>
+</p>
+<hr>
+<div id="user-top">
+    <div id="user-summary">
+        <?php $membership = $user->getMembershipOfSite($site->getWikidotId()); ?>
+        <?php if ($membership): ?>
+            Joined: <strong><?php echo $membership->getJoinDate()->format('Y-m-d'); ?></strong>
+        <?php else: ?>
+            Not a member of this wiki
+        <?php endif; ?>
+        <br>
+        <?php $activity = $user->getActivityOnSite($site->getWikidotId()); ?>
+        <?php if ($activity): ?>
+            Last active: <strong><?php echo $activity->getLastActivity()->format('Y-m-d'); ?></strong>
+            <br>
+            Votes: <strong><?php echo $activity->getVoteCount(); ?></strong>
+            <br>
+            Revisions: <strong><?php echo $activity->getRevisionCount(); ?></strong>
+            <br>
+            Pages: <strong><?php echo $activity->getAuthorshipCount(); ?></strong>
+            <br>
+            <?php if ($activity->getAuthorshipCount() > 0): ?>
+                <?php $summary = $activity->getAuthorSummary(); ?>
+                <ul>
+                    <li>Originals: <strong><?php echo $summary->getOriginalCount(); ?></strong></li>
+                    <li>Translations: <strong><?php echo $summary->getTranslationCount(); ?></strong></li>
+                    <li>Average rating: <strong><?php echo number_format($summary->getAverageRating(), 1); ?></strong></li>
+                    <li>Highest rating: <strong><?php echo $summary->getHighestRating(); ?></strong></li>
+                    <li>Total: <strong><?php echo $summary->getTotalRating(); ?></strong></li>
+                </ul>
+                Rank: <strong><?php echo $activity->getAuthorRank()+1; ?></strong>
+            <?php endif; ?>        
+        <?php endif; ?>
+    </div>
+</div>

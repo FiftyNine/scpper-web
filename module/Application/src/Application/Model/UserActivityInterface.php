@@ -75,6 +75,11 @@ interface UserActivityInterface
     public function getAuthorSummary();
     
     /**
+     * @return int
+     */
+    public function getAuthorRank();
+    
+    /**
      * @return boolean
      */
     public function isActive();

@@ -166,7 +166,7 @@ class User implements UserInterface
     public function getMemberships()
     {
         if (!isset($this->memberships)) {
-            $this->memberships = $this->membershipMapper->findMembershipsOfUser($this->getId());
+            $this->memberships = $this->membershipMapper->findUserMemberships($this->getId());
             foreach ($this->memberships as $membership) {
                 $this->membershipsBySite[$membership->getSiteId()] = $membership;
             }            
@@ -179,11 +179,11 @@ class User implements UserInterface
      */
     public function getMembershipOfSite($siteId) 
     {
-/*        if (!array_key_exists($siteId, $this->membershipsBySite)) {
+        if (!array_key_exists($siteId, $this->membershipsBySite)) {
             if (!isset($this->memberships)) {
                 $this->getMemberships();
             }
-        }*/
+        }        
         if (array_key_exists($siteId, $this->membershipsBySite)) {            
             return $this->membershipsBySite[$siteId];
         } else {        

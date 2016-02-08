@@ -12,6 +12,7 @@ use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Expression;
 use Application\Utils\DbConsts\DbViewAuthors;
+use Application\Utils\DbConsts\DbViewUserRank;
 use Application\Utils\PageType;
 use Application\Model\AuthorSummary;
 use Application\Utils\AuthorSummaryConsts;
@@ -109,8 +110,33 @@ class AuthorshipDbSqlMapper extends ZendDbSqlMapper implements AuthorshipMapperI
             DbViewAuthors::USERID.' = ?' => $userId,
             DbViewAuthors::SITEID.' = ?' => $siteId,
         ));
-        $this->fetchObject($sql, $select, $this->getSummaryHydrator(), new AuthorSummary());
+        return $this->fetchObject($sql, $select, $this->getSummaryHydrator(), new AuthorSummary());
     }    
+
+    /**
+     * {@inheritDoc}
+     */
+    public function findUserRank($userId, $siteId)
+    {
+        $sql = new Sql($this->dbAdapter);
+        $subSelect = $sql->select(DbViewUserRank::TABLE)
+                ->columns(array(new Expression('COUNT(*)')))
+                ->where(array(
+                    DbViewUserRank::TOTAL.' > r.'.DbViewUserRank::TOTAL,
+                    DbViewUserRank::SITEID.' = r.'.DbViewUserRank::SITEID,
+                ));        
+        $select = $sql->select(array('r' => DbViewUserRank::TABLE))
+                ->columns(array('Rank' => $subSelect), false)
+                ->where(array(
+                    DbViewUserRank::USERID.' = ?' => $userId,
+                    DbViewUserRank::SITEID.' = ?' => $siteId
+                ));
+        $res = $this->fetchArray($sql, $select);
+        if (count($res) === 1) {
+            return $res[0]['Rank'];
+        }
+        return -1;        
+    }
     
     /**
      * {@inheritDoc}

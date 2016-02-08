@@ -112,6 +112,11 @@ class UserActivity implements UserActivityInterface
      */
     protected $authorSummary;
     
+    /**
+     * @var int
+     */
+    protected $authorRank;
+    
     /***** Methods *****/
     
     /**
@@ -326,8 +331,9 @@ class UserActivity implements UserActivityInterface
     public function getAuthorSummary() 
     {
         if (!isset($this->authorSummary)) {
-            $this->authorMapper->getAuthorSummary($this->getUserId(), $this->getSiteId());
+            $this->authorSummary = $this->authorMapper->getAuthorSummary($this->getUserId(), $this->getSiteId());
         }
+        return $this->authorSummary;
     }
 
     /**
@@ -338,4 +344,14 @@ class UserActivity implements UserActivityInterface
         $this->authorSummary = $authorSummary;
     }    
     
+    /**
+     * {@inheritDoc}
+     */
+    public function getAuthorRank()
+    {
+        if (!isset($this->authorRank)) {
+            $this->authorRank = $this->authorMapper->findUserRank($this->getUserId(), $this->getSiteId());
+        }
+        return $this->authorRank;
+    }
 }
