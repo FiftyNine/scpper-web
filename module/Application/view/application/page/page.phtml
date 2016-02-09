@@ -21,7 +21,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
     
     // Call google graphing API
     google.charts.load('current', {packages: ['corechart']});
-    google.charts.setOnLoadCallback(function () {scpper.charts.page.go(pageId);});
+    google.charts.setOnLoadCallback(function () {scpper.charts.page.go(pageId, 'page-rating-chart');});
 
 }());
 
@@ -177,7 +177,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
         <strong>Tags</strong>: <em><?php echo implode(', ', $page->getTags()); ?></em>
     </div>
     <div id="page-chart">
-        <div class="chart-container" id="rating-chart">
+        <div class="chart-container" id="page-rating-chart">
         </div>
     </div>
 </div>

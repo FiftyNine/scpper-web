@@ -89,11 +89,11 @@ class PageController extends AbstractActionController
     {
         $pageId = (int)$this->params()->fromQuery('pageId');
         $byDate = new DateAggregate(DbViewVotes::DATETIME, 'Date');
-        $count = new Aggregate('*', Aggregate::COUNT, 'Votes');
+        $count = new Aggregate(DbViewVotes::VALUE, Aggregate::SUM, 'Votes');
         $votes = $this->services->getVoteService()->getAggregatedForPage($pageId, array($byDate, $count), true);
         $resVotes = array();
         foreach ($votes as $vote) {
-            $resVotes[] = array($vote['Date']->format(\DateTime::ISO8601), $vote['Votes']);
+            $resVotes[] = array($vote['Date']->format(\DateTime::ISO8601), (int)$vote['Votes']);
         }
         $revisions = $this->services->getRevisionService()->findRevisionsOfPage($pageId);
         $resRevisions = array();

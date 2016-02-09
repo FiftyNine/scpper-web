@@ -260,10 +260,10 @@ scpper.charts.page = {
         };            
     },
     
-    processData: function (result) {
+    processData: function (result, container) {
         // Define the chart to be drawn
         if (!result.success || result.votes.length < 2) {
-            setFailedBackground('rating-chart');    
+            setFailedBackground(container);    
             return;
         }
         scpper.charts.page.convertDates(result);
@@ -271,12 +271,12 @@ scpper.charts.page = {
         var pointData = scpper.charts.page.preparePointData(result.revisions);
         // Prepare data for line chart
         var data = scpper.charts.page.mergeData(lineData, pointData);
-        var chart = new google.visualization.LineChart(document.getElementById('rating-chart'));
+        var chart = new google.visualization.LineChart(document.getElementById(container));
         var options = scpper.charts.page.getOptions();
         chart.draw(data, options);
     },    
     
-    go: function (pageId) {
+    go: function (pageId, container) {
         // var callback = this.processData();
         $.ajax({
             url: "/page/ratingChart",
@@ -284,10 +284,10 @@ scpper.charts.page = {
             data: {pageId: pageId}
         })
         .done(function(result) {
-            scpper.charts.page.processData(result);
+            scpper.charts.page.processData(result, container);
         })
         .fail(function () {
-            scpper.charts.setFailedBackground('rating-chart');
+            scpper.charts.setFailedBackground(container);
         });        
     }
 };
