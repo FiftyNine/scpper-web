@@ -48,7 +48,49 @@
                     <li>Total: <strong><?php echo $summary->getTotalRating(); ?></strong></li>
                 </ul>
                 Rank: <strong><?php echo $activity->getAuthorRank()+1; ?></strong>
+                <br>
             <?php endif; ?>        
+        <?php endif; ?>
+        <?php 
+            $other = array();
+            foreach ($user->getActivities() as $activity) {
+                if ($activity->getSiteId() !== $site->getWikidotId()
+                        && ($activity->getVoteCount() > 0 
+                        || $activity->getRevisionCount() > 0 
+                        || $activity->getAuthorshipCount() > 0)
+                ) {
+                    $other[$activity->getSiteId()] = array(
+                        'activity' => $activity,
+                        'membership' => $user->getMembershipOfSite($activity->getSiteId())
+                    );
+                }
+            }
+            foreach ($user->getMemberships() as $membership) {
+                if ($membership->getSiteId() !== $site->getWikidotId() && !array_key_exists($membership->getSiteId(), $other)) {
+                    $other[$membership->getSiteId()] = array(
+                        'activity' => $user->getActivityOnSite($membership->getSiteId()),
+                        'membership' => $membership
+                    );
+                }
+            }   
+        ?>
+        <?php if (count($other) > 0): ?>
+            Other wikis:
+            <ul>
+            <?php foreach ($other as $i): ?>
+                <li>
+                    <a href="<?php echo $i['activity']->getSite()->getUrl(); ?>">
+                        <?php echo $i['activity']->getSite()->getEnglishName(); ?>
+                    </a>:
+                    <?php printf(' %d votes, %d revisions, %d pages, ', $i['activity']->getVoteCount(), $i['activity']->getRevisionCount(), $i['activity']->getAuthorshipCount()); ?>
+                    <?php if ($i['membership']): ?>
+                        joined <?php echo $i['membership']->getJoinDate()->format('Y-m-d'); ?>
+                    <?php else: ?>
+                        not a member
+                    <?php endif; ?>
+                </li>                                   
+            <?php endforeach; ?>
+            </ul>
         <?php endif; ?>
     </div>
 </div>

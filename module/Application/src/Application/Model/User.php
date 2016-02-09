@@ -134,6 +134,7 @@ class User implements UserInterface
     {
         if (!isset($this->activities)) {
             $this->activities = $this->activityMapper->findUserActivities($this->getId());
+            $this->activities = iterator_to_array($this->activities);
             foreach ($this->activities as $activity) {                
                 $this->activitiesBySite[$activity->getSiteId()] = $activity;
             }            
@@ -167,6 +168,7 @@ class User implements UserInterface
     {
         if (!isset($this->memberships)) {
             $this->memberships = $this->membershipMapper->findUserMemberships($this->getId());
+            $this->memberships = iterator_to_array($this->memberships);
             foreach ($this->memberships as $membership) {
                 $this->membershipsBySite[$membership->getSiteId()] = $membership;
             }            
