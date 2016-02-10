@@ -58,6 +58,16 @@ interface UserServiceInterface
     public function findUsersOfSite($siteId, $order = null, $paginated = false);
     
     /**
+     * Get a list of authorships by user on site
+     * @param int $userId
+     * @param int $siteId
+     * @param array[string]int $order
+     * @param bool $paginated
+     * @return Zend\Paginator\Paginator|AuthorshipInterface[]
+     */
+    public function findAuthorshipsOfUser($userId, $siteId, $order = null, $paginated = false, $page = 1, $perPage = 10);
+    
+    /**
      * Get an aggregated results from membership
      * P.e. Get a number of membership, average rating etc.
      * @param int $siteId Id of a site

@@ -61,8 +61,9 @@ interface VoteServiceInterface
      * Get an aggregated results from votes
      * P.e. Get a number of votes
      * @param int $userId
+     * @param int $siteId
      * @param \Application\Utils\QueryAggregateInterface[] $aggregates
      * @return array[array[string]mixed]
      */
-    public function getAggregatedForUser($userId, $aggregates);
+    public function getAggregatedForUser($userId, $siteId, $aggregates);
 }

@@ -258,28 +258,20 @@ div.google-visualization-tooltip {
     align-self: stretch;
 }
 
-/* Legacy stuff */
-/*
-.btn-success {
-  background-color: #57a900;
-  background-image: -moz-linear-gradient(top, #70d900, #57a900);
-  background-image: -ms-linear-gradient(top, #70d900, #57a900);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#70d900), to(#57a900));
-  background-image: -webkit-linear-gradient(top, #70d900, #57a900);
-  background-image: -o-linear-gradient(top, #70d900, #57a900);
-  background-image: linear-gradient(top, #70d900, #57a900);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#70d900', endColorstr='#57a900', GradientType=0);
+/** User **/
+
+#user-top {
+    display: flex; 
+    flex-direction: row; 
+    align-items: flex-start
 }
 
-.btn-success:hover,
-.btn-success:active,
-.btn-success.active,
-.btn-success.disabled,
-.btn-success[disabled] {
-  background-color: #57a900;
+#user-summary {
+    align-self: flex-start; 
+    max-width: 40%;
 }
 
-.btn-success:active, .btn-success.active {
-  background-color: #57a900;
+#user-chart {
+    flex: 1; 
+    align-self: stretch;
 }
-*/

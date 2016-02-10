@@ -25,6 +25,14 @@ interface PageMapperInterface extends SimpleMapperInterface
      * @return \Zend\Paginator\Paginator|PageInterface[]
      */
     public function findSitePages($siteId, $type = PageType::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null, $order = null, $paginated = false);
+        
+    /**
+     * Find all pages on the site authored by user
+     * @param int $userId
+     * @param int $siteId
+     * @return PageInterface[]
+     */
+    public function findPagesByUser($userId, $siteId);
     
     /**
      * Find translation of a page from other wikis

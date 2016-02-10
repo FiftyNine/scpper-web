@@ -13,7 +13,7 @@ return array(
     'router' => array(
         'routes' => array(
             'home' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'Literal',
                 'options' => array(
                     'route'    => '/',
                     'defaults' => array(
@@ -23,7 +23,7 @@ return array(
                 ),
             ),
             'generate-consts' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'Literal',
                 'options' => array(
                     'route'    => '/generateConsts',
                     'defaults' => array(
@@ -68,7 +68,7 @@ return array(
                 ),                
             ),            
             'users' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'Literal',
                 'options' => array(
                     'route'    => '/users',
                     'defaults' => array(
@@ -93,7 +93,7 @@ return array(
                 ),                                
             ),            
             'pages' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'Literal',
                 'options' => array(
                     'route'    => '/pages',
                     'defaults' => array(
@@ -118,7 +118,7 @@ return array(
                 ),                                
             ),            
             'revisions' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'Literal',
                 'options' => array(
                     'route'    => '/revisions',
                     'defaults' => array(
@@ -143,7 +143,7 @@ return array(
                 ),                                
             ),            
             'votes' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'type' => 'Literal',
                 'options' => array(
                     'route'    => '/votes',
                     'defaults' => array(
@@ -168,19 +168,25 @@ return array(
                 ),                                
             ),            
             'page' => array(
-                'type' => 'Segment',
+                'type' => 'Literal',
                 'options' => array(
-                    'route'    => '/page[/:pageId]',
-                    'constraints' => array(                                
-                        'pageId'     => '[1-9][0-9]*',
-                    ),                    
-                    'defaults' => array(
-                        'controller' => 'Application\Controller\Page',
-                        'action'     => 'page',
-                    ),
+                    'route'    => '/page',
                 ),
-                'may_terminate' => true,
+                'may_terminate' => false,
                 'child_routes' => array(
+                    'page' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/:pageId',
+                            'constraints' => array(                                
+                                'pageId'     => '[1-9][0-9]*',
+                            ),                                                
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\Page',
+                                'action' => 'page'
+                            ),
+                        ),                        
+                    ),
                     'default' => array(
                         'type'    => 'Segment',
                         'options' => array(
@@ -196,19 +202,25 @@ return array(
                 ),                                                
             ),
             'user' => array(
-                'type' => 'Segment',
+                'type' => 'Literal',
                 'options' => array(
-                    'route'    => '/user[/:userId]',
-                    'constraints' => array(                                
-                        'pageId'     => '[1-9][0-9]*',
-                    ),                    
-                    'defaults' => array(
-                        'controller' => 'Application\Controller\User',
-                        'action'     => 'user',
-                    ),
+                    'route'    => '/user',
                 ),
-                'may_terminate' => true,
+                'may_terminate' => false,
                 'child_routes' => array(
+                    'user' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/:userId',
+                            'constraints' => array(                                
+                                'pageId'     => '[1-9][0-9]*',
+                            ),                                                
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\User',
+                                'action' => 'user'
+                            ),
+                        ),                        
+                    ),
                     'default' => array(
                         'type'    => 'Segment',
                         'options' => array(

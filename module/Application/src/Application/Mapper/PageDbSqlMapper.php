@@ -7,6 +7,7 @@ use Zend\Db\Sql\Expression;
 use Application\Utils\PageType;
 use Application\Utils\DbConsts\DbViewPages;
 use Application\Utils\DbConsts\DbViewTags;
+use Application\Utils\DbConsts\DbViewAuthors;
 
 class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
 {
@@ -63,6 +64,21 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
         if ($paginated) {
             return $this->getPaginator($select);
         }        
+        return $this->fetchResultSet($sql, $select);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function findPagesByUser($userId, $siteId)
+    {
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select(array('p' => DbViewPages::TABLE))
+                ->join(array('a' => DbViewAuthors::TABLE), 'p.'.DbViewPages::PAGEID.' = a.'.DbViewAuthors::PAGEID, array())
+                ->where(array(
+                    'a.'.DbViewAuthors::USERID.' = ?' => $userId,
+                    'p.'.DbViewPages::SITEID.' = ?' => $siteId,
+                ));
         return $this->fetchResultSet($sql, $select);
     }
     

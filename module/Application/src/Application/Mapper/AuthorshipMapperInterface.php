@@ -25,9 +25,11 @@ interface AuthorshipMapperInterface extends SimpleMapperInterface
      * Returns all authorship entries for a specified user [on a certain site]
      * @param int $userId
      * @param int $siteId
+     * @param array[string]int $order
+     * @param bool $paginated
      * @return \Application\Model\AuthorshipInterface[]
      */
-    public function findAuthorshipsOfUser($userId, $siteId = -1);
+    public function findAuthorshipsOfUser($userId, $siteId, $order = null, $paginated = false);
     
     /**
      * Returns summary of information about user's authored pages

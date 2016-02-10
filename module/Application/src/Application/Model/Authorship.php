@@ -10,6 +10,7 @@ namespace Application\Model;
 
 use Application\Mapper\UserMapperInterface;
 use Application\Mapper\PageMapperInterface;
+use Application\Model\PageInterface;
 
 /**
  * Description of Authorship
@@ -83,6 +84,11 @@ class Authorship implements AuthorshipInterface
         return $this->page;
     }
 
+    public function setPage(PageInterface $page)
+    {
+        $this->page = $page;
+    }
+    
     /**
      * {@inheritDoc}
      */

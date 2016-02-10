@@ -35,4 +35,15 @@ interface VoteMapperInterface extends SimpleMapperInterface
      * @return array(array(string => mixed))
      */
     public function getAggregatedValues($conditions, $aggregates, \DateTime $castAfter = null, \DateTime $castBefore = null, $order = null, $paginated = false);
+    
+    /**
+     * Get an aggregated results from votes on specific author
+     * @param int $userId
+     * @param int $siteId
+     * @param \Application\Utils\QueryAggregateInterface[] $aggregates
+     * @param array(string => int) $order Associative array of field names and sorting orders (constants from \Application\Utils\Order)
+     * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
+     * @return array(array(string => mixed))
+     */
+    public function getAggregatedVotesOnUser($userId, $siteId, $aggregates, $order = null, $paginated = false);
 }

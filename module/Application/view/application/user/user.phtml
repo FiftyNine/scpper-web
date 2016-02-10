@@ -2,6 +2,34 @@
     $user = $this->user;
     $site = $this->site;
 ?>
+<?php
+$this->headScript()->appendFile('/js/scpper_charts.js');
+$this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
+?>
+<?php $this->headScript()->captureStart(); ?>
+
+// Anonymous self-executing function not to clutter global scope with temporary stuff
+(function () {
+
+    // Initialize global variables
+    var userId = <?php echo $user->getId() ?>;
+    var siteId = <?php echo $site->getWikidotId() ?>;
+
+    function init()
+    {
+    }
+
+    $(document).ready(init);    
+    
+    // Call google graphing API
+    google.charts.load('current', {packages: ['corechart']});
+    google.charts.setOnLoadCallback(function () {
+        scpper.charts.rating.go('/user/ratingChart', {userId: userId, siteId: siteId}, 'user-rating-chart');
+    });
+
+}());
+
+<?php $this->headScript()->captureEnd(); ?>
 <p>
     <span class="h2">
         <a href="http://www.wikidot.com/user:info/<?php echo $user->getName();?>">
@@ -47,7 +75,7 @@
                     <li>Highest rating: <strong><?php echo $summary->getHighestRating(); ?></strong></li>
                     <li>Total: <strong><?php echo $summary->getTotalRating(); ?></strong></li>
                 </ul>
-                Rank: <strong><?php echo $activity->getAuthorRank()+1; ?></strong>
+                Rank: <strong>#<?php echo $activity->getAuthorRank()+1; ?></strong>
                 <br>
             <?php endif; ?>        
         <?php endif; ?>
@@ -75,7 +103,7 @@
             }   
         ?>
         <?php if (count($other) > 0): ?>
-            Other wikis:
+            Other:
             <ul>
             <?php foreach ($other as $i): ?>
                 <li>
@@ -93,4 +121,8 @@
             </ul>
         <?php endif; ?>
     </div>
+    <div id="user-chart">
+        <div class="chart-container" id="user-rating-chart">
+        </div>
+    </div>    
 </div>

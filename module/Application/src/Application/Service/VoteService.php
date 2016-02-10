@@ -57,11 +57,7 @@ class VoteService implements VoteServiceInterface
             $result->setCurrentPageNumber($page);
             $result->setItemCountPerPage($perPage);
         } else {
-            $votes = array();
-            foreach ($result as $vote) {
-                $votes[] = $vote;
-            }
-            $result = $votes;
+            $result = iterator_to_array($result);
         }
         if ($result) {
             $userIds = array();
@@ -105,8 +101,8 @@ class VoteService implements VoteServiceInterface
     /**
      * {@inheritDoc}
      */
-    public function getAggregatedForUser($userId, $aggregates)
-    {
-        return $this->mapper->getAggregatedValues(array(DbViewVotes::USERID.' = ?' => $userId), $aggregates);
+    public function getAggregatedForUser($userId, $siteId, $aggregates)
+    {        
+        return $this->mapper->getAggregatedVotesOnUser($userId, $siteId, $aggregates);
     }
 }

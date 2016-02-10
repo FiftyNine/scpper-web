@@ -53,4 +53,42 @@ class UserController extends AbstractActionController
         ));
     }
     
+    public function ratingChartAction()
+    {
+        $result = array('success' => false);
+        $userId = (int)$this->params()->fromQuery('userId');
+        $siteId = (int)$this->params()->fromQuery('siteId');
+        $user = $this->services->getUserService()->find($userId);
+        if ($user) {
+            $byDate = new DateAggregate(DbViewVotes::DATETIME, 'Date');
+            $count = new Aggregate(DbViewVotes::VALUE, Aggregate::SUM, 'Votes');
+            $votes = $this->services->getVoteService()->getAggregatedForUser($userId, $siteId, array($byDate, $count));
+            $resVotes = array();
+            foreach ($votes as $vote) {
+                $resVotes[] = array($vote['Date']->format(\DateTime::ISO8601), (int)$vote['Votes']);
+            }        
+            $authorships = $this->services->getUserService()->findAuthorshipsOfUser($userId, $siteId);
+            $milestones = array();
+            foreach ($authorships as $auth) {
+                $name = $auth->getPage()->getTitle();
+                if (strlen($name) > 11) {
+                    $name = substr($name, 0, 8).'...';
+                }
+                $milestones[] = array(
+                    $auth->getPage()->getCreationDate()->format(\DateTime::ISO8601), 
+                    array(
+                        'name' => $name,
+                        'text' => $auth->getPage()->getTitle().' on '.$auth->getPage()->getCreationDate()->format('Y-m-d')
+                    )
+                );
+            }
+            $result = array(
+                'success' => true,
+                'votes' => $resVotes,
+                'milestones' => $milestones,
+            );
+        }
+        return new JsonModel($result);
+    }    
+    
 }

@@ -175,17 +175,17 @@ scpper.charts.changes = {
     }
 };
 
-/** Page rating chart **/
+/** Rating chart **/
 
-scpper.charts.page = {    
+scpper.charts.rating = {    
     
     convertDates: function (result) {
         // Convert returned values from string to date
         for (var i=0; i<result.votes.length; i++) {
             result.votes[i][0] = scpper.convertDate(result.votes[i][0]);
         }
-        for (var i=0; i<result.revisions.length; i++) {
-            result.revisions[i][0] = scpper.convertDate(result.revisions[i][0]);
+        for (var i=0; i<result.milestones.length; i++) {
+            result.milestones[i][0] = scpper.convertDate(result.milestones[i][0]);
         }                
     },
     
@@ -204,11 +204,10 @@ scpper.charts.page = {
         return lineData;
     },
     
-    preparePointData: function (revisions) {
+    preparePointData: function (milestones) {
         var points = [];        
-        for (var i=0; i<revisions.length; i++) {
-            var annotationText = revisions[i][1].user.displayName+': "'+revisions[i][1].comments+'"';
-            points.push([revisions[i][0], null, false, revisions[i][1].index.toString(), annotationText]);
+        for (var i=0; i<milestones.length; i++) {
+            points.push([milestones[i][0], null, false, milestones[i][1].name, milestones[i][1].text]);
         }
         // Draw line chart
         var pointData = new google.visualization.DataTable();
@@ -263,28 +262,28 @@ scpper.charts.page = {
     processData: function (result, container) {
         // Define the chart to be drawn
         if (!result.success || result.votes.length < 2) {
-            setFailedBackground(container);    
+            scpper.charts.setFailedBackground(container);    
             return;
         }
-        scpper.charts.page.convertDates(result);
-        var lineData = scpper.charts.page.prepareLineData(result.votes);
-        var pointData = scpper.charts.page.preparePointData(result.revisions);
+        scpper.charts.rating.convertDates(result);
+        var lineData = scpper.charts.rating.prepareLineData(result.votes);
+        var pointData = scpper.charts.rating.preparePointData(result.milestones);
         // Prepare data for line chart
-        var data = scpper.charts.page.mergeData(lineData, pointData);
+        var data = scpper.charts.rating.mergeData(lineData, pointData);
         var chart = new google.visualization.LineChart(document.getElementById(container));
-        var options = scpper.charts.page.getOptions();
+        var options = scpper.charts.rating.getOptions();
         chart.draw(data, options);
     },    
     
-    go: function (pageId, container) {
+    go: function (url, payload, container) {
         // var callback = this.processData();
         $.ajax({
-            url: "/page/ratingChart",
+            url: url,
             type: "get",
-            data: {pageId: pageId}
+            data: payload
         })
         .done(function(result) {
-            scpper.charts.page.processData(result, container);
+            scpper.charts.rating.processData(result, container);
         })
         .fail(function () {
             scpper.charts.setFailedBackground(container);

@@ -87,14 +87,20 @@ class AuthorshipDbSqlMapper extends ZendDbSqlMapper implements AuthorshipMapperI
     /**
      * {@inheritDoc}
      */
-    public function findAuthorshipsOfUser($userId, $siteId = -1) 
+    public function findAuthorshipsOfUser($userId, $siteId, $order = null, $paginated = false) 
     {
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select(DbViewAuthors::TABLE)
                 ->columns(self::COLUMNS)
-                ->where(array(DbViewAuthors::USERID.' = ?' => $userId));
-        if ($siteId > 0) {
-            $select->where(array(DbViewAuthors::SITEID.' = ?' => $siteId));
+                ->where(array(
+                    DbViewAuthors::USERID.' = ?' => $userId,
+                    DbViewAuthors::SITEID.' = ?' => $siteId,
+                ));
+        if (is_array($order)) {
+            $this->orderSelect($select, $order);
+        }
+        if ($paginated) {
+            return $this->getPaginator($select);
         }
         return $this->fetchResultSet($sql, $select);        
     }

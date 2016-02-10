@@ -98,12 +98,18 @@ class PageController extends AbstractActionController
         $revisions = $this->services->getRevisionService()->findRevisionsOfPage($pageId);
         $resRevisions = array();
         foreach ($revisions as $rev) {
-            $resRevisions[] = array($rev->getDateTime()->format(\DateTime::ISO8601), $rev);
+            $resRevisions[] = array(
+                $rev->getDateTime()->format(\DateTime::ISO8601), 
+                array(
+                    'name' => (string)($rev->getIndex()+1),
+                    'text' => $rev->getComments()==='' ? $rev->getUser()->getDisplayName() : sprintf('%s: "%s"', $rev->getUser()->getDisplayName(), $rev->getComments())
+                )
+            );
         }
         return new JsonModel(array(
             'success' => true,
             'votes' => $resVotes,
-            'revisions' => $resRevisions,
+            'milestones' => $resRevisions,
         ));
     }
     

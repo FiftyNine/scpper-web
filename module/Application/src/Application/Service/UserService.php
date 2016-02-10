@@ -8,7 +8,9 @@ use Application\Mapper\AuthorshipMapperInterface;
 use Application\Mapper\UserActivityMapperInterface;
 use Application\Utils\QueryAggregateInterface;
 use Application\Utils\DbConsts\DbViewUserActivity;
+use Application\Utils\DbConsts\DbViewPages;
 use Application\Utils\UserType;
+use Application\Mapper\PageMapperInterface;
 
 class UserService implements UserServiceInterface
 {        
@@ -37,17 +39,25 @@ class UserService implements UserServiceInterface
      */
     protected $authorshipMapper;    
     
+    /**
+     *
+     * @var PageMapperInterface
+     */
+    protected $pageMapper;
+    
     public function __construct(
             UserMapperInterface $userMapper,
             MembershipMapperInterface $membershipMapper,
             UserActivityMapperInterface $activityMapper,
-            AuthorshipMapperInterface $authorshipMapper
+            AuthorshipMapperInterface $authorshipMapper,
+            PageMapperInterface $pageMapper
     ) 
     {
         $this->userMapper = $userMapper;
         $this->membershipMapper = $membershipMapper;
         $this->activityMapper = $activityMapper;
         $this->authorshipMapper = $authorshipMapper;
+        $this->pageMapper = $pageMapper;
     }
 
     /**
@@ -151,5 +161,36 @@ class UserService implements UserServiceInterface
     public function findAuthorSummaries($siteId, $order = null, $paginated = false)
     {
         return $this->authorshipMapper->getAuthorSummaries($siteId, $order, $paginated);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function findAuthorshipsOfUser($userId, $siteId, $order = null, $paginated = false, $page = 1, $perPage = 10)
+    {
+        $result = $this->authorshipMapper->findAuthorshipsOfUser($userId, $siteId, $order, $paginated);
+        if ($paginated) {
+            $result->setCurrentPageNumber($page);
+            $result->setItemCountPerPage($perPage);
+        } else {
+            $result = iterator_to_array($result);
+        }
+        if ($result) {
+            $pageIds = array();
+            foreach ($result as $auth) {
+                $pageIds[] = $auth->getPageId();
+            }
+            $pages = $this->pageMapper->findAll(array(
+                sprintf('%s IN (%s)', DbViewPages::PAGEID, implode(',', $pageIds))
+            ));
+            $pageByIds = array();
+            foreach ($pages as $page) {
+                $pageByIds[$page->getId()] = $page;
+            }
+            foreach ($result as $auth) {
+                $auth->setPage($pageByIds[$auth->getPageId()]);
+            }
+        }
+        return $result;
     }
 }

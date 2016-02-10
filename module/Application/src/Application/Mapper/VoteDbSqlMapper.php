@@ -5,6 +5,7 @@ namespace Application\Mapper;
 use Zend\Db\Sql\Sql;
 use Application\Utils\VoteType;
 use Application\Utils\DbConsts\DbViewVotes;
+use Application\Utils\DbConsts\DbViewAuthors;
 
 class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
 {
@@ -52,6 +53,29 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
             return $this->getPaginator($select);
         }
         return $this->fetchResultSet($sql, $select);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getAggregatedVotesOnUser($userId, $siteId, $aggregates, $order = null, $paginated = false)
+    {
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select(array('v' => DbViewVotes::TABLE))
+                ->join(array('a' => DbViewAuthors::TABLE), 'a.'.DbViewAuthors::PAGEID.' = v.'.DbViewVotes::PAGEID, array())
+                ->where(array(
+                    'a.'.DbViewAuthors::USERID.' = ?' => $userId,
+                    'a.'.DbViewAuthors::SITEID.' = ?' => $siteId,
+                    'v.'.DbViewVotes::FROMMEMBER.' = 1'
+                ));
+        $this->aggregateSelect($select, $aggregates);
+        if (is_array($order)) {
+            $this->orderSelect($select, $order);
+        }
+        if ($paginated) {
+            return $this->getPaginator($select, true);
+        }
+        return $this->fetchArray($sql, $select);
     }
     
     /**
