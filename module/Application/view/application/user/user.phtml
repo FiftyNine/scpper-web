@@ -50,7 +50,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 <hr>
 <div id="user-top">
     <div id="user-summary">
-        <?php $membership = $user->getMembershipOfSite($site->getWikidotId()); ?>
+        <?php $membership = $user->getMembershipOfSite($site->getWikidotId()); ?>        
         <?php if ($membership): ?>
             Joined: <strong><?php echo $membership->getJoinDate()->format('Y-m-d'); ?></strong>
         <?php else: ?>
@@ -58,6 +58,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
         <?php endif; ?>
         <br>
         <?php $activity = $user->getActivityOnSite($site->getWikidotId()); ?>
+        <?php $isAuthor = $activity->getAuthorshipCount() > 0; ?>
         <?php if ($activity): ?>
             Last active: <strong><?php echo $activity->getLastActivity()->format('Y-m-d'); ?></strong>
             <br>
@@ -67,7 +68,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
             <br>
             Pages: <strong><?php echo $activity->getAuthorshipCount(); ?></strong>
             <br>
-            <?php if ($activity->getAuthorshipCount() > 0): ?>
+            <?php if ($isAuthor): ?>
                 <?php $summary = $activity->getAuthorSummary(); ?>
                 <ul>
                     <li>Originals: <strong><?php echo $summary->getOriginalCount(); ?></strong></li>
@@ -128,6 +129,56 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
     </div>    
 </div>
 <hr>
+
+<div class="container">
+    <div class="row">
+        <?php if ($user->getActivityOnSite($site->getWikidotId())->getVoteCount() > 0): ?>
+        <div class="col-md-4">
+            <h4>Favourite authors</h4>
+            <ol>
+                <?php foreach ($this->favs as $fav): ?>
+                <li>
+                    <a href="/user/<?php echo $fav[Application\Utils\DbConsts\DbViewAuthors::USERID] ?>">
+                        <?php echo $fav[Application\Utils\DbConsts\DbViewAuthors::USERDISPLAYNAME] ?>
+                    </a>
+                     with 
+                     <strong>
+                    <?php
+                        $negative = ((int)$fav['Votes']-(int)$fav['Rating'])/2;
+                        $positive = (int)$fav['Votes']-$negative;
+                        printf('%+d (%+d/%+d)', (int)$fav['Rating'], $positive, -$negative); 
+                    ?>
+                     </strong>
+                </li>
+                <?php endforeach; ?>
+            </ol>        
+        </div>
+        <?php endif; ?>
+        <?php if ($isAuthor): ?>
+        <div class="col-md-4">
+            <h4>Biggest fans</h4>
+            <ol>
+                <?php foreach ($this->fans as $fan): ?>
+                <li>
+                    <a href="/user/<?php echo $fan[Application\Utils\DbConsts\DbViewVotes::USERID] ?>">
+                        <?php echo $fan[Application\Utils\DbConsts\DbViewVotes::USERDISPLAYNAME] ?>
+                    </a>
+                     with 
+                     <strong>
+                    <?php
+                        $negative = ((int)$fan['Votes']-(int)$fan['Rating'])/2;
+                        $positive = (int)$fan['Votes']-$negative;
+                        printf('%+d (%+d/%+d)', (int)$fan['Rating'], $positive, -$negative); 
+                    ?>
+                     </strong>
+                </li>
+                <?php endforeach; ?>
+            </ol>
+        </div>
+        <?php endif; ?>
+    </div>
+</div>
+
 <h4><?php echo $this->pages->getPaginator()->getTotalItemCount();?> pages</h4>
 <div class="table-container" id="page-list">
 <?php

@@ -3,6 +3,7 @@
 namespace Application\Mapper;
 
 use Zend\Db\Sql\Sql;
+use Zend\Db\Sql\Expression;
 use Application\Utils\VoteType;
 use Application\Utils\DbConsts\DbViewVotes;
 use Application\Utils\DbConsts\DbViewAuthors;
@@ -68,10 +69,40 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
                     'a.'.DbViewAuthors::SITEID.' = ?' => $siteId,
                     'v.'.DbViewVotes::FROMMEMBER.' = 1'
                 ));
-        $this->aggregateSelect($select, $aggregates);
+        $this->aggregateSelect($select, $aggregates, 'v');
         if (is_array($order)) {
             $this->orderSelect($select, $order);
         }
+        if ($paginated) {
+            return $this->getPaginator($select, true);
+        }
+        return $this->fetchArray($sql, $select);
+    }
+
+    /**
+     * Get a list of favorite authors of user
+     * @param int $userId
+     * @param int $siteId
+     * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
+     * @return array(array(string => mixed))
+     */
+    public function getFavoriteAuthors($userId, $siteId, $paginated = false)
+    {
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select(array('v' => DbViewVotes::TABLE))
+                ->columns(array(
+                    DbViewAuthors::USERID => 'a.'.DbViewAuthors::USERID,
+                    DbViewAuthors::USERDISPLAYNAME => 'a.'.DbViewAuthors::USERDISPLAYNAME,
+                    'Votes' => new Expression('COUNT(*)'),
+                    'Rating' => new Expression('SUM(v.'.DbViewVotes::VALUE.')')
+                ), false)
+                ->join(array('a' => DbViewAuthors::TABLE), 'a.'.DbViewAuthors::PAGEID.' = v.'.DbViewVotes::PAGEID, array())
+                ->where(array(
+                    'v.'.DbViewVotes::USERID.' = ?' => $userId,
+                    'a.'.DbViewAuthors::SITEID.' = ?' => $siteId
+                ))                
+                ->group(array('a.'.DbViewAuthors::USERID, 'a.'.DbViewAuthors::USERDISPLAYNAME))
+                ->order('Rating DESC');
         if ($paginated) {
             return $this->getPaginator($select, true);
         }

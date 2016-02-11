@@ -199,7 +199,7 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
      * @param \Application\Utils\QueryAggregateInterface[] $aggregates
      * @return Select
      */
-    protected function aggregateSelect(Select $select, $aggregates)
+    protected function aggregateSelect(Select $select, $aggregates, $prefix = '')
     {
         $columns = array();
         foreach ($aggregates as $aggregate) {
@@ -208,13 +208,13 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
                 if ($aggName) {
                     $select->group($aggName);                    
                 } else {
-                    $select->group($aggregate->getAggregateExpression());
+                    $select->group($aggregate->getAggregateExpression($prefix));
                 }
             }
             if ($aggName) {
-                $columns[$aggName] = $aggregate->getAggregateExpression();
+                $columns[$aggName] = $aggregate->getAggregateExpression($prefix);
             } else {
-                $columns[] = $aggregate->getAggregateExpression();
+                $columns[] = $aggregate->getAggregateExpression($prefix);
             }
         }
         $select->columns($columns, false);    

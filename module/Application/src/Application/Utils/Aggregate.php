@@ -51,13 +51,17 @@ class Aggregate implements QueryAggregateInterface
         $this->group = $group;
     }
     
-    public function getPropertyName()
+    public function getPropertyName($prefix = '')
     {
         if ($this->getAggregateType() === self::COUNT) {
-            return '*';
+            $result = '*';
         } else {
-            return $this->propertyName;
+            $result = $this->propertyName;
+            if ($prefix) {
+                $result = $prefix.'.'.$result;
+            }                        
         }
+        return $result;
     }
     
     public function getAggregateType()
@@ -75,13 +79,13 @@ class Aggregate implements QueryAggregateInterface
         return $this->group;
     }
 
-    public function getAggregateExpression()
+    public function getAggregateExpression($prefix = '')
     {
         $sqlAggregate = self::SQL_NAMES[$this->getAggregateType()];
         if ($sqlAggregate) {
-            return new \Zend\Db\Sql\Expression("$sqlAggregate({$this->getPropertyName()})");
+            return new \Zend\Db\Sql\Expression("$sqlAggregate({$this->getPropertyName($prefix)})");
         } else {
-            return $this->getPropertyName();
+            return $this->getPropertyName($prefix);
         }
     }    
 }

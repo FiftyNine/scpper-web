@@ -46,4 +46,13 @@ interface VoteMapperInterface extends SimpleMapperInterface
      * @return array(array(string => mixed))
      */
     public function getAggregatedVotesOnUser($userId, $siteId, $aggregates, $order = null, $paginated = false);
+    
+    /**
+     * Get a list of favorite authors of user
+     * @param int $userId
+     * @param int $siteId
+     * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
+     * @return array(array(string => mixed))
+     */
+    public function getFavoriteAuthors($userId, $siteId, $paginated = false);    
 }

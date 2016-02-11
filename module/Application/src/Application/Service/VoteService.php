@@ -96,13 +96,21 @@ class VoteService implements VoteServiceInterface
             $conditions[] = DbViewVotes::FROMMEMBER.' = 1';
         }
         return $this->mapper->getAggregatedValues($conditions, $aggregates);
+    }        
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getUserFavoriteAuthors($userId, $siteId, $paginated = false)
+    {        
+        return $this->mapper->getFavoriteAuthors($userId, $siteId, $paginated);
     }
     
     /**
      * {@inheritDoc}
      */
-    public function getAggregatedForUser($userId, $siteId, $aggregates)
+    public function getAggregatedForUser($userId, $siteId, $aggregates, $order = null, $paginated = false)
     {        
-        return $this->mapper->getAggregatedVotesOnUser($userId, $siteId, $aggregates);
+        return $this->mapper->getAggregatedVotesOnUser($userId, $siteId, $aggregates, $order, $paginated);
     }
 }

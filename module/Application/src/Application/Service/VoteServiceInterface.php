@@ -62,8 +62,19 @@ interface VoteServiceInterface
      * P.e. Get a number of votes
      * @param int $userId
      * @param int $siteId
-     * @param \Application\Utils\QueryAggregateInterface[] $aggregates
+     * @param bool $paginated
      * @return array[array[string]mixed]
      */
-    public function getAggregatedForUser($userId, $siteId, $aggregates);
+    public function getUserFavoriteAuthors($userId, $siteId, $paginated = false);
+    
+    /**
+     * Get an aggregated results from votes
+     * P.e. Get a number of votes
+     * @param int $userId
+     * @param int $siteId
+     * @param \Application\Utils\QueryAggregateInterface[] $aggregates
+     * @param bool $paginated
+     * @return array[array[string]mixed]
+     */
+    public function getAggregatedForUser($userId, $siteId, $aggregates, $order = null, $paginated = false);
 }
