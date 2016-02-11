@@ -49,6 +49,14 @@ class PageService implements PageServiceInterface
     {
         return $this->mapper->findSitePages($siteId, $type, $createdAfter, $createdBefore, $order, $paginated);
     }
+        
+    /**
+     * {@inheritDoc}
+     */
+    public function findPagesByUser($userId, $siteId, $order = null, $paginated = false)
+    {
+        return $this->mapper->findPagesByUser($userId, $siteId, $order, $paginated);
+    }
     
     /**
      * {@inheritDoc}

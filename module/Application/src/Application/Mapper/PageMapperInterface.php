@@ -30,9 +30,11 @@ interface PageMapperInterface extends SimpleMapperInterface
      * Find all pages on the site authored by user
      * @param int $userId
      * @param int $siteId
+     * @param array(string => int) $order Associative array of field names and sorting orders (constants from \Application\Utils\Order)
+     * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
      * @return PageInterface[]
      */
-    public function findPagesByUser($userId, $siteId);
+    public function findPagesByUser($userId, $siteId, $order = null, $paginated = false);
     
     /**
      * Find translation of a page from other wikis

@@ -17,6 +17,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 
     function init()
     {
+        scpper.tables.assignPaginatorEvents('#page-list', '/user/pageList', {siteId: siteId, userId: userId});
     }
 
     $(document).ready(init);    
@@ -126,3 +127,19 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
         </div>
     </div>    
 </div>
+<hr>
+<h4><?php echo $this->pages->getPaginator()->getTotalItemCount();?> pages</h4>
+<div class="table-container" id="page-list">
+<?php
+$table = $this->pages;
+
+echo $this->partial(
+    'partial/tables/table.phtml',
+    array(
+        'table' => $table,
+        'data' => array(),
+    )
+);
+?>
+</div>
+

@@ -70,7 +70,7 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
     /**
      * {@inheritDoc}
      */
-    public function findPagesByUser($userId, $siteId)
+    public function findPagesByUser($userId, $siteId, $order = null, $paginated = false)
     {
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select(array('p' => DbViewPages::TABLE))
@@ -79,6 +79,12 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
                     'a.'.DbViewAuthors::USERID.' = ?' => $userId,
                     'p.'.DbViewPages::SITEID.' = ?' => $siteId,
                 ));
+        if (is_array($order)) {
+            $this->orderSelect($select, $order);
+        }
+        if ($paginated) {
+            return $this->getPaginator($select);
+        }
         return $this->fetchResultSet($sql, $select);
     }
     

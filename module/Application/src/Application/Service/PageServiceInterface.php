@@ -46,6 +46,16 @@ interface PageServiceInterface
     public function findSitePages($siteId, $type = PageType::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null, $order = null, $paginated = false);
     
     /**
+     * Find all pages on the site authored by user
+     * @param int $userId
+     * @param int $siteId
+     * @param array(string => int) $order Associative array of field names and sorting orders (constants from \Application\Utils\Order)
+     * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
+     * @return PageInterface[]
+     */
+    public function findPagesByUser($userId, $siteId, $order = null, $paginated = false);
+    
+    /**
      * Get an aggregated results from pages, grouped by period when created
      * P.e. Get a number of pages, average rating etc.
      * 
