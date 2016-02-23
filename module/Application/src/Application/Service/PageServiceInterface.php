@@ -24,6 +24,13 @@ interface PageServiceInterface
     public function findAll();
     
     /**
+     * Return pages with title or name matching the string
+     * @param string $mask
+     * @return PageInterface[]
+     */
+    public function findByName($mask);
+    
+    /**
      * Returns number of site pages
      * @param int $siteId Id of a site
      * @param int $type Type of page (constant from Application\Utils\PageType)

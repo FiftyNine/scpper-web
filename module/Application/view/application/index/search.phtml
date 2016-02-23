@@ -1,0 +1,84 @@
+<div class="row">
+    <div class="col-md-8 col-md-offset-2 text-center">
+        <h2>Search</h2>
+        <?php
+            $form = $this->form;
+            $form->setAttribute('action', $this->url('search'));
+            $field = $form->get(\Application\Form\SearchForm::TEXT_FIELD_NAME);
+            $form->prepare();
+        ?>
+        <?php
+            echo $this->form()->openTag($form);
+            ?>
+            <div class="input-group">
+                <?php
+            echo $this->formElement($field);
+            ?>
+            <span class="input-group-btn">
+                <?php
+            echo $this->formElement($form->get(\Application\Form\SearchForm::BUTTON_NAME));
+            ?>
+            </span>
+            </div>
+            <?php
+            echo $this->form()->closeTag();
+        ?>
+    </div>
+</div>
+<?php if ($field->getValue() !== ''): ?>
+    <?php if ((!$this->pages || count($this->pages) === 0) && (!$this->users || count($this->users) === 0)): ?>
+        <p class="text-center">
+        Sorry, nothing found
+        </p>
+    <?php else: ?>
+        <div class="row">
+        <?php if ($this->pages && count($this->pages) > 0): ?>
+            <div class="col-md-6">
+            <h3>
+                Pages
+            </h3>
+            <ul>
+                <?php $i=0; ?>
+                <?php foreach ($this->pages as $page): ?>
+                    <?php $i++; ?>
+                    <li>
+                        <a href="<?php echo $page->getUrl() ?>">
+                            <?php echo $page->getTitle() ?>                        
+                        </a>
+                        <span>
+                            (<?php echo $page->getSite()->getEnglishName(); ?>)
+                        </span>
+                    </li>
+                    <?php if ($i===50) {break;} ?>
+                <?php endforeach; ?>
+            </ul>
+            <?php if (count($this->pages) > 50): ?>
+                Too many results. Refine your query, please.
+            <?php endif; ?>
+            </div>
+        <?php endif; ?>
+        <?php if ($this->users && count($this->users) > 0): ?>
+            <div class="col-md-6">
+            <h3>
+                Users
+            </h3>
+            <ul>
+                <?php $i=0; ?>
+                <?php foreach ($this->users as $user): ?>
+                    <?php $i++; ?>
+                    <li>
+                        <a href="<?php echo $user->getUrl() ?>">
+                            <?php echo $user->getDisplayName() ?>                        
+                        </a>
+                    </li>
+                    <?php if ($i===50) {break;} ?>
+                <?php endforeach; ?>
+            </ul>
+            <?php if (count($this->users) > 50): ?>
+                Too many results. Refine your query, please.
+            <?php endif; ?>
+            </div>
+        <?php endif; ?>
+        </div>        
+    <?php endif; ?>
+<?php endif; ?>

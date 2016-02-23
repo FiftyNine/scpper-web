@@ -25,6 +25,13 @@ interface UserServiceInterface
     public function findAll($conditions = null, $paginated = false);
     
     /**
+     * Return users with name matching the string
+     * @param string $mask
+     * @return UserInterface[]
+     */
+    public function findByName($mask);    
+    
+    /**
      * Returns all users who are members of the site
      * @param int $siteId Id of a site
      * @param int $types Bitmask - types of user to retrieve (constants from \Application\Utils\UserType)

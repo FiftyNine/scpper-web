@@ -24,4 +24,16 @@ interface UtilityServiceInterface
      * Generates PHP files with field names as constants
      */
     public function generateDbConstants();
+    
+    /**
+     * Attach a search form to site's layout viewmodel
+     * @param ViewModel $viewModel
+     */
+    public function attachSearchForm(ViewModel $viewModel);
+    
+    /**
+     * Get a search form instance
+     * @return \Application\Form\SearchForm
+     */
+    public function getSearchForm();
 }

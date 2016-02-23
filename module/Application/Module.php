@@ -38,7 +38,6 @@ class Module
             'Zend\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-//                    'JPGraph' => __DIR__ . '/../../vendor/jpgraph'
                 ),
             ),
         );
@@ -46,8 +45,8 @@ class Module
     
     public function attachLayoutForms($event)
     {
-        // $viewModel = $event->getViewModel();        
-        // $utils = $event->getApplication()->getServiceManager()->get('Application\Service\UtilityServiceInterface');
-        // $utils->attachSiteSelectorForm($viewModel);
+        $viewModel = $event->getViewModel();        
+        $utils = $event->getApplication()->getServiceManager()->get('Application\Service\UtilityServiceInterface');
+        $utils->attachSearchForm($viewModel);
     }        
 }

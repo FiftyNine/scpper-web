@@ -9,6 +9,7 @@ use Application\Mapper\UserActivityMapperInterface;
 use Application\Utils\QueryAggregateInterface;
 use Application\Utils\DbConsts\DbViewUserActivity;
 use Application\Utils\DbConsts\DbViewPages;
+use Application\Utils\DbConsts\DbViewUsers;
 use Application\Utils\UserType;
 use Application\Mapper\PageMapperInterface;
 
@@ -88,6 +89,16 @@ class UserService implements UserServiceInterface
     public function findAll($conditions = null, $paginated = false)
     {
         return $this->userMapper->findAll($conditions, $paginated);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function findByName($mask)
+    {
+        $needle = sprintf('%%%s%%', $mask);            
+        $conditions = array(sprintf("%s LIKE ?", DbViewUsers::DISPLAYNAME) => $needle);
+        return $this->userMapper->findAll($conditions);        
     }
     
     /**

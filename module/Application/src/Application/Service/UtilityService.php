@@ -6,7 +6,9 @@ use Zend\Db\Adapter\AdapterInterface;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Http\Header\SetCookie;
+use Zend\View\Model\ViewModel;
 use Application\Model\SiteInterface;
+use Application\Form\SearchForm;
 
 class UtilityService implements UtilityServiceInterface
 {
@@ -29,34 +31,30 @@ class UtilityService implements UtilityServiceInterface
      * @var int
      */
     protected $siteId;
-    
-    /**
-     *
-     * @var SiteInterface[] 
-     */
-    protected $sites;
-    
+       
     /**
      *
      * @var AdapterInterface
      */
     protected $dbAdapter;
     
-    public function __construct(SiteServiceInterface $siteService, Request $request, AdapterInterface $dbAdapter)
+    /**
+     *
+     * @var type 
+     */
+    protected $searchForm;            
+    
+    public function __construct(
+            SiteServiceInterface $siteService,             
+            AdapterInterface $dbAdapter,
+            SearchForm $searchForm,
+            $siteId
+    )
     {
         $this->siteService = $siteService;
         $this->dbAdapter = $dbAdapter;
-        $cookies = $request->getHeaders('Cookie');
-        if ($cookies && $cookies->offsetExists(self::SITE_ID_COOKIE)) {
-            $this->siteId = (int)$cookies->offsetGet(self::SITE_ID_COOKIE);
-        } else {
-            $this->siteId = self::ENGLISH_SITE_ID;
-        }
-        $this->sites = array();
-        $sites = $siteService->findAll();
-        foreach ($sites as $site) {
-            $this->sites[$site->getWikidotId()] = $site;
-        }        
+        $this->searchForm = $searchForm;
+        $this->siteId = $siteId;
     }  
     
     /**
@@ -69,7 +67,8 @@ class UtilityService implements UtilityServiceInterface
             return false;
         }
         $siteId = $request->getQuery('siteId', self::ENGLISH_SITE_ID);
-        if (!array_key_exists($siteId, $this->sites)) {           
+        $site = $this->siteService->find($siteId);
+        if (!$site) {
            $siteId = self::ENGLISH_SITE_ID; 
         }
         // Just in case
@@ -88,6 +87,25 @@ class UtilityService implements UtilityServiceInterface
         return $this->siteId;
     }
 
+    /**
+     * 
+     * @param \Application\Service\ViewModel $viewModel
+     */
+    public function attachSearchForm(ViewModel $viewModel)
+    {
+        $viewModel->setVariables(array(
+            'searchForm' => $this->searchForm
+        ));
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getSearchForm()
+    {
+        return $this->searchForm;
+    }
+    
     /**
      * Generates PHP files with field names as constants
      */

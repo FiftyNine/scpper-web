@@ -4,6 +4,7 @@ namespace Application\Service;
 
 use Application\Mapper\PageMapperInterface;
 use Application\Utils\PageType;
+use Application\Utils\DbConsts\DbViewPages;
 
 class PageService implements PageServiceInterface 
 {
@@ -32,6 +33,20 @@ class PageService implements PageServiceInterface
     public function findAll()
     {
         return $this->mapper->findAll();
+    }
+
+    /**
+     * {@inheritDoc}
+     */    
+    public function findByName($mask)
+    {        
+        if (filter_var($mask, FILTER_VALIDATE_INT)) {
+            $needle = sprintf('((.*[^[:alnum:]])|^)%s(([^[:alnum:]].*)|$)', $mask);
+        } else {
+            $needle = sprintf('.*%s.*', $mask);            
+        }
+        $conditions = array(sprintf("%s RLIKE ?", DbViewPages::TITLE) => $needle);
+        return $this->mapper->findAll($conditions);
     }
     
     /**
