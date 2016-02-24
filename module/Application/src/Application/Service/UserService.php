@@ -96,8 +96,9 @@ class UserService implements UserServiceInterface
      */
     public function findByName($mask)
     {
+        $mask = mb_strtolower($mask);
         $needle = sprintf('%%%s%%', $mask);            
-        $conditions = array(sprintf("%s LIKE ?", DbViewUsers::DISPLAYNAME) => $needle);
+        $conditions = array(sprintf("LOWER(%s) LIKE ?", DbViewUsers::DISPLAYNAME) => $needle);
         return $this->userMapper->findAll($conditions);        
     }
     

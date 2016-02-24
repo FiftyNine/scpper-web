@@ -39,13 +39,14 @@ class PageService implements PageServiceInterface
      * {@inheritDoc}
      */    
     public function findByName($mask)
-    {        
+    {
+        $mask = mb_strtolower($mask);
         if (filter_var($mask, FILTER_VALIDATE_INT)) {
             $needle = sprintf('((.*[^[:alnum:]])|^)%s(([^[:alnum:]].*)|$)', $mask);
         } else {
             $needle = sprintf('.*%s.*', $mask);            
         }
-        $conditions = array(sprintf("%s RLIKE ?", DbViewPages::TITLE) => $needle);
+        $conditions = array(sprintf("LOWER(%s) RLIKE ?", DbViewPages::TITLE) => $needle);
         return $this->mapper->findAll($conditions);
     }
     

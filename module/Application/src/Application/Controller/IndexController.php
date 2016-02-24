@@ -62,7 +62,7 @@ class IndexController extends AbstractActionController
             if ($form->isValid()) {
                 $text = $form->get(SearchForm::TEXT_FIELD_NAME)->getValue();
                 $text = trim($text);
-                if (strlen($text) >= 3) {
+                if (mb_strlen($text) >= 3) {
                     $result['pages'] = $this->services->getPageService()->findByName($text);
                     $result['users'] = $this->services->getUserService()->findByName($text);
                 }

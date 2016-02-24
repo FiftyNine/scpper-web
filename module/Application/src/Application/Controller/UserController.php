@@ -96,8 +96,8 @@ class UserController extends AbstractActionController
             $milestones = array();
             foreach ($authorships as $auth) {
                 $name = $auth->getPage()->getTitle();
-                if (strlen($name) > 11) {
-                    $name = substr($name, 0, 8).'...';
+                if (mb_strlen($name) > 11) {
+                    $name = mb_substr($name, 0, 8).'...';
                 }
                 $milestones[] = array(
                     $auth->getPage()->getCreationDate()->format(\DateTime::ISO8601), 
