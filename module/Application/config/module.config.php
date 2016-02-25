@@ -32,7 +32,17 @@ return array(
                     ),
                 ),
             ),
-            'generate-consts' => array(
+            'about' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route'    => '/about',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action'     => 'about',
+                    ),                    
+                )
+            ),
+/*            'generate-consts' => array(
                 'type' => 'Literal',
                 'options' => array(
                     'route'    => '/generateConsts',
@@ -41,7 +51,7 @@ return array(
                         'action'     => 'generateConsts',
                     ),
                 ),
-            ),            
+            ),            */
             'select-site' => array(
                 'type' => 'Literal',
                 'options' => array(
@@ -382,6 +392,10 @@ return array(
             array(
                 'label' => 'Changes',
                 'route' => 'changes',
+            ),
+            array(
+                'label' => 'About',
+                'route' => 'about',
             ),            
         )
     )

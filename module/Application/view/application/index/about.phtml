@@ -1,0 +1,38 @@
+<h3>FAQ</h3>
+<dl id="faq">
+    <dt>Q: What's the purpose of this site?</dt>
+    <dd>A: This website was created to provide various data and statistics about pages and users of SCP wikis, which may be useful or simple interesting</dd>
+    <dt>Q: Why this piece of information is incorrect or missing?</dt>
+    <dd>A: There is a few possible explanations:
+        <ol>
+            <li>
+                Database is out of date. In order to avoid generating high load on hosting service and Wikidot itself database updates only once a week. Which sucks, yes. And if you need fresh data from wiki this site will not be very helpful to you, I'm afraid. Although if you're interested in data collected over some period in the past, you're in the right place</li>            
+            </li>
+            <li>
+                Wikidot does not provide all the information that this database supports, so sometimes code behind this site has to make a guess. For example, if there's a page on the main wiki named 'scp-1234' and a page on a russian wiki named 'scp-1234' then the latter probably is a translation of the former. It will be marked at such and everyone is happy. A different example: the translation of the tale 'Quiet Days' by Dmatix on the Spanish wiki is named 'dias-tranquilos'. In this case algorithm can't automatically match translated page to the original one since their names are different. Cases like this require either manual human input or improved matching algorithms. I have ideas for both solutions but at the moment neither is implemented.
+            </li>
+            <li>
+                I screwed up the coding. Please, feel free to report any such bugs, errors, inconsistencies, etc <a href="https://www.wikidot.com/account/messages#/new/1440737">over Wikidot PMS</a>
+            </li>
+        </ol>
+    </dd>
+    <dt>
+        Q: What is an 'active user'?        
+    </dt>
+    <dd>
+        A: Active user is a user who either voted on articles or posted or edited an article at least once in the last six months. Activity is separate for different wikis. User can be considered active on one wiki and inactive on the others.
+    </dd>
+    <dt>
+        Q: Your rating is different from the one shown on the wiki. Also, what's with the multiple ratings?
+    </dt>
+    <dd>
+        A: ScpperDB has three separate ratings for each page:
+        <ul>
+            <li>Rating or clean rating - this is like a normal wikidot rating, but it only counts votes from members of the wiki. So, no deleted accounts and no people who were banned</li>
+            <li>Contributor rating - only counts votes from members of the wiki who have pages of their own</li>
+            <li>Adjusted rating - this one only counts votes from active members of the wiki</li>
+        </ul>
+        I have ideas about rolling contributor rating and adjusted rating into one, but for now they are separate.
+        To answer the first question: rating also may differ from the one shown on the wiki itself, because the database is out of date.
+    </dd>
+</dl>

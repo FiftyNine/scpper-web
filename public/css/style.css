@@ -275,3 +275,9 @@ div.google-visualization-tooltip {
     flex: 1; 
     align-self: stretch;
 }
+
+/** About **/
+
+#faq > dd {
+    margin-bottom: 20px;
+}

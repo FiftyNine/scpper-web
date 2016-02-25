@@ -84,4 +84,9 @@ class IndexController extends AbstractActionController
         $this->services->getUtilityService()->generateDbConstants();
         return $this->redirect()->toRoute('home');
     }
+    
+    public function aboutAction()
+    {
+        return new ViewModel();
+    }
 }
