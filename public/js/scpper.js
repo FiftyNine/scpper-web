@@ -79,9 +79,11 @@ scpper.tables = {
     assignPaginatorEvents: function (containerId, url, payload)
     {
         var container = $(containerId);
-        container.find("ul.pagination > li > a").on('click', {container: containerId, url: url, payload: payload}, scpper.tables.fetchPaginatorIndex);
-        container.find(".per-page-control").on('change', {container: containerId, url: url, payload: payload}, scpper.tables.changePaginatorSize);
-        container.find("th.can-order").on('click', {container: containerId, url: url, payload: payload}, scpper.tables.changePaginatorOrder);
+        if (container) {
+            container.find("ul.pagination > li > a").on('click', {container: containerId, url: url, payload: payload}, scpper.tables.fetchPaginatorIndex);
+            container.find(".per-page-control").on('change', {container: containerId, url: url, payload: payload}, scpper.tables.changePaginatorSize);
+            container.find("th.can-order").on('click', {container: containerId, url: url, payload: payload}, scpper.tables.changePaginatorOrder);
+        }
     },
 
     /**

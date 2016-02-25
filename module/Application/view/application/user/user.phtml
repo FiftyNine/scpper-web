@@ -60,7 +60,12 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
         <?php $activity = $user->getActivityOnSite($site->getWikidotId()); ?>
         <?php $isAuthor = $activity->getAuthorshipCount() > 0; ?>
         <?php if ($activity): ?>
-            Last active: <strong><?php echo $activity->getLastActivity()->format('Y-m-d'); ?></strong>
+            <?php if ($activity->getLastActivity()): ?>
+                Last active: 
+                <strong>
+                    <?php echo $activity->getLastActivity()->format('Y-m-d'); ?>                    
+                </strong>
+            <?php endif; ?>
             <br>
             Votes: <strong><?php echo $activity->getVoteCount(); ?></strong>
             <br>
@@ -180,17 +185,19 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 </div>
 
 <h4><?php echo $this->pages->getPaginator()->getTotalItemCount();?> pages</h4>
-<div class="table-container" id="page-list">
-<?php
-$table = $this->pages;
+<?php if ($this->pages->getPaginator()->getTotalItemCount()): ?>
+    <div class="table-container" id="page-list">
+    <?php
+    $table = $this->pages;
 
-echo $this->partial(
-    'partial/tables/table.phtml',
-    array(
-        'table' => $table,
-        'data' => array(),
-    )
-);
-?>
-</div>
+    echo $this->partial(
+        'partial/tables/table.phtml',
+        array(
+            'table' => $table,
+            'data' => array(),
+        )
+    );
+    ?>
+    </div>
+<?php endif ?>
 
