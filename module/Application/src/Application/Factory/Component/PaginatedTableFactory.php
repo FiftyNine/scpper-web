@@ -158,6 +158,7 @@ class PaginatedTableFactory
             array(
                 new Column('#'),
                 new Column('User', DbViewVotes::USERDISPLAYNAME),                
+                new Column('Vote', DbViewVotes::VALUE, false),
                 new Column('Member', DbViewVotes::FROMMEMBER, false, 'Vote from a member of the wiki'),
                 new Column('Contributor', DbViewVotes::FROMCONTRIBUTOR, false, 'Vote from a member who authored at least one successful page'),
                 new Column('Active', DbViewVotes::FROMACTIVE, false, 'Vote from an active member of the wiki'),
