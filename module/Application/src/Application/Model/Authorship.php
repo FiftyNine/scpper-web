@@ -61,7 +61,7 @@ class Authorship implements AuthorshipInterface
     
     /**
      * Constructor
-     * @param SimpleMapperInterface $userMapper
+     * @param UserMapperInterface $userMapper
      * @param PageMapperInterface $pageMapper
      */
     public function __construct(

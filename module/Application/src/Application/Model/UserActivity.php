@@ -8,7 +8,7 @@
 
 namespace Application\Model;
 
-use Application\Mapper\SimpleMapperInterface;
+use Application\Mapper\SiteMapperInterface;
 use Application\Mapper\UserMapperInterface;
 use Application\Mapper\AuthorshipMapperInterface;
 use Application\Mapper\VoteMapperInterface;
@@ -121,14 +121,14 @@ class UserActivity implements UserActivityInterface
     
     /**
      * Constructor
-     * @param SimpleMapperInterface $siteMapper
+     * @param SiteMapperInterface $siteMapper
      * @param UserMapperInterface $userMapper
      * @param VoteMapperInterface $voteMapper
      * @param RevisionMapperInterface $revisionMapper
      * @param AuthorshipMapperInterface $authorMapper
      */
     public function __construct(
-        SimpleMapperInterface $siteMapper,
+        SiteMapperInterface $siteMapper,
         UserMapperInterface $userMapper,        
         VoteMapperInterface $voteMapper,
         RevisionMapperInterface $revisionMapper,

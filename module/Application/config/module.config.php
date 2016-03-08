@@ -309,7 +309,7 @@ return array(
     ),
     'lazy_services' => array(
         'class_map' => array(
-            'SiteMapper' => 'Application\Mapper\ZendDbSqlMapper',
+            'SiteMapper' => 'Application\Mapper\SiteDbSqlMapper',
             'UserMapper' => 'Application\Mapper\UserDbSqlMapper',
             'PageMapper' => 'Application\Mapper\PageDbSqlMapper',
             'RevisionMapper' => 'Application\Mapper\RevisionDbSqlMapper',

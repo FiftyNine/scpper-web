@@ -2,20 +2,20 @@
 
 namespace Application\Service;
 
-use Application\Mapper\SimpleMapperInterface;
+use Application\Mapper\SiteMapperInterface;
 
 class SiteService implements SiteServiceInterface
 {
     /**
      *
-     * @var SimpleMapperInterface
+     * @var SiteMapperInterface
      */
     protected $mapper;
     
     /**
      * @param SiteMapperInterface $mapper
      */
-    public function __construct(SimpleMapperInterface $mapper) 
+    public function __construct(SiteMapperInterface $mapper) 
     {
         $this->mapper = $mapper;
     }

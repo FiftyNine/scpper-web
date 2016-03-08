@@ -8,7 +8,7 @@
 
 namespace Application\Model;
 
-use Application\Mapper\SimpleMapperInterface;
+use Application\Mapper\SiteMapperInterface;
 use Application\Mapper\UserMapperInterface;
 
 /**
@@ -59,11 +59,11 @@ class Membership implements MembershipInterface
     
     /**
      * Constructor
-     * @param SimpleMapperInterface $siteMapper
-     * @param SimpleMapperInterface $userMapper
+     * @param SiteMapperInterface $siteMapper
+     * @param UserMapperInterface $userMapper
      */
     public function __construct(
-        SimpleMapperInterface $siteMapper,
+        SiteMapperInterface $siteMapper,
         UserMapperInterface $userMapper
     ) 
     {

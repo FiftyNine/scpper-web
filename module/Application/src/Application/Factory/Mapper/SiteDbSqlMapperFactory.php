@@ -5,7 +5,7 @@ namespace Application\Factory\Mapper;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\Hydrator\ClassMethods;
-use Application\Mapper\ZendDbSqlMapper;
+use Application\Mapper\SiteDbSqlMapper;
 
 
 class SiteDbSqlMapperFactory implements FactoryInterface
@@ -14,6 +14,6 @@ class SiteDbSqlMapperFactory implements FactoryInterface
         $dbAdapter = $serviceLocator->get('Zend\Db\Adapter\Adapter');
         $hydrator = new ClassMethods();
         $prototype = $serviceLocator->get('SitePrototype');
-        return new ZendDbSqlMapper($dbAdapter, $hydrator, $prototype, 'sites', 'WikidotId');
+        return new SiteDbSqlMapper($dbAdapter, $hydrator, $prototype, 'sites', 'WikidotId');
     }
 }

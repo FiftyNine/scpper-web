@@ -2,7 +2,7 @@
 
 namespace Application\Model;
 
-use Application\Mapper\SimpleMapperInterface;
+use Application\Mapper\SiteMapperInterface;
 use Application\Mapper\PageMapperInterface;
 use Application\Mapper\AuthorshipMapperInterface;
 use Application\Mapper\RevisionMapperInterface;
@@ -11,7 +11,7 @@ use Application\Mapper\VoteMapperInterface;
 class Page implements PageInterface
 {
     /**
-     * @var \Application\Mapper\SimpleMapperInterface
+     * @var \Application\Mapper\SiteMapperInterface
      */
     protected $siteMapper;
     
@@ -170,13 +170,14 @@ class Page implements PageInterface
     
     /**
      * Constructor
+     * @param ЫшеуMapperInterface $siteMapper
      * @param PageMapperInterface $pageMapper
      * @param AuthorshipMapperInterface $authorMapper
      * @param RevisionMapperInterface $revisionMapper
      * @param VoteMapperInterface $voteMapper
      */
     public function __construct(
-            SimpleMapperInterface $siteMapper,
+            SiteMapperInterface $siteMapper,
             PageMapperInterface $pageMapper,
             AuthorshipMapperInterface $authorMapper, 
             RevisionMapperInterface $revisionMapper,
