@@ -45,8 +45,10 @@ class Module
     
     public function attachLayoutForms($event)
     {
-        $viewModel = $event->getViewModel();        
-        $utils = $event->getApplication()->getServiceManager()->get('Application\Service\UtilityServiceInterface');
-        $utils->attachSearchForm($viewModel);
+        $viewModel = $event->getViewModel();
+        if (!($viewModel instanceof \Zend\View\Model\JsonModel)) {
+            $utils = $event->getApplication()->getServiceManager()->get('Application\Service\UtilityServiceInterface');        
+            $utils->attachSearchForm($viewModel);
+        }
     }        
 }

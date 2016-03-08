@@ -11,10 +11,12 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
 use Application\Service\HubServiceInterface;
 use Application\Utils\PageType;
 use Application\Utils\UserType;
 use Application\Utils\VoteType;
+use Application\Utils\AuthorRole;
 use Application\Form\SearchForm;
 
 class IndexController extends AbstractActionController
@@ -24,6 +26,41 @@ class IndexController extends AbstractActionController
      * @var HubServiceInterface 
      */
     protected $services;
+    
+    private function fillExtensionAuthorsInfo($authors, &$info)
+    {
+        foreach ($authors as $author) {
+            $info['authors'][] = array(
+                'userId' => $author->getUser()->getId(),
+                'userName' => $author->getUser()->getName(),
+                'user' => $author->getUser()->getDisplayName(),
+                'roleId' => $author->getRole(),
+                'role' => AuthorRole::getDescription($author->getRole()),
+                'deleted' => $author->getUser()->getDeleted()
+            );
+        }        
+    }
+    
+    private function fillExtensionPageInfo($pageId, &$info)
+    {
+        $page = $this->services->getPageService()->find($pageId);
+        if (!$page) {
+            return false;
+        }
+        $info['statusId'] = $page->getStatus();
+        $info['status'] = PageType::getDescription($page->getStatus());
+        $info['date'] = $page->getCreationDate()->getTimestamp();        
+        $info['authors'] = array();
+        $this->fillExtensionAuthorsInfo($page->getAuthors(), $info);
+        if ($page->getStatus() === PageType::TRANSLATION) {
+            $original = $page->getOriginal();
+            if ($original) {
+                $info['original'] = sprintf('%s/%s', $original->getSite()->getUrl(), $original->getName());            
+                $this->fillExtensionAuthorsInfo($original->getAuthors(), $info);
+            }
+        }
+        return true;
+    }
     
     public function __construct(HubServiceInterface $hubService) 
     {
@@ -88,5 +125,20 @@ class IndexController extends AbstractActionController
     public function aboutAction()
     {
         return new ViewModel();
+    }
+    
+    public function extensionPageInfoAction()
+    {
+        // log request to db
+        $result = array(
+            'status' => 'not_ok',
+            'message' => '',
+            'data' => array()
+        );
+        $pageId = $this->params()->fromQuery('pageId', 0);
+        if ((int)$pageId > 0 && $this->fillExtensionPageInfo($pageId, $result['data'])) {            
+            $result['status'] = 'ok';
+        }
+        return new JsonModel($result);
     }
 }

@@ -62,6 +62,16 @@ return array(
                     )
                 )            
             ),
+            'extension-page-info' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/extension-page-info',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action' => 'extensionPageInfo',
+                    )
+                )            
+            ),            
             'changes' => array(
                 'type' => 'Literal',
                 'options' => array(
