@@ -56,7 +56,9 @@ scpper.charts.changes = {
             colors: [color],
             tooltip: { isHtml: true }
         };    
-        var chart = new google.visualization.ColumnChart(document.getElementById(id));
+        var div = document.getElementById(id);
+        $(div).removeClass().addClass('chart-loaded');        
+        var chart = new google.visualization.ColumnChart(div);
         chart.draw(data, options);    
     },
 
@@ -71,7 +73,9 @@ scpper.charts.changes = {
             chartArea: {width: '80%', height: '80%'},
             colors: [color]
         };    
-        var chart = new google.visualization.LineChart(document.getElementById(id));
+        var div = document.getElementById(id);
+        $(div).removeClass().addClass('chart-loaded');
+        var chart = new google.visualization.LineChart(div);
         chart.draw(data, options);    
     },
 
@@ -269,9 +273,11 @@ scpper.charts.rating = {
         var lineData = scpper.charts.rating.prepareLineData(result.votes);
         var pointData = scpper.charts.rating.preparePointData(result.milestones);
         // Prepare data for line chart
-        var data = scpper.charts.rating.mergeData(lineData, pointData);
-        var chart = new google.visualization.LineChart(document.getElementById(container));
-        var options = scpper.charts.rating.getOptions();
+        var data = scpper.charts.rating.mergeData(lineData, pointData);        
+        var div = document.getElementById(container);
+        $(div).removeClass().addClass('chart-loaded');
+        var chart = new google.visualization.LineChart(div);
+        var options = scpper.charts.rating.getOptions();        
         chart.draw(data, options);
     },    
     

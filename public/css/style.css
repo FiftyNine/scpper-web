@@ -236,6 +236,10 @@ div.google-visualization-tooltip {
     background-image: url("/img/chartstub.png");
 }
 
+.chart-loaded {
+    background-image: none;
+}
+
 .chart-failed {
     background-image: url("/img/chartfail.png");
 }

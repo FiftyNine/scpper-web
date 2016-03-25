@@ -125,7 +125,7 @@ class ChangesController extends AbstractActionController
                 'originals' => $this->services->getPageService()->countSitePages($siteId, PageType::ORIGINAL, $from, $to),
                 'translations' => $this->services->getPageService()->countSitePages($siteId, PageType::TRANSLATION, $from, $to),
                 'highest rating' => $ratings[0]['MaxRating'],
-                'average rating' => $ratings[0]['AvgRating']
+                'average rating' => number_format($ratings[0]['AvgRating'], 1)
             ),
             'table' => $table
         );
