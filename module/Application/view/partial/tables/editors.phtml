@@ -1,13 +1,16 @@
 <?php 
     $i=1; 
     foreach ($this->rows as $editor): 
+        $deleted = $editor[\Application\Utils\DbConsts\DbViewRevisions::USERDELETED]; 
 ?>
 <tr>
     <td><?php echo $this->rows->getAbsoluteItemNumber($i); $i++; ?></td>
     <td>
+        <?php if ($deleted): ?><del><?php endif; ?>
         <a href="<?php printf('/user/%d', $editor[\Application\Utils\DbConsts\DbViewRevisions::USERID]);?>">
-            <?php echo $editor[\Application\Utils\DbConsts\DbViewRevisions::USERDISPLAYNAME]; ?>
+            <?php echo $this->escapeHtml($editor[\Application\Utils\DbConsts\DbViewRevisions::USERDISPLAYNAME]); ?>
         </a>
+        <?php if ($deleted): ?></del><?php endif; ?>
     </td>
     <td><?php echo $editor['Revisions'] ?></td>
     <td><?php echo number_format($editor['Revisions']/$this->data['total']*100, 2); ?></td>

@@ -21,7 +21,7 @@
         <tr>                    
             <td colspan="2" class="tile tile-header" onclick="window.location.assign('<?php echo $this->site->getUrl(); ?>')">
                 <span class="h1">
-                    <?php echo $this->site->getEnglishName(); ?>
+                    <?php echo $this->partial('partial/site.phtml', array('site' => $this->site, 'link' => false)); ?>
                 </span>
                 <br>
                 <span class="small-text">

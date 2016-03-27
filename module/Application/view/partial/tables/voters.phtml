@@ -8,7 +8,7 @@
     <td>
         <?php if ($deleted): ?><del><?php endif; ?>        
         <a href="<?php printf('/user/%d', $voter[\Application\Utils\DbConsts\DbViewVotes::USERID]);?>">
-            <?php echo $voter[\Application\Utils\DbConsts\DbViewVotes::USERDISPLAYNAME]; ?>
+            <?php echo $this->escapeHtml($voter[\Application\Utils\DbConsts\DbViewVotes::USERDISPLAYNAME]); ?>
         </a>
         <?php if ($deleted): ?></del><?php endif; ?>
     </td>

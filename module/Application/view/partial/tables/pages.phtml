@@ -5,9 +5,7 @@
 <tr>
     <td><?php echo $this->rows->getAbsoluteItemNumber($i); $i++; ?></td>
     <td>
-        <a href="<?php echo $page->getUrl(); ?>">
-            <?php echo $page->getTitle(); ?>
-        </a>
+        <?php echo $this->partial('partial/page.phtml', array('page' => $page)); ?>
     </td>
     <td><?php echo $page->getCleanRating(); ?></td>
     <td><?php echo $page->getContributorRating(); ?></td>
@@ -20,9 +18,7 @@
             $one = 1 === count($authors);
         ?>
         <?php foreach ($authors as $author): ?>
-            <a href="<?php echo $author->getUser()->getUrl();?>">
-                <?php echo $author->getUser()->getDisplayName(); ?>
-            </a>
+            <?php echo $this->partial('partial/user.phtml', array('user' => $author->getUser())); ?>
             <?php 
                 if (!$one || $author->getRole() !== \Application\Utils\AuthorRole::AUTHOR) {
                     printf("&nbsp;(%s)", \Application\Utils\AuthorRole::getDescription($author->getRole()));

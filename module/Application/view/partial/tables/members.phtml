@@ -5,9 +5,7 @@
 <tr>
     <td><?php echo $this->rows->getAbsoluteItemNumber($i); $i++; ?></td>
     <td>
-        <a href="<?php echo $member->getUser()->getUrl();?>">
-            <?php echo $member->getUser()->getDisplayName(); ?>
-        </a>
+        <?php echo $this->partial('partial/user.phtml', array('user' => $member->getUser())); ?>
     </td>
     <td><?php echo $member->getActivity()->getVoteCount(); ?></td>
     <td><?php echo $member->getActivity()->getRevisionCount(); ?></td>

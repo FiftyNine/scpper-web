@@ -17,6 +17,7 @@ use Application\Utils\Aggregate;
 use Application\Utils\DateAggregate;
 use Application\Utils\Order;
 use Application\Utils\DbConsts\DbViewVotes;
+use Application\Utils\DbConsts\DbViewAuthors;
 use Application\Utils\DbConsts\DbViewPages;
 
 
@@ -32,6 +33,43 @@ class UserController extends AbstractActionController
      * @var Application\Service\ServiceHubInterface
      */    
     protected $services;
+    
+    protected function getFans($userId, $siteId)
+    {
+        $fanAggregates = array(
+            new Aggregate(DbViewVotes::USERID, Aggregate::NONE, DbViewVotes::USERID, true),
+            new Aggregate('*', Aggregate::COUNT, 'Votes'),
+            new Aggregate(DbViewVotes::VALUE, Aggregate::SUM, 'Rating'),
+        );
+        $fans = $this->services->getVoteService()->getAggregatedForUser($userId, $siteId, $fanAggregates, array('Rating' => Order::DESCENDING), true);
+        $fans->setCurrentPageNumber(1);
+        $fans->setItemCountPerPage(10);
+        $result = array();
+        foreach ($fans as $fan) {
+            $result[] = array(
+                'user' => $this->services->getUserService()->find($fan[DbViewVotes::USERID]),
+                'votes' => $fan['Votes'],
+                'rating' => $fan['Rating']
+            );
+        }
+        return $result;
+    }
+
+    protected function getFavorites($userId, $siteId)
+    {
+        $favs = $this->services->getVoteService()->getUserFavoriteAuthors($userId, $siteId, true);
+        $favs->setCurrentPageNumber(1);
+        $favs->setItemCountPerPage(10);        
+        $result = array();
+        foreach ($favs as $fav) {
+            $result[] = array(
+                'user' => $this->services->getUserService()->find($fav[DbViewAuthors::USERID]),
+                'votes' => $fav['Votes'],
+                'rating' => $fav['Rating']
+            );
+        }
+        return $result;
+    }
     
     protected function getPagesTable($userId, $siteId, $orderBy, $order, $page, $perPage)
     {
@@ -57,24 +95,12 @@ class UserController extends AbstractActionController
         if (!$user) {
             return $this->notFoundAction();
         }
-        $fanAggregates = array(
-            new Aggregate(DbViewVotes::USERID, Aggregate::NONE, DbViewVotes::USERID, true),
-            new Aggregate(DbViewVotes::USERDISPLAYNAME, Aggregate::NONE, DbViewVotes::USERDISPLAYNAME, true),
-            new Aggregate('*', Aggregate::COUNT, 'Votes'),
-            new Aggregate(DbViewVotes::VALUE, Aggregate::SUM, 'Rating'),
-        );
-        $fans = $this->services->getVoteService()->getAggregatedForUser($userId, $siteId, $fanAggregates, array('Rating' => Order::DESCENDING), true);
-        $fans->setCurrentPageNumber(1);
-        $fans->setItemCountPerPage(10);
-        $favs = $this->services->getVoteService()->getUserFavoriteAuthors($userId, $siteId, true);
-        $favs->setCurrentPageNumber(1);
-        $favs->setItemCountPerPage(10);        
         return new ViewModel(array(
             'user' => $user,
             'site' => $site,
             'pages' => $this->getPagesTable($userId, $siteId, DbViewPages::CREATIONDATE, ORDER::DESCENDING, 1, 10),
-            'fans' => $fans,
-            'favs' => $favs
+            'fans' => $this->getFans($userId, $siteId),
+            'favs' => $this->getFavorites($userId, $siteId),
         ));
     }
     

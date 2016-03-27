@@ -15,9 +15,7 @@
 
 <?php $this->headScript()->captureEnd(); ?>
 <span class="h1">
-    <a href="<?php echo $this->site->getUrl(); ?>">
-       <?php echo $this->site->getEnglishName(); ?>
-    </a>        
+    <?php echo $this->partial('partial/site.phtml', array('site' => $this->site, 'link' => true));?>
 </span>
 <h3>Users (<?php echo $this->usersTable->getPaginator()->getTotalItemCount();?> total)</h3>
 <div class="table-container" id="user-list">

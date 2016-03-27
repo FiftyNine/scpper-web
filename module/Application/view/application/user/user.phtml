@@ -33,15 +33,15 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 <?php $this->headScript()->captureEnd(); ?>
 <p>
     <span class="h2">
+        <?php if ($user->getDeleted()): ?><del><?php endif; ?>
         <a href="http://www.wikidot.com/user:info/<?php echo $user->getName();?>">
-            <?php echo $this->user->getDisplayName();?>
+            <?php echo $this->escapeHtml($this->user->getDisplayName());?>
         </a>
+        <?php if ($user->getDeleted()): ?></del><?php endif; ?>
     </span>
     <br>
     on
-    <a href="<?php echo $site->getUrl() ?>">
-        <?php echo $site->getEnglishName() ?>
-    </a>
+    <?php echo $this->partial('partial/site.phtml', array('site' => $site, 'link' => true));?>
     <br>
     <span class="small-text">
         Updated <?php echo $site->getLastUpdate()->format('Y-m-d H:i') ?>
@@ -114,9 +114,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
             <ul>
             <?php foreach ($other as $i): ?>
                 <li>
-                    <a href="<?php echo $i['activity']->getSite()->getUrl(); ?>">
-                        <?php echo $i['activity']->getSite()->getEnglishName(); ?>
-                    </a>:
+                    <?php echo $this->partial('partial/site.phtml', array('site' => $i['activity']->getSite(), 'link' => true));?>
                     <?php printf(' %d votes, %d revisions, %d pages, ', $i['activity']->getVoteCount(), $i['activity']->getRevisionCount(), $i['activity']->getAuthorshipCount()); ?>
                     <?php if ($i['membership']): ?>
                         joined <?php echo $i['membership']->getJoinDate()->format('Y-m-d'); ?>
@@ -143,15 +141,13 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
             <ol>
                 <?php foreach ($this->favs as $fav): ?>
                 <li>
-                    <a href="/user/<?php echo $fav[Application\Utils\DbConsts\DbViewAuthors::USERID] ?>">
-                        <?php echo $fav[Application\Utils\DbConsts\DbViewAuthors::USERDISPLAYNAME] ?>
-                    </a>
+                    <?php echo $this->partial('partial/user.phtml', array('user' => $fav['user'])); ?>
                      with 
                      <strong>
                     <?php
-                        $negative = ((int)$fav['Votes']-(int)$fav['Rating'])/2;
-                        $positive = (int)$fav['Votes']-$negative;
-                        printf('%+d (%+d/%+d)', (int)$fav['Rating'], $positive, -$negative); 
+                        $negative = ((int)$fav['votes']-(int)$fav['rating'])/2;
+                        $positive = (int)$fav['votes']-$negative;
+                        printf('%+d (%+d/%+d)', (int)$fav['rating'], $positive, -$negative); 
                     ?>
                      </strong>
                 </li>
@@ -165,15 +161,13 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
             <ol>
                 <?php foreach ($this->fans as $fan): ?>
                 <li>
-                    <a href="/user/<?php echo $fan[Application\Utils\DbConsts\DbViewVotes::USERID] ?>">
-                        <?php echo $fan[Application\Utils\DbConsts\DbViewVotes::USERDISPLAYNAME] ?>
-                    </a>
-                     with 
+                    <?php echo $this->partial('partial/user.phtml', array('user' => $fan['user'])); ?>
+                    with 
                      <strong>
                     <?php
-                        $negative = ((int)$fan['Votes']-(int)$fan['Rating'])/2;
-                        $positive = (int)$fan['Votes']-$negative;
-                        printf('%+d (%+d/%+d)', (int)$fan['Rating'], $positive, -$negative); 
+                        $negative = ((int)$fan['votes']-(int)$fan['rating'])/2;
+                        $positive = (int)$fan['votes']-$negative;
+                        printf('%+d (%+d/%+d)', (int)$fan['rating'], $positive, -$negative); 
                     ?>
                      </strong>
                 </li>

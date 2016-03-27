@@ -45,6 +45,7 @@ class RevisionsController extends AbstractActionController
             new Aggregate(DbViewRevisions::USERID, Aggregate::NONE, null, true),
             new Aggregate(DbViewRevisions::USERWIKIDOTNAME, Aggregate::NONE, null, true),
             new Aggregate(DbViewRevisions::USERDISPLAYNAME, Aggregate::NONE, null, true),
+            new Aggregate(DbViewRevisions::USERDELETED, Aggregate::NONE, null, true),
             new Aggregate('*', Aggregate::COUNT, 'Revisions'),
         );
         $editors = $this->services->getRevisionService()->getAggregatedValues($siteId, $aggregates, null, null, array($orderBy => $order), true);

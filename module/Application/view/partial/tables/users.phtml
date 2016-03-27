@@ -6,11 +6,7 @@
 <tr>
     <td><?php echo $this->rows->getAbsoluteItemNumber($i); $i++; ?></td>
     <td>
-        <?php if ($user->getDeleted()): ?> <del> <?php endif;?>
-        <a href="<?php echo $user->getUrl();?>">            
-            <?php echo $user->getDisplayName(); ?>
-        </a>
-        <?php if ($user->getDeleted()): ?> </del> <?php endif;?>
+        <?php echo $this->partial('partial/user.phtml', array('user' => $user)); ?>
     </td>
     <td><?php echo $user->getActivityOnSite($siteId)->getVoteCount(); ?></td>
     <td><?php echo $user->getActivityOnSite($siteId)->getRevisionCount(); ?></td>
