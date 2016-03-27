@@ -26,7 +26,7 @@
     </div>
 </div>
 <?php if ($field->getValue() !== ''): ?>
-    <?php if ((!$this->pages || count($this->pages) === 0) && (!$this->users || count($this->users) === 0)): ?>
+    <?php if (($this->pages && count($this->pages) === 0) && ($this->users && count($this->users) === 0)): ?>
         <p class="text-center">
         Sorry, nothing found
         </p>
