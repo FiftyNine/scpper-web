@@ -194,38 +194,47 @@ scpper.charts.rating = {
     },
     
     prepareLineData: function (votes) {
-        var rating = $.extend(true, [], votes);        
-        rating[0].push(true);
+        var rating = $.extend(true, [], votes);                
+        var dateString = '';
         for (var i=1; i<rating.length; i++) {
             rating[i][1] = rating[i-1][1]+rating[i][1];
+        }
+        for (var i=0; i<rating.length; i++) {
             rating[i].push(true);
+            dateString = rating[i][0].toISOString().slice(0, 10);
+            rating[i].push('['+dateString+'] Rating: ' + rating[i][1]);
         }
         var lineData = new google.visualization.DataTable();
         lineData.addColumn({type: 'date', label: 'Time'});
         lineData.addColumn({type: 'number', label: 'Rating'});
-        lineData.addColumn({type: 'boolean', role: 'certainty'});
+        lineData.addColumn({type: 'boolean', role: 'certainty'});    
+        lineData.addColumn({type: 'string', role: 'tooltip'});
         lineData.addRows(rating);
         return lineData;
     },
     
     preparePointData: function (milestones) {
         var points = [];        
+        var tooltip = '';
+        var dateString = '';
         for (var i=0; i<milestones.length; i++) {
-            points.push([milestones[i][0], null, false, milestones[i][1].name, milestones[i][1].text]);
+            dateString = milestones[i][0].toISOString().slice(0, 10);
+            tooltip = '['+dateString+'] '+milestones[i][1].text;
+            points.push([milestones[i][0], null, false, tooltip, 'point { size: 3; color: #EDA200; visible: true}']);
         }
         // Draw line chart
         var pointData = new google.visualization.DataTable();
         pointData.addColumn({type: 'date', label: 'Time'});
         pointData.addColumn({type: 'number', label: 'Rating'});
         pointData.addColumn({type: 'boolean', role: 'certainty'});
-        pointData.addColumn({type: 'string', role: 'annotation'});
-        pointData.addColumn({type: 'string', role: 'annotationText'});
+        pointData.addColumn({type: 'string', role: 'tooltip'});
+        pointData.addColumn({type: 'string', role: 'style'});                
         pointData.addRows(points);
         return pointData;
     },
     
     mergeData: function(lineData, pointData) {
-        var data = google.visualization.data.join(lineData, pointData, 'full', [[0, 0], [1, 1], [2, 2]], [], [3, 4]);
+        var data = google.visualization.data.join(lineData, pointData, 'full', [[0, 0], [1, 1], [2, 2], [3, 3]], [], [4]);
         data.setValue(0, 1, 0);
         var last = 0;
         for (var i=1; i<data.getNumberOfRows(); i++) {
@@ -256,7 +265,8 @@ scpper.charts.rating = {
                 // The color of the text.
                 color: '#DB9191'
               }
-            },
+            }, 
+            dataOpacity: 0.5,
             chartArea: {width: '80%', height: '80%'},
             legend: 'none',
             colors: ['#E0A96E'],      

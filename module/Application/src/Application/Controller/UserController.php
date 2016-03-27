@@ -129,7 +129,7 @@ class UserController extends AbstractActionController
                     $auth->getPage()->getCreationDate()->format(\DateTime::ISO8601), 
                     array(
                         'name' => $name,
-                        'text' => $auth->getPage()->getTitle().' on '.$auth->getPage()->getCreationDate()->format('Y-m-d')
+                        'text' => $auth->getPage()->getTitle()
                     )
                 );
             }
