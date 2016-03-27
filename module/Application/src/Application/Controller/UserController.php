@@ -91,7 +91,11 @@ class UserController extends AbstractActionController
         $siteId = $this->services->getUtilityService()->getSiteId();
         $site = $this->services->getSiteService()->find($siteId);
         $userId = (int)$this->params()->fromRoute('userId');
-        $user = $this->services->getUserService()->find($userId);
+        try {
+            $user = $this->services->getUserService()->find($userId);
+        } catch (\InvalidArgumentException $e) {
+            return $this->notFoundAction();
+        }
         if (!$user) {
             return $this->notFoundAction();
         }

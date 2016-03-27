@@ -74,7 +74,11 @@ class PageController extends AbstractActionController
     public function pageAction()
     {
         $pageId = (int)$this->params()->fromRoute('pageId');
-        $page = $this->services->getPageService()->find($pageId);
+        try {
+            $page = $this->services->getPageService()->find($pageId);
+        } catch (\InvalidArgumentException $e) {
+            return $this->notFoundAction();
+        }
         if (!$page) {
             return $this->notFoundAction();
         }
