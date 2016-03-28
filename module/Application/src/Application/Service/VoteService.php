@@ -64,15 +64,17 @@ class VoteService implements VoteServiceInterface
             foreach ($result as $vote) {
                 $userIds[] = $vote->getUserId();
             }
-            $users = $this->userMapper->findAll(array(
-                sprintf('%s IN (%s)', DbViewUsers::USERID, implode(',', $userIds))
-            ));
-            $userByIds = array();
-            foreach ($users as $user) {
-                $userByIds[$user->getId()] = $user;
-            }
-            foreach ($result as $vote) {
-                $vote->setUser($userByIds[$vote->getUserId()]);
+            if (count($userIds) > 0) {
+                $users = $this->userMapper->findAll(array(
+                    sprintf('%s IN (%s)', DbViewUsers::USERID, implode(',', $userIds))
+                ));
+                $userByIds = array();
+                foreach ($users as $user) {
+                    $userByIds[$user->getId()] = $user;
+                }
+                foreach ($result as $vote) {
+                    $vote->setUser($userByIds[$vote->getUserId()]);
+                }
             }
         }
         return $result;        
