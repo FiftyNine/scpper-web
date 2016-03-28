@@ -22,6 +22,7 @@ class VotePrototypeFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator) 
     {
         $userMapper = $serviceLocator->get('UserMapper');
-        return new Vote($userMapper);
+        $pageMapper = $serviceLocator->get('PageMapper');
+        return new Vote($userMapper, $pageMapper);
     }
 }

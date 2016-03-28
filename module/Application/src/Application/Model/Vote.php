@@ -4,6 +4,7 @@ namespace Application\Model;
 
 use Application\Model\UserInterface;
 use Application\Mapper\UserMapperInterface;
+use Application\Mapper\PageMapperInterface;
 
 class Vote implements VoteInterface
 {
@@ -12,6 +13,12 @@ class Vote implements VoteInterface
      * @var Application\Mapper\UserMapperInterface;
      */
     protected $userMapper;    
+
+    /**
+     *
+     * @var Application\Mapper\PageMapperInterface;
+     */
+    protected $pageMapper;
     
     /**
      *
@@ -54,6 +61,12 @@ class Vote implements VoteInterface
      * @var bool
      */
     protected $fromActive;
+
+    /**
+     *
+     * @var Application\Model\PageInterface
+     */
+    protected $page;
     
     /**
      *
@@ -64,10 +77,14 @@ class Vote implements VoteInterface
     /**
      * Constructor
      * @param UserMapperInterface $userMapper
+     * @param PageMapperInterface $pageMapper
      */    
-    public function __construct(UserMapperInterface $userMapper)
+    public function __construct(
+            UserMapperInterface $userMapper,
+            PageMapperInterface $pageMapper)
     {
         $this->userMapper = $userMapper;
+        $this->pageMapper = $pageMapper;
     }
     
     /**
@@ -86,6 +103,17 @@ class Vote implements VoteInterface
         return $this->pageId;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getPage()
+    {
+        if (!isset($this->page)) {
+            $this->page = $this->pageMapper->find($this->getPageId());
+        }
+        return $this->page;
+    }
+    
     /**
      * {@inheritdoc}
      */
@@ -157,6 +185,11 @@ class Vote implements VoteInterface
         $this->user = $user;
     }
         
+    public function setPage(PageInterface $page)
+    {
+        $this->page = $page;
+    }
+
     public function setValue($value)
     {
         $this->value = $value;

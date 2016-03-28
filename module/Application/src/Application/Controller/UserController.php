@@ -80,6 +80,16 @@ class UserController extends AbstractActionController
         $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);        
         return $table;                
     }
+
+    protected function getVotesTable($userId, $siteId, $orderBy, $order, $page, $perPage)
+    {
+        $votes = $this->services->getVoteService()->findVotesOfUser($userId, $siteId, array($orderBy => $order), true, $page, $perPage);
+        $votes->setCurrentPageNumber($page);
+        $votes->setItemCountPerPage($perPage);
+        $table = PaginatedTableFactory::createUserVotesTable($votes);
+        $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);        
+        return $table;                
+    }
     
     public function __construct(HubServiceInterface $services) 
     {
@@ -105,6 +115,7 @@ class UserController extends AbstractActionController
             'pages' => $this->getPagesTable($userId, $siteId, DbViewPages::CREATIONDATE, ORDER::DESCENDING, 1, 10),
             'fans' => $this->getFans($userId, $siteId),
             'favs' => $this->getFavorites($userId, $siteId),
+            'votes' => $this->getVotesTable($userId, $siteId, DbViewVotes::DATETIME, ORDER::DESCENDING, 1, 10)
         ));
     }
     
@@ -174,4 +185,31 @@ class UserController extends AbstractActionController
         return new JsonModel($result);                        
     }
     
+    public function voteListAction()
+    {
+        $userId = (int)$this->params()->fromQuery('userId');
+        $siteId = (int)$this->params()->fromQuery('siteId');
+        $page = (int)$this->params()->fromQuery('page', 1);
+        $perPage = (int)$this->params()->fromQuery('perPage', 10);
+        $orderBy = $this->params()->fromQuery('orderBy', DbViewVotes::DATETIME);
+        $order = $this->params()->fromQuery('ascending', false);
+        if ($order) {
+            $order = Order::ASCENDING;
+        } else {
+            $order = Order::DESCENDING;
+        }    
+        $table = $this->getVotesTable($userId, $siteId, $orderBy, $order, $page, $perPage);
+        $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
+        if ($renderer) {
+            $result['success'] = true;                
+            $result['content'] = $renderer(
+                'partial/tables/table.phtml', 
+                array(
+                    'table' => $table, 
+                    'data' => array()
+                )
+            );
+        }
+        return new JsonModel($result);                        
+    }        
 }

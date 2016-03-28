@@ -4,9 +4,11 @@ namespace Application\Service;
 
 use Application\Mapper\VoteMapperInterface;
 use Application\Mapper\UserMapperInterface;
+use Application\Mapper\PageMapperInterface;
 use Application\Utils\VoteType;
 use Application\Utils\DbConsts\DbViewVotes;
 use Application\Utils\DbConsts\DbViewUsers;
+use Application\Utils\DbConsts\DbViewPages;
 
 class VoteService implements VoteServiceInterface 
 {
@@ -22,13 +24,21 @@ class VoteService implements VoteServiceInterface
      */
     protected $userMapper;
     
+    /**
+     *
+     * @var PageMapperInterface
+     */
+    protected $pageMapper;    
+    
     public function __construct(
         VoteMapperInterface $mapper,
-        UserMapperInterface $userMapper
+        UserMapperInterface $userMapper,
+        PageMapperInterface $pageMapper
     )
     {
         $this->mapper = $mapper;
         $this->userMapper = $userMapper;
+        $this->pageMapper = $pageMapper;
     }
        
     /**
@@ -78,6 +88,40 @@ class VoteService implements VoteServiceInterface
             }
         }
         return $result;        
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function findVotesOfUser($userId, $siteId, $order = null, $paginated = false, $page = -1, $perPage = -1)
+    {
+        $result = $this->mapper->findVotesOfUser($userId, $siteId, $order, $paginated);
+        if ($paginated && $result && $page >= 0 && $perPage > 0) {            
+            $result->setCurrentPageNumber($page);
+            $result->setItemCountPerPage($perPage);
+        } else {
+            $result = iterator_to_array($result);
+        }
+        if ($result) {
+            $pageIds = array();
+            foreach ($result as $vote) {
+                $pageIds[] = $vote->getPageId();
+            }
+            if (count($pageIds) > 0) {
+                $pages = $this->pageMapper->findAll(array(
+                    sprintf('%s IN (%s)', DbViewPages::PAGEID, implode(',', $pageIds))
+                ));
+                $pageByIds = array();
+                foreach ($pages as $page) {
+                    $pageByIds[$page->getId()] = $page;
+                }
+                foreach ($result as $vote) {
+                    $vote->setPage($pageByIds[$vote->getPageId()]);
+                }
+            }
+        }
+        
+        return $result;
     }
     
     /**

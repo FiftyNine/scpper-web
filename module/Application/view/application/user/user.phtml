@@ -18,6 +18,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
     function init()
     {
         scpper.tables.assignPaginatorEvents('#page-list', '/user/pageList', {siteId: siteId, userId: userId});
+        scpper.tables.assignPaginatorEvents('#vote-list', '/user/voteList', {siteId: siteId, userId: userId});
     }
 
     $(document).ready(init);    
@@ -178,8 +179,8 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
     </div>
 </div>
 
-<h4><?php echo $this->pages->getPaginator()->getTotalItemCount();?> pages</h4>
 <?php if ($this->pages->getPaginator()->getTotalItemCount()): ?>
+    <h4><?php echo $this->pages->getPaginator()->getTotalItemCount();?> pages</h4>
     <div class="table-container" id="page-list">
     <?php
     $table = $this->pages;
@@ -193,5 +194,23 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
     );
     ?>
     </div>
-<?php endif ?>
+<?php endif; ?>
+
+<?php if ($this->votes->getPaginator()->getTotalItemCount()): ?>
+    <h4><?php echo $this->votes->getPaginator()->getTotalItemCount();?> votes</h4>
+    <div class="table-container" id="vote-list">
+    <?php
+    $table = $this->votes;
+
+    echo $this->partial(
+        'partial/tables/table.phtml',
+        array(
+            'table' => $table,
+            'data' => array(),
+        )
+    );
+    ?>
+    </div>
+<?php endif; ?>
+    
 

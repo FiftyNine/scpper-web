@@ -33,6 +33,18 @@ interface VoteServiceInterface
      * @return Zend\Paginator\Paginator|VoteInterface[]
      */
     public function findVotesOnPage($pageId, $order = null, $paginated = false, $page = -1, $perPage = -1);
+
+    /**
+     * Return votes by a suer
+     * @param int $userId
+     * @param int $siteId
+     * @param array[string]int
+     * @param bool $paginated
+     * @param int $page Number of page of paginator
+     * @param int $perPage Items per page of paginator
+     * @return Zend\Paginator\Paginator|VoteInterface[]
+     */
+    public function findVotesOfUser($userId, $siteId, $order = null, $paginated = false, $page = -1, $perPage = -1);
     
     /**
      * Get an aggregated results from votes, grouped by period when cast

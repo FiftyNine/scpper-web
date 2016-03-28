@@ -10,6 +10,11 @@ interface VoteInterface
     public function getPageId();
     
     /**
+     * @return Application\Model\PageInterface
+     */
+    public function getPage();
+    
+    /**
      * @return int
      */
     public function getUserId();

@@ -170,4 +170,21 @@ class PaginatedTableFactory
         );
         return $table;        
     }    
+    
+    static public function createUserVotesTable($paginator)
+    {
+        $table = new \Application\Component\PaginatedTable\Table(
+            array(
+                new Column('#'),                
+                new Column('Page', DbViewVotes::PAGETITLE, false),
+                new Column('Authors', null, false),
+                new Column('Vote', DbViewVotes::VALUE, false),
+                new Column('Time', DbViewVotes::DATETIME, false, 'Not the exact time but rather upper estimate'),
+            ),
+            $paginator,
+            'partial/tables/userVotes.phtml', 
+            false
+        );
+        return $table;        
+    }        
 }

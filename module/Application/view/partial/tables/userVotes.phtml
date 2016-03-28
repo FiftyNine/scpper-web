@@ -1,0 +1,32 @@
+<?php 
+    $i=1;
+    foreach ($this->rows as $vote): 
+?>
+<?php $page = $vote->getPage(); ?>
+<tr>
+    <td><?php echo $this->rows->getAbsoluteItemNumber($i); $i++; ?></td>    
+    <td>
+        <?php echo $this->partial('partial/page.phtml', array('page' => $page, 'link' => true)); ?>
+    </td>
+    <td>
+        <?php 
+            $authors = $page->getAuthors();
+            $one = 1 === count($authors);
+        ?>
+        <?php foreach ($authors as $author): ?>
+            <?php echo $this->partial('partial/user.phtml', array('user' => $author->getUser())); ?>
+            <?php 
+                if (!$one || $author->getRole() !== \Application\Utils\AuthorRole::AUTHOR) {
+                    printf("&nbsp;(%s)", \Application\Utils\AuthorRole::getDescription($author->getRole()));
+                }
+            ?>
+            <br>
+        <?php endforeach; ?>
+    </td>
+    <td><?php if ($vote->getValue() > 0) {echo '+';} else {echo '-';} ?></td>
+    <td><?php echo $vote->getDateTime()->format('Y-m-d H:i'); ?></td>
+</tr>
+<?php endforeach; ?>
+
+
+
