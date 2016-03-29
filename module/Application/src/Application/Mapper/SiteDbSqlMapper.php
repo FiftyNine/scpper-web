@@ -10,7 +10,7 @@ namespace Application\Mapper;
 
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Select;
-use Application\Utils\DbConsts\DbSites;
+use Application\Utils\DbConsts\DbViewSites;
 
 /**
  * Description of SiteDbSqlMapper
@@ -29,7 +29,7 @@ class SiteDbSqlMapper extends ZendDbSqlMapper implements SiteMapperInterface
         if (is_array($conditions)) {
             $select->where($conditions);
         }
-        $select->order(sprintf('%s %s', DbSites::WIKIDOTID, Select::ORDER_ASCENDING));
+        $select->order(sprintf('%s %s', DbViewSites::SITEID, Select::ORDER_ASCENDING));
         if ($paginated) {
             $result = $this->getPaginator($select);
         } else {

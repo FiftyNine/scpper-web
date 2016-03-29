@@ -5,7 +5,7 @@
 
     function init()
     {
-        scpper.tables.assignPaginatorEvents('#voter-list', '/votes/voterList', {siteId: <?php echo $this->site->getWikidotId();?>});
+        scpper.tables.assignPaginatorEvents('#voter-list', '/votes/voterList', {siteId: <?php echo $this->site->getId();?>});
     }
 
     $(document).ready(init);

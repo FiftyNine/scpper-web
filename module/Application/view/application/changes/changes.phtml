@@ -21,7 +21,7 @@ $site = $this->site;
 
     // Initialize global variables
     var chartsData = {};
-    chartsData.siteId = <?php echo $site->getWikidotId(); ?>;
+    chartsData.siteId = <?php echo $site->getId(); ?>;
     chartsData.fromDate = "<?php echo $fromDate->getValue(); ?>";
     chartsData.toDate = "<?php echo $toDate->getValue(); ?>";
     // Variables for pagination
@@ -107,7 +107,7 @@ function printInfoLabel($data)
                         'partial/tables/table.phtml', 
                         array(
                             'table' => $membersTable,
-                            'data' => array('siteId' => $site->getWikidotId()),
+                            'data' => array('siteId' => $site->getId()),
                         )
                     );
                 ?>

@@ -72,7 +72,7 @@ class IndexController extends AbstractActionController
         $siteId = $this->services->getUtilityService()->getSiteId();
         $site = $this->services->getSiteService()->find($siteId);
         $result = array(
-            'site' => $site,
+            'site' => $site);/*,
             'members' => $this->services->getUserService()->countSiteMembers($siteId),
             'contributors' => $this->services->getUserService()->countSiteMembers($siteId, UserType::CONTRIBUTOR),
             'posters' => $this->services->getUserService()->countSiteMembers($siteId, UserType::getTypeMask(false, true, true)),
@@ -85,7 +85,7 @@ class IndexController extends AbstractActionController
             'votes' => $this->services->getVoteService()->countSiteVotes($siteId),
             'positive' => $this->services->getVoteService()->countSiteVotes($siteId, VoteType::POSITIVE),
         );
-        $result['negative'] = $result['votes']-$result['positive'];
+        $result['negative'] = $result['votes']-$result['positive'];*/
         return new ViewModel($result);
     }
     

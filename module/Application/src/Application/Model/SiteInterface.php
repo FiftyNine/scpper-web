@@ -8,7 +8,7 @@ interface SiteInterface
      * 
      * @return int
      */
-    public function getWikidotId();    
+    public function getId();    
     
     /**
      * 
@@ -33,4 +33,70 @@ interface SiteInterface
      * @return string
      */
     public function getUrl();
+    
+    /**
+     * 
+     * @return int
+     */
+    public function getMembers();
+    
+    /**
+     * 
+     * @return int
+     */    
+    public function getActiveMembers();
+
+    /**
+     * 
+     * @return int
+     */    
+    public function getContributors();
+    
+    /**
+     * 
+     * @return int
+     */
+    public function getAuthors();
+    
+    /**
+     * 
+     * @return int
+     */
+    public function getPages();
+    
+    /**
+     * 
+     * @return int
+     */
+    public function getOriginals();
+    
+    /**
+     * 
+     * @return int
+     */
+    public function getTranslations();
+    
+    /**
+     * 
+     * @return int
+     */
+    public function getVotes();
+    
+    /**
+     * 
+     * @return int
+     */
+    public function getPositive();
+    
+    /**
+     * 
+     * @return int
+     */
+    public function getNegative();
+    
+    /**
+     * 
+     * @return int
+     */
+    public function getRevisions();            
 }

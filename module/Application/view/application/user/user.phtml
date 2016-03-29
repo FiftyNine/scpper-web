@@ -13,7 +13,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 
     // Initialize global variables
     var userId = <?php echo $user->getId() ?>;
-    var siteId = <?php echo $site->getWikidotId() ?>;
+    var siteId = <?php echo $site->getId() ?>;
 
     function init()
     {
@@ -51,14 +51,14 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 <hr>
 <div id="user-top">
     <div id="user-summary">
-        <?php $membership = $user->getMembershipOfSite($site->getWikidotId()); ?>        
+        <?php $membership = $user->getMembershipOfSite($site->getId()); ?>        
         <?php if ($membership): ?>
             Joined: <strong><?php echo $membership->getJoinDate()->format('Y-m-d'); ?></strong>
         <?php else: ?>
             Not a member of this wiki
         <?php endif; ?>
         <br>
-        <?php $activity = $user->getActivityOnSite($site->getWikidotId()); ?>
+        <?php $activity = $user->getActivityOnSite($site->getId()); ?>
         <?php $isAuthor = $activity->getAuthorshipCount() > 0; ?>
         <?php if ($activity): ?>
             <?php if ($activity->getLastActivity()): ?>
@@ -90,7 +90,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
         <?php 
             $other = array();
             foreach ($user->getActivities() as $activity) {
-                if ($activity->getSiteId() !== $site->getWikidotId()
+                if ($activity->getSiteId() !== $site->getId()
                         && ($activity->getVoteCount() > 0 
                         || $activity->getRevisionCount() > 0 
                         || $activity->getAuthorshipCount() > 0)
@@ -102,7 +102,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
                 }
             }
             foreach ($user->getMemberships() as $membership) {
-                if ($membership->getSiteId() !== $site->getWikidotId() && !array_key_exists($membership->getSiteId(), $other)) {
+                if ($membership->getSiteId() !== $site->getId() && !array_key_exists($membership->getSiteId(), $other)) {
                     $other[$membership->getSiteId()] = array(
                         'activity' => $user->getActivityOnSite($membership->getSiteId()),
                         'membership' => $membership
@@ -136,7 +136,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 
 <div class="container">
     <div class="row">
-        <?php if ($user->getActivityOnSite($site->getWikidotId())->getVoteCount() > 0): ?>
+        <?php if ($user->getActivityOnSite($site->getId())->getVoteCount() > 0): ?>
         <div class="col-md-4">
             <h4>Favourite authors</h4>
             <ol>

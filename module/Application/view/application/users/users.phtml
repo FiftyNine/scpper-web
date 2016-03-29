@@ -5,8 +5,8 @@
 
     function init()
     {
-        scpper.tables.assignPaginatorEvents('#user-list', '/users/userList', {siteId: <?php echo $this->site->getWikidotId();?>});
-        scpper.tables.assignPaginatorEvents('#author-list', '/users/authorList', {siteId: <?php echo $this->site->getWikidotId();?>});
+        scpper.tables.assignPaginatorEvents('#user-list', '/users/userList', {siteId: <?php echo $this->site->getId();?>});
+        scpper.tables.assignPaginatorEvents('#author-list', '/users/authorList', {siteId: <?php echo $this->site->getId();?>});
     }
 
     $(document).ready(init);
@@ -27,7 +27,7 @@ echo $this->partial(
     'partial/tables/table.phtml', 
     array(
         'table' => $usersTable,
-        'data' => array('siteId' => $this->site->getWikidotId()),
+        'data' => array('siteId' => $this->site->getId()),
     )
 );    
 ?>

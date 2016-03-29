@@ -15,7 +15,7 @@
 }());
 
 <?php $this->headScript()->captureEnd(); ?>
-
+<?php $site = $this->site; ?>
 <div class="tiles">
     <table class="tile-table text-center">
         <tr>                    
@@ -31,31 +31,31 @@
         </tr>
         <tr>
             <td class="tile background-green" id="members">
-                <h2><?php echo $this->members; ?> members</h2>
+                <h2><?php echo $site->getMembers(); ?> members</h2>
                 <ul class="list-unstyled">
-                    <li><?php echo $this->active; ?> active</li>
-                    <li><?php echo $this->contributors; ?> contributors</li>
-                    <li><?php echo $this->posters; ?> posters</li>
+                    <li><?php echo $site->getActiveMembers(); ?> active</li>
+                    <li><?php echo $site->getContributors(); ?> contributors</li>
+                    <li><?php echo $site->getAuthors(); ?> authors</li>
                 </ul>
             </td>
             <td class="tile background-blue" id="pages">
-                <h2><?php echo $this->pages; ?> pages</h2>
+                <h2><?php echo $site->getPages(); ?> pages</h2>
                 <ul class="list-unstyled">
-                    <li> <?php echo $this->originals; ?> originals </li>
-                    <li> <?php echo $this->translations; ?> translations </li>
+                    <li> <?php echo $site->getOriginals(); ?> originals </li>
+                    <li> <?php echo $site->getTranslations(); ?> translations </li>
                 </ul>
             </td>            
         </tr>
         <tr>
             <td class="tile background-red" id="votes">
-                <h2><?php echo $this->votes; ?> votes</h2>
+                <h2><?php echo $site->getVotes(); ?> votes</h2>
                 <ul class="list-unstyled">
-                    <li><?php echo $this->positive; ?> positive</li>
-                    <li><?php echo $this->negative; ?> negative</li>
+                    <li><?php echo $site->getPositive(); ?> positive</li>
+                    <li><?php echo $site->getNegative(); ?> negative</li>
                 </ul>        
             </td>            
             <td class="tile background-orange" id="revisions">
-                <h2><?php echo $this->revisions; ?> revisions</h2>
+                <h2><?php echo $site->getRevisions(); ?> revisions</h2>
             </td>                        
         </tr>        
     </table>

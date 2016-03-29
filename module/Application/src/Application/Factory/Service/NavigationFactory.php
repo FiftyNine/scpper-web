@@ -46,7 +46,7 @@ class NavigationFactory extends AbstractNavigationFactory
         $sites = $this->siteService->findAll();
         $sitePages = array();
         foreach ($sites as $site) {
-            $isActive = $site->getWikidotId() === $activeSite;
+            $isActive = $site->getId() === $activeSite;
             if ($isActive) {
                 $result[0]['label'] = $site->getEnglishName();
             }
@@ -55,7 +55,7 @@ class NavigationFactory extends AbstractNavigationFactory
                 'route' => 'select-site',
                 'active' => $isActive,
                 'query' => array(
-                    'siteId' => $site->getWikidotId()                        
+                    'siteId' => $site->getId()                        
                 )
             );
         }
