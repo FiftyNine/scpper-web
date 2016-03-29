@@ -131,6 +131,7 @@ scpper.tables = {
         payload.orderBy = orderCol.attr('data-name');
         payload.ascending = orderCol.attr('data-ascending');
         scpper.tables.fetchPaginator(event.data.container, event.data.url, payload);
+        document.getElementById(event.data.container.substring(1)).scrollIntoView();       
     },
 
     /**
