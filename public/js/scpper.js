@@ -30,6 +30,23 @@ scpper.convertDate = function(dateString) {
     }        
 };
 
+scpper.isElementInViewport = function(el) {
+
+    //special bonus for those using jQuery
+    if (typeof jQuery === "function" && el instanceof jQuery) {
+        el = el[0];
+    }
+
+    var rect = el.getBoundingClientRect();
+
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+    );
+}
+
 /** Table functions **/
 
 scpper.tables = {
@@ -113,7 +130,7 @@ scpper.tables = {
         payload.perPage = $(this).val();
         orderCol = $(event.data.container+' th.ordered');
         payload.orderBy = orderCol.attr('data-name');
-        payload.ascending = orderCol.attr('data-ascending');    
+        payload.ascending = orderCol.attr('data-ascending');            
         scpper.tables.fetchPaginator(event.data.container, event.data.url, payload);
     },
 
@@ -125,13 +142,16 @@ scpper.tables = {
     {
         var payload = event.data.payload;
         var orderCol = null;
+        var table = document.getElementById(event.data.container.substring(1));
         payload.page = $(this).attr('data-page');
         payload.perPage = $(event.data.container+' select.per-page-control').val();    
         orderCol = $(event.data.container+' th.ordered');
         payload.orderBy = orderCol.attr('data-name');
         payload.ascending = orderCol.attr('data-ascending');
         scpper.tables.fetchPaginator(event.data.container, event.data.url, payload);
-        document.getElementById(event.data.container.substring(1)).scrollIntoView();       
+        if (!scpper.isElementInViewport(table)) {
+            table.scrollIntoView();
+        }
     },
 
     /**
