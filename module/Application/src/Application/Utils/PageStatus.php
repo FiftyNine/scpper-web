@@ -2,7 +2,7 @@
 
 namespace Application\Utils;
 
-class PageType
+class PageStatus
 {
     const ANY = 0;
     const ORIGINAL = 1;
@@ -26,7 +26,7 @@ class PageType
         if (array_key_exists($status, self::DESCRIPTIONS)) {
             return self::DESCRIPTIONS[$status];
         } else {
-            throw new \InvalidArgumentException("Unknown author role - $status");
+            throw new \InvalidArgumentException("Unknown page status - $status");
         }                
     }
 }

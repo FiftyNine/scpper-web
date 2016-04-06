@@ -3,7 +3,7 @@
 namespace Application\Service;
 
 use Application\Mapper\PageMapperInterface;
-use Application\Utils\PageType;
+use Application\Utils\PageStatus;
 use Application\Utils\DbConsts\DbViewPages;
 
 class PageService implements PageServiceInterface 
@@ -53,7 +53,7 @@ class PageService implements PageServiceInterface
     /**
      * {@inheritDoc}
      */
-    public function countSitePages($siteId, $type = PageType::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null)
+    public function countSitePages($siteId, $type = PageStatus::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null)
     {
         return $this->mapper->countSitePages($siteId, $type, $createdAfter, $createdBefore);
     }
@@ -61,7 +61,7 @@ class PageService implements PageServiceInterface
     /**
      * {@inheritDoc}
      */
-    public function findSitePages($siteId, $type = PageType::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null, $order = null, $paginated = false)
+    public function findSitePages($siteId, $type = PageStatus::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null, $order = null, $paginated = false)
     {
         return $this->mapper->findSitePages($siteId, $type, $createdAfter, $createdBefore, $order, $paginated);
     }

@@ -2,15 +2,12 @@
 
 namespace Application\Utils\DbConsts;
 
-class DbPageStatus
+class DbDictPageKind
 {
-    const TABLE = 'page_status';
+    const TABLE = 'dict_page_kind';
     const __ID = '__Id';
-    const PAGEID = 'PageId';
-    const STATUSID = 'StatusId';
-    const ORIGINALID = 'OriginalId';
-    const FIXED = 'Fixed';
     const KINDID = 'KindId';
+    const DESCRIPTION = 'Description';
 
 
     static public function hasField($field) 

@@ -110,9 +110,11 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
         <br>
         Rank: <strong>#<?php echo $page->getRank()+1 ?></strong>
         <br>
-        Status: <strong><?php echo \Application\Utils\PageType::getDescription($page->getStatus()); ?></strong>
+        Status: <strong><?php echo \Application\Utils\PageStatus::getDescription($page->getStatus()); ?></strong>
         <br>
-        <?php if ($page->getStatus() === \Application\Utils\PageType::ORIGINAL): ?>
+        Kind: <strong><?php echo \Application\Utils\PageKind::getDescription($page->getKind()); ?></strong>
+        <br>
+        <?php if ($page->getStatus() === \Application\Utils\PageStatus::ORIGINAL): ?>
             <?php if (count($page->getTranslations()) > 0): ?>
             Translations of this page:
             <ul>

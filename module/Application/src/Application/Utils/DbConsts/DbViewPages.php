@@ -21,7 +21,9 @@ class DbViewPages
     const ADJUSTEDRATING = 'AdjustedRating';
     const REVISIONS = 'Revisions';
     const STATUSID = 'StatusId';
+    const KINDID = 'KindId';
     const STATUS = 'Status';
+    const KIND = 'Kind';
     const ORIGINALID = 'OriginalId';
 
 

@@ -10,7 +10,8 @@
     <td><?php echo $page->getCleanRating(); ?></td>
     <td><?php echo $page->getContributorRating(); ?></td>
     <td><?php echo $page->getAdjustedRating(); ?></td>
-    <td><?php echo \Application\Utils\PageType::getDescription($page->getStatus()); ?></td>
+    <td><?php echo \Application\Utils\PageStatus::getDescription($page->getStatus()); ?></td>
+    <td><?php echo \Application\Utils\PageKind::getDescription($page->getKind()); ?></td>
     <td><?php echo $page->getCreationDate()->format('Y-m-d'); ?></td>
     <td>
         <?php 

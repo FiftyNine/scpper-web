@@ -24,7 +24,7 @@
         <?php endforeach; ?>
     </td>
     <td><?php if ($vote->getValue() > 0) {echo '+';} else {echo '-';} ?></td>
-    <td><?php echo $vote->getDateTime()->format('Y-m-d H:i'); ?></td>
+    <td><?php echo $vote->getDateTime()->format('Y-m-d'); ?></td>
 </tr>
 <?php endforeach; ?>
 

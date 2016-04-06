@@ -96,6 +96,11 @@ interface PageInterface
     public function getStatus();
     
     /**
+     * @return int
+     */
+    public function getKind();
+    
+    /**
      * @return PageInterface
      */
     public function getOriginal();

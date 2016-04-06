@@ -14,7 +14,7 @@ use Zend\View\Model\JsonModel;
 use Application\Service\HubServiceInterface;
 use Application\Factory\Component\PaginatedTableFactory;
 use Application\Utils\DbConsts\DbViewPages;
-use Application\Utils\PageType;
+use Application\Utils\PageStatus;
 use Application\Utils\Order;
 
 /**
@@ -41,7 +41,7 @@ class PagesController extends AbstractActionController
      */
     protected function getPagesTable($siteId, $orderBy, $order, $page, $perPage)
     {
-        $pages = $this->services->getPageService()->findSitePages($siteId, PageType::ANY, null, null, array($orderBy => $order), true);
+        $pages = $this->services->getPageService()->findSitePages($siteId, PageStatus::ANY, null, null, array($orderBy => $order), true);
         $pages->setCurrentPageNumber($page);
         $pages->setItemCountPerPage($perPage);
         $table = PaginatedTableFactory::createPagesTable($pages);

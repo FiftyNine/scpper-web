@@ -29,6 +29,23 @@
                     $attributes[] = 'data-ascending="'.($col->isDefaultAscending()?'0':'1').'"';
                 }
             }
+            switch ($col->getKind()) {
+                case \Application\Component\PaginatedTable\Column::PAGE:
+                    $classes[] = 'column-page';
+                    break;
+                case \Application\Component\PaginatedTable\Column::USERS:
+                    $classes[] = 'column-users';
+                    break;
+                case \Application\Component\PaginatedTable\Column::INDEX:
+                    $classes[] = 'column-index';
+                    break;
+                case \Application\Component\PaginatedTable\Column::DATE:
+                    $classes[] = 'column-date';
+                    break;
+                case \Application\Component\PaginatedTable\Column::DATE_TIME:
+                    $classes[] = 'column-date-time';
+                    break;                
+            }            
             if ($classes) {
                 echo 'class="'.implode(' ', $classes).'" ';
             }

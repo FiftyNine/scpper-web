@@ -13,7 +13,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Application\Service\HubServiceInterface;
-use Application\Utils\PageType;
+use Application\Utils\PageStatus;
 use Application\Utils\UserType;
 use Application\Utils\VoteType;
 use Application\Utils\AuthorRole;
@@ -48,11 +48,11 @@ class IndexController extends AbstractActionController
             return false;
         }
         $info['statusId'] = $page->getStatus();
-        $info['status'] = PageType::getDescription($page->getStatus());
+        $info['status'] = PageStatus::getDescription($page->getStatus());
         $info['date'] = $page->getCreationDate()->getTimestamp();        
         $info['authors'] = array();
         $this->fillExtensionAuthorsInfo($page->getAuthors(), $info);
-        if ($page->getStatus() === PageType::TRANSLATION) {
+        if ($page->getStatus() === PageStatus::TRANSLATION) {
             $original = $page->getOriginal();
             if ($original) {
                 $info['original'] = sprintf('%s/%s', $original->getSite()->getUrl(), $original->getName());            

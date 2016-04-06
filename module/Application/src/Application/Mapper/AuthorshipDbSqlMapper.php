@@ -13,7 +13,7 @@ use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Expression;
 use Application\Utils\DbConsts\DbViewAuthors;
 use Application\Utils\DbConsts\DbViewUserRank;
-use Application\Utils\PageType;
+use Application\Utils\PageStatus;
 use Application\Model\AuthorSummary;
 use Application\Utils\AuthorSummaryConsts;
 
@@ -48,8 +48,8 @@ class AuthorshipDbSqlMapper extends ZendDbSqlMapper implements AuthorshipMapperI
                         DbViewAuthors::USERID => DbViewAuthors::USERID,
                         DbViewAuthors::SITEID => DbViewAuthors::SITEID,
                         AuthorSummaryConsts::PAGES => new Expression('COUNT(*)'),
-                        AuthorSummaryConsts::ORIGINALS => new Expression(sprintf('SUM(CASE WHEN %s = %d THEN 1 ELSE 0 END)', DbViewAuthors::STATUSID, PageType::ORIGINAL)),
-                        AuthorSummaryConsts::TRANSLATIONS => new Expression(sprintf('SUM(CASE WHEN %s = %d THEN 1 ELSE 0 END)', DbViewAuthors::STATUSID, PageType::TRANSLATION)),
+                        AuthorSummaryConsts::ORIGINALS => new Expression(sprintf('SUM(CASE WHEN %s = %d THEN 1 ELSE 0 END)', DbViewAuthors::STATUSID, PageStatus::ORIGINAL)),
+                        AuthorSummaryConsts::TRANSLATIONS => new Expression(sprintf('SUM(CASE WHEN %s = %d THEN 1 ELSE 0 END)', DbViewAuthors::STATUSID, PageStatus::TRANSLATION)),
                         AuthorSummaryConsts::TOTAL_RATING => new Expression(sprintf('SUM(%s)', DbViewAuthors::RATING)),
                         AuthorSummaryConsts::AVERAGE_RATING => new Expression(sprintf('SUM(%s)/COUNT(*)', DbViewAuthors::RATING)),
                         AuthorSummaryConsts::HIGHEST_RATING => new Expression(sprintf('MAX(%s)', DbViewAuthors::RATING))

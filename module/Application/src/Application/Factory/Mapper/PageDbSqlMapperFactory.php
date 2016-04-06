@@ -18,7 +18,9 @@ class PageDbSqlMapperFactory implements FactoryInterface
             DbViewPages::PAGENAME => 'name',
             DbViewPages::REVISIONS => 'revisionCount',
             DbViewPages::STATUSID => 'status',
-            DbViewPages::STATUS => ''
+            DbViewPages::STATUS => '',
+            DbViewPages::KINDID => 'kind',
+            DbViewPages::KIND => ''
         ));
         $hydrator->setNamingStrategy($namingStrat);
         $hydrator->addStrategy(DbViewPages::CREATIONDATE, new \Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy('Y-m-d H:i:s'));

@@ -156,7 +156,12 @@ class Page implements PageInterface
      * @var PageInterface[]
      */
     protected $translations;
- 
+
+    /**
+     * @var int
+     */
+    protected $kind;    
+    
     /**
      *
      * @var int
@@ -441,7 +446,20 @@ class Page implements PageInterface
     {
         $this->status = $value;
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getKind()
+    {
+        return $this->kind;
+    }
 
+    public function setKind($kind)
+    {
+        $this->kind = $kind;
+    }
+        
     /**
      * {@inheritDoc}
      */

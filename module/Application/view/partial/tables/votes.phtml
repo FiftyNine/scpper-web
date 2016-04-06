@@ -12,7 +12,7 @@
     <td><?php if ($vote->getFromMember()) {echo '&check;';} ?></td>
     <td><?php if ($vote->getFromContributor()) {echo '&check;';} ?></td>
     <td><?php if ($vote->getFromActive()) {echo '&check;';} ?></td>
-    <td><?php echo $vote->getDateTime()->format('Y-m-d H:i'); ?></td>
+    <td><?php echo $vote->getDateTime()->format('Y-m-d'); ?></td>
 </tr>
 <?php endforeach; ?>
 

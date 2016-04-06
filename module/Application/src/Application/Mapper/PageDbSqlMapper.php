@@ -4,7 +4,7 @@ namespace Application\Mapper;
 
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Expression;
-use Application\Utils\PageType;
+use Application\Utils\PageStatus;
 use Application\Utils\DbConsts\DbViewPages;
 use Application\Utils\DbConsts\DbViewTags;
 use Application\Utils\DbConsts\DbViewAuthors;
@@ -14,7 +14,7 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
     protected function buildPageSelect(
         Sql $sql,
         $siteId, 
-        $type = PageType::ANY, 
+        $type = PageStatus::ANY, 
         \DateTime $createdAfter = null, 
         \DateTime $createdBefore = null
     )
@@ -22,7 +22,7 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
         $select = $sql->select()
                       ->from(array('p' => DbViewPages::TABLE))
                       ->where(array('p.'.DbViewPages::SITEID.' = ?' => $siteId));
-        if ($type !== PageType::ANY) {            
+        if ($type !== PageStatus::ANY) {            
                    $select->where(array('p.'.DbViewPages::STATUSID.' = ?' => $type));
         }
         if ($createdAfter) {
@@ -37,7 +37,7 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
     /**
      * {@inheritDoc}
      */
-    public function countSitePages($siteId, $type = PageType::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null) 
+    public function countSitePages($siteId, $type = PageStatus::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null) 
     {
         $sql = new Sql($this->dbAdapter);
         $select = $this->buildPageSelect($sql, $siteId, $type, $createdAfter, $createdBefore);
@@ -49,7 +49,7 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
      */
     public function findSitePages(
             $siteId, 
-            $type = PageType::ANY, 
+            $type = PageStatus::ANY, 
             \DateTime $createdAfter = null, 
             \DateTime $createdBefore = null, 
             $order = null, 
@@ -144,7 +144,7 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
     public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore)   
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $this->buildPageSelect($sql, $siteId, PageType::ANY, $createdAfter, $createdBefore);
+        $select = $this->buildPageSelect($sql, $siteId, PageStatus::ANY, $createdAfter, $createdBefore);
         $this->aggregateSelect($select, $aggregates);
         return $this->fetchArray($sql, $select);
     }

@@ -3,7 +3,7 @@
 namespace Application\Service;
 
 use Application\Model\PageInterface;
-use Application\Utils\PageType;
+use Application\Utils\PageStatus;
 
 interface PageServiceInterface
 {
@@ -38,7 +38,7 @@ interface PageServiceInterface
      * @param \DateTime $createdBefore Only pages created before date
      * @return int
      */
-    public function countSitePages($siteId, $type = PageType::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null);
+    public function countSitePages($siteId, $type = PageStatus::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null);
     
     /**
      * Returns site pages
@@ -50,7 +50,7 @@ interface PageServiceInterface
      * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
      * @return \Zend\Paginator\Paginator|PageInterface[]
      */
-    public function findSitePages($siteId, $type = PageType::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null, $order = null, $paginated = false);
+    public function findSitePages($siteId, $type = PageStatus::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null, $order = null, $paginated = false);
     
     /**
      * Find all pages on the site authored by user

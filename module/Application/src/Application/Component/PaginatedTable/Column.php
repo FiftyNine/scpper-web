@@ -15,6 +15,13 @@ namespace Application\Component\PaginatedTable;
  */
 class Column 
 {
+    const PAGE = 1;
+    const DATE = 2;
+    const DATE_TIME = 3;
+    const INDEX = 4;
+    const USERS = 5;
+    const OTHER = 6;
+    
     /**
      *
      * @var string
@@ -40,12 +47,18 @@ class Column
     protected $defaultAscending;
     
     /**
+     *
+     * @var int
+     */
+    protected $kind;
+    
+    /**
      * 
      * @param string $name
      * @param string $orderName
      * @param bool $defaultAsc
      */    
-    public function __construct($name, $orderName = '', $defaultAsc = true, $tooltip = '')
+    public function __construct($name, $orderName = '', $defaultAsc = true, $tooltip = '', $kind = self::OTHER)
     {
         if (is_string($name)) {
             $this->name = $name;
@@ -57,6 +70,7 @@ class Column
         }
         $this->defaultAscending = $defaultAsc;
         $this->tooltip = $tooltip;
+        $this->kind = $kind;
     }
     
     /**
@@ -103,4 +117,13 @@ class Column
     {
         return $this->tooltip;
     }
+    
+    /**
+     * Kind
+     * @return int
+     */
+    public function getKind()
+    {
+        return $this->kind;
+    }    
 }

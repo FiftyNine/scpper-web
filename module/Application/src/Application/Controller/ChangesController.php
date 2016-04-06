@@ -16,7 +16,7 @@ use Application\Service\HubServiceInterface;
 use Application\Form\DateIntervalForm;
 use Application\Factory\Component\PaginatedTableFactory;
 use Application\Utils\UserType;
-use Application\Utils\PageType;
+use Application\Utils\PageStatus;
 use Application\Utils\VoteType;
 use Application\Utils\DbConsts\DbViewMembership;
 use Application\Utils\DbConsts\DbViewPages;
@@ -113,18 +113,18 @@ class ChangesController extends AbstractActionController
         $maxRating = new Aggregate(DbViewPages::CLEANRATING, Aggregate::MAX, 'MaxRating');
         $avgRating = new Aggregate(DbViewPages::CLEANRATING, Aggregate::AVERAGE, 'AvgRating');
         $ratings = $this->services->getPageService()->getAggregatedValues($siteId, array($maxRating, $avgRating), $from, $to);
-        $pages = $this->services->getPageService()->findSitePages($siteId, PageType::ANY, $from, $to, array(DbViewPages::CREATIONDATE => Order::ASCENDING), true);
+        $pages = $this->services->getPageService()->findSitePages($siteId, PageStatus::ANY, $from, $to, array(DbViewPages::CREATIONDATE => Order::ASCENDING), true);
         $pages->setCurrentPageNumber(1);
         $pages->setItemCountPerPage(3);
         $table = PaginatedTableFactory::createPagesTable($pages, true);
         $table->getColumns()->setOrder(DbViewPages::CREATIONDATE);        
         $result = array(
             'header' => array(
-                'pages' => $this->services->getPageService()->countSitePages($siteId, PageType::ANY, $from, $to),
+                'pages' => $this->services->getPageService()->countSitePages($siteId, PageStatus::ANY, $from, $to),
             ),
             'list' => array(
-                'originals' => $this->services->getPageService()->countSitePages($siteId, PageType::ORIGINAL, $from, $to),
-                'translations' => $this->services->getPageService()->countSitePages($siteId, PageType::TRANSLATION, $from, $to),
+                'originals' => $this->services->getPageService()->countSitePages($siteId, PageStatus::ORIGINAL, $from, $to),
+                'translations' => $this->services->getPageService()->countSitePages($siteId, PageStatus::TRANSLATION, $from, $to),
                 'highest rating' => $ratings[0]['MaxRating'],
                 'average rating' => number_format($ratings[0]['AvgRating'], 1)
             ),
@@ -247,7 +247,7 @@ class ChangesController extends AbstractActionController
                 $result['data'][] = array($page['Period']->format(\DateTime::ISO8601), $page['Number']);
             }
             $result['group'] = $dateAgg->getAggregateDescription();
-            $result['starting'] = $this->services->getPageService()->countSitePages($siteId, PageType::ANY, null, $fromDate);
+            $result['starting'] = $this->services->getPageService()->countSitePages($siteId, PageStatus::ANY, null, $fromDate);
             $result['success'] = true;
         }
         return new JsonModel($result);
@@ -353,7 +353,7 @@ class ChangesController extends AbstractActionController
             } else {
                 $order = Order::DESCENDING;
             }
-            $pages = $this->services->getPageService()->findSitePages($siteId, PageType::ANY, $from, $to, array($orderBy => $order), true);
+            $pages = $this->services->getPageService()->findSitePages($siteId, PageStatus::ANY, $from, $to, array($orderBy => $order), true);
             $pages->setCurrentPageNumber($page);
             $pages->setItemCountPerPage($perPage);
             $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
