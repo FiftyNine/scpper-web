@@ -79,6 +79,10 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
                 <ul>
                     <li>Originals: <strong><?php echo $summary->getOriginalCount(); ?></strong></li>
                     <li>Translations: <strong><?php echo $summary->getTranslationCount(); ?></strong></li>
+                    <li>SCPs: <strong><?php echo $summary->getSCPCount(); ?></strong></li>
+                    <li>Tales: <strong><?php echo $summary->getTaleCount(); ?></strong></li>
+                    <li>Jokes: <strong><?php echo $summary->getJokeCount(); ?></strong></li>
+                    <li>GOI: <strong><?php echo $summary->getGOICount(); ?></strong></li>
                     <li>Average rating: <strong><?php echo number_format($summary->getAverageRating(), 1); ?></strong></li>
                     <li>Highest rating: <strong><?php echo $summary->getHighestRating(); ?></strong></li>
                     <li>Total: <strong><?php echo $summary->getTotalRating(); ?></strong></li>
@@ -179,8 +183,10 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
     </div>
 </div>
 
-<?php if ($this->pages->getPaginator()->getTotalItemCount()): ?>
-    <h4><?php echo $this->pages->getPaginator()->getTotalItemCount();?> pages</h4>
+<?php if ($this->pages->getPaginator()->getTotalItemCount() && $isAuthor): ?>
+    <h4>
+        <?php echo $this->pages->getPaginator()->getTotalItemCount();?> pages:
+    </h4>    
     <div class="table-container" id="page-list">
     <?php
     $table = $this->pages;

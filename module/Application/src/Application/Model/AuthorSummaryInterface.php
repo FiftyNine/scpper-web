@@ -46,6 +46,26 @@ interface AuthorSummaryInterface
     
     /**
      * @return int
+     */
+    function getSCPCount();
+
+    /**
+     * @return int
+     */
+    function getTaleCount();
+
+    /**
+     * @return int
+     */
+    function getJokeCount();    
+    
+    /**
+     * @return int
+     */
+    function getGOICount();        
+    
+    /**
+     * @return int
      */    
     function getTotalRating();
 

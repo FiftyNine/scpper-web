@@ -47,6 +47,26 @@ class AuthorSummary implements AuthorSummaryInterface
     /**
      * @var int
      */
+    protected $scpCount;
+    
+    /**
+     * @var int
+     */
+    protected $taleCount;
+    
+    /**
+     * @var int
+     */
+    protected $jokeCount;
+    
+    /**
+     * @var int
+     */
+    protected $goiCount;
+    
+    /**
+     * @var int
+     */
     protected $translationCount;
     
     /**
@@ -112,6 +132,26 @@ class AuthorSummary implements AuthorSummaryInterface
         return $this->translationCount;
     }
     
+    public function getSCPCount()
+    {
+        return $this->scpCount;
+    }
+
+    public function getTaleCount()
+    {
+        return $this->taleCount;
+    }
+
+    public function getJokeCount()
+    {
+        return $this->jokeCount;
+    }
+
+    public function getGOICount()
+    {
+        return $this->goiCount;
+    }
+        
     /**
      * @return int
      */    
@@ -166,6 +206,26 @@ class AuthorSummary implements AuthorSummaryInterface
         $this->translationCount = $translationCount;
     }
 
+    public function setSCPCount($scpCount)
+    {
+        $this->scpCount = $scpCount;
+    }
+
+    public function setTaleCount($taleCount)
+    {
+        $this->taleCount = $taleCount;
+    }
+
+    public function setJokeCount($jokeCount)
+    {
+        $this->jokeCount = $jokeCount;
+    }
+
+    public function setGOICount($goiCount)
+    {
+        $this->goiCount = $goiCount;
+    }
+        
     public function setTotalRating($totalRating) 
     {
         $this->totalRating = $totalRating;

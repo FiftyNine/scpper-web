@@ -18,6 +18,10 @@ class AuthorSummaryConsts
     const PAGES = 'PageCount';
     const ORIGINALS = 'OriginalCount';
     const TRANSLATIONS = 'TranslationCount';
+    const SCPS = 'SCPCount';
+    const TALES = 'TaleCount';
+    const JOKES = 'JokeCount';
+    const GOIS = 'GOICount';
     const TOTAL_RATING = 'TotalRating';
     const AVERAGE_RATING = 'AverageRating';
     const HIGHEST_RATING = 'HighestRating';
