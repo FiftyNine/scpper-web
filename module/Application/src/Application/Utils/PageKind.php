@@ -47,8 +47,9 @@ class PageKind
      */
     static public function getDescription($kind)
     {
-        if (array_key_exists($kind, self::DESCRIPTIONS)) {
-            return self::DESCRIPTIONS[$kind];
+        $intKind = (int)$kind;
+        if (array_key_exists($intKind, self::DESCRIPTIONS)) {
+            return self::DESCRIPTIONS[$intKind];
         } else {
             throw new \InvalidArgumentException("Unknown page kind - $kind");
         }                
