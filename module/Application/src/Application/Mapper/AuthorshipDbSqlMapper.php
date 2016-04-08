@@ -16,6 +16,7 @@ use Application\Utils\DbConsts\DbViewUserRank;
 use Application\Utils\PageStatus;
 use Application\Model\AuthorSummary;
 use Application\Utils\AuthorSummaryConsts;
+use Application\Utils\PageKind;
 
 /**
  * Description of AuthorshipMapper
@@ -57,7 +58,8 @@ class AuthorshipDbSqlMapper extends ZendDbSqlMapper implements AuthorshipMapperI
                 ->group(array(
                         DbViewAuthors::USERID, 
                         DbViewAuthors::SITEID
-                ));
+                ))
+                ->where(array(DbViewAuthors::KINDID.' <> '.PageKind::SERVICE));
         return $select;
     }
     
@@ -95,6 +97,7 @@ class AuthorshipDbSqlMapper extends ZendDbSqlMapper implements AuthorshipMapperI
                 ->where(array(
                     DbViewAuthors::USERID.' = ?' => $userId,
                     DbViewAuthors::SITEID.' = ?' => $siteId,
+                    DbViewAuthors::KINDID.' <> '.PageKind::SERVICE
                 ));
         if (is_array($order)) {
             $this->orderSelect($select, $order);

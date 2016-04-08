@@ -5,6 +5,7 @@ namespace Application\Mapper;
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Expression;
 use Application\Utils\PageStatus;
+use Application\Utils\PageKind;
 use Application\Utils\DbConsts\DbViewPages;
 use Application\Utils\DbConsts\DbViewTags;
 use Application\Utils\DbConsts\DbViewAuthors;
@@ -78,6 +79,7 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
                 ->where(array(
                     'a.'.DbViewAuthors::USERID.' = ?' => $userId,
                     'p.'.DbViewPages::SITEID.' = ?' => $siteId,
+                    'p.'.DbViewPages::KINDID.' <> '.PageKind::SERVICE
                 ));
         if (is_array($order)) {
             $this->orderSelect($select, $order);
@@ -110,6 +112,7 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
                 ->where(array(
                     DbViewPages::CLEANRATING.' > p.'.DbViewPages::CLEANRATING,
                     DbViewPages::SITEID.' = p.'.DbViewPages::SITEID,
+                    DbViewPages::KINDID.' <> '.PageKind::SERVICE 
                 ));
         $select = $sql->select(array('p' => DbViewPages::TABLE))
                 ->columns(array('Rank' => $subSelect), false)

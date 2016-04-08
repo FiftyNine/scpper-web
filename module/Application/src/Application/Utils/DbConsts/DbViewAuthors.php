@@ -12,6 +12,7 @@ class DbViewAuthors
     const PAGENAME = 'PageName';
     const PAGETITLE = 'PageTitle';
     const STATUSID = 'StatusId';
+    const KINDID = 'KindId';
     const STATUS = 'Status';
     const RATING = 'Rating';
     const ROLE = 'Role';
