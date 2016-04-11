@@ -6,7 +6,7 @@
     <dd>A: There is a few possible explanations:
         <ol>
             <li>
-                Database is out of date. In order to avoid generating high load on hosting service and Wikidot itself database updates only once a week. Which sucks, yes. And if you need fresh data from wiki this site will not be very helpful to you, I'm afraid. Although if you're interested in data collected over some period in the past, you're in the right place</li>            
+                Database is out of date. In order to avoid generating high load on hosting service and Wikidot itself database updates only once a day (once a week for translation projects). Which sucks, yes. And if you need the freshest <del>memes</del> data from wiki this site may not be very helpful to you, I'm afraid. Although if you're interested in data collected over some period in the past, you're in the right place</li>            
             </li>
             <li>
                 Wikidot does not provide all the information that this database supports, so sometimes code behind this site has to make a guess. For example, if there's a page on the main wiki named 'scp-1234' and a page on a russian wiki named 'scp-1234' then the latter probably is a translation of the former. It will be marked as such and everyone will be happy. A different example: the translation of the tale 'Quiet Days' by Dmatix on the Spanish wiki is named 'dias-tranquilos'. In this case algorithm can't automatically match translated page to the original one since their names are different. Cases like this require either manual human input or improved matching algorithms. I have ideas for both solutions but at the moment neither is implemented.
@@ -35,4 +35,16 @@
         I have ideas about rolling contributor rating and adjusted rating into one, but for now they are separate.
         To answer the first question: rating also may differ from the one shown on the wiki itself, because the database is out of date.
     </dd>
+    <dt>
+        Q: What is this "kind" of the page?
+    </dt>
+    <dd>
+        A: Mostly, a clumsy wording on my part. But, hey, I'm taking suggestions for a better word!
+        Seriously, though, all pages are divided into 10 kinds:
+        <ul class="list-inline">
+            <li>Mainlist SCPs,</li><li>tales,</li><li>SCP-Js and other jokes,</li><li>pages in GOI format,</li><li>artwork galleries,</li><li>audio galleries,</li><li>essays,</li><li>author pages,</li><li>service pages,</li><li>and other pages (-EX, -ARC, supplements, etc.)</li>.
+        </ul>
+        Service pages are pages that do not represent creative writing, such as <a href="http://www.scp-wiki.net/">the main page</a>, <a href="http://www.scp-wiki.net/guide-hub">guides</a>, <a href="http://www.scp-wiki.net/members-pages">some hubs</a>, and other pages, that are long forgotten. Service pages do not go author's net rating and are not displayed on user's profile.
+        All other categories are treated equally, at least for now.
+    </dd>    
 </dl>
