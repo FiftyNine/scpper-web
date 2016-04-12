@@ -10,6 +10,7 @@ namespace Application\Mapper;
 
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Predicate\Predicate;
 use Zend\Db\Sql\Expression;
 use Application\Utils\DbConsts\DbViewAuthors;
 use Application\Utils\DbConsts\DbViewUserRank;
@@ -63,7 +64,11 @@ class AuthorshipDbSqlMapper extends ZendDbSqlMapper implements AuthorshipMapperI
                         DbViewAuthors::USERID, 
                         DbViewAuthors::SITEID
                 ))
-                ->where(array(DbViewAuthors::KINDID.' <> '.PageKind::SERVICE));
+                ->where(
+                    array(
+                        '('.DbViewAuthors::KINDID.' IS NULL OR '.DbViewAuthors::KINDID.' <> '.PageKind::SERVICE.')'
+                    )
+                );
         return $select;
     }
     
@@ -101,7 +106,7 @@ class AuthorshipDbSqlMapper extends ZendDbSqlMapper implements AuthorshipMapperI
                 ->where(array(
                     DbViewAuthors::USERID.' = ?' => $userId,
                     DbViewAuthors::SITEID.' = ?' => $siteId,
-                    DbViewAuthors::KINDID.' <> '.PageKind::SERVICE
+                    '('.DbViewAuthors::KINDID.' IS NULL OR '.DbViewAuthors::KINDID.' <> '.PageKind::SERVICE.')'
                 ));
         if (is_array($order)) {
             $this->orderSelect($select, $order);

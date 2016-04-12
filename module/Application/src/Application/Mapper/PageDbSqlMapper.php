@@ -79,7 +79,7 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
                 ->where(array(
                     'a.'.DbViewAuthors::USERID.' = ?' => $userId,
                     'p.'.DbViewPages::SITEID.' = ?' => $siteId,
-                    'p.'.DbViewPages::KINDID.' <> '.PageKind::SERVICE
+                    '(p.'.DbViewPages::KINDID.' IS NULL OR p.'.DbViewPages::KINDID.' <> '.PageKind::SERVICE.')'
                 ));
         if (is_array($order)) {
             $this->orderSelect($select, $order);
@@ -112,7 +112,7 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
                 ->where(array(
                     DbViewPages::CLEANRATING.' > p.'.DbViewPages::CLEANRATING,
                     DbViewPages::SITEID.' = p.'.DbViewPages::SITEID,
-                    DbViewPages::KINDID.' <> '.PageKind::SERVICE 
+                    '('.DbViewPages::KINDID.' IS NULL OR '.DbViewPages::KINDID.' <> '.PageKind::SERVICE.')'
                 ));
         $select = $sql->select(array('p' => DbViewPages::TABLE))
                 ->columns(array('Rank' => $subSelect), false)
