@@ -109,64 +109,75 @@ scpper.charts.changes = {
     },
 
     drawMemberCharts: function (chartsData) {
+        $('#members-joined').block(scpper.loadingOverlayOptions);
+        $('#members-total').block(scpper.loadingOverlayOptions);        
         $.ajax({
             url: "/changes/getMemberChartData",
             type: "get",
             data: chartsData
-        })
-        .done(function (result) {
+        }).done(function (result) {
             scpper.charts.changes.drawTimeLineCharts(result, 'Joined', 'New members', 'members-joined', 'Members', 'Total members', 'members-total', '#94C282');
-        })
-        .fail(function () {
+        }).fail(function () {
             scpper.charts.setFailedBackground('members-joined');
             scpper.charts.removeChartContainer('members-total');
+        }).always(function () {
+            $('#members-joined').unblock();
+            $('#members-total').unblock();
         });
     },
 
     drawPageCharts: function (chartsData) {
+        $('#pages-created').block(scpper.loadingOverlayOptions);
+        $('#pages-total').block(scpper.loadingOverlayOptions);        
         $.ajax({
             url: "/changes/getPageChartData",
             type: "get",
             data: chartsData
-        })
-        .done(function (result) {
+        }).done(function (result) {
             scpper.charts.changes.drawTimeLineCharts(result, 'Created', 'New pages', 'pages-created', 'Pages', 'Total pages', 'pages-total', '#6DAECF');
-        })
-        .fail(function () {
+        }).fail(function () {
             scpper.charts.setFailedBackground('pages-created');
             scpper.charts.removeChartContainer('pages-total');
+        }).always(function () {
+            $('#pages-created').unblock();
+            $('#pages-total').unblock();
         });
     },
 
     drawRevisionCharts: function (chartsData) {
+        $('#revisions-created').block(scpper.loadingOverlayOptions);
+        $('#revisions-total').block(scpper.loadingOverlayOptions);        
         $.ajax({
             url: "/changes/getRevisionChartData",
             type: "get",
             data: chartsData
-        })
-        .done(function (result) {
+        }).done(function (result) {
             scpper.charts.changes.drawTimeLineCharts(result, 'Created', 'New revisions', 'revisions-created', 'Revisions', 'Total revisions', 'revisions-total', '#DB9191');
-        })
-        .fail(function () {
+        }).fail(function () {
             scpper.charts.setFailedBackground('revisions-created');
             scpper.charts.removeChartContainer('revisions-total');
+        }).always(function () {
+            $('#revisions-created').unblock();
+            $('#revisions-total').unblock();
         });
     },
 
     drawVoteCharts: function (chartsData) {
+        $('#votes-cast').block(scpper.loadingOverlayOptions);
+        $('#votes-total').block(scpper.loadingOverlayOptions);
         $.ajax({
             url: "/changes/getVoteChartData",
             type: "get",
             data: chartsData
-        })
-        .done(function (result) {
+        }).done(function (result) {
             scpper.charts.changes.drawTimeLineCharts(result, 'Votes', 'New votes', 'votes-cast', 'Votes', 'Total votes', 'votes-total', '#E0A96E');
-        })
-        .fail(function () {
+        }).fail(function () {
             scpper.charts.setFailedBackground('votes-cast');
             scpper.charts.removeChartContainer('votes-total');
+        }).always(function () {
+            $('#votes-cast').unblock();
+            $('#votes-total').unblock();
         });
-
     },
 
     go: function (chartsData) {
@@ -292,16 +303,19 @@ scpper.charts.rating = {
     },    
     
     go: function (url, payload, container) {
-        // var callback = this.processData();
+        var graph = $('#'+container);
+        graph.block(scpper.loadingOverlayOptions);
         $.ajax({
             url: url,
             type: "get",
             data: payload
         })
         .done(function(result) {
+            graph.unblock();
             scpper.charts.rating.processData(result, container);
         })
         .fail(function () {
+            graph.unblock();
             scpper.charts.setFailedBackground(container);
         });        
     }

@@ -9,6 +9,15 @@ var scpper = {};
 
 /** Add functionality **/
 
+scpper.loadingOverlayOptions = {
+    css: {
+        border:		'none',
+        backgroundColor:'transparent',                
+    },
+    overlayCSS: {opacity: 0.25}, 
+    message: '<div class="loader"></div>'
+};
+
 scpper.isIE = function() {
     var ms_ie = false;
     var ua = window.navigator.userAgent;
@@ -70,6 +79,8 @@ scpper.tables = {
      */
     fetchPaginator: function (containerId, url, payload)
     {
+        var table = $(containerId).children("table");
+        table.block(scpper.loadingOverlayOptions);
         $.ajax({
             url: url,
             data: payload
@@ -81,9 +92,11 @@ scpper.tables = {
            } else {
                scpper.tables.showTableError(containerId);           
            }
-        }).fail(function () {
+        }).fail(function () {            
             scpper.tables.showTableError(containerId);
-        });
+        }).always(function () {
+            table.unblock(); 
+        });      
     },
 
     /**

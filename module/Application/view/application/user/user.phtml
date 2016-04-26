@@ -19,17 +19,20 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
     
     function fetchFavorites(all, byRatio)
     {
+        var container = $("#favorites");
+        container.block(scpper.loadingOverlayOptions);
         $.ajax({
             url: "/user/favorites",
             data: {'orderByRatio': byRatio, 'all': all, 'siteId': siteId, 'userId': userId}
         }).done(function (result) {
-           if (result.success) {
-               var container = $("#favorites");
-               container.html(result.content);
-               orderFavoritesByRatio = byRatio;
-               allFavorites = all;
-               assignFavoriteEvents();               
-           }
+            if (result.success) {               
+                container.html(result.content);
+                orderFavoritesByRatio = byRatio;
+                allFavorites = all;
+                assignFavoriteEvents();               
+            }
+        }).always(function () {
+            container.unblock();
         });
     }
     
