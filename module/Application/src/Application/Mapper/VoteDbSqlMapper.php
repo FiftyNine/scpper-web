@@ -7,6 +7,7 @@ use Zend\Db\Sql\Expression;
 use Application\Utils\VoteType;
 use Application\Utils\DbConsts\DbViewVotes;
 use Application\Utils\DbConsts\DbViewAuthors;
+use Application\Utils\DbConsts\DbViewTags;
 
 class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
 {
@@ -100,33 +101,123 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
     }
 
     /**
-     * Get a list of favorite authors of user
-     * @param int $userId
-     * @param int $siteId
-     * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
-     * @return array(array(string => mixed))
+     * {@inheritDoc}
      */
-    public function getFavoriteAuthors($userId, $siteId, $paginated = false)
+    public function getUserFavoriteAuthors($userId, $siteId, $orderByRatio, $paginated = false)
     {
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select(array('v' => DbViewVotes::TABLE))
                 ->columns(array(
                     DbViewAuthors::USERID => 'a.'.DbViewAuthors::USERID,
                     DbViewAuthors::USERDISPLAYNAME => 'a.'.DbViewAuthors::USERDISPLAYNAME,
-                    'Votes' => new Expression('COUNT(*)'),
-                    'Rating' => new Expression('SUM(v.'.DbViewVotes::VALUE.')')
+                    'Positive' => new Expression('SUM(v.IsPositive)'),
+                    'Negative' => new Expression('SUM(v.IsNegative)'),
                 ), false)
                 ->join(array('a' => DbViewAuthors::TABLE), 'a.'.DbViewAuthors::PAGEID.' = v.'.DbViewVotes::PAGEID, array())
                 ->where(array(
                     'v.'.DbViewVotes::USERID.' = ?' => $userId,
                     'a.'.DbViewAuthors::SITEID.' = ?' => $siteId
                 ))                
-                ->group(array('a.'.DbViewAuthors::USERID, 'a.'.DbViewAuthors::USERDISPLAYNAME))
-                ->order('Rating DESC');
+                ->group(array('a.'.DbViewAuthors::USERID, 'a.'.DbViewAuthors::USERDISPLAYNAME));
+        $select = $sql->select(array('a' => $select));
+        if ($orderByRatio) {
+            $select->columns(array(
+                '*',
+                'Confidence' => new Expression('CI_LOWER_BOUND(Positive, Negative)')
+            ))
+            ->order('Confidence DESC');
+        } else {
+            $select->columns(array(
+                '*',
+                'Total' => new Expression('Positive - Negative')
+            ))
+            ->order('Total DESC');
+        }
         if ($paginated) {
             return $this->getPaginator($select, true);
         }
         return $this->fetchArray($sql, $select);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getUserFavoriteTags($userId, $siteId, $orderByRatio, $paginated = false)
+    {
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select(array('v' => DbViewVotes::TABLE))
+                ->columns(array(
+                    DbViewTags::TAG => 't.'.DbViewTags::TAG,
+                    'Positive' => new Expression('SUM(v.IsPositive)'),
+                    'Negative' => new Expression('SUM(v.IsNegative)'),
+                ), false)
+                ->join(array('t' => DbViewTags::TABLE), 't.'.DbViewTags::PAGEID.' = v.'.DbViewVotes::PAGEID, array())
+                ->where(array(
+                    'v.'.DbViewVotes::USERID.' = ?' => $userId,
+                    'v.'.DbViewVotes::SITEID.' = ?' => $siteId
+                ))                
+                ->group(array('t.'.DbViewTags::TAG));
+        $select = $sql->select(array('a' => $select));
+        if ($orderByRatio) {
+            $select->columns(array(
+                '*',
+                'Confidence' => new Expression('CI_LOWER_BOUND(Positive, Negative)')
+            ))
+            ->order('Confidence DESC');
+        } else {
+            $select->columns(array(
+                '*',
+                'Total' => new Expression('Positive - Negative')
+            ))
+            ->order('Total DESC');
+        }        
+        if ($paginated) {
+            return $this->getPaginator($select, true);
+        }
+        return $this->fetchArray($sql, $select);        
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getUserBiggestFans($userId, $siteId, $orderByRatio, $paginated = false)
+    {
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select(array('v' => DbViewVotes::TABLE))
+            ->columns(array(
+                DbViewVotes::USERID => 'v.'.DbViewVotes::USERID,
+                DbViewVotes::USERDISPLAYNAME => 'v.'.DbViewVotes::USERDISPLAYNAME,
+                'Positive' => new Expression('SUM(v.IsPositive)'),
+                'Negative' => new Expression('SUM(v.IsNegative)'),                    
+            ), false)
+            ->join(array('a' => DbViewAuthors::TABLE), 'a.'.DbViewAuthors::PAGEID.' = v.'.DbViewVotes::PAGEID, array())
+            ->where(array(
+                'a.'.DbViewAuthors::USERID.' = ?' => $userId,
+                'a.'.DbViewAuthors::SITEID.' = ?' => $siteId,
+                'v.'.DbViewVotes::FROMMEMBER.' = 1'
+            ))
+            ->group(array(
+                'v.'.DbViewVotes::USERID,
+                'v.'.DbViewVotes::USERDISPLAYNAME,
+            ));
+        $select = $sql->select(array('a' => $select));
+        if ($orderByRatio) {
+            $select->columns(array(
+                '*',
+                'Confidence' => new Expression('CI_LOWER_BOUND(Positive, Negative)')
+            ))
+            ->order('Confidence DESC');
+        } else {
+            $select->columns(array(
+                '*',
+                'Total' => new Expression('Positive - Negative')
+            ))
+            ->order('Total DESC');
+        }                
+        if ($paginated) {
+            return $this->getPaginator($select, true);
+        }
+        return $this->fetchArray($sql, $select);        
     }
     
     /**

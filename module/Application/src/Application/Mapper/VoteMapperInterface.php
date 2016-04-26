@@ -61,8 +61,30 @@ interface VoteMapperInterface extends SimpleMapperInterface
      * Get a list of favorite authors of user
      * @param int $userId
      * @param int $siteId
+     * @param bool $orderByRatio Order by total or by ratio
      * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
      * @return array(array(string => mixed))
      */
-    public function getFavoriteAuthors($userId, $siteId, $paginated = false);    
+    public function getUserFavoriteAuthors($userId, $siteId, $orderByRatio, $paginated = false);
+
+    /**
+     * Get an aggregated results from votes
+     * P.e. Get a number of votes
+     * @param int $userId
+     * @param int $siteId
+     * @param bool $orderByRatio Order by total or by ratio
+     * @param bool $paginated
+     * @return array[array[string]mixed]
+     */
+    public function getUserFavoriteTags($userId, $siteId, $orderByRatio, $paginated = false);
+    
+    /**
+     * Get biggest fans of user
+     * @param int $userId
+     * @param int $siteId
+     * @param bool $orderByRatio Order by total or by ratio
+     * @param bool $paginated
+     * @return array[array[string]mixed]
+     */
+    public function getUserBiggestFans($userId, $siteId, $orderByRatio, $paginated = false);
 }

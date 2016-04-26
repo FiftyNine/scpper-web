@@ -293,6 +293,39 @@ div.google-visualization-tooltip {
     align-self: stretch;
 }
 
+#favorites {
+    margin-bottom: 20px;
+}
+
+#favorites-header {
+    margin-bottom: 5px;
+}
+
+#favorites-content {
+    margin-top: 10px;
+}
+
+div.favorites-column {
+    padding-left: 0px;
+}
+
+div.favorites-column-header {
+    margin-bottom: 5px;
+}
+
+ol.favorites-list {
+    padding-left: 20px; 
+    margin-bottom: 0px;
+}
+
+p.favorites-hidden {
+    padding-left: 20px; 
+}
+
+div#favorites-button {
+    margin-top: 20px;
+}
+
 /** About **/
 
 #faq > dd {

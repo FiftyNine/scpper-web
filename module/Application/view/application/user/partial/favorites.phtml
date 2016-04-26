@@ -1,0 +1,105 @@
+<?php if ($this->hasVotes || $this->isAuthor): ?>
+<hr>
+<h3 id="favorites-header">Favorites and fans</h3>
+<span>
+    <?php if ($this->byRatio): ?>
+    (by ratio | <a id="favorites-by-total" href="javascript:;">by total</a>)
+    <?php else: ?>
+    (<a id="favorites-by-ratio" href="javascript:;">by ratio</a> | by total)
+    <?php endif; ?>
+</span>
+<div class="container" id="favorites-content">
+    <div class="row">        
+        <?php if ($this->hasVotes): ?>
+        <div class="col-md-4 favorites-column">
+            <h4 class="favorites-column-header">Authors</h4>
+            <ol class="favorites-list">
+                <?php foreach ($this->authors as $fav): ?>
+                <?php
+                    $positive = (int)$fav['positive'];
+                    $negative = (int)$fav['negative'];
+                    $rating = $positive-$negative;  
+                    $hiding = false;
+                ?>
+                <?php if ($rating >= 0): ?>
+                    <li>
+                        <?php echo $this->partial('partial/user.phtml', array('user' => $fav['user'])); ?>
+                        with 
+                        <strong>
+                        <?php printf('%+d (%+d/%+d)', $rating, $positive, -$negative); ?>
+                        </strong>
+                    </li>
+                <?php 
+                    else: 
+                        $hiding = true;
+                    endif; 
+                ?>                
+                <?php endforeach; ?>
+            </ol> 
+            <?php if ($hiding): ?>
+            <p class="favorites-hidden"><i>Hiding negative</i></p>
+            <?php endif; ?>
+        </div>
+        <div class="col-md-4 favorites-column">
+            <h4 class="favorites-column-header">Tags</h4>
+            <ol class="favorites-list">
+                <?php foreach ($this->tags as $tag): ?>
+                <li>
+                    <?php echo $tag['tag'];?>
+                     with 
+                     <strong>
+                    <?php
+                        $positive = (int)$tag['positive'];
+                        $negative = (int)$tag['negative'];
+                        $rating = $positive-$negative;
+                        printf('%+d (%+d/%+d)', $rating, $positive, -$negative); 
+                    ?>
+                     </strong>
+                </li>
+                <?php endforeach; ?>
+            </ol>        
+        </div>        
+        <?php endif; ?>
+        <?php if ($this->isAuthor): ?>
+        <div class="col-md-4 favorites-column">
+            <h4 class="favorites-column-header">Fans</h4>
+            <ol class="favorites-list">
+                <?php foreach ($this->fans as $fan): ?>
+                <?php
+                    $positive = (int)$fan['positive'];
+                    $negative = (int)$fan['negative'];
+                    $rating = $positive-$negative;  
+                    $hiding = false;
+                ?>
+                <?php if ($rating >= 0): ?>
+                <li>
+                    <?php echo $this->partial('partial/user.phtml', array('user' => $fan['user'])); ?>
+                    with 
+                    <strong>
+                    <?php printf('%+d (%+d/%+d)', $rating, $positive, -$negative); ?>
+                    </strong>
+                </li>
+                <?php 
+                    else: 
+                        $hiding = true;
+                    endif; 
+                ?>                
+                <?php endforeach; ?>
+            </ol>
+            <?php if ($hiding): ?>
+            <p class="favorites-hidden"><i>Hiding negative</i></p>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
+    </div>
+    <div class="row" id="favorites-button">        
+        <div class="col-md-offset-5 col-md-2">
+            <?php if ($this->all): ?>
+                <a class="btn btn-default btn-table" id="favorites-hide-all" href="javascript:;" role="button">Collapse</a>
+            <?php else: ?>
+                <a class="btn btn-default btn-table" id="favorites-show-all" href="javascript:;" role="button">Show all</a>
+            <?php endif; ?>            
+        </div>
+    </div>
+</div>
+<?php endif; ?>

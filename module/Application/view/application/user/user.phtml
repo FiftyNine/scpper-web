@@ -14,11 +14,52 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
     // Initialize global variables
     var userId = <?php echo $user->getId() ?>;
     var siteId = <?php echo $site->getId() ?>;
-
+    var allFavorites = false;
+    var orderFavoritesByRatio = true;
+    
+    function fetchFavorites(all, byRatio)
+    {
+        $.ajax({
+            url: "/user/favorites",
+            data: {'orderByRatio': byRatio, 'all': all, 'siteId': siteId, 'userId': userId}
+        }).done(function (result) {
+           if (result.success) {
+               var container = $("#favorites");
+               container.html(result.content);
+               orderFavoritesByRatio = byRatio;
+               allFavorites = all;
+               assignFavoriteEvents();               
+           }
+        });
+    }
+    
+    function showFavorites(event)
+    {
+        fetchFavorites(event.data.all, event.data.byRatio);
+    }
+    
+    function hideFavorites(event)
+    {        
+        var top = document.getElementById('favorites');
+        fetchFavorites(0, orderFavoritesByRatio);        
+        if (!scpper.isElementInViewport(top)) {
+            top.scrollIntoView();
+        }        
+    }
+    
+    function assignFavoriteEvents()
+    {
+        $('#favorites-by-total').on('click', {'byRatio': 0, 'all': allFavorites}, showFavorites);
+        $('#favorites-by-ratio').on('click', {'byRatio': 1, 'all': allFavorites}, showFavorites);
+        $('#favorites-show-all').on('click', {'byRatio': orderFavoritesByRatio, 'all': 1}, showFavorites);
+        $('#favorites-hide-all').on('click', {}, hideFavorites);
+    }
+    
     function init()
     {
         scpper.tables.assignPaginatorEvents('#page-list', '/user/pageList', {siteId: siteId, userId: userId});
         scpper.tables.assignPaginatorEvents('#vote-list', '/user/voteList', {siteId: siteId, userId: userId});
+        assignFavoriteEvents();
     }
 
     $(document).ready(init);    
@@ -136,57 +177,27 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
         </div>
     </div>    
 </div>
-<hr>
-
-<div class="container">
-    <div class="row">
-        <?php if ($user->getActivityOnSite($site->getId())->getVoteCount() > 0): ?>
-        <div class="col-md-4">
-            <h4>Favourite authors</h4>
-            <ol>
-                <?php foreach ($this->favs as $fav): ?>
-                <li>
-                    <?php echo $this->partial('partial/user.phtml', array('user' => $fav['user'])); ?>
-                     with 
-                     <strong>
-                    <?php
-                        $negative = ((int)$fav['votes']-(int)$fav['rating'])/2;
-                        $positive = (int)$fav['votes']-$negative;
-                        printf('%+d (%+d/%+d)', (int)$fav['rating'], $positive, -$negative); 
-                    ?>
-                     </strong>
-                </li>
-                <?php endforeach; ?>
-            </ol>        
-        </div>
-        <?php endif; ?>
-        <?php if ($isAuthor): ?>
-        <div class="col-md-4">
-            <h4>Biggest fans</h4>
-            <ol>
-                <?php foreach ($this->fans as $fan): ?>
-                <li>
-                    <?php echo $this->partial('partial/user.phtml', array('user' => $fan['user'])); ?>
-                    with 
-                     <strong>
-                    <?php
-                        $negative = ((int)$fan['votes']-(int)$fan['rating'])/2;
-                        $positive = (int)$fan['votes']-$negative;
-                        printf('%+d (%+d/%+d)', (int)$fan['rating'], $positive, -$negative); 
-                    ?>
-                     </strong>
-                </li>
-                <?php endforeach; ?>
-            </ol>
-        </div>
-        <?php endif; ?>
-    </div>
+<div id="favorites">
+    <?php 
+        echo $this->partial(
+            'application/user/partial/favorites.phtml', 
+            array(
+                'byRatio' => true,
+                'hasVotes' => $user->getActivityOnSite($site->getId())->getVoteCount() > 0,
+                'isAuthor' => $isAuthor,
+                'authors' => $this->authors,
+                'tags' => $this->tags,
+                'fans' => $this->fans,
+                'all' => $this->allFavorites
+            )
+        ); 
+    ?>
 </div>
-
 <?php if ($this->pages->getPaginator()->getTotalItemCount() && $isAuthor): ?>
-    <h4>
-        <?php echo $this->pages->getPaginator()->getTotalItemCount();?> pages:
-    </h4>    
+    <hr>
+    <h3>
+        <?php echo $this->pages->getPaginator()->getTotalItemCount();?> pages
+    </h3>    
     <div class="table-container" id="page-list">
     <?php
     $table = $this->pages;
@@ -203,7 +214,8 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 <?php endif; ?>
 
 <?php if ($this->votes->getPaginator()->getTotalItemCount()): ?>
-    <h4><?php echo $this->votes->getPaginator()->getTotalItemCount();?> votes</h4>
+    <hr>
+    <h3><?php echo $this->votes->getPaginator()->getTotalItemCount();?> votes</h3>
     <div class="table-container" id="vote-list">
     <?php
     $table = $this->votes;

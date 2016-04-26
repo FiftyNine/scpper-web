@@ -70,14 +70,34 @@ interface VoteServiceInterface
     public function getAggregatedForPage($pageId, $aggregates, $onlyClean = false);
     
     /**
-     * Get an aggregated results from votes
-     * P.e. Get a number of votes
+     * Gets favorite authors of user
      * @param int $userId
      * @param int $siteId
+     * @param bool $orderByRatio Order by total or by ratio
      * @param bool $paginated
      * @return array[array[string]mixed]
      */
-    public function getUserFavoriteAuthors($userId, $siteId, $paginated = false);
+    public function getUserFavoriteAuthors($userId, $siteId, $orderByRatio, $paginated = false);
+    
+    /**
+     * Get favorite tags of user
+     * @param int $userId
+     * @param int $siteId
+     * @param bool $orderByRatio Order by total or by ratio
+     * @param bool $paginated
+     * @return array[array[string]mixed]
+     */
+    public function getUserFavoriteTags($userId, $siteId, $orderByRatio, $paginated = false);
+    
+    /**
+     * Get biggest fans of user
+     * @param int $userId
+     * @param int $siteId
+     * @param bool $orderByRatio Order by total or by ratio
+     * @param bool $paginated
+     * @return array[array[string]mixed]
+     */
+    public function getUserBiggestFans($userId, $siteId, $orderByRatio, $paginated = false);
     
     /**
      * Get an aggregated results from votes
@@ -88,5 +108,5 @@ interface VoteServiceInterface
      * @param bool $paginated
      * @return array[array[string]mixed]
      */
-    public function getAggregatedForUser($userId, $siteId, $aggregates, $order = null, $paginated = false);
+    public function getAggregatedVotesOnUser($userId, $siteId, $aggregates, $order = null, $paginated = false);
 }

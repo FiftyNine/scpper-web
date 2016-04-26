@@ -147,16 +147,33 @@ class VoteService implements VoteServiceInterface
     /**
      * {@inheritDoc}
      */
-    public function getUserFavoriteAuthors($userId, $siteId, $paginated = false)
+    public function getUserFavoriteAuthors($userId, $siteId, $orderByRatio, $paginated = false)
     {        
-        return $this->mapper->getFavoriteAuthors($userId, $siteId, $paginated);
+        return $this->mapper->getUserFavoriteAuthors($userId, $siteId, $orderByRatio, $paginated);
     }
     
     /**
      * {@inheritDoc}
      */
-    public function getAggregatedForUser($userId, $siteId, $aggregates, $order = null, $paginated = false)
+    public function getUserFavoriteTags($userId, $siteId, $orderByRatio, $paginated = false)
+    {
+        return $this->mapper->getUserFavoriteTags($userId, $siteId, $orderByRatio, $paginated);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getUserBiggestFans($userId, $siteId, $orderByRatio, $paginated = false)
+    {
+        return $this->mapper->getUserBiggestFans($userId, $siteId, $orderByRatio, $paginated);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getAggregatedVotesOnUser($userId, $siteId, $aggregates, $order = null, $paginated = false)
     {        
         return $this->mapper->getAggregatedVotesOnUser($userId, $siteId, $aggregates, $order, $paginated);
     }
+    
 }
