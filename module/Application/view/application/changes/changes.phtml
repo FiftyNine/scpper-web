@@ -12,6 +12,7 @@ $toDate = $form->get('to-date');
 $submit = $form->get('submit');
 $submit->setValue('Show');
 $site = $this->site;
+$this->headTitle(sprintf('Changes from %s to %s', $fromDate->getValue(), $toDate->getValue()));
 ?>
 
 <?php $this->headScript()->captureStart(); ?>

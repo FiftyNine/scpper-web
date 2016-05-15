@@ -1,3 +1,4 @@
+<?php $this->headTitle('Search'); ?>
 <div class="row">
     <div class="col-md-8 col-md-offset-2 text-center">
         <h2>Search</h2>
@@ -26,6 +27,7 @@
     </div>
 </div>
 <?php if ($field->getValue() !== ''): ?>
+    <?php $this->headTitle('"'.$field->getValue().'"'); ?>
     <?php if (($this->pages && count($this->pages) === 0) && ($this->users && count($this->users) === 0)): ?>
         <p class="text-center">
         Sorry, nothing found

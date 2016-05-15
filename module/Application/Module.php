@@ -23,6 +23,7 @@ class Module
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);        
         $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'attachLayoutForms'), 100);        
+        $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'setLayoutTitle'));
         // Initialize logger
         $serviceManager->get('EventLogger');
     }
@@ -51,4 +52,20 @@ class Module
             $utils->attachSearchForm($viewModel);
         }
     }        
+    
+    /**
+     * @param  \Zend\Mvc\MvcEvent $e The MvcEvent instance
+     * @return void
+     */
+    public function setLayoutTitle($e)
+    {
+        // Getting the view helper manager from the application service manager
+        $viewHelperManager = $e->getApplication()->getServiceManager()->get('viewHelperManager');
+
+        // Getting the headTitle helper from the view helper manager
+        $headTitleHelper   = $viewHelperManager->get('headTitle');
+
+        // Setting a separator string for segments
+        $headTitleHelper->setSeparator(' - ');
+    }
 }
