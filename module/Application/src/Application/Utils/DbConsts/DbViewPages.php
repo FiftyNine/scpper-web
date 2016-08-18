@@ -19,6 +19,7 @@ class DbViewPages
     const CLEANRATING = 'CleanRating';
     const CONTRIBUTORRATING = 'ContributorRating';
     const ADJUSTEDRATING = 'AdjustedRating';
+    const WILSONSCORE = 'WilsonScore';
     const REVISIONS = 'Revisions';
     const STATUSID = 'StatusId';
     const KINDID = 'KindId';

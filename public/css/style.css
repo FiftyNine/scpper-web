@@ -148,6 +148,13 @@ table.table-sortable > tbody > tr > th.can-order {
     background-color: #F7E3CD;
 }
 
+img.rating-image {
+    height: 20px;
+    width: 20px;
+    display: block;
+    float: left;
+}
+
 /* Index */
 
 div.tiles {

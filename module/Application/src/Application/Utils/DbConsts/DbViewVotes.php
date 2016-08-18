@@ -21,6 +21,8 @@ class DbViewVotes
     const FROMMEMBER = 'FromMember';
     const FROMCONTRIBUTOR = 'FromContributor';
     const FROMACTIVE = 'FromActive';
+    const ISPOSITIVE = 'IsPositive';
+    const ISNEGATIVE = 'IsNegative';
 
 
     static public function hasField($field) 

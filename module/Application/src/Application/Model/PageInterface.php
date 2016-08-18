@@ -53,6 +53,11 @@ interface PageInterface
      * @return int
      */
     public function getAdjustedRating();
+
+    /**
+     * @return double
+     */
+    public function getWilsonScore();
     
     /**
      * @return int

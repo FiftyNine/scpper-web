@@ -104,6 +104,12 @@ class Page implements PageInterface
      * @var int
      */    
     protected $adjustedRating;
+
+    /**
+     *
+     * @var double
+     */    
+    protected $wilsonScore;
     
     /**
      *
@@ -336,7 +342,20 @@ class Page implements PageInterface
     {
         $this->adjustedRating = $adjustedRating;
     }
-        
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getWilsonScore()
+    {
+        return $this->wilsonScore;
+    }
+
+    public function setWilsonScore($wilsonScore)
+    {
+        $this->wilsonScore = $wilsonScore;
+    }
+    
     /**
      * {@inheritDoc}
      */
