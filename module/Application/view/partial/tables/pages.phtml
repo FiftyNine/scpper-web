@@ -13,7 +13,7 @@
     <td>        
         <?php 
             $stars = round($page->getWilsonScore()*10);            
-            for ($i=0; $i<5; $i++):
+            for ($star=0; $star<5; $star++):
                 if ($stars >= 2):
         ?>
                     <img src="/img/FullStar.png" alt="Star" class="rating-image">
