@@ -31,10 +31,14 @@ class PaginatedTableFactory
             array(
                 new Column('#', '', true, '', Column::INDEX),
                 new Column('Page', DbViewPages::TITLE, true, '', Column::PAGE),
-                new Column('Rating', DbViewPages::CLEANRATING, false, 'Clean rating - only counts votes from members of the site'),
-//                new Column('Rating (C)', DbViewPages::CONTRIBUTORRATING, false, 'Contributors rating - only counts votes from members who have at least one successful page'),
-//                new Column('Rating (A)', DbViewPages::ADJUSTEDRATING, false, 'Adjusted rating - only counts votes from active members'),
-                new Column('Quality', DbViewPages::WILSONSCORE, false, 'Calculated as ratio of upvotes to downvotes corrected by total amount of votes'),
+                new Column('Rating', '', true, '', Column::PAGE, 
+                    [
+                        new Column('Total', DbViewPages::CLEANRATING, false, 'Total rating - only counts votes from members of the site'),
+                        new Column('Contributor', DbViewPages::CONTRIBUTORRATING, false, 'Contributors rating - only counts votes from members who have at least one successful page'),
+                        new Column('Adjusted', DbViewPages::ADJUSTEDRATING, false, 'Adjusted rating - only counts votes from active members'),
+                        new Column('Wilson', DbViewPages::WILSONSCORE, false, 'Wilson score - calculated as ratio of upvotes to downvotes corrected by total amount of votes'),                        
+                    ]
+                ),
                 new Column('Status', DbViewPages::STATUSID),
                 new Column('Kind', DbViewPages::KINDID),
                 new Column('Posted', DbViewPages::CREATIONDATE, false, '', Column::DATE_TIME),

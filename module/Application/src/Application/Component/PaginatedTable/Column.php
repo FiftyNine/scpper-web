@@ -54,11 +54,19 @@ class Column
     
     /**
      * 
+     * @var \Application\Component\PaginatedTable\ColumnList
+     */
+    protected $subColumns;
+            
+    /**
+     * 
      * @param string $name
      * @param string $orderName
      * @param bool $defaultAsc
+     * @param int $kind
+     * @param mixed $columns Associative array of column names => descriptions or array of Column objects
      */    
-    public function __construct($name, $orderName = '', $defaultAsc = true, $tooltip = '', $kind = self::OTHER)
+    public function __construct($name, $orderName = '', $defaultAsc = true, $tooltip = '', $kind = self::OTHER, $subColumns = [])
     {
         if (is_string($name)) {
             $this->name = $name;
@@ -71,6 +79,7 @@ class Column
         $this->defaultAscending = $defaultAsc;
         $this->tooltip = $tooltip;
         $this->kind = $kind;
+        $this->subColumns = new ColumnList($subColumns);
     }
     
     /**
@@ -97,7 +106,7 @@ class Column
      */
     public function canOrder()
     {
-        return isset($this->orderName);
+        return ($this->subColumns->getCount() == 0) && isset($this->orderName);
     }
     
     /**
@@ -125,5 +134,32 @@ class Column
     public function getKind()
     {
         return $this->kind;
+    }  
+    
+    /**
+     * SubColumns of this column
+     * @return \Application\Component\PaginatedTable\TableColumns
+     */
+    public function getSubColumns()
+    {
+        return $this->subColumns;
+    }
+    
+    /**
+     * Returns number of child columns of the lowest level
+     * Translates into "colspan" html attribute
+     * @return int
+     */
+    public function getColSpan()
+    {
+        if ($this->subColumns->getCount() == 0) {
+            $result = 1;
+        } else {
+            $result = 0;
+            foreach ($this->subColumns as $index => $column) {
+                $result+=$column->getColSpan();
+            }                        
+        }        
+        return $result;
     }    
 }

@@ -27,11 +27,12 @@
         Q: Your rating is different from the one shown on the wiki. Also, what's with the multiple ratings?
     </dt>
     <dd>
-        A: ScpperDB has three separate ratings for each page:
+        A: ScpperDB has four separate ratings for each page:
         <ul>
             <li>Rating or clean rating - this is like a normal wikidot rating, but it only counts votes from members of the wiki. So, no deleted accounts and no people who were banned</li>
             <li>Contributor rating - only counts votes from members of the wiki who have pages of their own</li>
             <li>Adjusted rating - this one only counts votes from active members of the wiki</li>
+            <li>Wilson score - this number shows with high degree of certainty what fraction of wiki audience actually likes the page given the amount of upvotes and downvotes on this particular page. This number does not mean much by itself but it's a good comparison metric, which allows for better rankings (as opposed to sorting by flat rating). You can read more about it here: http://www.evanmiller.org/how-not-to-sort-by-average-rating.html
         </ul>
         I have ideas about rolling contributor rating and adjusted rating into one, but for now they are separate.
         To answer the first question: rating also may differ from the one shown on the wiki itself, because the database is out of date.
@@ -47,5 +48,5 @@
         </ul>
         Service pages are pages that do not represent creative writing, such as <a href="http://www.scp-wiki.net/">the main page</a>, <a href="http://www.scp-wiki.net/guide-hub">guides</a>, <a href="http://www.scp-wiki.net/members-pages">some hubs</a>, and other pages, that are long forgotten. Service pages do not go author's net rating and are not displayed on user's profile.
         All other categories are treated equally, at least for now.
-    </dd>    
+    </dd>   
 </dl>

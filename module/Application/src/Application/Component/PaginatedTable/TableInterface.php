@@ -16,7 +16,7 @@ interface TableInterface
 {
     /**
      * Get a list of columns for this table
-     * @return Application\Component\PaginatedTable\Columns
+     * @return Application\Component\PaginatedTable\TableColumns
      */
     public function getColumns();       
     

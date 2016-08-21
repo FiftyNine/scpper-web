@@ -73,10 +73,21 @@ hr {
     margin-bottom: 10px;
 }
 
-table.table-striped > tbody > tr:last-child {
-    border-bottom: 1px solid #ddd;
+.table-striped>tbody>tr>th {
+    background-color: #f9f9f9;    
 }
 
+.table-striped>tbody>tr>th[colspan] {
+    text-align: center;
+}
+
+.table-striped>tbody>tr>th[rowspan] {
+    vertical-align: middle;
+}
+
+.table-striped>tbody>tr>th,.table-striped>tbody>tr>td {         
+    border: 1px solid #ddd;
+}
 
 th.column-page {
     width: 350px;

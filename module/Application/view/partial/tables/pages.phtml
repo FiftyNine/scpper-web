@@ -8,30 +8,9 @@
         <?php echo $this->partial('partial/page.phtml', array('page' => $page)); ?>
     </td>
     <td><?php echo $page->getCleanRating(); ?></td>
-<!--    <td><?php echo $page->getContributorRating(); ?></td>
-    <td><?php echo $page->getAdjustedRating(); ?></td> -->
-    <td>        
-        <?php 
-            $stars = round($page->getWilsonScore()*10);            
-            for ($star=0; $star<5; $star++):
-                if ($stars >= 2):
-        ?>
-                    <img src="/img/FullStar.png" alt="Star" class="rating-image">
-        <?php
-                    $stars-=2;
-                elseif ($stars >= 1):
-        ?>
-                    <img src="/img/HalfStar.png" alt="Half" class="rating-image">
-        <?php                    
-                    $stars--;
-                else:
-        ?>
-                    <img src="/img/EmptyStar.png" alt="Empty" class="rating-image">
-        <?php                           
-                endif;
-            endfor;
-        ?>
-    </td>    
+    <td><?php echo $page->getContributorRating(); ?></td>
+    <td><?php echo $page->getAdjustedRating(); ?></td>
+    <td><?php echo number_format($page->getWilsonScore()*100, 2).'%'; ?></td>    
     <td><?php echo \Application\Utils\PageStatus::getDescription($page->getStatus()); ?></td>
     <td><?php echo \Application\Utils\PageKind::getDescription($page->getKind()); ?></td>
     <td><?php echo $page->getCreationDate()->format('Y-m-d'); ?></td>

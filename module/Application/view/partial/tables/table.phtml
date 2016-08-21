@@ -12,11 +12,17 @@
     ?>
     "
 >
+    <?php
+        $colArray = $cols->toArray();
+        $maxLevel = $cols->getMaxNestedLevel();
+    ?>
+    <?php for ($level=0; $level<count($colArray); $level++): ?>
+    <?php $levelCols = $colArray[$level]; ?>
     <tr>
-        <?php foreach ($cols as $index => $col): ?>
+        <?php foreach ($levelCols as $col): ?>
         <th 
             <?php 
-            $thisOrder = $col->canOrder() && ($cols->getOrderBy() === $index);
+            $thisOrder = $col->canOrder() && ($cols->getOrderBy() === $col);
             $classes = array();
             $attributes = array();
             if ($col->canOrder()) {
@@ -28,6 +34,18 @@
                 } else {
                     $attributes[] = 'data-ascending="'.($col->isDefaultAscending()?'0':'1').'"';
                 }
+            }
+            $colspan = $col->getColSpan();
+            if ($colspan > 1) {
+                $attributes[] = 'colspan="'.$colspan.'"';
+            }
+            if ($col->getSubColumns()->getCount()) {
+                $rowspan = 1;
+            } else {
+                $rowspan = $maxLevel - $level;
+            }
+            if ($rowspan > 1) {
+                $attributes[] = 'rowspan="'.$rowspan.'"';
             }
             switch ($col->getKind()) {
                 case \Application\Component\PaginatedTable\Column::PAGE:
@@ -73,6 +91,7 @@
         </th>           
         <?php endforeach;?>
     </tr>
+    <?php endfor; ?>
     <?php 
         echo $this->partial(
             $table->getBodyView(), 

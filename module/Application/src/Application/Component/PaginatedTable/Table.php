@@ -40,7 +40,7 @@ class Table implements TableInterface
     
     public function __construct($columns, $paginator, $bodyView, $preview = false) 
     {
-        $this->columns = new Columns($columns);
+        $this->columns = new TableColumns($columns);
         $this->paginator = $paginator;
         $this->bodyView = $bodyView;
         $this->preview = $preview;
