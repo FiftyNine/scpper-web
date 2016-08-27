@@ -82,6 +82,7 @@ class Site implements SiteInterface
      */
     protected $positive;
     
+    
     /**
      * 
      * @var int
@@ -93,6 +94,12 @@ class Site implements SiteInterface
      * @var int
      */
     protected $revisions;
+
+    /**
+     *
+     * @var bool
+     */
+    protected $hideVotes;
     
     /**
      * 
@@ -270,6 +277,14 @@ class Site implements SiteInterface
         return $this->votes;
     }
     
+    /**
+     * {@inheritDoc}
+     */
+    public function getHideVotes()
+    {
+        return $this->hideVotes;
+    }
+    
     public function setMembers($members)
     {
         $this->members = $members;
@@ -323,6 +338,11 @@ class Site implements SiteInterface
     public function setRevisions($revisions)
     {
         $this->revisions = $revisions;
+    }    
+    
+    public function setHideVotes($hideVotes)
+    {
+        $this->hideVotes = $hideVotes;
     }    
 }
 

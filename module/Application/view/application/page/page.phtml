@@ -193,6 +193,7 @@ echo $this->partial(
 );
 ?>
 </div>
+<?php if (!$page->getSite()->getHideVotes()): ?>
 <h4><?php echo $this->page->getVoteCount();?> votes</h4>
 <div class="table-container" id="vote-list">
 <?php
@@ -205,5 +206,6 @@ echo $this->partial(
         'data' => array(),
     )
 );
-?>
+?>    
 </div>
+<?php endif; ?>

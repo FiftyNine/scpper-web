@@ -216,8 +216,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
     ?>
     </div>
 <?php endif; ?>
-
-<?php if ($this->votes->getPaginator()->getTotalItemCount()): ?>
+<?php if (!$site->getHideVotes() && $this->votes->getPaginator()->getTotalItemCount()): ?>
     <hr>
     <h3><?php echo $this->votes->getPaginator()->getTotalItemCount();?> votes</h3>
     <div class="table-container" id="vote-list">
@@ -234,5 +233,3 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
     ?>
     </div>
 <?php endif; ?>
-    
-

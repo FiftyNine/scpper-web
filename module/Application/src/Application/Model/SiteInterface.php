@@ -98,5 +98,10 @@ interface SiteInterface
      * 
      * @return int
      */
-    public function getRevisions();            
+    public function getRevisions();  
+    
+    /**
+     * @return bool
+     */
+    public function getHideVotes();
 }
