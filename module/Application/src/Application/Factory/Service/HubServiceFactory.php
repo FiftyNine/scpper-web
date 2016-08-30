@@ -25,7 +25,8 @@ class HubServiceFactory implements FactoryInterface
         $pageService = $serviceLocator->get('Application\Service\PageServiceInterface');
         $revisionService = $serviceLocator->get('Application\Service\RevisionServiceInterface');
         $voteService = $serviceLocator->get('Application\Service\VoteServiceInterface');
+        $tagService = $serviceLocator->get('Application\Service\TagServiceInterface');
         $utilityService = $serviceLocator->get('Application\Service\UtilityServiceInterface');
-        return new HubService($siteService, $userService, $pageService, $revisionService, $voteService, $utilityService);
+        return new HubService($siteService, $userService, $pageService, $revisionService, $voteService, $tagService, $utilityService);
     }
 }

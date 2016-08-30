@@ -80,7 +80,7 @@ interface PageInterface
     public function getVotes();
     
     /**
-     * @return array[string]
+     * @return TagInterface[]
      */
     public function getTags();
     

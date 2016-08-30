@@ -9,7 +9,7 @@
 
 namespace Application\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
+ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Application\Service\HubServiceInterface;
@@ -68,24 +68,12 @@ class IndexController extends AbstractActionController
     }
     
     public function indexAction()
-    {                
+    {        
         $siteId = $this->services->getUtilityService()->getSiteId();
         $site = $this->services->getSiteService()->find($siteId);
         $result = array(
-            'site' => $site);/*,
-            'members' => $this->services->getUserService()->countSiteMembers($siteId),
-            'contributors' => $this->services->getUserService()->countSiteMembers($siteId, UserType::CONTRIBUTOR),
-            'posters' => $this->services->getUserService()->countSiteMembers($siteId, UserType::getTypeMask(false, true, true)),
-            'active' => $this->services->getUserService()->countSiteMembers($siteId, UserType::ANY, true),
-            'pages' => $this->services->getPageService()->countSitePages($siteId),
-            'originals' => $this->services->getPageService()->countSitePages($siteId, PageType::ORIGINAL),
-            'translations' => $this->services->getPageService()->countSitePages($siteId, PageType::TRANSLATION),
-            'rewrites' => $this->services->getPageService()->countSitePages($siteId, PageType::REWRITE),
-            'revisions' => $this->services->getRevisionService()->countSiteRevisions($siteId),
-            'votes' => $this->services->getVoteService()->countSiteVotes($siteId),
-            'positive' => $this->services->getVoteService()->countSiteVotes($siteId, VoteType::POSITIVE),
+            'site' => $site
         );
-        $result['negative'] = $result['votes']-$result['positive'];*/
         return new ViewModel($result);
     }
     

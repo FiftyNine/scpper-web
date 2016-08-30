@@ -7,6 +7,7 @@ use Application\Mapper\PageMapperInterface;
 use Application\Mapper\AuthorshipMapperInterface;
 use Application\Mapper\RevisionMapperInterface;
 use Application\Mapper\VoteMapperInterface;
+use Application\Mapper\TagMapperInterface;
 
 class Page implements PageInterface
 {
@@ -38,6 +39,12 @@ class Page implements PageInterface
      * @var \Application\Mapper\VoteMapperInterface
      */
     protected $voteMapper;    
+
+    /**
+     *
+     * @var \Application\Mapper\TagMapperInterface
+     */
+    protected $tagMapper;    
     
     /**
      *
@@ -181,18 +188,20 @@ class Page implements PageInterface
     
     /**
      * Constructor
-     * @param ЫшеуMapperInterface $siteMapper
+     * @param SiteMapperInterface $siteMapper
      * @param PageMapperInterface $pageMapper
      * @param AuthorshipMapperInterface $authorMapper
      * @param RevisionMapperInterface $revisionMapper
      * @param VoteMapperInterface $voteMapper
+     * @param TagMapperInterface $tagMapper
      */
     public function __construct(
             SiteMapperInterface $siteMapper,
             PageMapperInterface $pageMapper,
             AuthorshipMapperInterface $authorMapper, 
             RevisionMapperInterface $revisionMapper,
-            VoteMapperInterface $voteMapper
+            VoteMapperInterface $voteMapper,
+            TagMapperInterface $tagMapper
     ) 
     { 
         $this->siteMapper = $siteMapper;
@@ -200,6 +209,7 @@ class Page implements PageInterface
         $this->authorMapper = $authorMapper;
         $this->revisionMapper = $revisionMapper;
         $this->voteMapper = $voteMapper;
+        $this->tagMapper = $tagMapper;
     }
     
     /**
@@ -501,7 +511,11 @@ class Page implements PageInterface
     public function getTags()
     {
         if (!isset($this->tags)) {
-            $this->tags = $this->pageMapper->findPageTags($this->getId());
+            $this->tags = [];
+            $tags = $this->tagMapper->findPageTags($this->getId());
+            foreach ($tags as $tag) {
+                $this->tags[] = $tag->getTag();
+            }
         }
         return $this->tags;
     }

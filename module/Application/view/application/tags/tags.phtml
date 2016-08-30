@@ -1,0 +1,304 @@
+<?php 
+$this->headTitle('Tags');
+$this->headScript()->appendFile('/js/jquery-ui/jquery-ui.min.js');
+$this->headScript()->appendFile('/js/bootstrap-switch.js');
+$this->headLink()->prependStylesheet($this->basePath('css/jquery-ui.min.css'));
+$this->headScript()->captureStart(); 
+
+?>
+// Anonymous self-executing function not to clutter global scope with temporary stuff
+(function() {
+    var tagPrototype = {
+        tag: '',
+        include: true,
+        buildUI: function() {            
+            var newElement = $('#prototype-tag-element').clone(true);            
+            newElement.removeAttr('id');            
+            newElement.attr('data-tag', this.tag);            
+            newElement.attr('data-include', this.include?"1":"0");            
+            newElement.children('.search-tag-body').html(this.tag);            
+            newElement.appendTo('#search-tags');
+        },
+        getSearchString: function() {
+            var result='';
+            if (this.include)
+                result='+';
+            else
+                result='-';
+            result+=this.tag;
+            return result;
+        }
+    }
+    var searchTags = [];     
+    var tags = [
+        <?php 
+        $i=0;
+        foreach ($this->tags as $tag) {
+            if ($i > 0) {
+                echo ',';
+            }            
+            vprintf('{tag: "%s", count: "%d", label: "%s"}', [strtolower($tag->getTag()), $tag->getPageCount(), htmlspecialchars_decode(strtolower($tag->getTag()))]);
+            $i++;
+        }
+        ?>
+    ];
+ 
+    function findTagIndex(tag)
+    {
+        var i=0;
+        for (i=0; i<tags.length; i++) {
+            if (tags[i].tag === tag)
+              return i;
+        }
+        return -1;
+    }
+    
+    function addSearchTag(tag)
+    {
+        var include = true;
+        var i;
+        var tagObject = null;
+        if (tag[0] === '+')
+            tag=tag.substr(1)
+        else if (tag[0] === '-') {
+            include=false;
+            tag=tag.substr(1);
+        }
+        tag=tag.toLowerCase();
+        for (i=0; i<searchTags.length; i++)
+            if (searchTags[i].tag === tag)
+                return null;
+        if (findTagIndex(tag) < 0)
+            return null;
+        tagObject = jQuery.extend({}, tagPrototype);
+        tagObject.tag = tag;
+        tagObject.include = include;
+        tagObject.buildUI();
+        searchTags.push(tagObject);
+        return tagObject;
+    }
+
+    function switchSearchTag(tag)
+    {
+        var i=0;
+        for (i=0; i<searchTags.length; i++)
+            if (searchTags[i].tag === tag) {
+                searchTags[i].include=!searchTags[i].include;
+                break;
+            }    
+    }
+    
+    function deleteSearchTag(tag)
+    {
+        var i=0;
+        for (i=0; i<searchTags.length; i++)
+            if (searchTags[i].tag === tag) {
+                searchTags.splice(i, 1);
+                break;
+            }
+    }
+    
+    function autocompleteTag(request, response)
+    {
+        var prefix = '';
+        var filter = request.term;
+        var result = [];
+        var i = 0;
+        if (filter.length > 0 && (filter[0] == '+' || filter[0] == '-')) {
+            prefix=filter[0];
+            filter=filter.substr(1);
+        }
+        if (filter.length > 0) {        
+            for (i=0; i<tags.length; i++) {
+                if (tags[i].tag.startsWith(filter)) {
+                    result.push(prefix+tags[i].tag);
+                }
+            }
+        }
+        response(result);
+    }
+
+    function buildTagsString()
+    {
+        var i=0;
+        var result='';    
+        for (i=0; i<searchTags.length; i++) {
+            if (i > 0) 
+                result+=',';
+            result+=searchTags[i].getSearchString();
+        }
+        return result;
+    }
+    
+    function buildMethodString()
+    {
+        var method='and';        
+        var methodSwitch=$('#combine-with-and');
+        if (!methodSwitch.prop('checked')) {
+            method = 'or';
+        }
+        return method;
+    }
+    
+    function buildSearchString()
+    {
+        var i=0;
+        var result='?';
+        result+='method='+buildMethodString()+'&tags='+encodeURIComponent(buildTagsString());
+        return result;
+    }
+    
+    function processAutocompleteResponse(event, ui) 
+    {
+        var i=0;
+        var index=0;
+        var newLabel='';
+        for (i=0; i<ui.content.length; i++) {
+            newLabel=ui.content[i].label;
+            if (['+', '-'].indexOf(newLabel[0]) >= 0) {
+                newLabel = newLabel.substr(1);
+            }
+            index=findTagIndex(newLabel);
+            if (index >= 0) {
+                newLabel = tags[index].label+' ('+tags[index].count+')'
+            }
+            ui.content[i].label = newLabel;
+        }
+    }
+    
+    function renderAutocompleteItem (ul, item) 
+    {
+        return $( "<li>" )
+            .attr("data-value", item.value)
+            .append(item.label+'()')
+            .appendTo(ul);
+    }
+    
+    function addSelectedTag(event, ui) 
+    {
+        addSearchTag(ui.item.value);
+        ui.item.value='';
+        ui.item.label='';
+    }        
+    
+    function submit(event)
+    {
+        var paramString = '';
+        addSearchTag($("#tags").val());
+        paramString=buildSearchString();
+        location.href = location.protocol + '//' + location.host + location.pathname+paramString;
+    }    
+    
+    function tagKeyUp(event)
+    {
+        if ([13, 10, 32].indexOf(event.keyCode)>=0) {
+            tag = event.target.value.trim();
+            if (addSearchTag(tag))
+                $(".ui-menu-item").hide();            
+                event.target.value='';
+        }
+    }
+    
+    function deleteSearchTagClick(event)
+    {
+        var tag = '';
+        var parent = $(event.target.parentElement);
+        tag = parent.attr('data-tag');
+        parent.remove();
+        deleteSearchTag(tag);
+    }
+
+    function bodySearchTagClick(event)
+    {
+        var tag = '';
+        var include = 1;
+        var parent = $(event.target.parentElement);
+        tag = parent.attr('data-tag');
+        include = parent.attr('data-include');
+        parent.attr('data-include', include==="0"?"1":"0");
+        switchSearchTag(tag);
+    }   
+    
+    function initElements()
+    {
+        $('#combine-with-and').prop('checked', <?php echo $this->method==='and'?'true':'false'; ?>);
+        <?php foreach ($this->searchTags as $tag): ?>
+        addSearchTag('<?php echo $tag; ?>');
+        <?php endforeach; ?>
+    }
+    
+    function init()
+    {           
+        $('#tags').autocomplete({
+          source: autocompleteTag,
+          response: processAutocompleteResponse,
+          select: addSelectedTag,          
+        })
+        .on('keyup', tagKeyUp);
+        
+        $('#prototype-tag-element .search-tag-body').on('click', bodySearchTagClick);
+        $('#prototype-tag-element .search-tag-delete').on('click', deleteSearchTagClick);        
+        $('#button-go').on('click', submit);
+        initElements();        
+        $('#combine-with-and').bootstrapSwitch({
+            on: 'All', 
+            off: 'Any', 
+            same: true, 
+            size: 'xs',
+            offClass: 'primary'
+        });
+        scpper.tables.assignPaginatorEvents('#page-list', '/tags/pageList', {
+            siteId: <?php echo $this->siteId;?>,
+            method: buildMethodString(),
+            tags: buildTagsString()
+        });        
+    }
+    $(document).ready(init);
+
+}());
+
+<?php $this->headScript()->captureEnd(); ?>
+
+<div class="form-horizontal" style="width: 50%; margin-bottom: 15px">
+    <label for="tags">Tags</label>
+    <div class="input-group">        
+        <input type="text" class="form-control" id="tags" placeholder="Example: scp memetic -joke">        
+        <span class="input-group-btn">
+            <button type="submit" class="btn btn-default" id="button-go" aria-label="Go">
+              <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            </button>
+        </span>
+    </div>    
+    <div style="margin-top: 10px">
+        <div style="display: inline">
+            <input type="checkbox" id="combine-with-and">
+        </div>            
+        <a href="/tags" class="btn btn-default btn-xs" style="margin-right: 5px">Reset</a>
+        <div id="search-tags" style="display: inline"></div>          
+    </div>
+</div>
+
+<div class="table-container" id="page-list">
+<?php
+$table = $this->table;
+if ($table) {
+    echo $this->partial(
+        'partial/tables/table.phtml', 
+        array(
+            'table' => $table,
+            'data' => array(
+                'siteId' => $this->siteId,
+                
+            ),
+        )
+    );    
+}
+?>
+</div>
+
+<div hidden="1">
+<div id="prototype-tag-element" class="search-tag-container" data-tag="" data-include="1">
+<span class="search-tag search-tag-body" title="Include/exclude tag">memetic</span>
+<span class="search-tag search-tag-delete" title="Remove tag">&#x2716</span>
+</div>
+</div>

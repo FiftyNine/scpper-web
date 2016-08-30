@@ -265,6 +265,31 @@ return array(
                     ),
                 ),                                                
             ),            
+            'tags' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route'    => '/tags',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Tags',
+                        'action'     => 'tags',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/:action',
+                            'constraints' => array(                                
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\Tags',
+                            ),
+                        ),
+                    ),
+                ),                                
+            ), 
         ),
     ),
     'service_manager' => array(
@@ -280,6 +305,7 @@ return array(
             'Application\Service\RevisionServiceInterface' => 'Application\Factory\Service\RevisionServiceFactory',
             'Application\Service\VoteServiceInterface' => 'Application\Factory\Service\VoteServiceFactory',
             'Application\Service\UtilityServiceInterface' => 'Application\Factory\Service\UtilityServiceFactory',
+            'Application\Service\TagServiceInterface' => 'Application\Factory\Service\TagServiceFactory',
             'Application\Service\HubServiceInterface' => 'Application\Factory\Service\HubServiceFactory',
             'EventLogger' => 'Application\Factory\Service\FileEventLoggerFactory',            
             // Mappers
@@ -291,6 +317,7 @@ return array(
             'AuthorshipMapper' => 'Application\Factory\Mapper\AuthorshipDbSqlMapperFactory',
             'UserActivityMapper' => 'Application\Factory\Mapper\UserActivityDbSqlMapperFactory',
             'MembershipMapper' => 'Application\Factory\Mapper\MembershipDbSqlMapperFactory',
+            'TagMapper' => 'Application\Factory\Mapper\TagDbSqlMapperFactory',
             // Model object prototypes
             'SitePrototype' => 'Application\Factory\Prototype\SitePrototypeFactory',
             'UserPrototype' => 'Application\Factory\Prototype\UserPrototypeFactory',
@@ -349,6 +376,7 @@ return array(
             'Application\Controller\Votes' => 'Application\Factory\Controller\VotesControllerFactory',
             'Application\Controller\Page' => 'Application\Factory\Controller\PageControllerFactory',
             'Application\Controller\User' => 'Application\Factory\Controller\UserControllerFactory',
+            'Application\Controller\Tags' => 'Application\Factory\Controller\TagsControllerFactory',
         ),
     ),
     'view_manager' => array(
@@ -399,6 +427,10 @@ return array(
                 'label' => 'Votes',
                 'route' => 'votes',
             ),            
+            array(
+                'label' => 'Tags',
+                'route' => 'tags',
+            ),
             array(
                 'label' => 'Changes',
                 'route' => 'changes',

@@ -93,6 +93,55 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
     /**
      * {@inheritDoc}
      */
+    public function findPagesByTags($siteId, $includeTags, $excludeTags = [], $all = true, $order = null, $paginated = false)
+    {
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select(array('p' => DbViewPages::TABLE))
+                ->where(array(
+                    'p.'.DbViewPages::SITEID.' = ?' => $siteId,
+                    '(p.'.DbViewPages::KINDID.' IS NULL OR p.'.DbViewPages::KINDID.' <> '.PageKind::SERVICE.')'
+                ));
+        if (count($includeTags) > 0) {        
+            $includeString = vsprintf("'%s'", [implode("','", $includeTags)]);
+            $includeSubSelect = $sql->select(array('t' => DbViewTags::TABLE))
+                    ->columns(array(new Expression('COUNT(*)')))
+                    ->where(array(
+                        't.'.DbViewTags::PAGEID.' = p.'.DbViewPages::PAGEID,
+                        't.'.DbViewTags::TAG.' IN ('.$includeString.')',
+                    ));
+            $platform = $this->dbAdapter->getPlatform();
+            $query = $includeSubSelect->getSqlString($platform);                        
+            if ($all) {
+                $condition = vsprintf('(%s) = %d', [$query, count($includeTags)]);
+            } else {
+                $condition = vsprintf('(%s) >= 1', [$query]);
+            }
+            $select->where(array($condition));                        
+        }
+        if (count($excludeTags) > 0) {
+            $excludeString = vsprintf("'%s'", [implode("','", $excludeTags)]);
+            $excludeSubSelect = $sql->select(array('t' => DbViewTags::TABLE))                    
+                    ->columns(array(new Expression('NULL')))
+                    ->where(array(
+                        't.'.DbViewTags::PAGEID.' = p.'.DbViewPages::PAGEID,
+                        't.'.DbViewTags::TAG.' IN ('.$excludeString.')',
+                    ));
+            $platform = $this->dbAdapter->getPlatform();
+            $query = $excludeSubSelect->getSqlString($platform);                        
+            $select->where(array(vsprintf('NOT EXISTS(%s)', [$query])));                        
+        }       
+        if (is_array($order)) {
+            $this->orderSelect($select, $order);
+        }
+        if ($paginated) {
+            return $this->getPaginator($select);
+        }
+        return $this->fetchResultSet($sql, $select);        
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public function findTranslations($pageId)
     {
         $sql = new Sql($this->dbAdapter);
@@ -122,23 +171,6 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
             return $res[0]['Rank'];
         }
         return -1;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function findPageTags($pageId)
-    {
-        $sql = new Sql($this->dbAdapter);
-        $select = $sql->select(DbViewTags::TABLE)
-                ->columns(array(DbViewTags::TAG))
-                ->where(array(DbViewTags::PAGEID.' = ?' => $pageId));
-        $tags = $this->fetchArray($sql, $select);
-        $result = array();
-        foreach ($tags as $tag) {
-            $result[] = $tag[DbViewTags::TAG];
-        }
-        return $result;
     }
     
     /**

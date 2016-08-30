@@ -77,6 +77,14 @@ class PageService implements PageServiceInterface
     /**
      * {@inheritDoc}
      */
+    public function findPagesByTags($siteId, $includeTags, $excludeTags = [], $all = true, $order = null, $paginated = false)
+    {
+        return $this->mapper->findPagesByTags($siteId, $includeTags, $excludeTags, $all, $order, $paginated);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore)
     {
         return $this->mapper->getAggregatedValues($siteId, $aggregates, $createdAfter, $createdBefore);

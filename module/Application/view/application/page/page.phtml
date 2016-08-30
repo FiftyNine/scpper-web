@@ -171,7 +171,14 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
             <?php endif; ?>
             <br>
         <?php endif; ?>
-        <strong>Tags</strong>: <em><?php echo implode(', ', $page->getTags()); ?></em>
+        <strong>Tags</strong>: <em>
+            <?php 
+            $tags = $page->getTags();
+            for ($j=0; $j<count($tags); $j++):
+            ?>
+            <a href="/tags?tags=<?php echo urlencode($tags[$j]);?>" ><?php echo $this->escapeHtml($tags[$j]); ?></a><?php if ($j < count($tags)-1) {echo ',';}?>
+            <?php endfor; ?>
+        </em>
     </div>
     <div id="page-chart">
         <div class="chart-container" id="page-rating-chart">

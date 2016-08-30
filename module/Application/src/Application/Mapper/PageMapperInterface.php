@@ -37,6 +37,18 @@ interface PageMapperInterface extends SimpleMapperInterface
     public function findPagesByUser($userId, $siteId, $order = null, $paginated = false);
     
     /**
+     * Find all pages on the site by the list of tags
+     * @param int $siteId
+     * @param array(string) $includeTags Tags, page should have
+     * @param array(string) $excludeTags Tags, page should NOT have
+     * @param bool $all Page must contain all tags
+     * @param array(string => int) $order Associative array of field names and sorting orders (constants from \Application\Utils\Order)
+     * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
+     * @return PageInterface[]
+     */
+    public function findPagesByTags($siteId, $includeTags, $excludeTags = [], $all = true, $order = null, $paginated = false);
+    
+    /**
      * Find translation of a page from other wikis
      * @param int $pageId
      * @return PageInterface[]
@@ -48,14 +60,7 @@ interface PageMapperInterface extends SimpleMapperInterface
      * @param int pageId
      * @return int
      */
-    public function findPageRank($pageId);
-    
-    /**
-     * Find page tags
-     * @param $pageId
-     * @return string[]
-     */
-    public function findPageTags($pageId);
+    public function findPageRank($pageId);    
     
     /**
      * Get an aggregated results from pages

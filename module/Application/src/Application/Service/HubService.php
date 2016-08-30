@@ -13,6 +13,7 @@ use Application\Service\UserServiceInterface;
 use Application\Service\PageServiceInterface;
 use Application\Service\RevisionServiceInterface;
 use Application\Service\VoteServiceInterface;
+use Application\Service\TagServiceInterface;
 use Application\Service\UtilityServiceInterface;
 
 /**
@@ -51,6 +52,12 @@ class HubService implements HubServiceInterface
      * @var VoteServiceInterface
      */
     protected $voteService;    
+
+    /**
+     *
+     * @var TagServiceInterface
+     */
+    protected $tagService;    
     
     /**
      *
@@ -64,6 +71,7 @@ class HubService implements HubServiceInterface
             PageServiceInterface $pageService,
             RevisionServiceInterface $revisionService,
             VoteServiceInterface $voteService,
+            TagServiceInterface $tagService,
             UtilityServiceInterface $utilityService
     ) 
     {
@@ -72,6 +80,7 @@ class HubService implements HubServiceInterface
         $this->pageService = $pageService;
         $this->revisionService = $revisionService;
         $this->voteService = $voteService;
+        $this->tagService = $tagService;
         $this->utilityService = $utilityService;        
     }
     
@@ -113,6 +122,14 @@ class HubService implements HubServiceInterface
     public function getVoteService()
     {
         return $this->voteService;
+    }
+
+    /**
+     * @return TagServiceInterface
+     */    
+    public function getTagService()
+    {
+        return $this->tagService;
     }
     
     /**

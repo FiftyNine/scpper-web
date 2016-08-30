@@ -46,6 +46,12 @@ interface HubServiceInterface
      * @return VoteServiceInterface
      */    
     public function getVoteService();
+
+    /**
+     * @return TagServiceInterface
+     */    
+    public function getTagService();
+
     
     /**
      * @return UtilityServiceInterface

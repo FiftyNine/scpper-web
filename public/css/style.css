@@ -166,6 +166,19 @@ img.rating-image {
     float: left;
 }
 
+.ui-autocomplete {
+  max-height: 200px;
+  overflow-y: auto;
+  /* prevent horizontal scrollbar */
+  overflow-x: hidden;
+}
+/* IE 6 doesn't support max-height
+ * we use height instead, but this forces the menu to always be this tall
+ */
+* html .ui-autocomplete {
+  height: 100px;
+}
+
 /* Index */
 
 div.tiles {
@@ -342,6 +355,42 @@ p.favorites-hidden {
 
 div#favorites-button {
     margin-top: 20px;
+}
+
+/** Tags **/
+
+div.search-tag-container {
+    vertical-align: middle;
+    display: inline;
+    margin-right: 10px;
+    border-radius: 3px;
+    padding: 2px;
+}
+
+div.search-tag-container[data-include="1"] {
+    background-color: #99cb84;
+}
+
+div.search-tag-container[data-include="0"] {
+    background-color: #e4b9b9;
+}
+
+span.search-tag {    
+    cursor: pointer; 
+    display: inline;     
+}
+
+span.search-tag-status {
+    padding-left: 3px;
+}
+
+span.search-tag-body {
+    padding-left: 5px; 
+    padding-right: 5px;
+}
+
+span.search-tag-delete {
+    padding-right: 3px
 }
 
 /** About **/
