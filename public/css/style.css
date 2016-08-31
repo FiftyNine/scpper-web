@@ -393,6 +393,28 @@ span.search-tag-delete {
     padding-right: 3px
 }
 
+div.tags-search-form {
+    width: 50%; 
+    min-width: 550px;
+    margin-bottom: 15px;
+}
+
+div.tags-search-options {
+    margin-top: 10px;
+}
+
+div.tags-combine-method {
+    display: inline;
+}
+
+.tags-search-reset {
+    margin-right: 5px;
+}
+
+div#search-tags {
+    display: inline;
+}
+
 /** About **/
 
 #faq > dd {

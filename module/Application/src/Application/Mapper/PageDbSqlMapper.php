@@ -99,7 +99,7 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
         $select = $sql->select(array('p' => DbViewPages::TABLE))
                 ->where(array(
                     'p.'.DbViewPages::SITEID.' = ?' => $siteId,
-                    '(p.'.DbViewPages::KINDID.' IS NULL OR p.'.DbViewPages::KINDID.' <> '.PageKind::SERVICE.')'
+                    //'(p.'.DbViewPages::KINDID.' IS NULL OR p.'.DbViewPages::KINDID.' <> '.PageKind::SERVICE.')'
                 ));
         if (count($includeTags) > 0) {        
             $includeString = vsprintf("'%s'", [implode("','", $includeTags)]);

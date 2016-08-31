@@ -45,7 +45,7 @@
             <ol class="favorites-list">
                 <?php foreach ($this->tags as $tag): ?>
                 <li>
-                    <?php echo $tag['tag'];?>
+                    <a href="/tags?tags=<?php echo urlencode($tag['tag']);?>" ><?php echo $this->escapeHtml($tag['tag']); ?></a>
                      with 
                      <strong>
                     <?php
