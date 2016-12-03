@@ -157,8 +157,28 @@ class PaginatedTableFactory
         );
         return $table;        
     }
-    
+
     static public function createVotesTable($paginator)
+    {
+        $table = new \Application\Component\PaginatedTable\Table(
+            array(
+                new Column('#', '', true, '', Column::INDEX),
+                new Column('User', DbViewVotes::USERDISPLAYNAME, true, '', Column::USERS),                
+                new Column('Page', DbViewVotes::PAGETITLE, true, '', Column::PAGE),                
+                new Column('Vote', DbViewVotes::VALUE, false),
+                new Column('Member', DbViewVotes::FROMMEMBER, false, 'Vote from a member of the wiki'),
+                new Column('Contributor', DbViewVotes::FROMCONTRIBUTOR, false, 'Vote from a member who authored at least one successful page'),
+                new Column('Active', DbViewVotes::FROMACTIVE, false, 'Vote from an active member of the wiki'),
+                new Column('Date', DbViewVotes::DATETIME, false, 'Not the exact time but rather upper estimate', Column::DATE),
+            ),
+            $paginator,
+            'partial/tables/votes.phtml', 
+            false
+        );
+        return $table;        
+    }
+    
+    static public function createPageVotesTable($paginator)
     {
         $table = new \Application\Component\PaginatedTable\Table(
             array(
@@ -171,11 +191,11 @@ class PaginatedTableFactory
                 new Column('Date', DbViewVotes::DATETIME, false, 'Not the exact time but rather upper estimate', Column::DATE),
             ),
             $paginator,
-            'partial/tables/votes.phtml', 
+            'partial/tables/pageVotes.phtml', 
             false
         );
         return $table;        
-    }    
+    }
     
     static public function createUserVotesTable($paginator)
     {

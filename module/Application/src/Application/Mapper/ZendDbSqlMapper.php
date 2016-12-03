@@ -237,7 +237,7 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
      * @param Select $select
      * @return \Zend\Paginator\Paginator
      */
-    protected function getPaginator(Select $select, $asArray = false, HydratorInterface $hydrator = null, $prototype = null)
+    protected function getPaginator(Select $select, $asArray = false, HydratorInterface $hydrator = null, $prototype = null, $simpleCount = false)
     {
         $this->logQuery($select);
         $resultSet = null;        
@@ -249,8 +249,17 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
                 $prototype = $this->objectPrototype;
             }            
             $resultSet = new \Zend\Db\ResultSet\HydratingResultSet($hydrator, $prototype);
-        }        
-        $adapter = new \Zend\Paginator\Adapter\DbSelect($select, $this->dbAdapter, $resultSet);
+        }
+        $countSelect = NULL;        
+        if ($simpleCount) {
+            $countSelect = clone $select;
+            $countSelect->reset(Select::LIMIT);
+            $countSelect->reset(Select::OFFSET);
+            $countSelect->reset(Select::ORDER);                    
+            $aggregate = new \Application\Utils\Aggregate('*', \Application\Utils\Aggregate::COUNT, \Zend\Paginator\Adapter\DbSelect::ROW_COUNT_COLUMN_NAME);
+            $this->aggregateSelect($countSelect, array($aggregate));               
+        }
+        $adapter = new \Zend\Paginator\Adapter\DbSelect($select, $this->dbAdapter, $resultSet, $countSelect);
         $paginator = new \Zend\Paginator\Paginator($adapter);
         return $paginator;        
     }

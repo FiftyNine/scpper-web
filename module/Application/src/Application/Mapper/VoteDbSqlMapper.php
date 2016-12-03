@@ -43,6 +43,22 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
     /**
      * {@inheritDoc}
      */
+    public function findSiteVotes($siteId, $order = null, $paginated = false)
+    {
+        $sql = new Sql($this->dbAdapter);
+        $select = $this->buildVoteSelect($sql, array(DbViewVotes::SITEID.' = ?' => $siteId));
+        if (is_array($order)) {
+            $this->orderSelect($select, $order);
+        }        
+        if ($paginated) {         
+            return $this->getPaginator($select, false, null, null, true);
+        }        
+        return $this->fetchResultSet($sql, $select);      
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public function findVotesOnPage($pageId, $order = null, $paginated = false)
     {
         $sql = new Sql($this->dbAdapter);

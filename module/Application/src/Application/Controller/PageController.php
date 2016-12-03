@@ -61,7 +61,7 @@ class PageController extends AbstractActionController
     protected function getVotesTable($pageId, $orderBy, $order, $page, $perPage)
     {
         $votes = $this->services->getVoteService()->findVotesOnPage($pageId, array($orderBy => $order), true, $page, $perPage);
-        $table = PaginatedTableFactory::createVotesTable($votes);
+        $table = PaginatedTableFactory::createPageVotesTable($votes);
         $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);
         return $table;
     }

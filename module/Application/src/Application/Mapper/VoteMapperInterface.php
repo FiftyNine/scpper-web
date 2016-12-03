@@ -14,6 +14,15 @@ interface VoteMapperInterface extends SimpleMapperInterface
      * @return int
      */
     public function countSiteVotes($siteId, $type = VoteType::ANY, \DateTime $castAfter = null, \DateTime $castBefore = null);
+
+    /**
+     * Return votes for a certain site
+     * @param int $siteId
+     * @param array[string]int
+     * @param bool $paginated
+     * @return Zend\Paginator\Paginator|VoteInterface[]
+     */
+    public function findSiteVotes($siteId, $order = null, $paginated = false);
     
     /**
      * Return votes for a certain page

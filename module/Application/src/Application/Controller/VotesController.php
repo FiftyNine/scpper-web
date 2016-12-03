@@ -56,6 +56,23 @@ class VotesController extends AbstractActionController
         $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);        
         return $table;
     }
+
+    /**
+     * 
+     * @param int $siteId
+     * @param string $orderBy
+     * @param int $order
+     * @param int $page
+     * @param int $perPage
+     * @return Application\Component\TableInterface
+     */
+    protected function getVotesTable($siteId, $orderBy, $order, $page, $perPage)
+    {
+        $votes = $this->services->getVoteService()->findSiteVotes($siteId, array($orderBy => $order), true, $page, $perPage);
+        $table = PaginatedTableFactory::createVotesTable($votes);
+        $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);        
+        return $table;
+    }
     
     public function __construct(HubServiceInterface $services) 
     {
@@ -67,9 +84,11 @@ class VotesController extends AbstractActionController
         $siteId = $this->services->getUtilityService()->getSiteId();
         $site = $this->services->getSiteService()->find($siteId);
         $voters = $this->getVotersTable($siteId, 'Votes', Order::DESCENDING, 1, 10);
+        $votes = $this->getVotesTable($siteId, DbViewVotes::DATETIME, Order::DESCENDING, 1, 10);
         $result = array(
             'site' => $site,
-            'table' => $voters,
+            'votersTable' => $voters,
+            'votesTable' => $votes
         );
         return new ViewModel($result);
     }  
@@ -88,6 +107,35 @@ class VotesController extends AbstractActionController
             $order = Order::DESCENDING;
         }
         $table = $this->getVotersTable($siteId, $orderBy, $order, $page, $perPage);
+        $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
+        if ($renderer) {
+            $result['success'] = true;                
+            $result['content'] = $renderer(
+                'partial/tables/table.phtml', 
+                array(
+                    'table' => $table,
+                    'data' => array(
+                    )
+                )
+            );
+        }
+        return new JsonModel($result);        
+    }
+    
+    public function voteListAction()
+    {
+        $result = array('success' => false);
+        $siteId = (int)$this->params()->fromQuery('siteId', $this->services->getUtilityService()->getSiteId());
+        $page = (int)$this->params()->fromQuery('page', 1);
+        $perPage = (int)$this->params()->fromQuery('perPage', 10);
+        $orderBy = $this->params()->fromQuery('orderBy', DbViewVotes::DATETIME);
+        $order = $this->params()->fromQuery('ascending', false);
+        if ($order) {
+            $order = Order::ASCENDING;
+        } else {
+            $order = Order::DESCENDING;
+        }
+        $table = $this->getVotesTable($siteId, $orderBy, $order, $page, $perPage);
         $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
         if ($renderer) {
             $result['success'] = true;                

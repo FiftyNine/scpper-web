@@ -7,6 +7,7 @@
     function init()
     {
         scpper.tables.assignPaginatorEvents('#voter-list', '/votes/voterList', {siteId: <?php echo $this->site->getId();?>});
+        scpper.tables.assignPaginatorEvents('#vote-list', '/votes/voteList', {siteId: <?php echo $this->site->getId();?>});
     }
 
     $(document).ready(init);
@@ -18,18 +19,33 @@
     <?php echo $this->partial('partial/site.phtml', array('site' => $this->site, 'link' => true));?>   
 </span>
 <p class="small-text">Updated <?php echo $this->site->getLastUpdate()->format('Y-m-d H:i'); ?></p>
-<h3>Voters (<?php echo $this->table->getPaginator()->getTotalItemCount();?> total)</h3>
+<h3>Voters (<?php echo $this->votersTable->getPaginator()->getTotalItemCount();?> total)</h3>
 <div class="table-container" id="voter-list">
 <?php
-$table = $this->table;
 
 echo $this->partial(
     'partial/tables/table.phtml', 
     array(
-        'table' => $table,
+        'table' => $this->votersTable,
         'data' => array(
         )
     )
-);    
+);
+?>
+</div>
+
+<h3>Votes (<?php echo $this->votesTable->getPaginator()->getTotalItemCount();?> total)</h3>
+<div class="table-container" id="vote-list">
+<?php
+
+echo $this->partial(
+    'partial/tables/table.phtml', 
+    array(
+        'table' => $this->votesTable,
+        'data' => array(
+        )
+    )
+);
+
 ?>
 </div>
