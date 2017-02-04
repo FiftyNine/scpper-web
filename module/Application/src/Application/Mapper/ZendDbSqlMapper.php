@@ -8,6 +8,7 @@ use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Select;
 use Zend\Db\Adapter\Driver\ResultInterface;
 use Zend\Db\ResultSet\HydratingResultSet;
+use Zend\Db\Sql\Expression;
 use Zend\EventManager\EventManagerAwareInterface;
 use Application\Utils\Order;
 
@@ -225,7 +226,7 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
     {
         $newOrder = array(); // We run this place now
         foreach ($order as $name => $type) {
-            $newOrder[] = $name.' '.Order::getTypeSql($type);
+            $newOrder[] = new Expression($name.' '.Order::getTypeSql($type));
         }
         $select->order($newOrder);
         return $select;
@@ -313,11 +314,15 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
      * 
      * {@inheritDoc}
      */
-    public function findAll($conditions = null, $paginated = false) {
+    public function findAll($conditions = null, $order = null, $paginated = false)
+    {
         $sql = new Sql($this->dbAdapter);        
         $select = $sql->select($this->table);
         if (is_array($conditions)) {
             $select->where($conditions);
+        }
+        if (is_array($order)) {
+            $select = $this->orderSelect($select, $order);
         }
         if ($paginated) {
             $result = $this->getPaginator($select);

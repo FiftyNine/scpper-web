@@ -10,6 +10,7 @@ use Application\Utils\QueryAggregateInterface;
 use Application\Utils\DbConsts\DbViewUserActivity;
 use Application\Utils\DbConsts\DbViewPages;
 use Application\Utils\DbConsts\DbViewUsers;
+use Application\Utils\Order;
 use Application\Utils\UserType;
 use Application\Mapper\PageMapperInterface;
 
@@ -88,18 +89,24 @@ class UserService implements UserServiceInterface
      */
     public function findAll($conditions = null, $paginated = false)
     {
-        return $this->userMapper->findAll($conditions, $paginated);
+        return $this->userMapper->findAll($conditions, null, $paginated);
     }
     
     /**
      * {@inheritDoc}
      */
-    public function findByName($mask)
+    public function findByName($mask, $order = null, $paginated = false)
     {
-        $mask = mb_strtolower($mask);
-        $needle = sprintf('%%%s%%', $mask);            
-        $conditions = array(sprintf("LOWER(%s) LIKE ?", DbViewUsers::DISPLAYNAME) => $needle);
-        return $this->userMapper->findAll($conditions);        
+        $needle = sprintf('%%%s%%', mb_strtolower($mask));            
+        $conditions = array(
+            sprintf("LOWER(%s) LIKE ?", DbViewUsers::DISPLAYNAME) => $needle,
+            // sprintf("%s in (?)", DbViewPages::SITEID) => implode($sites, ',')
+        );
+        if ($order === null) {
+            $len = strlen($mask);
+            $order = [sprintf("ABS(LENGTH(%s) - $len)", DbViewUsers::DISPLAYNAME) => Order::ASCENDING];
+        }
+        return $this->userMapper->findAll($conditions, $order, $paginated);
     }
     
     /**
@@ -147,6 +154,14 @@ class UserService implements UserServiceInterface
     public function findUsersOfSite($siteId, $order = null, $paginated = false)
     {
         return $this->userMapper->findUsersOfSite($siteId, $order, $paginated);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findUsersOfSiteByName($siteId, $name, $order = null, $paginated = false)
+    {
+        return $this->userMapper->findUsersOfSiteByName($siteId, $name, $order, $paginated);
     }
     
     /**

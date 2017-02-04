@@ -1,33 +1,47 @@
 <?php 
-    $i=1;
-    foreach ($this->rows as $page): 
-?>
-<tr>
-    <td><?php echo $this->rows->getAbsoluteItemNumber($i); $i++; ?></td>
-    <td>
-        <?php echo $this->partial('partial/page.phtml', array('page' => $page)); ?>
-    </td>
-    <td><?php echo $page->getCleanRating(); ?></td>
-    <td><?php echo $page->getContributorRating(); ?></td>
-    <td><?php echo $page->getAdjustedRating(); ?></td>
-    <td><?php echo number_format($page->getWilsonScore()*100, 2).'%'; ?></td>    
-    <td><?php echo \Application\Utils\PageStatus::getDescription($page->getStatus()); ?></td>
-    <td><?php echo \Application\Utils\PageKind::getDescription($page->getKind()); ?></td>
-    <td><?php echo $page->getCreationDate()->format('Y-m-d'); ?></td>
-    <td>
-        <?php 
-            $authors = $page->getAuthors();
-            $one = 1 === count($authors);
-        ?>
-        <?php foreach ($authors as $author): ?>
-            <?php echo $this->partial('partial/user.phtml', array('user' => $author->getUser())); ?>
-            <?php 
-                if (!$one || $author->getRole() !== \Application\Utils\AuthorRole::AUTHOR) {
-                    printf("&nbsp;(%s)", \Application\Utils\AuthorRole::getDescription($author->getRole()));
-                }
-            ?>
-            <br>
-        <?php endforeach; ?>
-    </td>
-</tr>
-<?php endforeach; ?>
+$row = $this->row;
+switch($this->column->getName()) {
+    case '#':
+        echo $this->index;
+        break;
+    case 'Branch':
+        echo strtoupper($row->getSite()->getShortName());
+        break;
+    case 'Page':
+        echo $this->partial('partial/page.phtml', array('page' => $row));
+        break;
+    case 'Total':
+        echo $row->getCleanRating();
+        break;
+    case 'Contributor':
+        echo $row->getContributorRating();
+        break;
+    case 'Adjusted':
+        echo $row->getAdjustedRating();
+        break;
+    case 'Wilson':
+        echo number_format($row->getWilsonScore()*100, 2).'%';
+        break;
+    case 'Status':
+        echo \Application\Utils\PageStatus::getDescription($row->getStatus());
+        break;
+    case 'Kind':
+        echo \Application\Utils\PageKind::getDescription($row->getKind());
+        break;
+    case 'Posted':
+        echo $row->getCreationDate()->format('Y-m-d');
+        break;
+    case 'Authors':
+        $authors = $row->getAuthors();
+        $one = 1 === count($authors);
+        foreach ($authors as $author) {
+            echo $this->partial('partial/user.phtml', array('user' => $author->getUser()));
+            if (!$one || $author->getRole() !== \Application\Utils\AuthorRole::AUTHOR) {
+                printf("&nbsp;(%s)", \Application\Utils\AuthorRole::getDescription($author->getRole()));
+            }
+            echo "<br>";
+        }
+        break;
+    default:;    
+}
+?> 

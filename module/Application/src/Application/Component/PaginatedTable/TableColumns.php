@@ -25,6 +25,15 @@ class TableColumns extends ColumnList
      */
     protected $ascending;
 
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getIterator()
+    {
+        return new \RecursiveIteratorIterator(parent::getIterator());
+    }
+    
     /**
      * Column used to order rows in the table
      * @return \Application\Component\PaginatedTable\Column
@@ -45,15 +54,23 @@ class TableColumns extends ColumnList
     
     /**
      * Set new ordering rule
-     * @param string $name Name of the column to order rows by
+     * @param string $orderName Column->getOrderName() to order rows by
      * @param bool $ascending
      */
-    public function setOrder($name, $ascending = true)
+    public function setOrder($orderName, $ascending = true)
     {
-        $column = $this->findColumn($name);
-        if ($column && $column->canOrder()) {
-            $this->orderBy = $column;
-            $this->ascending = (bool)$ascending;            
+        if (!is_string($orderName)) {
+            return;
+        }
+        $orderName = strtoupper($orderName);
+        foreach ($this->getIterator() as $col) {
+            if (strtoupper($col->getOrderName()) === $orderName) {
+                if ($col->canOrder()) {
+                    $this->orderBy = $col;
+                    $this->ascending = (bool)$ascending;            
+                }                
+                return;
+            }
         }
     }    
 }

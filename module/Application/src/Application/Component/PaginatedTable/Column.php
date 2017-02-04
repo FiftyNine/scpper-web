@@ -53,6 +53,12 @@ class Column
     protected $kind;
     
     /**
+     *
+     * @var bool
+     */
+    protected $hidden;
+    
+    /**
      * 
      * @var \Application\Component\PaginatedTable\ColumnList
      */
@@ -66,7 +72,7 @@ class Column
      * @param int $kind
      * @param mixed $columns Associative array of column names => descriptions or array of Column objects
      */    
-    public function __construct($name, $orderName = '', $defaultAsc = true, $tooltip = '', $kind = self::OTHER, $subColumns = [])
+    public function __construct($name, $orderName = '', $defaultAsc = true, $tooltip = '', $kind = self::OTHER, $subColumns = [], $hidden = false)
     {
         if (is_string($name)) {
             $this->name = $name;
@@ -79,6 +85,7 @@ class Column
         $this->defaultAscending = $defaultAsc;
         $this->tooltip = $tooltip;
         $this->kind = $kind;
+        $this->hidden = $hidden;
         $this->subColumns = new ColumnList($subColumns);
     }
     
@@ -135,6 +142,24 @@ class Column
     {
         return $this->kind;
     }  
+
+    /**
+     * Hidden
+     * @return bool
+     */
+    public function getHidden()
+    {
+        return $this->hidden;
+    }
+
+    /**
+     * Hidden
+     * @return bool
+     */
+    public function setHidden($value)
+    {
+        $this->hidden = $value;
+    }
     
     /**
      * SubColumns of this column

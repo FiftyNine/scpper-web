@@ -44,7 +44,7 @@ class UsersController extends AbstractActionController
         $users = $this->services->getUserService()->findUsersOfSite($siteId, array($orderBy => $order), true);
         $users->setItemCountPerPage($perPage);
         $users->setCurrentPageNumber($page);
-        $table = \Application\Factory\Component\PaginatedTableFactory::createUsersTable($users);
+        $table = \Application\Factory\Component\PaginatedTableFactory::createSiteUsersTable($users);
         $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);        
         return $table;
     }

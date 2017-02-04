@@ -23,21 +23,10 @@ class SiteDbSqlMapper extends ZendDbSqlMapper implements SiteMapperInterface
      * 
      * {@inheritDoc}
      */
-    public function findAll($conditions = null, $paginated = false) {
-        $sql = new Sql($this->dbAdapter);        
-        $select = $sql->select($this->table);
-        if (is_array($conditions)) {
-            $select->where($conditions);
-        }
-        $select->order(sprintf('%s %s', DbViewSites::SITEID, Select::ORDER_ASCENDING));
-        if ($paginated) {
-            $result = $this->getPaginator($select);
-        } else {
-            $result = $this->fetchResultSet($sql, $select);
-        }
-        if (!$result) {
-            $result = array();
-        }                    
-        return $result;
+    public function findAll($conditions = null, $order = null, $paginated = false) {
+        if (!$order) {
+            $order = array(DbViewSites::SITEID => Select::ORDER_ASCENDING);
+        }        
+        return parent::findAll($conditions, $order, $paginated);
     }
 }

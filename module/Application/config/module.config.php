@@ -22,16 +22,6 @@ return array(
                     ),
                 ),
             ),
-            'search' => array(
-                'type' => 'Literal',
-                'options' => array(
-                    'route'    => '/search',
-                    'defaults' => array(
-                        'controller' => 'Application\Controller\Index',
-                        'action'     => 'search',
-                    ),
-                ),
-            ),
             'about' => array(
                 'type' => 'Literal',
                 'options' => array(
@@ -71,6 +61,31 @@ return array(
                         'action' => 'extensionPageInfo',
                     )
                 )            
+            ),
+            'search' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route'    => '/search',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Search',
+                        'action'     => 'search',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/:action',
+                            'constraints' => array(                                
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\Search',
+                            ),
+                        ),
+                    ),
+                ),                                
             ),            
             'changes' => array(
                 'type' => 'Literal',
@@ -369,6 +384,7 @@ return array(
     'controllers' => array(
         'factories' => array(
             'Application\Controller\Index' => 'Application\Factory\Controller\IndexControllerFactory',
+            'Application\Controller\Search' => 'Application\Factory\Controller\SearchControllerFactory',
             'Application\Controller\Changes' => 'Application\Factory\Controller\ChangesControllerFactory',
             'Application\Controller\Users' => 'Application\Factory\Controller\UsersControllerFactory',
             'Application\Controller\Pages' => 'Application\Factory\Controller\PagesControllerFactory',

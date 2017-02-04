@@ -26,9 +26,12 @@ interface PageServiceInterface
     /**
      * Return pages with title or name matching the string
      * @param string $mask
-     * @return PageInterface[]
+     * @param int[] $sites Site Ids within which search for pages
+     * @param array(string => int) $order Associative array of field names and sorting orders (constants from \Application\Utils\Order)
+     * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
+     * @return \Zend\Paginator\Paginator|PageInterface[]
      */
-    public function findByName($mask);
+    public function findByName($mask, $sites, $order = null, $paginated = false);
     
     /**
      * Returns number of site pages

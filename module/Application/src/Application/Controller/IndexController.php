@@ -9,15 +9,12 @@
 
 namespace Application\Controller;
 
- use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Application\Service\HubServiceInterface;
 use Application\Utils\PageStatus;
-use Application\Utils\UserType;
-use Application\Utils\VoteType;
 use Application\Utils\AuthorRole;
-use Application\Form\SearchForm;
 
 class IndexController extends AbstractActionController
 {
@@ -26,7 +23,7 @@ class IndexController extends AbstractActionController
      * @var HubServiceInterface 
      */
     protected $services;
-    
+        
     private function fillExtensionAuthorsInfo($authors, &$info)
     {
         foreach ($authors as $author) {
@@ -76,26 +73,7 @@ class IndexController extends AbstractActionController
         );
         return new ViewModel($result);
     }
-    
-    public function searchAction()
-    {        
-        $request = $this->getRequest();
-        $form = $this->services->getUtilityService()->getSearchForm();
-        $result = array('form' => $form);
-        if ($request->isPost()) {
-            $form->setData($request->getPost());
-            if ($form->isValid()) {
-                $text = $form->get(SearchForm::TEXT_FIELD_NAME)->getValue();
-                $text = trim($text);
-                if (mb_strlen($text) >= 3) {
-                    $result['pages'] = $this->services->getPageService()->findByName($text);
-                    $result['users'] = $this->services->getUserService()->findByName($text);
-                }
-            }
-        }        
-        return new ViewModel($result);
-    }
-        
+            
     public function selectSiteAction()
     {
         $request = $this->getRequest();

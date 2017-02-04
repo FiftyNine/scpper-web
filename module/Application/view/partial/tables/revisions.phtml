@@ -1,12 +1,18 @@
-<?php foreach ($this->rows as $rev): ?>
-<?php $user = $rev->getUser(); ?>
-<tr>
-    <td><?php echo $rev->getIndex()+1; ?></td>
-    <td>
-        <?php echo $this->partial('partial/user.phtml', array('user' => $user)); ?>
-    </td>
-    <td><?php echo $this->escapeHtml($rev->getComments()); ?></td>
-    <td><?php echo $rev->getDateTime()->format('Y-m-d H:i'); ?></td>
-</tr>
-<?php endforeach; ?>
-
+<?php 
+$row = $this->row;
+switch($this->column->getName()) {
+    case '#':
+        echo $this->index;
+        break;
+    case 'User':
+        echo $this->partial('partial/user.phtml', array('user' => $row->getUser()));
+        break;
+    case 'Comment':
+        echo $this->escapeHtml($row->getComments());
+        break;
+    case 'Time':
+        echo $row->getDateTime()->format('Y-m-d H:i');
+        break;
+    default:;    
+}
+?>

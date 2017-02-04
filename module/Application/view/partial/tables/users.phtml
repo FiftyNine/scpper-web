@@ -1,26 +1,19 @@
 <?php 
-    $i=1;
-    $siteId = $this->data['siteId']; 
+$row = $this->row;
+switch($this->column->getName()) {
+    case '#':
+        echo $this->index;
+        break;
+    case 'User':
+        echo $this->partial('partial/user.phtml', array('user' => $row));
+        break;
+    case 'Membership':
+        $res = [];
+        foreach ($row->getMemberships() as $membership) {
+            $res[] = strtoupper($membership->getSite()->getShortName());
+        }
+        echo implode(', ', $res);
+        break;
+    default:;    
+}
 ?>
-<?php foreach ($this->rows as $user): ?>
-<tr>
-    <td><?php echo $this->rows->getAbsoluteItemNumber($i); $i++; ?></td>
-    <td>
-        <?php echo $this->partial('partial/user.phtml', array('user' => $user)); ?>
-    </td>
-    <td><?php echo $user->getActivityOnSite($siteId)->getVoteCount(); ?></td>
-    <td><?php echo $user->getActivityOnSite($siteId)->getRevisionCount(); ?></td>
-    <td><?php echo $user->getActivityOnSite($siteId)->getAuthorshipCount(); ?></td>
-    <td><?php if ($user->getActivityOnSite($siteId)->isActive()) {echo '&check;';} ?></td>    
-    <td>
-        <?php   
-            $member = $user->getMembershipOfSite($siteId);            
-            if ($member != null) {
-                echo $member->getJoinDate()->format('Y-m-d'); 
-            } else {
-                echo '&cross;';
-            }
-        ?>        
-    </td>
-</tr>
-<?php endforeach; ?>

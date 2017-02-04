@@ -20,6 +20,7 @@
     <?php $levelCols = $colArray[$level]; ?>
     <tr>
         <?php foreach ($levelCols as $col): ?>
+        <?php if (!$col->getHidden()): ?>
         <th 
             <?php 
             $thisOrder = $col->canOrder() && ($cols->getOrderBy() === $col);
@@ -88,18 +89,37 @@
             <?php if ($col->getTooltip()): ?>
             </abbr>
             <?php endif; ?>                            
-        </th>           
+        </th>  
+        <?php endif; ?>
         <?php endforeach;?>
     </tr>
     <?php endfor; ?>
     <?php 
-        echo $this->partial(
-            $table->getBodyView(), 
-            array(
-                'rows' => $table->getPaginator(),
-                'data' => $this->data
-            )
-        ); 
+    $i=1;
+    foreach ($table->getPaginator() as $row): 
+    ?>
+    <tr>
+        <?php foreach ($table->getColumns() as $col): ?>
+            <?php if (!$col->getHidden()): ?>
+            <td>
+                <?php
+                    echo $this->partial(
+                        $table->getBodyView(), 
+                        array(
+                            'index' => $i,
+                            'column' => $col,
+                            'row' => $row,                            
+                            'data' => $this->data
+                        )
+                    );                 
+                ?>
+            </td>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </tr>
+    <?php
+      $i++;
+      endforeach;
     ?>
 </table>
 <?php 

@@ -1,22 +1,29 @@
 <?php 
-    $i=1;
-    foreach ($this->rows as $member): 
-?>
-<tr>
-    <td><?php echo $this->rows->getAbsoluteItemNumber($i); $i++; ?></td>
-    <td>
-        <?php echo $this->partial('partial/user.phtml', array('user' => $member->getUser())); ?>
-    </td>
-    <td><?php echo $member->getActivity()->getVoteCount(); ?></td>
-    <td><?php echo $member->getActivity()->getRevisionCount(); ?></td>
-    <td><?php echo $member->getActivity()->getAuthorshipCount(); ?></td>
-    <td><?php if ($member->getActivity()->isActive()) {echo '&check;';} ?></td>    
-    <td>
-        <?php 
-            if ($member->getJoinDate() != null) {
-                echo $member->getJoinDate()->format('Y-m-d'); 
-            }
-        ?>
-    </td>
-</tr>
-<?php endforeach; ?>
+$row = $this->row;
+switch($this->column->getName()) {
+    case '#':
+        echo $this->index;
+        break;
+    case 'User':
+        echo $this->partial('partial/user.phtml', array('user' => $row->getUser()));
+        break;
+    case 'Votes':
+        echo $row->getActivity()->getVoteCount();
+        break;
+    case 'Revisions':
+        echo $row->getActivity()->getRevisionCount();
+        break;
+    case 'Pages':
+        echo $row->getActivity()->getAuthorshipCount();
+        break;
+    case 'Active':
+        if ($row->getActivity()->isActive()) {echo '&check;';}
+        break;
+    case 'Joined':
+        if ($row->getJoinDate() != null) {
+            echo $row->getJoinDate()->format('Y-m-d'); 
+        }
+        break;
+    default:;    
+}
+?> 

@@ -39,22 +39,24 @@ class ColumnList implements \IteratorAggregate
 
     /**
      * Searches list for the specific column
-     * @param string|\Application\Component\PaginatedTable\Column $column  Column to find
+     * @param string $name Column to find
      * @param bool $recursive Whether to search in subcolumns
      * @return \Application\Component\PaginatedTable\Column
      */
-    public function findColumn($column, $recursive = true)
-    {
-        $res = null;        
-        if (is_string($column)) {
-            $column = strtoupper($column);
+    public function findColumn($name, $recursive = true)
+    {            
+        if (is_string($name)) {
+            $name = strtoupper($name);
+        } else {
+            return null;
         }
+        $res = null;    
         foreach ($this->columns as $index => $col) {
-            if ($column === $col || is_string($column) && strtoupper($col->getOrderName()) === $column) {
+            if (is_string($name) && strtoupper($col->getName()) === $name) {
                 $res = $col;
             }
             if ($recursive && !$res) {
-                $res = $col->getSubColumns()->findColumn($column, $recursive);
+                $res = $col->getSubColumns()->findColumn($name, $recursive);
             }            
             if ($res) {
                 break;
@@ -68,7 +70,7 @@ class ColumnList implements \IteratorAggregate
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->columns);
+        return new ColumnIterator($this->columns);
     }
     
     /**

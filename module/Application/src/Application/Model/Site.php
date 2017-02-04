@@ -21,6 +21,18 @@ class Site implements SiteInterface
      * @var string
      */
     protected $wikidotName;
+
+    /**
+     *
+     * @var string
+     */
+    protected $shortName;
+    
+    /**
+     *
+     * @var string
+     */
+    protected $nativeName;
     
     /**
      *
@@ -154,6 +166,42 @@ class Site implements SiteInterface
     {
         $this->wikidotName = $wikidotName;
     }    
+
+    /**
+     * 
+     * {@inheritDoc}
+     */
+    public function getShortName()
+    {
+        return $this->shortName;
+    }
+    
+    /**
+     * 
+     * @param string $shortName
+     */
+    public function setShortName($shortName)
+    {
+        $this->shortName = $shortName;
+    }   
+
+    /**
+     * 
+     * {@inheritDoc}
+     */
+    public function getNativeName()
+    {
+        return $this->nativeName;
+    }
+    
+    /**
+     * 
+     * @param string $nativeName
+     */
+    public function setNativeName($nativeName)
+    {
+        $this->nativeName = $nativeName;
+    }   
     
     /**
      * 

@@ -27,9 +27,11 @@ interface UserServiceInterface
     /**
      * Return users with name matching the string
      * @param string $mask
-     * @return UserInterface[]
+     * @param array(string => int) $order Associative array of field names and sorting orders (constants from \Application\Utils\Order)
+     * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
+     * @return \Zend\Paginator\Paginator|UserInterface[]
      */
-    public function findByName($mask);    
+    public function findByName($mask, $order = null, $paginated = false);
     
     /**
      * Returns all users who are members of the site
@@ -63,6 +65,16 @@ interface UserServiceInterface
      * @return UserInterface[]|Paginator
      */
     public function findUsersOfSite($siteId, $order = null, $paginated = false);
+
+    /**
+     * Returns a list of all users who are members of site or has any kind of activity on the site
+     * @param int $siteId
+     * @param string $name
+     * @param array[string]int $order
+     * @param bool $paginated
+     * @return UserInterface[]|Paginator
+     */
+    public function findUsersOfSiteByName($siteId, $name, $order = null, $paginated = false);
     
     /**
      * Get a list of authorships by user on site

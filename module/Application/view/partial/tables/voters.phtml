@@ -1,19 +1,28 @@
 <?php 
-    $i=1;
-    foreach ($this->rows as $voter): 
-        $deleted = $voter[\Application\Utils\DbConsts\DbViewVotes::USERDELETED]; 
-?>
-<tr>
-    <td><?php echo $this->rows->getAbsoluteItemNumber($i); $i++; ?></td>
-    <td>
-        <?php if ($deleted): ?><del><?php endif; ?>        
-        <a href="<?php printf('/user/%d', $voter[\Application\Utils\DbConsts\DbViewVotes::USERID]);?>">
-            <?php echo $this->escapeHtml($voter[\Application\Utils\DbConsts\DbViewVotes::USERDISPLAYNAME]); ?>
-        </a>
-        <?php if ($deleted): ?></del><?php endif; ?>
-    </td>
-    <td><?php echo $voter['Votes'] ?></td>
-    <td><?php echo ($voter['Votes']+$voter['Sum'])/2; ?></td>
-    <td><?php echo ($voter['Votes']-$voter['Sum'])/2; ?></td>
-</tr>
-<?php endforeach; ?>
+$row = $this->row;
+switch($this->column->getName()) {
+    case '#':
+        echo $this->index;
+        break;
+    case 'User':
+        $deleted = $row[\Application\Utils\DbConsts\DbViewVotes::USERDELETED]; 
+        if ($deleted) { echo "<del>"; }
+        echo '<a href="';
+        printf('/user/%d', $row[\Application\Utils\DbConsts\DbViewVotes::USERID]);
+        echo '">';
+        echo $this->escapeHtml($row[\Application\Utils\DbConsts\DbViewVotes::USERDISPLAYNAME]);
+        echo "</a>";
+        if ($deleted) { echo "</del>";}
+        break;
+    case 'Votes':
+        echo $row['Votes'];
+        break;
+    case 'Positive':
+        echo ($row['Votes']+$row['Sum'])/2;
+        break;
+    case 'Negative':
+        echo ($row['Votes']-$row['Sum'])/2;
+        break;
+    default:;    
+}
+?> 

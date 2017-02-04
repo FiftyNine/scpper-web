@@ -1,19 +1,27 @@
 <?php 
-    $i=1;
-    foreach ($this->rows as $vote): 
-?>
-<?php $user = $vote->getUser(); ?>
-<tr>
-    <td><?php echo $this->rows->getAbsoluteItemNumber($i); $i++; ?></td>
-    <td>
-        <?php echo $this->partial('partial/user.phtml', array('user' => $user)); ?>
-    </td>
-    <td><?php if ($vote->getValue() > 0) {echo '+';} else {echo '-';} ?></td>
-    <td><?php if ($vote->getFromMember()) {echo '&check;';} ?></td>
-    <td><?php if ($vote->getFromContributor()) {echo '&check;';} ?></td>
-    <td><?php if ($vote->getFromActive()) {echo '&check;';} ?></td>
-    <td><?php echo $vote->getDateTime()->format('Y-m-d'); ?></td>
-</tr>
-<?php endforeach; ?>
-
-
+$row = $this->row;
+switch($this->column->getName()) {
+    case '#':
+        echo $this->index;
+        break;
+    case 'User':
+        echo $this->partial('partial/user.phtml', array('user' =>  $row->getUser()));
+        break;
+    case 'Vote':
+        if ($row->getValue() > 0) {echo '+';} else {echo '-';}
+        break;
+    case 'Member':
+        if ($row->getFromMember()) {echo '&check;';}
+        break;
+    case 'Contributor':
+        if ($row->getFromContributor()) {echo '&check;';}
+        break;
+    case 'Active':
+        if ($row->getFromActive()) {echo '&check;';}
+        break;
+    case 'Date':
+        echo $row->getDateTime()->format('Y-m-d');
+        break;
+    default:;    
+}
+?> 

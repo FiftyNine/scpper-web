@@ -59,6 +59,7 @@ class PagesController extends AbstractActionController
         $siteId = $this->services->getUtilityService()->getSiteId();
         $site = $this->services->getSiteService()->find($siteId);
         $pages = $this->getPagesTable($siteId, DbViewPages::CLEANRATING, Order::DESCENDING, 1, 10);
+
         $result = array(
             'site' => $site,
             'table' => $pages

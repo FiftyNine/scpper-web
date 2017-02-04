@@ -15,6 +15,7 @@ use Application\Utils\DbConsts\DbViewUsers;
 use Application\Utils\DbConsts\DbViewUserActivity;
 use Application\Utils\DbConsts\DbViewMembership;
 use Application\Utils\DbSelectColumns;
+use Application\Utils\Order;
 
 /**
  * Description of UserDbSqlMapper
@@ -41,10 +42,23 @@ class UserDbSqlMapper extends ZendDbSqlMapper implements UserMapperInterface
         $this->userSiteHydrator = $userSiteHydrator;
     }
     
+    protected function getUsersOfSiteConditions($siteId)
+    {
+        return [
+            'a.'.DbViewUserActivity::SITEID.' = ?' => $siteId,                    
+            '(m.'.DbViewMembership::JOINDATE.' IS NOT NULL OR (a.'.DbViewUserActivity::VOTES.' > 0) OR (a.'.DbViewUserActivity::REVISIONS.' > 0) or (a.'.DbViewUserActivity::PAGES.' > 0))',
+        ];        
+    }
+    
     /**
-     * {@inheritdoc}
+     * Returns a list of all users who are members of site or has any kind of activity on the site
+     * @param int $siteId
+     * @param array[string] $conditions
+     * @param array[string]int $order
+     * @param bool $paginated
+     * @return UserInterface[]|Paginator
      */
-    public function findUsersOfSite($siteId, $order = null, $paginated = false) 
+    protected function findUsersOfSiteInternal($conditions = null, $order = null, $paginated = false) 
     {
         $sql = new Sql($this->dbAdapter);
         $membershipCols = array();
@@ -64,10 +78,7 @@ class UserDbSqlMapper extends ZendDbSqlMapper implements UserMapperInterface
                 ->columns($userCols)
                 ->join(array('a' => DbViewUserActivity::TABLE), 'u.'.DbViewUsers::USERID.' = a.'.DbViewUserActivity::USERID, $activityCols)
                 ->join(array('m' => DbViewMembership::TABLE), 'm.'.DbViewMembership::USERID.' = u.'.DbViewUsers::USERID.' AND m.'.DbViewMembership::SITEID.' = a.'.DbViewUserActivity::SITEID, $membershipCols, Select::JOIN_LEFT)
-                ->where(array(
-                    'a.'.DbViewUserActivity::SITEID.' = ?' => $siteId,
-                    '(m.'.DbViewMembership::JOINDATE.' IS NOT NULL OR (a.'.DbViewUserActivity::VOTES.' > 0) OR (a.'.DbViewUserActivity::REVISIONS.' > 0) or (a.'.DbViewUserActivity::PAGES.' > 0))',
-                    ));
+                ->where($conditions);
         if (is_array($order)) {
             $this->orderSelect($select, $order);            
         }
@@ -77,5 +88,28 @@ class UserDbSqlMapper extends ZendDbSqlMapper implements UserMapperInterface
             return new \Zend\Paginator\Paginator($adapter);
         }        
         return $resultSet->initialize($this->fetch($sql, $select));        
+    }
+    
+    /**
+     * {@inheritDoc}
+     */    
+    public function findUsersOfSite($siteId, $order = null, $paginated = false)
+    {
+        return $this->findUsersOfSiteInternal($this->getUsersOfSiteConditions($siteId), $order, $paginated);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */        
+    public function findUsersOfSiteByName($siteId, $query, $order = null, $paginated = false)
+    {
+        $conditions = $this->getUsersOfSiteConditions($siteId);
+        $needle = sprintf('%%%s%%', mb_strtolower($query));            
+        $conditions[sprintf("LOWER(u.%s) LIKE ?", DbViewUsers::DISPLAYNAME)] = $needle;
+        if ($order === null) {
+            $len = strlen($query);
+            $order = [sprintf("ABS(LENGTH(u.%s) - $len)", DbViewUsers::DISPLAYNAME) => Order::ASCENDING];
+        }
+        return $this->findUsersOfSiteInternal($conditions, $order, $paginated);
     }
 }

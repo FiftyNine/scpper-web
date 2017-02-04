@@ -1,18 +1,25 @@
 <?php 
-    $i=1; 
-    foreach ($this->rows as $editor): 
-        $deleted = $editor[\Application\Utils\DbConsts\DbViewRevisions::USERDELETED]; 
-?>
-<tr>
-    <td><?php echo $this->rows->getAbsoluteItemNumber($i); $i++; ?></td>
-    <td>
-        <?php if ($deleted): ?><del><?php endif; ?>
-        <a href="<?php printf('/user/%d', $editor[\Application\Utils\DbConsts\DbViewRevisions::USERID]);?>">
-            <?php echo $this->escapeHtml($editor[\Application\Utils\DbConsts\DbViewRevisions::USERDISPLAYNAME]); ?>
-        </a>
-        <?php if ($deleted): ?></del><?php endif; ?>
-    </td>
-    <td><?php echo $editor['Revisions'] ?></td>
-    <td><?php echo number_format($editor['Revisions']/$this->data['total']*100, 2); ?></td>
-</tr>
-<?php endforeach; ?>
+$row = $this->row;
+switch($this->column->getName()) {
+    case '#':
+        echo $this->index;
+        break;
+    case 'User':
+        $deleted = $row[\Application\Utils\DbConsts\DbViewRevisions::USERDELETED]; 
+        if ($deleted) { echo "<del>"; }
+        echo '<a href="';
+        printf('/user/%d', $row[\Application\Utils\DbConsts\DbViewRevisions::USERID]);
+        echo '">';
+        echo $this->escapeHtml($row[\Application\Utils\DbConsts\DbViewRevisions::USERDISPLAYNAME]);
+        echo "</a>";
+        if ($deleted) { echo "</del>";}
+        break;
+    case 'Revisions':
+        echo $row['Revisions'];
+        break;
+    case '%':
+        echo number_format($row['Revisions']/$this->data['total']*100, 2);
+        break;
+    default:;    
+}
+?> 

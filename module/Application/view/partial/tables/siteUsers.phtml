@@ -1,0 +1,33 @@
+<?php 
+$row = $this->row;
+$siteId = $this->data['siteId']; 
+switch($this->column->getName()) {
+    case '#':
+        echo $this->index;
+        break;
+    case 'User':
+        echo $this->partial('partial/user.phtml', array('user' => $row));
+        break;
+    case 'Votes':
+        echo $row->getActivityOnSite($siteId)->getVoteCount();
+        break;
+    case 'Revisions':
+        echo $row->getActivityOnSite($siteId)->getRevisionCount();
+        break;
+    case 'Pages':
+        echo $row->getActivityOnSite($siteId)->getAuthorshipCount();
+        break;
+    case 'Active':
+        if ($row->getActivityOnSite($siteId)->isActive()) {echo '&check;';}
+        break;
+    case 'Joined':
+        $member = $row->getMembershipOfSite($siteId);            
+        if ($member != null) {
+            echo $member->getJoinDate()->format('Y-m-d'); 
+        } else {
+            echo '&cross;';
+        }
+        break;
+    default:;    
+}
+?> 

@@ -21,7 +21,19 @@ interface SiteInterface
      * @return string
      */
     public function getWikidotName();
-   
+
+    /**
+     * 
+     * @return string
+     */
+    public function getShortName();
+
+    /**
+     * 
+     * @return string
+     */
+    public function getNativeName();    
+    
     /**
      * 
      * @return \DateTime

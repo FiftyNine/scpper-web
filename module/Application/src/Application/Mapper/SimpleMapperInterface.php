@@ -16,11 +16,12 @@ interface SimpleMapperInterface
     /**
      * Returns all available objects
      * 
-     * @param array[string]string
-     * @param bool $paginated
+     * @param array[string] $conditions
+     * @param array(string => int) $order Associative array of field names and sorting orders (constants from \Application\Utils\Order)
+     * @param bool $paginated 
      * @return ResultSet|\Zend\Paginator\Paginator
      */
-    public function findAll($conditions = null, $paginated = true);
+    public function findAll($conditions = null, $order = null, $paginated = false);
     
     /**
      * Returns number of all available objects

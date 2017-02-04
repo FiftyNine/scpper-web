@@ -1,19 +1,30 @@
 <?php 
-    $i=1;
-    foreach ($this->rows as $author): 
-?>
-<?php $user = $author->getUser(); ?>
-<tr>
-    <td><?php echo $this->rows->getAbsoluteItemNumber($i); $i++; ?></td>
-    <td>
-        <?php echo $this->partial('partial/user.phtml', array('user' => $user)); ?>        
-    </td>
-    <td><?php echo $author->getPageCount(); ?></td>
-    <td><?php echo $author->getOriginalCount(); ?></td>
-    <td><?php echo $author->getTranslationCount(); ?></td>
-    <td><?php echo $author->getTotalRating(); ?></td>    
-    <td><?php echo number_format($author->getAverageRating(), 1); ?></td>
-    <td><?php echo $author->getHighestRating(); ?></td>
-</tr>
-<?php endforeach; ?>
-
+$row = $this->row;
+switch($this->column->getName()) {
+    case '#':
+        echo $this->index;
+        break;
+    case 'User':
+        echo $this->partial('partial/user.phtml', array('user' => $row->getUser()));
+        break;
+    case 'Pages':
+        echo $row->getPageCount();
+        break;
+    case 'Originals':
+        echo $row->getOriginalCount();
+        break;
+    case 'Translations':
+        echo $row->getTranslationCount();
+        break;
+    case 'Rating':
+        echo $row->getTotalRating();
+        break;
+    case 'Average':
+        echo number_format($row->getAverageRating(), 1);
+        break;
+    case 'Highest':
+        echo $row->getHighestRating();
+        break;
+    default:;    
+}
+?> 

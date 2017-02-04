@@ -5,6 +5,7 @@ namespace Application\Service;
 use Application\Mapper\PageMapperInterface;
 use Application\Utils\PageStatus;
 use Application\Utils\DbConsts\DbViewPages;
+use Application\Utils\Order;
 
 class PageService implements PageServiceInterface 
 {
@@ -37,8 +38,8 @@ class PageService implements PageServiceInterface
 
     /**
      * {@inheritDoc}
-     */    
-    public function findByName($mask)
+     */
+    public function findByName($mask, $sites, $order = null, $paginated = false)
     {
         $mask = mb_strtolower($mask);
         if (filter_var($mask, FILTER_VALIDATE_INT)) {
@@ -46,8 +47,17 @@ class PageService implements PageServiceInterface
         } else {
             $needle = sprintf('.*%s.*', $mask);            
         }
-        $conditions = array(sprintf("LOWER(%s) RLIKE ?", DbViewPages::TITLE) => $needle);
-        return $this->mapper->findAll($conditions);
+        $conditions = [
+            sprintf("LOWER(%s) RLIKE ?", DbViewPages::TITLE) => $needle
+        ];
+        if (is_array($sites)) {
+            $conditions[sprintf("%s in (?)", DbViewPages::SITEID)] = implode($sites, ',');
+        }
+        if ($order === null) {
+            $len = strlen($mask);
+            $order = [sprintf("ABS(LENGTH(%s) - $len)", DbViewPages::TITLE) => Order::ASCENDING];
+        }
+        return $this->mapper->findAll($conditions, $order, $paginated);
     }
     
     /**

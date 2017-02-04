@@ -30,6 +30,7 @@ class PaginatedTableFactory
         $table = new \Application\Component\PaginatedTable\Table(
             array(
                 new Column('#', '', true, '', Column::INDEX),
+                new Column('Branch', DbViewPages::SITENAME, true, '', Column::OTHER, [], true),
                 new Column('Page', DbViewPages::TITLE, true, '', Column::PAGE),
                 new Column('Rating', '', true, '', Column::PAGE, 
                     [
@@ -108,6 +109,21 @@ class PaginatedTableFactory
         $table = new \Application\Component\PaginatedTable\Table(
             array(
                 new Column('#', '', true, '', Column::INDEX),
+                new Column('User', DbViewUsers::DISPLAYNAME, true, '', Column::USERS),
+                new Column('Membership')
+            ),
+            $paginator,
+            'partial/tables/users.phtml', 
+            false
+        );
+        return $table;        
+    }
+
+    static public function createSiteUsersTable($paginator)
+    {
+        $table = new \Application\Component\PaginatedTable\Table(
+            array(
+                new Column('#', '', true, '', Column::INDEX),
                 new Column('User', DbViewUsers::TABLE.'_'.DbViewUsers::DISPLAYNAME, true, '', Column::USERS),
                 new Column('Votes', DbViewUserActivity::TABLE.'_'.DbViewUserActivity::VOTES, false),
                 new Column('Revisions', DbViewUserActivity::TABLE.'_'.DbViewUserActivity::REVISIONS, false),
@@ -116,7 +132,7 @@ class PaginatedTableFactory
                 new Column('Joined', DbViewMembership::TABLE.'_'.DbViewMembership::JOINDATE, false, '', Column::DATE)
             ),
             $paginator,
-            'partial/tables/users.phtml', 
+            'partial/tables/siteUsers.phtml', 
             false
         );
         return $table;        

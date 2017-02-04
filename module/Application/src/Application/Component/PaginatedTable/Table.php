@@ -17,7 +17,7 @@ class Table implements TableInterface
 {
     /**
      *
-     * @var \Application\Component\PaginatedTable\Columns;
+     * @var \Application\Component\PaginatedTable\TableColumns;
      */
     protected $columns;
     
