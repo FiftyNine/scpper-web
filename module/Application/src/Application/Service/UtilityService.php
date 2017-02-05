@@ -94,7 +94,8 @@ class UtilityService implements UtilityServiceInterface
     public function attachSearchForm(ViewModel $viewModel)
     {
         $viewModel->setVariables(array(
-            'searchForm' => $this->searchForm
+            'searchForm' => $this->searchForm,
+            'site' => $this->siteService->find($this->getSiteId())
         ));
     }
     

@@ -400,13 +400,15 @@ scpper.tags = {
 /** Search **/
 
 scpper.search = {
+    siteId: 66711,
+    
     autocompleteSearch: function(request, response)
     {
         $.ajax({
             url: "/search/autocomplete",
             data: {
                 query: request.term,
-                siteId: 66711
+                siteId: scpper.search.siteId
             }
         }).done(function (result) {
             var content = [];

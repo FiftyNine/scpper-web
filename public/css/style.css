@@ -426,6 +426,7 @@ div#search-tags {
 
 ul.search-autocomplete {
     z-index: 1050;
+    overflow-y: hidden !important;
 }
     /* #E5F5DF*/
 .search-item-page {

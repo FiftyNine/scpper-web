@@ -33,7 +33,8 @@
 (function () {
 
 function initSearch()
-{    
+{   
+    scpper.search.siteId = <?php echo $this->site->getId(); ?>;
     scpper.search.registerSearchAutocomplete();
     scpper.search.initSearchControl('.search-control');
 }
