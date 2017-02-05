@@ -15,29 +15,42 @@
                         ->prependStylesheet($this->basePath('css/style.css'))
                         ->prependStylesheet($this->basePath('css/spinner.css'))
                         ->prependStylesheet($this->basePath('css/bootstrap-theme.min.css'))
-                        ->prependStylesheet($this->basePath('css/bootstrap.min.css')) ?>
-
+                        ->prependStylesheet($this->basePath('css/bootstrap.min.css')) 
+                        ->prependStylesheet($this->basePath('css/jquery-ui.min.css'));?>
         <!-- Scripts -->
         <?php echo $this->headScript()                
             ->prependFile($this->basePath('js/scpper.js'), 'text/javascript')
             ->prependFile($this->basePath('js/jquery.blockUI.js'), 'text/javascript')
-            ->prependFile($this->basePath('js/bootstrap.min.js'))
-            ->prependFile($this->basePath('js/jquery.min.js'))
+            ->prependFile($this->basePath('/js/jquery-ui/jquery-ui.min.js'), 'text/javascript') 
+            ->prependFile($this->basePath('js/bootstrap.min.js'), 'text/javascript')
+            ->prependFile($this->basePath('js/jquery.min.js'), 'text/javascript')
             ->prependFile($this->basePath('js/respond.min.js'), 'text/javascript', array('conditional' => 'lt IE 9',))
             ->prependFile($this->basePath('js/html5shiv.min.js'),   'text/javascript', array('conditional' => 'lt IE 9',))
             ->prependFile($this->basePath('js/date.format.js'), 'text/javascript')            
             
-        ; ?>
+        ; ?>       
+<script type="text/javascript">
+(function () {
 
+function initSearch()
+{    
+    scpper.search.registerSearchAutocomplete();
+    scpper.search.initSearchControl('.search-control');
+}
+
+ $(document).ready(initSearch);
+
+}()); 
+</script>
     </head>
     <body>
         <?php
             echo $this->navigation('navigation')
                 ->menu()
                 ->setPartial('partial/navbar.phtml');               
-        ?>
+        ?>        
         <div class="container">
-            <?php echo $this->content; ?>
+            <?php echo $this->content; ?>           
         </div> <!-- /container -->                
         <footer>
             <hr>

@@ -75,36 +75,30 @@
 </div>
 <?php if ($field->getValue() !== ''): ?>
     <?php $this->headTitle('"'.$field->getValue().'"'); ?>
-    <?php if (($this->pages && count($this->pages) === 0) && ($this->users && count($this->users) === 0)): ?>
-        <p class="text-center">
-        Sorry, nothing found
-        </p>
-    <?php else: ?>
-        <h3>Pages</h3>
-        <div class="table-container" id="page-list">
-        <?php
+    <h3>Pages</h3>
+    <div class="table-container" id="page-list">
+    <?php
 
-        echo $this->partial(
-            'partial/tables/table.phtml', 
-            array(
-                'table' => $this->pages,
-                'data' => array('siteId' => $this->site->getId()),
-            )
-        );    
-        ?>
-        </div>       
-        <h3>Users</h3>
-        <div class="table-container" id="user-list">
-        <?php
+    echo $this->partial(
+        'partial/tables/table.phtml', 
+        array(
+            'table' => $this->pages,
+            'data' => array('siteId' => $this->site->getId()),
+        )
+    );    
+    ?>
+    </div>       
+    <h3>Users</h3>
+    <div class="table-container" id="user-list">
+    <?php
 
-        echo $this->partial(
-            'partial/tables/table.phtml', 
-            array(
-                'table' => $this->users,
-                'data' => array('siteId' => $this->site->getId()),
-            )
-        );    
-        ?>
-        </div>  
-    <?php endif;?>
+    echo $this->partial(
+        'partial/tables/table.phtml', 
+        array(
+            'table' => $this->users,
+            'data' => array('siteId' => $this->site->getId()),
+        )
+    );    
+    ?>
+    </div>  
 <?php endif; ?>

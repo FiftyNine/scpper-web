@@ -420,3 +420,21 @@ div#search-tags {
 #faq > dd {
     margin-bottom: 20px;
 }
+
+/** Search **/
+
+
+ul.search-autocomplete {
+    z-index: 1050;
+}
+    /* #E5F5DF*/
+.search-item-page {
+
+    color: #64D43B !important;
+}
+    /* #f2dede*/
+.search-item-user {
+
+    color: #E34F4F !important;
+}
+

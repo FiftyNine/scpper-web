@@ -112,7 +112,16 @@ class SearchController extends AbstractActionController
                     $result['pages'] = $this->getPagesTable($text, [$siteId], null, null, 1, 10);
                     $result['users'] = $this->getUsersTable($text, [$siteId], null, null, 1, 10);
                     $result['site'] = $site;
-                }
+                    $pageCount = $result['pages']->getPaginator()->getTotalItemCount();
+                    $userCount = $result['users']->getPaginator()->getTotalItemCount();
+                    if ($pageCount === 1 && $userCount === 0) {
+                        $page = $result['pages']->getPaginator()->getItem(1);
+                        return $this->redirect()->toUrl("/page/{$page->getId()}");
+                    } elseif ($pageCount === 0 && $userCount === 1) {
+                        $user = $result['users']->getPaginator()->getItem(1);
+                        return $this->redirect()->toUrl("/user/{$user->getId()}");
+                    }
+                }                
             }
         }        
         return new ViewModel($result);
@@ -188,6 +197,38 @@ class SearchController extends AbstractActionController
             );
         }
         return new JsonModel($result);        
-    }      
+    }
     
+    public function autocompleteAction()
+    {
+        $maxItems = 3;
+        $result = ['success' => true];
+        $siteId = (int)$this->params()->fromQuery('siteId', $this->services->getUtilityService()->getSiteId());
+        $query = $this->params()->fromQuery('query', '');
+        $pages = $this->services->getPageService()->findByName($query, [$siteId], null, true);
+        $users = $this->services->getUserService()->findUsersOfSiteByName($siteId, $query, null, true);
+        $result['pages'] = [];
+        $i = 1;        
+        foreach ($pages as $page) {
+            $result['pages'][] = [
+                'id' => $page->getId(),
+                'label' => $page->getTitle()];
+            $i++;
+            if ($i > $maxItems) {
+                break;
+            }
+        }
+        $result['users'] = [];
+        $i = 1;
+        foreach ($users as $user) {
+            $result['users'][] = [
+                'id' => $user->getId(),
+                'label' => $user->getDisplayName()];
+            $i++;
+            if ($i > $maxItems) {
+                break;
+            }            
+        }
+        return new JsonModel($result);
+    }    
 }

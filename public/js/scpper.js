@@ -397,3 +397,88 @@ scpper.tags = {
     }    
 };
 
+/** Search **/
+
+scpper.search = {
+    autocompleteSearch: function(request, response)
+    {
+        $.ajax({
+            url: "/search/autocomplete",
+            data: {
+                query: request.term,
+                siteId: 66711
+            }
+        }).done(function (result) {
+            var content = [];
+            if (result.success) {               
+               for (var i=0; i<result.pages.length; i++) {
+                   content.push({
+                       label: result.pages[i].label,
+                       value: result.pages[i].label,
+                       type: 'page',
+                       id: result.pages[i].id
+                   });
+               }
+               for (var i=0; i<result.users.length; i++) {
+                   content.push({
+                       label: result.users[i].label,
+                       value: result.users[i].label,
+                       type: 'user',
+                       id: result.users[i].id
+                   });
+               }               
+               response(content);
+            } else {
+               response(null);
+            }
+        }).fail(function () {            
+            response(null);
+        });         
+    },
+    
+    selectItem: function (event, ui)
+    {
+        if (ui.item.type === 'page') {
+            location.href = location.protocol + '//' + location.host + '/page/'+ui.item.id;
+        } else if (ui.item.type === 'user') {
+            location.href = location.protocol + '//' + location.host + '/user/'+ui.item.id;
+        }
+    },
+    
+    registerSearchAutocomplete: function()
+    {
+        $.widget('custom.searchAutocomplete', $.ui.autocomplete, {
+            _renderItem: function(ul, item) {
+                var li = $('<li>')
+                    .addClass('ui-menu-item')
+                    .appendTo(ul);
+
+                var div = $('<div>')
+                    .addClass('ui-menu-item-wrapper')
+                    .append(item.label)
+                    .appendTo(li);
+                var span = $('<span>')
+                    .addClass('small-text')
+                    .append(' ('+item.type+')')
+                    .appendTo(div);
+                if (item.type === 'page') {
+                    span.addClass('search-item-page');
+                } else if (item.type === 'user') {
+                    span.addClass('search-item-user');
+                }
+                return li;
+            }
+        });
+    },
+    
+    initSearchControl: function(id)
+    {       
+        $(id).searchAutocomplete({
+          source: scpper.search.autocompleteSearch,
+          select: scpper.search.selectItem,
+          delay: 500,
+          minLength: 3
+        });
+        $(id).searchAutocomplete('widget').addClass('search-autocomplete');
+    }
+};

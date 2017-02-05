@@ -27,7 +27,7 @@ class SearchForm extends Form
             'name' => self::TEXT_FIELD_NAME,
             'attributes' => array(
               'id' => self::TEXT_FIELD_NAME,
-              'class'   => 'form-control',
+              'class'   => 'form-control search-control',
               'placeholder' => 'Search...'
             ),
             'type' => 'text'
