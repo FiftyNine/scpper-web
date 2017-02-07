@@ -1,4 +1,8 @@
 <?php $page = $this->page; ?>
 <a href="<?php echo $page->getUrl() ?>">
     <?php echo $this->escapeHtml($page->getTitle()); ?>
+    <?php if ($page->getAltTitle()): ?>
+    <em> <?php echo $this->escapeHtml(' - '.$page->getAltTitle()); ?> </em>
+    <?php endif; ?>
+    
 </a>

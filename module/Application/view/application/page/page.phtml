@@ -47,6 +47,10 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 <hr>
 <div id="page-top">
     <div id="page-summary">
+        <?php if ($page->getAltTitle()): ?>
+        Alternative title: <strong><?php echo $this->escapeHtml($page->getAltTitle()); ?></strong>
+        <br>
+        <?php endif; ?>
         Posted: <strong><?php echo $page->getCreationDate()->format('Y-m-d H:i') ?></strong>
         <br>
         Contributors:

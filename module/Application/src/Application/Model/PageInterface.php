@@ -28,6 +28,11 @@ interface PageInterface
      * @return string
      */
     public function getTitle();
+
+    /**
+     * @return string
+     */
+    public function getAltTitle();
     
     /**
      * @return int

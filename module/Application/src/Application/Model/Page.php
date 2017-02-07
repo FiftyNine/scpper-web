@@ -75,6 +75,12 @@ class Page implements PageInterface
      * @var string
      */    
     protected $title;
+
+    /**
+     *
+     * @var string
+     */    
+    protected $altTitle;
     
     /**
      *
@@ -273,6 +279,19 @@ class Page implements PageInterface
     public function setTitle($value)
     {
         $this->title = $value;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAltTitle()
+    {
+        return $this->altTitle;
+    }
+    
+    public function setAltTitle($value)
+    {
+        $this->altTitle = $value;
     }
     
     /**
