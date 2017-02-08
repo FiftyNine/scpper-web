@@ -42,20 +42,22 @@ class PageService implements PageServiceInterface
     public function findByName($mask, $sites, $order = null, $paginated = false)
     {
         $mask = mb_strtolower($mask);
-        if (filter_var($mask, FILTER_VALIDATE_INT)) {
+        $needle = sprintf('.*%s.*', $mask);            
+/*        if (filter_var($mask, FILTER_VALIDATE_INT)) {
             $needle = sprintf('((.*[^[:alnum:]])|^)%s(([^[:alnum:]].*)|$)', $mask);
         } else {
             $needle = sprintf('.*%s.*', $mask);            
         }
+ */
         $conditions = [
-            sprintf("LOWER(%s) RLIKE ?", DbViewPages::TITLE) => $needle
+            sprintf("LOWER(CONCAT(%s, %s)) RLIKE ?", DbViewPages::TITLE, DbViewPages::ALTTITLE) => $needle
         ];
         if (is_array($sites)) {
             $conditions[sprintf("%s in (?)", DbViewPages::SITEID)] = implode($sites, ',');
         }
         if ($order === null) {
             $len = strlen($mask);
-            $order = [sprintf("ABS(LENGTH(%s) - $len)", DbViewPages::TITLE) => Order::ASCENDING];
+            $order = [sprintf("ABS(LENGTH(CONCAT(%s, %s)) - $len)", DbViewPages::TITLE, DbViewPages::ALTTITLE) => Order::ASCENDING];
         }
         return $this->mapper->findAll($conditions, $order, $paginated);
     }

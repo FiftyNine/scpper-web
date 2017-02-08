@@ -13,6 +13,7 @@ class DbViewSites
     const DOMAIN = 'Domain';
     const DEFAULTLANGUAGE = 'DefaultLanguage';
     const LASTUPDATE = 'LastUpdate';
+    const HIDEVOTES = 'HideVotes';
     const MEMBERS = 'Members';
     const ACTIVEMEMBERS = 'ActiveMembers';
     const CONTRIBUTORS = 'Contributors';

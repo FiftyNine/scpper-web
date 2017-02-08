@@ -2,9 +2,9 @@
 
 namespace Application\Utils\DbConsts;
 
-class DbViewPages
+class DbViewAllPages
 {
-    const TABLE = 'view_pages';
+    const TABLE = 'view_all_pages';
     const __ID = '__Id';
     const SITEID = 'SiteId';
     const PAGEID = 'PageId';
@@ -13,14 +13,12 @@ class DbViewPages
     const SITE = 'Site';
     const PAGENAME = 'PageName';
     const TITLE = 'Title';
-    const ALTTITLE = 'AltTitle';
     const SOURCE = 'Source';
     const CREATIONDATE = 'CreationDate';
     const RATING = 'Rating';
     const CLEANRATING = 'CleanRating';
     const CONTRIBUTORRATING = 'ContributorRating';
     const ADJUSTEDRATING = 'AdjustedRating';
-    const WILSONSCORE = 'WilsonScore';
     const REVISIONS = 'Revisions';
     const STATUSID = 'StatusId';
     const KINDID = 'KindId';

@@ -12,6 +12,7 @@ class DbPages
     const NAME = 'Name';
     const CATEGORYID = 'CategoryId';
     const SOURCE = 'Source';
+    const ALTTITLE = 'AltTitle';
 
 
     static public function hasField($field) 

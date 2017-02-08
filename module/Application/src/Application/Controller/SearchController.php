@@ -205,14 +205,16 @@ class SearchController extends AbstractActionController
         $result = ['success' => true];
         $siteId = (int)$this->params()->fromQuery('siteId', $this->services->getUtilityService()->getSiteId());
         $query = $this->params()->fromQuery('query', '');
-        $pages = $this->services->getPageService()->findByName($query, [$siteId], null, true);
+        $pages = $this->services->getPageService()->findByName($query, [$siteId], [DbViewPages::CLEANRATING => Order::DESCENDING], true);
         $users = $this->services->getUserService()->findUsersOfSiteByName($siteId, $query, null, true);
         $result['pages'] = [];
         $i = 1;        
         foreach ($pages as $page) {
             $result['pages'][] = [
                 'id' => $page->getId(),
-                'label' => $page->getTitle()];
+                'label' => $page->getTitle(),
+                'altTitle' => $page->getAltTitle()            
+            ];
             $i++;
             if ($i > $maxItems) {
                 break;

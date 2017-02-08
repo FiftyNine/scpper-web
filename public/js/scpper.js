@@ -416,6 +416,7 @@ scpper.search = {
                for (var i=0; i<result.pages.length; i++) {
                    content.push({
                        label: result.pages[i].label,
+                       altLabel: result.pages[i].altTitle,
                        value: result.pages[i].label,
                        type: 'page',
                        id: result.pages[i].id
@@ -424,6 +425,7 @@ scpper.search = {
                for (var i=0; i<result.users.length; i++) {
                    content.push({
                        label: result.users[i].label,
+                       altLabel: null,
                        value: result.users[i].label,
                        type: 'user',
                        id: result.users[i].id
@@ -454,11 +456,13 @@ scpper.search = {
                 var li = $('<li>')
                     .addClass('ui-menu-item')
                     .appendTo(ul);
-
                 var div = $('<div>')
                     .addClass('ui-menu-item-wrapper')
-                    .append(item.label)
+                    .append(item.label)                    
                     .appendTo(li);
+                if (item.altLabel) {
+                    div.append($('<em>').append(' - '+item.altLabel));
+                }
                 var span = $('<span>')
                     .addClass('small-text')
                     .append(' ('+item.type+')')
