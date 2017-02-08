@@ -2,7 +2,7 @@
 $row = $this->row;
 switch($this->column->getName()) {
     case '#':
-        echo $this->index;
+        echo $row->getIndex()+1;
         break;
     case 'User':
         echo $this->partial('partial/user.phtml', array('user' => $row->getUser()));
