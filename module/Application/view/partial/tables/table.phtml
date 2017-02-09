@@ -106,7 +106,7 @@
                     echo $this->partial(
                         $table->getBodyView(), 
                         array(
-                            'index' => $i,
+                            'index' => $table->getPaginator()->getAbsoluteItemNumber($i),
                             'column' => $col,
                             'row' => $row,                            
                             'data' => $this->data
