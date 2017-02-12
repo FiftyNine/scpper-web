@@ -17,47 +17,72 @@
 
 <?php $this->headScript()->captureEnd(); ?>
 <?php $site = $this->site; ?>
-<div class="tiles">
-    <table class="tile-table text-center">
-        <tr>                    
-            <td colspan="2" class="tile tile-header" onclick="window.location.assign('<?php echo $this->site->getUrl(); ?>')">
-                <span class="h1">
-                    <?php echo $this->partial('partial/site.phtml', array('site' => $this->site, 'link' => false)); ?>
-                </span>
-                <br>
+
+<div class="row text-center">    
+    <div class="col-sm-6 col-xs-8 col-sm-offset-3 col-xs-offset-2">        
+        <div class="row tile-row">                        
+            <div class="col-xs-12 tile-main" onclick="window.location.assign('<?php echo $this->site->getUrl(); ?>')">
+                <h1>
+                    <?php echo $this->escapeHtml($this->site->getNativeName()); ?>
+                </h1>
                 <span class="small-text">
                     Updated <?php echo $this->site->getLastUpdate()->format('Y-m-d H:i:s'); ?>
-                </span>
-            </td>                
-        </tr>
-        <tr>
-            <td class="tile background-green" id="members">
-                <h2><?php echo $site->getMembers(); ?> members</h2>
-                <ul class="list-unstyled">
-                    <li><?php echo $site->getActiveMembers(); ?> active</li>
-                    <li><?php echo $site->getContributors(); ?> contributors</li>
-                    <li><?php echo $site->getAuthors(); ?> authors</li>
-                </ul>
-            </td>
-            <td class="tile background-blue" id="pages">
-                <h2><?php echo $site->getPages(); ?> pages</h2>
-                <ul class="list-unstyled">
-                    <li> <?php echo $site->getOriginals(); ?> originals </li>
-                    <li> <?php echo $site->getTranslations(); ?> translations </li>
-                </ul>
-            </td>            
-        </tr>
-        <tr>
-            <td class="tile background-red" id="votes">
-                <h2><?php echo $site->getVotes(); ?> votes</h2>
-                <ul class="list-unstyled">
-                    <li><?php echo $site->getPositive(); ?> positive</li>
-                    <li><?php echo $site->getNegative(); ?> negative</li>
-                </ul>        
-            </td>            
-            <td class="tile background-orange" id="revisions">
-                <h2><?php echo $site->getRevisions(); ?> revisions</h2>
-            </td>                        
-        </tr>        
-    </table>
-</div>
+                </span>                    
+            </div>            
+        </div>
+        <div class="row tile-row">
+            <div class="col-sm-6 col-xs-12 tile-1">
+                <div class="tile background-green" id="members">
+                    <h2>
+                        <span><?php echo $site->getMembers(); ?></span>
+                        <span class="tile-whitespace"></span>
+                        <span>members</span>
+                    </h2>
+                    <ul class="list-unstyled tile-details">
+                        <li><?php echo $site->getActiveMembers(); ?> active</li>
+                        <li><?php echo $site->getContributors(); ?> contributors</li>
+                        <li><?php echo $site->getAuthors(); ?> authors</li>
+                    </ul>        
+                </div>
+            </div>
+            <div class = "col-sm-6 col-xs-12 tile-2">
+                <div class="tile background-blue" id="pages">
+                    <h2>
+                        <span><?php echo $site->getPages(); ?></span>
+                        <span class="tile-whitespace"></span>
+                        <span>pages</span>
+                    </h2>
+                    <ul class="list-unstyled tile-details">
+                        <li> <?php echo $site->getOriginals(); ?> originals </li>
+                        <li> <?php echo $site->getTranslations(); ?> translations </li>
+                    </ul>        
+                </div>
+            </div>                        
+        </div>
+        <div class="row tile-row">
+            <div class="col-sm-6 col-xs-12 tile-1">
+                <div class = "tile background-red" id="votes">
+                    <h2>
+                        <span><?php echo $site->getVotes(); ?></span>
+                        <span class="tile-whitespace"></span>
+                        <span>votes</span>
+                    </h2>
+                    <ul class="list-unstyled tile-details">
+                        <li><?php echo $site->getPositive(); ?> positive</li>
+                        <li><?php echo $site->getNegative(); ?> negative</li>
+                    </ul>        
+                </div>
+            </div>
+            <div class = "col-sm-6 col-xs-12 tile-2">
+                <div class = "tile background-orange" id="revisions">
+                    <h2>
+                        <span><?php echo $site->getRevisions(); ?></span>
+                        <span class="tile-whitespace"></span>
+                        <span>revisions</span>
+                    </h2>
+                </div>                            
+            </div>            
+        </div>
+        
+    </div>
+</div>              

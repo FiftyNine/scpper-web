@@ -5,8 +5,32 @@
     padding-bottom: 0px;
 }
 
+.scpper-navbar {
+    display: flex; 
+    flex-flow: row wrap; 
+    justify-content: center; 
+    align-content: flex-start; 
+    align-items: flex-start;    
+}
+
 .scpper-navbar-text {
     color: #999;
+}
+
+.scpper-navbar-search {
+    flex-basis: 160px;
+    flex-grow: 1; 
+    flex-shrink: 2;
+    max-width: 300px;
+    margin-top: 8px;
+}
+
+.navbar-toggle {
+    margin-left: 15px;
+}
+
+.navbar-collapse {
+    flex-basis: 665px;
 }
 
 div.container a.brand {
@@ -14,13 +38,32 @@ div.container a.brand {
     margin-left: 0;
     padding: 8px 20px 12px 40px;
 }
-
+/*
 @media (min-width: 979px) {
-  ul.nav li.dropdown:hover > ul.dropdown-menu {
+  ul.nav li.dropdown:hover> ul.dropdown-menu {
     display: block;
   }
 }
+*/
 
+@media (max-width: 997px) {
+  .navbar-collapse {
+    order: 4;        
+  }    
+}
+
+@media (max-width: 767px) {
+  .navbar-header-name {
+    display: none;
+  }    
+  .navbar-toggle {
+    display: block;
+  }
+  .navbar-collapse.collapse {
+    display: none !important;
+  }    
+}
+ 
 /* General */
 
 html {
@@ -181,44 +224,100 @@ img.rating-image {
 
 /* Index */
 
-div.tiles {
-    display: flex; 
-    justify-content: center;
-    align-items: center;
-}
-
-table.tile-table {
-    width: 60%; 
-    table-layout: fixed;
-    border-spacing: 25px;    
-    border-collapse: separate;        
-}
-
-td.tile {    
-    height: 10em;
-    display: table-cell;    
+.tile, .tile-main{    
     border: 1px solid #ddd;
     border-radius:4px;
-    padding: 0px;
-    -moz-border-radius:4px;
-    cursor:pointer;
-    vertical-align: middle;
+    /*padding: 0px;*/
+    -moz-border-radius: 4px;
+    cursor: pointer;     
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;    
+    height: 150px;
 }
 
-td.tile:active {
+.tile-main {
+    height: 7em;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f4f1d7+0,ede2a3+100 */
+    background: #FAF7D7; /* Old browsers */
+}
+
+.tile-1 {
+    padding-left: 0px; 
+    padding-right: 12px;
+}
+.tile-2 {
+    padding-left: 12px; 
+    padding-right: 0px;
+}
+.tile-row {
+    margin-top: 25px;
+}
+
+.tile-main h1,
+.tile-main h2 {
+    margin: 0px;
+}
+
+.tile h1,
+.tile h2 {
+    margin: 10px;
+    display: flex; 
+    flex-flow: row wrap; 
+    justify-content: center; 
+    align-content: center;
+}
+
+span.tile-whitespace {
+    padding-left: 0.15em; 
+    padding-right: 0.15em;
+}
+
+@media (max-width: 450px) {
+    .tile h2 {        
+        flex-flow: column nowrap;
+    }
+    
+    span.tile-whitespace {
+        display: none;
+    }        
+}
+@media (max-width: 767px) {
+    .tile-details {
+        display: none;
+    }
+    .tile {        
+        height: 80px;
+    }    
+    .tile-1, .tile-2 {
+        padding-left: 0px;
+        padding-right: 0px;        
+    }
+    .tile-2 {
+        margin-top: 10px;
+    }
+    .tile-row {
+        margin-top: 10px;
+    }
+    .tile-main h1 {
+        font-size: 30px;
+    }
+    .tile h2 {
+        font-size: 24px;        
+    }    
+}
+
+.tile:active {
   background-image: none;
   outline: 0;
   -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
           box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);    
 }
 
-td.tile-header {
-    height: 7em;
-    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f4f1d7+0,ede2a3+100 */
-    background: #FAF7D7; /* Old browsers */
-}
 
-td.tile-header:hover {
+
+.tile-main:hover {
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f9f3b6+0,ede2a3+100 */
     background: #f9f3b6; /* Old browsers */
     background: -moz-linear-gradient(top,  #f9f3b6 0%, #ede2a3 100%); /* FF3.6-15 */

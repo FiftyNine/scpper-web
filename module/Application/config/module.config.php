@@ -425,7 +425,8 @@ return array(
         'default' => array(
             array(
                 'label' => 'Wiki',
-                'route' => 'home',                
+                'type' => 'Uri',
+                'uri' => '#'
             ),
             array(
                 'label' => 'Users',
