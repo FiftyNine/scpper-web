@@ -137,8 +137,7 @@ scpper.tables = {
      * @returns {undefined}
      */
     assignPaginatorEvents: function (containerId, url, payload)
-    {
-        scpper.tables.selectors = scpper.tables.RESPONSIVE_SELECTORS;
+    {        
         var container = $(containerId);
         if (container) {
             container.find(scpper.tables.selectors.pageLink).on('click', {container: containerId, url: url, payload: payload}, scpper.tables.fetchPaginatorIndex);
@@ -207,6 +206,8 @@ scpper.tables = {
         scpper.tables.fetchPaginator(event.data.container, event.data.url, event.data.payload);
     }    
 };
+
+scpper.tables.selectors = scpper.tables.RESPONSIVE_SELECTORS;
 
 /** Tags **/
 
