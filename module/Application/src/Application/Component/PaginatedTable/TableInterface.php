@@ -14,6 +14,13 @@ namespace Application\Component\PaginatedTable;
  */
 interface TableInterface 
 {
+    
+    /**
+     * Get table name
+     * @return string
+     */
+    public function getName();     
+    
     /**
      * Get a list of columns for this table
      * @return Application\Component\PaginatedTable\TableColumns

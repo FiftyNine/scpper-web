@@ -1,0 +1,118 @@
+<?php
+    // To make tables responsive we need to generate inline stylesheets with @media queries for them
+    if (!function_exists("fillTableStyles")) {
+        
+        // Style constants
+        // There should be a better way to do this with static external stylesheets
+        // but I haven't figured it out yet
+        define('BORDER_STYLE', '1px solid #dddddd');
+        define('PADDING_STYLE', '8px');        
+
+        // This recursive function traverses all columns of the table and fills two stylesheets: 
+        // $defaultStyles - array of styles used by default for big screens
+        // $collapseStyles - array of @media queries with styles for collapsed columns
+        // $prefix - string used as the first part of class names for table cells
+        //        First level cells will have class names like 'table-1', 'table-2' ...
+        //        Each cell inherits class name from its parent and adds own index to it
+        //        P.e. 3rd child of a 2nd first-level cell will have class name 'table-2-3'
+        function fillTableStyles($prefix, $columns, &$defaultStyles, &$collapseStyles) {
+            for ($i=0; $i<$columns->getCount(); $i++) {            
+                $col = $columns->getColumn($i);
+                $index = $i+1;
+                $cellClass = "$prefix-$index";
+                // Column widths in percents are defined in model
+                // so we get them from there and put into our stylesheets
+                $width = $col->getWidth();
+                // Default style only specifies width
+                $defaultStyles[] = "div.$cellClass { width: $width%; }";
+                // Recursively process all children of the current column
+                // This has to be done before generating collapsed styles
+                // because @media queries have to go from highest collapse point 
+                // (inner-most group) to lowest collapse point (outer-most group)
+                fillTableStyles($cellClass, $col->getSubColumns(), $defaultStyles, $collapseStyles);
+                // No need to make @media queries if column is a leaf or doesn't collapse
+                if ($col->getSubColumns()->getCount() && $col->getCollapseAt() > 0) {
+                    // Absolute width of a collapsed group should be equal to its widest child
+                    // Which in precentile terms is a product of its own width and width of the widest child                    
+                    $collapseWidth = 0;
+                    foreach ($col->getSubColumns() as $sub) {
+                        $collapseWidth = max($collapseWidth, $sub->getWidth());                    
+                    }
+                    // P.e. 30% x 50% = 1500 % / 100 = 15%
+                    $collapseWidth = $col->getWidth()*$collapseWidth/100;
+                    
+                    // Fill collapsed styles for this group and its immediate children
+                    $collapseStyles[] = "@media (max-width: {$col->getCollapseAt()}px) {";
+                    // Group cell now paints its own border instead of relying on children for that
+                    $collapseStyles[] = "div.$cellClass { width: {$collapseWidth}%; border-right: ".BORDER_STYLE."; padding: ".PADDING_STYLE."}";
+                    // Hide name of the collapsed group in the header
+                    $collapseStyles[] = "div.$cellClass>.responsive-table-column-name { display: none }";
+                    // Actual collapse: children of the group are stacked in a column instead of being displayed in a row
+                    $collapseStyles[] = "div.$cellClass>.responsive-table-column-group { flex-direction: column}";                    
+                    $j=1;
+                    // Now fill styles for each child of the collapsed group
+                    foreach ($col->getSubColumns() as $sub) {
+                        // Since children are now displayed in column they can take 100% of parent's width
+                        // Also, parent now paints border and pads itself to save space
+                        $collapseStyles[] = "div.$cellClass-".$j."{ width: 100%; padding: 0px; border: none}";                    
+                        $collapseStyles[] = "div.$cellClass-".$j.">.responsive-table-column-name{ padding: 0px; border: none}";
+                        $j++;
+                    }
+                    $collapseStyles[] = "}";
+                }            
+            }
+        }
+    }
+?>
+
+<?php  
+    $table = $this->table; 
+    $cols = $table->getColumns();
+    // Generate styles for the responsive table
+    $defaultStyles = [];
+    $collapseStyles = [];        
+    fillTableStyles($table->getName(), $table->getColumns(), $defaultStyles, $collapseStyles);    
+    $this->headStyle()->appendStyle(implode($defaultStyles, PHP_EOL));
+    $this->headStyle()->appendStyle(implode($collapseStyles, PHP_EOL));
+    
+    // And the rest is history
+    $tableClasses = ['responsive-table'];
+    if ($table->isPreview()) {
+        $tableClasses[] = 'responsive-table-preview';
+    } else {
+        $tableClasses[] = 'responsive-table-sortable';             
+    }
+?>
+
+<div class="<?php echo implode($tableClasses, ' ')?>">
+    <div class="responsive-table-row responsive-table-header">
+        <?php 
+            echo $this->partial('partial/tables/responsive/columns.phtml', [
+                'table' => $table, 
+                'columns' => $cols,
+                'prefix' => $table->getName(),
+                'level' => 1]); 
+        ?>
+    </div>
+    <?php $i=1; ?>
+    <?php foreach ($table->getPaginator() as $row): ?>
+    <div class="responsive-table-row responsive-table-data">
+        <?php                 
+            echo $this->partial('partial/tables/responsive/cells.phtml', [
+                'table' => $table,
+                'columns' => $cols,
+                'index' => $table->getPaginator()->getAbsoluteItemNumber($i),
+                'values' => $row,
+                'level' => 1,
+                'prefix' => $table->getName(),
+                'data' => $this->data]);
+            $i++;
+        ?>        
+    </div>
+    <?php endforeach; ?>    
+</div>
+<?php 
+    if (!$table->isPreview()) {
+        echo $this->paginationControl($table->getPaginator(), 'Sliding', 'partial/paginator'); 
+    }
+?>

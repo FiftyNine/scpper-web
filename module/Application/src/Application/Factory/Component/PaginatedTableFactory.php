@@ -28,58 +28,78 @@ class PaginatedTableFactory
     static public function createPagesTable($paginator, $preview = false)
     {
         $table = new \Application\Component\PaginatedTable\Table(
-            array(
-                new Column('#', '', true, '', Column::INDEX),
-                new Column('Branch', DbViewPages::SITENAME, true, '', Column::OTHER, [], true),
-                new Column('Page', DbViewPages::TITLE, true, '', Column::PAGE),
-                new Column('Rating', '', true, '', Column::PAGE, 
-                    [
-                        new Column('Total', DbViewPages::CLEANRATING, false, 'Total rating - only counts votes from members of the site'),
-                        new Column('Contributor', DbViewPages::CONTRIBUTORRATING, false, 'Contributors rating - only counts votes from members who have at least one successful page'),
-                        new Column('Adjusted', DbViewPages::ADJUSTEDRATING, false, 'Adjusted rating - only counts votes from active members'),
-                        new Column('Wilson', DbViewPages::WILSONSCORE, false, 'Wilson score - calculated as ratio of upvotes to downvotes corrected by total amount of votes'),                        
-                    ]
-                ),
-                new Column('Status', DbViewPages::STATUSID),
-                new Column('Kind', DbViewPages::KINDID),
-                new Column('Posted', DbViewPages::CREATIONDATE, false, '', Column::DATE_TIME),
-                new Column('Authors', '', true, '', Column::USERS)
-            ), 
+            'pages',
+            [
+                Column::group([
+                    Column::column('#', 8, '', true, '', Column::INDEX),
+                    Column::column('Branch', 40, DbViewPages::SITENAME, true, '', Column::OTHER, true),
+                    Column::column('Page', 92, DbViewPages::TITLE, true, '', Column::PAGE),
+                ], 35, 768),
+                Column::group([
+                        Column::column('Total', 20, DbViewPages::CLEANRATING, false, 'Total rating - only counts votes from members of the site'),
+                        Column::column('Contributor', 30, DbViewPages::CONTRIBUTORRATING, false, 'Contributors rating - only counts votes from members who have at least one successful page'),
+                        Column::column('Adjusted', 25, DbViewPages::ADJUSTEDRATING, false, 'Adjusted rating - only counts votes from active members'),
+                        Column::column('Wilson', 25, DbViewPages::WILSONSCORE, false, 'Wilson score - calculated as ratio of upvotes to downvotes corrected by total amount of votes'),
+                ], 30, 991, 'Rating'),
+                Column::group([
+                    Column::group([
+                        Column::column('Status', 60, DbViewPages::STATUSID),
+                        Column::column('Kind', 40, DbViewPages::KINDID),
+                    ], 40, 991),
+                    Column::group([
+                        Column::column('Posted', 40, DbViewPages::CREATIONDATE, false, '', Column::DATE),
+                        Column::column('Authors', 60, '', true, '', Column::USERS)
+                    ], 60, 991),
+                ], 35, 768)
+            ], 
             $paginator, 
             'partial/tables/pages.phtml', 
             $preview
-        );        
+        );
         return $table;
     }
     
     static public function createMembersTable($paginator, $preview = false)
     {
+        
         $table = new \Application\Component\PaginatedTable\Table(
-            array(
-                new Column('#', '', true, '', Column::INDEX),
-                new Column('User', DbViewMembership::DISPLAYNAME, true, '', Column::USERS),
-                new Column('Votes', DbViewMembership::VOTES, false),
-                new Column('Revisions', DbViewMembership::REVISIONS, false),
-                new Column('Pages', DbViewMembership::PAGES, false),
-                new Column('Active', DbViewMembership::LASTACTIVITY, false, 'User either posted a page, edited one, or cast at least one vote in the last 6 months'),
-                new Column('Joined', DbViewMembership::JOINDATE, false, '', Column::DATE_TIME)
-            ), 
+            'members',
+            [
+                Column::group([
+                    Column::column('#', 15, '', true, '', Column::INDEX),
+                    Column::column('User', 85, DbViewMembership::DISPLAYNAME, true, '', Column::USERS)
+                ], 40, 768),
+                Column::group([
+                    Column::column('Votes', 30, DbViewMembership::VOTES, false),
+                    Column::column('Revisions', 40, DbViewMembership::REVISIONS, false),
+                    Column::column('Pages', 30, DbViewMembership::PAGES, false)
+                ], 30, 768),
+                Column::group([
+                    Column::column('Joined', 65, DbViewMembership::JOINDATE, false, '', Column::DATE_TIME),
+                    Column::column('Active', 35, DbViewMembership::LASTACTIVITY, false, 'User either posted a page, edited one, or cast at least one vote in the last 6 months'),                    
+                ], 30, 768)
+            ], 
             $paginator, 
             'partial/tables/members.phtml', 
             $preview
-        );        
+        );
         return $table;
     }    
     
     static public function createEditorsTable($paginator, $preview = false)
     {
         $table = new \Application\Component\PaginatedTable\Table(
-            array(
-                new Column('#', '', true, '', Column::INDEX),
-                new Column('User', DbViewRevisions::USERDISPLAYNAME, true, '', Column::USERS),
-                new Column('Revisions', 'Revisions', false),
-                new Column('%', null, false, 'Relative to all revisions made during selected period'),
-            ),
+            'editors',
+            [
+                Column::group([
+                    Column::column('#', 5, '', true, '', Column::INDEX),
+                    Column::column('User', 95, DbViewRevisions::USERDISPLAYNAME, true, '', Column::USERS),
+                ], 70, 768),
+                Column::group([
+                    Column::column('Revisions', 70, 'Revisions', false),
+                    Column::column('%', 30, null, false, 'Relative to all revisions made during selected period'),
+                ], 30, 768),
+            ],
             $paginator,
             'partial/tables/editors.phtml', 
             $preview
@@ -90,13 +110,18 @@ class PaginatedTableFactory
     static public function createVotersTable($paginator, $preview = false)
     {
         $table = new \Application\Component\PaginatedTable\Table(
-            array(
-                new Column('#', '', true, '', Column::INDEX),
-                new Column('User', DbViewRevisions::USERDISPLAYNAME, true, '', Column::USERS),
-                new Column('Votes', 'Votes', false),
-                new Column('Positive'),
-                new Column('Negative'),
-            ),
+            'voters',
+            [
+                Column::group([
+                    Column::column('#', 5, '', true, '', Column::INDEX),
+                    Column::column('User', 95, DbViewRevisions::USERDISPLAYNAME, true, '', Column::USERS),
+                ], 70, 768),
+                Column::group([
+                    Column::column('Votes', 30, 'Votes', false),                    
+                    Column::column('Positive', 35),
+                    Column::column('Negative', 35),
+                ], 30, 768)
+            ],
             $paginator,
             'partial/tables/voters.phtml', 
             $preview
@@ -107,11 +132,12 @@ class PaginatedTableFactory
     static public function createUsersTable($paginator)
     {
         $table = new \Application\Component\PaginatedTable\Table(
-            array(
-                new Column('#', '', true, '', Column::INDEX),
-                new Column('User', DbViewUsers::DISPLAYNAME, true, '', Column::USERS),
-                new Column('Membership')
-            ),
+            'users',
+            [
+                Column::column('#', 5, '', true, '', Column::INDEX),
+                Column::column('User', 50, DbViewUsers::DISPLAYNAME, true, '', Column::USERS),
+                Column::column('Membership', 45)
+            ],
             $paginator,
             'partial/tables/users.phtml', 
             false
@@ -122,18 +148,25 @@ class PaginatedTableFactory
     static public function createSiteUsersTable($paginator)
     {
         $table = new \Application\Component\PaginatedTable\Table(
-            array(
-                new Column('#', '', true, '', Column::INDEX),
-                new Column('User', DbViewUsers::TABLE.'_'.DbViewUsers::DISPLAYNAME, true, '', Column::USERS),
-                new Column('Votes', DbViewUserActivity::TABLE.'_'.DbViewUserActivity::VOTES, false),
-                new Column('Revisions', DbViewUserActivity::TABLE.'_'.DbViewUserActivity::REVISIONS, false),
-                new Column('Pages', DbViewUserActivity::TABLE.'_'.DbViewUserActivity::PAGES, false),
-                new Column('Active', DbViewUserActivity::TABLE.'_'.DbViewUserActivity::LASTACTIVITY, true, 'User either posted a page, edited one, or cast at least one vote in the last 6 months'),
-                new Column('Joined', DbViewMembership::TABLE.'_'.DbViewMembership::JOINDATE, false, '', Column::DATE)
-            ),
+            'site-users',
+            [
+                Column::group([
+                    Column::column('#', 15, '', true, '', Column::INDEX),
+                    Column::column('User', 85, DbViewUsers::TABLE.'_'.DbViewUsers::DISPLAYNAME, true, '', Column::USERS),
+                ], 40, 768),
+                Column::group([
+                    Column::column('Votes', 30, DbViewUserActivity::TABLE.'_'.DbViewUserActivity::VOTES, false),
+                    Column::column('Revisions', 40, DbViewUserActivity::TABLE.'_'.DbViewUserActivity::REVISIONS, false),
+                    Column::column('Pages', 30, DbViewUserActivity::TABLE.'_'.DbViewUserActivity::PAGES, false),
+                ], 30, 768),
+                Column::group([
+                    Column::column('Joined', 65, DbViewMembership::TABLE.'_'.DbViewMembership::JOINDATE, false, '', Column::DATE),
+                    Column::column('Active', 35, DbViewUserActivity::TABLE.'_'.DbViewUserActivity::LASTACTIVITY, true, 'User either posted a page, edited one, or cast at least one vote in the last 6 months'),
+                ], 30, 768)
+            ],
             $paginator,
             'partial/tables/siteUsers.phtml', 
-            false
+            false            
         );
         return $table;        
     }
@@ -141,16 +174,23 @@ class PaginatedTableFactory
     static public function createAuthorsTable($paginator)
     {
         $table = new \Application\Component\PaginatedTable\Table(
-            array(
-                new Column('#', '', true, '', Column::INDEX),
-                new Column('User', DbViewAuthors::USERDISPLAYNAME, true, '', Column::USERS),
-                new Column('Pages', AuthorSummaryConsts::PAGES, false),
-                new Column('Originals', AuthorSummaryConsts::ORIGINALS, false),
-                new Column('Translations', AuthorSummaryConsts::TRANSLATIONS, false),
-                new Column('Rating', AuthorSummaryConsts::TOTAL_RATING, false, 'Summary clean rating of all pages posted by user'),
-                new Column('Average', AuthorSummaryConsts::AVERAGE_RATING, false, 'Average clean rating of a page posted by user'),
-                new Column('Highest', AuthorSummaryConsts::HIGHEST_RATING, false, 'Highest clean rating of a page posted by user')
-            ),
+            'authors',
+            [
+                Column::group([
+                    Column::column('#', 15, '', true, '', Column::INDEX),
+                    Column::column('User', 85, DbViewAuthors::USERDISPLAYNAME, true, '', Column::USERS),
+                ], 40, 768),
+                Column::group([
+                    Column::column('Pages', 25, AuthorSummaryConsts::PAGES, false),
+                    Column::column('Originals', 35, AuthorSummaryConsts::ORIGINALS, false),
+                    Column::column('Translations', 40, AuthorSummaryConsts::TRANSLATIONS, false),
+                ], 30, 768),
+                Column::group([
+                    Column::column('Rating', 40, AuthorSummaryConsts::TOTAL_RATING, false, 'Summary clean rating of all pages posted by user'),
+                    Column::column('Average', 30, AuthorSummaryConsts::AVERAGE_RATING, false, 'Average clean rating of a page posted by user'),
+                    Column::column('Highest', 30, AuthorSummaryConsts::HIGHEST_RATING, false, 'Highest clean rating of a page posted by user')
+                ], 30, 768)
+            ],
             $paginator,
             'partial/tables/authors.phtml', 
             false
@@ -159,14 +199,19 @@ class PaginatedTableFactory
     }
     
     static public function createRevisionsTable($paginator)
-    {
+    {        
         $table = new \Application\Component\PaginatedTable\Table(
-            array(
-                new Column('#', DbViewRevisions::REVISIONINDEX, false, '', Column::INDEX),
-                new Column('User', DbViewRevisions::USERDISPLAYNAME, true, '', Column::USERS),                
-                new Column('Comment'),
-                new Column('Time', DbViewRevisions::DATETIME, false, '', Column::DATE_TIME),
-            ),
+            'revisions',
+            [
+                Column::group([
+                    Column::column('#', 10, DbViewRevisions::REVISIONINDEX, false, '', Column::INDEX),
+                    Column::column('User', 90, DbViewRevisions::USERDISPLAYNAME, true, '', Column::USERS),                
+                ], 40, 768),
+                Column::group([
+                    Column::column('Time', 30, DbViewRevisions::DATETIME, false, '', Column::DATE_TIME),
+                    Column::column('Comment', 70),                    
+                ], 60, 768)
+            ],
             $paginator,
             'partial/tables/revisions.phtml', 
             false
@@ -177,16 +222,23 @@ class PaginatedTableFactory
     static public function createVotesTable($paginator)
     {
         $table = new \Application\Component\PaginatedTable\Table(
-            array(
-                new Column('#', '', true, '', Column::INDEX),
-                new Column('User', DbViewVotes::USERDISPLAYNAME, true, '', Column::USERS),                
-                new Column('Page', DbViewVotes::PAGETITLE, true, '', Column::PAGE),                
-                new Column('Vote', DbViewVotes::VALUE, false),
-                new Column('Member', DbViewVotes::FROMMEMBER, false, 'Vote from a member of the wiki'),
-                new Column('Contributor', DbViewVotes::FROMCONTRIBUTOR, false, 'Vote from a member who authored at least one successful page'),
-                new Column('Active', DbViewVotes::FROMACTIVE, false, 'Vote from an active member of the wiki'),
-                new Column('Date', DbViewVotes::DATETIME, false, 'Not the exact time but rather upper estimate', Column::DATE),
-            ),
+            'votes',
+            [
+                Column::group([
+                    Column::column('#', 7, '', true, '', Column::INDEX),
+                    Column::column('User', 43, DbViewVotes::USERDISPLAYNAME, true, '', Column::USERS),                
+                    Column::column('Page', 50, DbViewVotes::PAGETITLE, true, '', Column::PAGE),                
+                ], 50, 768),
+                Column::group([
+                    Column::column('Vote', 30, DbViewVotes::VALUE, false),
+                    Column::column('Date', 70, DbViewVotes::DATETIME, false, 'Not the exact time but rather upper estimate', Column::DATE),
+                ], 20, 768),
+                Column::group([
+                    Column::column('Member', 30, DbViewVotes::FROMMEMBER, false, 'Vote from a member of the wiki'),
+                    Column::column('Contributor', 45, DbViewVotes::FROMCONTRIBUTOR, false, 'Vote from a member who authored at least one successful page'),
+                    Column::column('Active', 25, DbViewVotes::FROMACTIVE, false, 'Vote from an active member of the wiki'),                
+                ], 30, 768),                
+            ],
             $paginator,
             'partial/tables/votes.phtml', 
             false
@@ -197,15 +249,22 @@ class PaginatedTableFactory
     static public function createPageVotesTable($paginator)
     {
         $table = new \Application\Component\PaginatedTable\Table(
-            array(
-                new Column('#', '', true, '', Column::INDEX),
-                new Column('User', DbViewVotes::USERDISPLAYNAME, true, '', Column::USERS),                
-                new Column('Vote', DbViewVotes::VALUE, false),
-                new Column('Member', DbViewVotes::FROMMEMBER, false, 'Vote from a member of the wiki'),
-                new Column('Contributor', DbViewVotes::FROMCONTRIBUTOR, false, 'Vote from a member who authored at least one successful page'),
-                new Column('Active', DbViewVotes::FROMACTIVE, false, 'Vote from an active member of the wiki'),
-                new Column('Date', DbViewVotes::DATETIME, false, 'Not the exact time but rather upper estimate', Column::DATE),
-            ),
+            'page-votes',
+            [
+                Column::group([
+                    Column::column('#', 10, '', true, '', Column::INDEX),
+                    Column::column('User', 90, DbViewVotes::USERDISPLAYNAME, true, '', Column::USERS),
+                ], 40, 768),
+                Column::group([
+                    Column::column('Vote', 30, DbViewVotes::VALUE, false),
+                    Column::column('Date', 70, DbViewVotes::DATETIME, false, 'Not the exact time but rather upper estimate', Column::DATE),
+                ], 25, 768),
+                Column::group([
+                    Column::column('Member', 30, DbViewVotes::FROMMEMBER, false, 'Vote from a member of the wiki'),
+                    Column::column('Contributor', 40, DbViewVotes::FROMCONTRIBUTOR, false, 'Vote from a member who authored at least one successful page'),
+                    Column::column('Active', 30, DbViewVotes::FROMACTIVE, false, 'Vote from an active member of the wiki'),
+                ], 35, 768)
+            ],
             $paginator,
             'partial/tables/pageVotes.phtml', 
             false
@@ -216,13 +275,18 @@ class PaginatedTableFactory
     static public function createUserVotesTable($paginator)
     {
         $table = new \Application\Component\PaginatedTable\Table(
-            array(
-                new Column('#', '', true, '', Column::INDEX),                
-                new Column('Page', DbViewVotes::PAGETITLE, true, '', Column::PAGE),
-                new Column('Authors', '', false, '', Column::USERS),
-                new Column('Vote', DbViewVotes::VALUE, false),
-                new Column('Date', DbViewVotes::DATETIME, false, 'Not the exact time but rather upper estimate', Column::DATE),
-            ),
+            'user-votes',
+            [
+                Column::group([
+                    Column::column('#', 5, '', true, '', Column::INDEX),                
+                    Column::column('Page', 50, DbViewVotes::PAGETITLE, true, '', Column::PAGE),
+                    Column::column('Authors', 45, '', false, '', Column::USERS),
+                ], 70, 768),
+                Column::group([
+                    Column::column('Vote', 20, DbViewVotes::VALUE, false),
+                    Column::column('Date', 80, DbViewVotes::DATETIME, false, 'Not the exact time but rather upper estimate', Column::DATE),
+                ], 30, 768)
+            ],
             $paginator,
             'partial/tables/userVotes.phtml', 
             false

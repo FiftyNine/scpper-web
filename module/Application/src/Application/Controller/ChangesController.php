@@ -323,7 +323,7 @@ class ChangesController extends AbstractActionController
             if ($renderer) {
                 $result['success'] = true;                
                 $result['content'] = $renderer(
-                    'partial/tables/table.phtml', 
+                    'partial/tables/default/table.phtml', 
                     array(
                         'table' => $table, 
                         'data' => array('siteId' => $siteId)
@@ -362,7 +362,7 @@ class ChangesController extends AbstractActionController
             if ($renderer) {
                 $result['success'] = true;                
                 $result['content'] = $renderer(
-                    'partial/tables/table.phtml', 
+                    'partial/tables/default/table.phtml', 
                     array(
                         'table' => $table, 
                         'data' => array()
@@ -399,7 +399,7 @@ class ChangesController extends AbstractActionController
             if ($renderer) {
                 $result['success'] = true;                
                 $result['content'] = $renderer(
-                    'partial/tables/table.phtml', 
+                    'partial/tables/default/table.phtml', 
                     array(
                         'table' => $table, 
                         'data' => array(
@@ -438,7 +438,7 @@ class ChangesController extends AbstractActionController
             if ($renderer) {
                 $result['success'] = true;                
                 $result['content'] = $renderer(
-                    'partial/tables/table.phtml', 
+                    'partial/tables/default/table.phtml', 
                     array(
                         'table' => $table, 
                         'data' => array(

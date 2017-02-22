@@ -196,7 +196,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 $revTable = $this->revisions;
 
 echo $this->partial(
-    'partial/tables/table.phtml',
+    'partial/tables/default/table.phtml',
     array(
         'table' => $revTable,
         'data' => array(),
@@ -211,7 +211,7 @@ echo $this->partial(
 $voteTable = $this->votes;
 
 echo $this->partial(
-    'partial/tables/table.phtml',
+    'partial/tables/default/table.phtml',
     array(
         'table' => $voteTable,
         'data' => array(),

@@ -36,20 +36,21 @@
             ->prependFile($this->basePath('js/date.format.js'), 'text/javascript')            
             
         ; ?>       
-<script type="text/javascript">
-(function () {
+        <script type="text/javascript">
+        (function () {
 
-function initSearch()
-{   
-    scpper.search.siteId = <?php echo $this->site->getId(); ?>;
-    scpper.search.registerSearchAutocomplete();
-    scpper.search.initSearchControl('.search-control');
-}
+        function initSearch()
+        {   
+            scpper.search.siteId = <?php echo $this->site->getId(); ?>;
+            scpper.search.registerSearchAutocomplete();
+            scpper.search.initSearchControl('.search-control');
+        }
 
- $(document).ready(initSearch);
+         $(document).ready(initSearch);
 
-}()); 
-</script>
+        }()); 
+        </script>
+        <?php echo $this->headStyle() ?>
     </head>
     <body>
         <?php
@@ -74,6 +75,6 @@ function initSearch()
             </span>
         </footer>
         
-        <?php echo $this->inlineScript() ?>
+        <?php echo $this->inlineScript() ?>        	        
     </body>
 </html>

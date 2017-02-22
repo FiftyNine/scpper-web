@@ -2,6 +2,7 @@
     $table = $this->table; 
     $cols = $table->getColumns();
 ?>
+<div class="table-responsive">
 <table class="table table-striped 
     <?php 
         if ($table->isPreview()) {
@@ -122,6 +123,7 @@
       endforeach;
     ?>
 </table>
+</div>
 <?php 
     if (!$table->isPreview()) {
         echo $this->paginationControl($table->getPaginator(), 'Sliding', 'partial/paginator'); 

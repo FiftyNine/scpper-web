@@ -1,0 +1,60 @@
+<?php 
+    $table = $this->table;
+    $col = $this->column; 
+    $level = $this->level;
+    $prefix = $this->prefix;
+?>
+
+<div class="responsive-table-cell <?php echo $prefix; ?>">
+    <?php if ($col->getName()): ?>
+        <?php
+            $thisOrder = $col->canOrder() && ($table->getColumns()->getOrderBy() === $col);
+            $classes = ['responsive-table-column-name'];
+            if ($col->getSubColumns()->getCount()) {
+                $classes[] = 'responsive-table-group-name';
+            }
+            $attributes = [];
+            if ($col->canOrder()) {
+                $classes[] = 'can-order';
+                $attributes[] = 'data-name="'.$col->getOrderName().'"';
+                if ($thisOrder) {
+                    $classes[] = 'ordered';
+                    $attributes[] = 'data-ascending="'.($table->getColumns()->isAscending()?'1':'0').'"';
+                } else {
+                    $attributes[] = 'data-ascending="'.($col->isDefaultAscending()?'0':'1').'"';
+                }
+            }         
+        ?>          
+        <div class="<?php echo implode($classes, ' '); ?>" <?php echo implode($attributes, ' '); ?>>
+            <div>
+            <?php if ($col->getTooltip()): ?>
+            <abbr title="<?php echo $col->getTooltip(); ?>">
+            <?php endif; ?>            
+            <?php
+                echo $col->getName(); 
+                if ($thisOrder) {
+                    if ($table->getColumns()->isAscending()) {
+                        echo "&nbsp;&UpArrow;";
+                    } else {
+                        echo "&nbsp;&DownArrow;";
+                    }
+                }
+            ?>
+            <?php if ($col->getTooltip()): ?>
+            </abbr>
+            <?php endif; ?>     
+            </div>
+        </div>
+    <?php endif; ?>
+    <?php $cols = $col->getSubColumns(); ?>
+    <?php if ($cols->getCount()): ?>
+    <div class="responsive-table-column-group">
+        <?php echo $this->partial('partial/tables/responsive/columns.phtml', [
+            'table' => $table, 
+            'columns' => $cols,
+            'prefix' => $prefix,
+            'level' => $level+1]);
+        ?>
+    </div>
+    <?php endif; ?>
+</div>

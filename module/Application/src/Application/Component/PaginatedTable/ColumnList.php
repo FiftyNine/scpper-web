@@ -153,7 +153,7 @@ class ColumnList implements \IteratorAggregate
                     if (count($res) <= $i+1) {
                         $res[]=[];
                     }
-                    $res[$i+1]+=$subArray[$i];
+                    $res[$i+1]=array_merge($res[$i+1], $subArray[$i]);
                 }
             }            
         }

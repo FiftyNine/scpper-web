@@ -38,13 +38,6 @@ div.container a.brand {
     margin-left: 0;
     padding: 8px 20px 12px 40px;
 }
-/*
-@media (min-width: 979px) {
-  ul.nav li.dropdown:hover> ul.dropdown-menu {
-    display: block;
-  }
-}
-*/
 
 @media (max-width: 997px) {
   .navbar-collapse {
@@ -63,54 +56,105 @@ div.container a.brand {
     display: none !important;
   }    
 }
- 
-/* General */
 
-html {
-  position: relative;
-  min-height: 100%;
-}
-body {
-  /* Margin bottom by footer height */
-  margin-bottom: 4em;
-  padding-top: 60px;
+/* Tables (common) */
+
+.btn-table {
+    background-color: #f9f9f9;
 }
 
-footer {
-  position: absolute;
-  text-align: center;
-  bottom: 0;
-  height: 4em;
-  width: 100%;
-  margin: auto;
+.pagination {
+    margin-top: 5px;
 }
 
-footer > hr {
-    margin-bottom: 5px;
+.per-page-block {
+    margin-left: 25px;
+    display: inline-block;
 }
 
-.small-text {
-    font-size: smaller;
-    color: #AAAAAA;
+.per-page-block label {
+    font-weight: normal;
 }
 
-.small-text > a {
-    color: #AAAAAA;
-    text-decoration: underline;
+.per-page-block select {
+    margin-left: 5px;
+    padding: 0px;
 }
 
-.top-buffer { 
-    margin-top:30px; 
+.authors {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
 }
 
-.bottom-buffer { 
-    margin-bottom:30px; 
+/* Responsive tables */
+
+.responsive-table {
+    display: flex; 
+    flex-flow: column nowrap;
+    margin-bottom: 10px;
 }
 
-hr {
-    margin-top: 0px;
-    border-color: #dddddd;
+.responsive-table-row {
+    display: flex;
+    flex-flow: row nowrap;    
+    border-top: 1px solid #dddddd;
+    border-left: 1px solid #dddddd;    
 }
+
+.responsive-table-cell {    
+    display: flex;    
+    flex-flow: column nowrap; 
+    justify-content: center; 
+    flex: auto 1 1;            
+    text-overflow: clip;
+    overflow: hidden;    
+}
+
+.responsive-table-column-name, .responsive-table-value {
+    padding: 8px;
+    line-height: 1.4285;
+    vertical-align: top;
+    border-right: 1px solid #dddddd;    
+}
+
+.responsive-table-column-name {
+    align-items: center;
+}
+
+.responsive-table>.responsive-table-row:last-of-type{
+    border-bottom: 1px solid #dddddd;
+}
+
+.responsive-table>.responsive-table-row:nth-child(odd){
+    background-color: #f9f9f9;
+}
+
+.responsive-table-column-name {        
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;    
+    font-weight: bold;
+    text-overflow: clip;
+    overflow-x: hidden;
+}
+
+.responsive-table-column-name.can-order {
+    cursor: pointer;
+}
+
+.responsive-table-group-name {
+    border-bottom: 1px solid #dddddd;
+    justify-content: center;
+}
+
+.responsive-table-column-group {
+    display: flex;
+    flex-flow: row nowrap;
+    flex-grow: 1;
+}
+
+/* Basic tables */
 
 .table {
     margin-bottom: 10px;
@@ -156,8 +200,29 @@ table.table-sortable > tbody > tr > th.can-order {
     cursor: pointer;
 }
 
-.btn-table {
-    background-color: #f9f9f9;
+/* General */
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 4em;
+  padding-top: 60px;
+}
+
+footer {
+  position: absolute;
+  text-align: center;
+  bottom: 0;
+  height: 4em;
+  width: 100%;
+  margin: auto;
+}
+
+footer > hr {
+    margin-bottom: 5px;
 }
 
 .text-condensed {
@@ -168,22 +233,27 @@ table.table-sortable > tbody > tr > th.can-order {
     font-weight: bold;
 }
 
-.pagination {
-    margin-top: 5px;
+.small-text {
+    font-size: smaller;
+    color: #AAAAAA;
 }
 
-.per-page-block {
-    margin-left: 25px;
-    display: inline-block;
+.small-text > a {
+    color: #AAAAAA;
+    text-decoration: underline;
 }
 
-.per-page-block label {
-    font-weight: normal;
+.top-buffer { 
+    margin-top:30px; 
 }
 
-.per-page-block select {
-    margin-left: 5px;
-    padding: 0px;
+.bottom-buffer { 
+    margin-bottom:30px; 
+}
+
+hr {
+    margin-top: 0px;
+    border-color: #dddddd;
 }
 
 .background-green {
@@ -222,6 +292,7 @@ img.rating-image {
   height: 100px;
 }
 
+
 /* Index */
 
 .tile, .tile-main{    
@@ -238,7 +309,9 @@ img.rating-image {
 }
 
 .tile-main {
-    height: 7em;
+    height: auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f4f1d7+0,ede2a3+100 */
     background: #FAF7D7; /* Old browsers */
 }

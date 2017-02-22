@@ -15,6 +15,7 @@
 }());
 
 <?php $this->headScript()->captureEnd(); ?>
+
 <span class="h1">
     <?php echo $this->partial('partial/site.phtml', array('site' => $this->site, 'link' => true));?>
 </span>
@@ -25,7 +26,7 @@
 $usersTable = $this->usersTable;
 
 echo $this->partial(
-    'partial/tables/table.phtml', 
+    'partial/tables/default/table.phtml', 
     array(
         'table' => $usersTable,
         'data' => array('siteId' => $this->site->getId()),
@@ -40,10 +41,10 @@ echo $this->partial(
 $authorsTable = $this->authorsTable;
 
 echo $this->partial(
-    'partial/tables/table.phtml', 
+    'partial/tables/default/table.phtml', 
     array(
         'table' => $authorsTable,
     )
-);    
+);
 ?>
 </div>

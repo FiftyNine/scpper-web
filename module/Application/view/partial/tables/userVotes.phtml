@@ -8,15 +8,7 @@ switch($this->column->getName()) {
         echo $this->partial('partial/page.phtml', array('page' => $row->getPage(), 'link' => true));
         break;
     case 'Authors':
-        $authors = $row->getPage()->getAuthors();
-        $one = 1 === count($authors);
-        foreach ($authors as $author) {
-            echo $this->partial('partial/user.phtml', array('user' => $author->getUser()));
-            if (!$one || $author->getRole() !== \Application\Utils\AuthorRole::AUTHOR) {
-                printf("&nbsp;(%s)", \Application\Utils\AuthorRole::getDescription($author->getRole()));
-            }
-            echo "<br>";
-        }
+        echo $this->partial('partial/authors.phtml', ['authors' => $row->getPage()->getAuthors()]);
         break;
     case 'Vote':
         if ($row->getValue() > 0) {echo '+';} else {echo '-';}

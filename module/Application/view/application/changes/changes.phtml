@@ -105,7 +105,7 @@ function printInfoLabel($data)
                 <?php 
                     $membersTable = $this->members['table'];
                     echo $this->partial(
-                        'partial/tables/table.phtml', 
+                        'partial/tables/default/table.phtml', 
                         array(
                             'table' => $membersTable,
                             'data' => array('siteId' => $site->getId()),
@@ -144,7 +144,7 @@ function printInfoLabel($data)
                 <?php 
                     $pagesTable = $this->pages['table'];
                     echo $this->partial(
-                        'partial/tables/table.phtml', 
+                        'partial/tables/default/table.phtml', 
                         array(
                             'table' => $pagesTable,
                             'data' => array(),
@@ -183,7 +183,7 @@ function printInfoLabel($data)
                 <?php 
                     $revisionsTable = $this->revisions['table'];
                     echo $this->partial(
-                        'partial/tables/table.phtml', 
+                        'partial/tables/default/table.phtml', 
                         array(
                             'table' => $revisionsTable,
                             'data' => array(
@@ -224,7 +224,7 @@ function printInfoLabel($data)
                 <?php 
                     $votersTable = $this->votes['table'];
                     echo $this->partial(
-                        'partial/tables/table.phtml', 
+                        'partial/tables/default/table.phtml', 
                         array(
                             'table' => $votersTable,
                             'data' => array(
@@ -239,7 +239,7 @@ function printInfoLabel($data)
         </div>
     </div>                
 </div>
-<div id="table-error-row" hidden>
+<div id="basic-table-error-row" hidden>
     <table>
     <tr>
         <td colspan="100">
@@ -247,4 +247,10 @@ function printInfoLabel($data)
         </td>
     </tr>
     </table>
+</div>
+
+<div id="responsive-table-error-row" hidden>
+    <div class="responsive-table-row responsive-table-data">
+        Failed to retrieve data
+    </div>
 </div>

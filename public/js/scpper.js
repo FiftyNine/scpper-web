@@ -59,6 +59,36 @@ scpper.isElementInViewport = function(el) {
 /** Table functions **/
 
 scpper.tables = {
+    BASIC_SELECTORS: 
+    {
+        table: 'table',
+        tableBody: 'table.table-preview>tbody',
+        firstRow: 'tr:first-child',
+        errorBody: '#basic-table-error-row > table > tbody',
+        pageLink: 'ul.pagination > li > a',
+        perPageCount: 'select.per-page-control',
+        sortableColumn: 'th.can-order',
+        sortColumn: 'th.ordered',
+        sortAttribute: 'data-name',
+        sortOrderAttribute: 'data-ascending',
+        currentPageAttribute: 'data-page'
+    },
+    RESPONSIVE_SELECTORS:
+    {
+        table: '.responsive-table',
+        tableBody: '.responsive-table',
+        firstRow: '.responsive-table-data:first-child',
+        errorBody: '#responsive-table-error-row',
+        pageLink: 'ul.pagination > li > a',
+        perPageCount: 'select.per-page-control',
+        sortableColumn: '.responsive-table-column-name.can-order',
+        sortColumn: '.responsive-table-column-name.ordered',
+        sortAttribute: 'data-name',
+        sortOrderAttribute: 'data-ascending',
+        currentPageAttribute: 'data-page'        
+    },
+    selectors: null,
+    
     /**
      * 
      * @param {string} containerId
@@ -66,9 +96,9 @@ scpper.tables = {
     showTableError: function (containerId)
     {
         var container = $(containerId);
-        var table = container.find('table.table-preview>tbody');
-        table.find('tr:first-child').nextAll().remove();
-        table.append($("#table-error-row > table > tbody").html());    
+        var table = container.find(scpper.tables.selectors.tableBody);
+        table.find(scpper.tables.selectors.firstRow).nextAll().remove();
+        table.append($(scpper.tables.selectors.errorBody).html());    
     },
 
     /**
@@ -79,7 +109,7 @@ scpper.tables = {
      */
     fetchPaginator: function (containerId, url, payload)
     {
-        var table = $(containerId).children("table");
+        var table = $(containerId).children(scpper.tables.selectors.table);
         table.block(scpper.loadingOverlayOptions);
         $.ajax({
             url: url,
@@ -108,11 +138,12 @@ scpper.tables = {
      */
     assignPaginatorEvents: function (containerId, url, payload)
     {
+        scpper.tables.selectors = scpper.tables.RESPONSIVE_SELECTORS;
         var container = $(containerId);
         if (container) {
-            container.find("ul.pagination > li > a").on('click', {container: containerId, url: url, payload: payload}, scpper.tables.fetchPaginatorIndex);
-            container.find(".per-page-control").on('change', {container: containerId, url: url, payload: payload}, scpper.tables.changePaginatorSize);
-            container.find("th.can-order").on('click', {container: containerId, url: url, payload: payload}, scpper.tables.changePaginatorOrder);
+            container.find(scpper.tables.selectors.pageLink).on('click', {container: containerId, url: url, payload: payload}, scpper.tables.fetchPaginatorIndex);
+            container.find(scpper.tables.selectors.perPageCount).on('change', {container: containerId, url: url, payload: payload}, scpper.tables.changePaginatorSize);
+            container.find(scpper.tables.selectors.sortableColumn).on('click', {container: containerId, url: url, payload: payload}, scpper.tables.changePaginatorOrder);
         }
     },
 
@@ -125,9 +156,9 @@ scpper.tables = {
     {
         var payload = event.data.payload;
         payload.page = 1;
-        payload.perPage = $(event.data.container+' select.per-page-control').val();        
-        payload.orderBy = $(this).attr('data-name');
-        payload.ascending = $(this).attr('data-ascending') === "1" ? "0": "1";
+        payload.perPage = $(event.data.container+' '+scpper.tables.selectors.perPageCount).val();        
+        payload.orderBy = $(this).attr(scpper.tables.selectors.sortAttribute);
+        payload.ascending = $(this).attr(scpper.tables.selectors.sortOrderAttribute) === "1" ? "0": "1";
         scpper.tables.fetchPaginator(event.data.container, event.data.url, payload);
     },
 
@@ -141,9 +172,9 @@ scpper.tables = {
         var orderCol = null;
         payload.page = 1;
         payload.perPage = $(this).val();
-        orderCol = $(event.data.container+' th.ordered');
-        payload.orderBy = orderCol.attr('data-name');
-        payload.ascending = orderCol.attr('data-ascending');            
+        orderCol = $(event.data.container+' '+scpper.tables.selectors.sortColumn);
+        payload.orderBy = orderCol.attr(scpper.tables.selectors.sortAttribute);
+        payload.ascending = orderCol.attr(scpper.tables.selectors.sortOrderAttribute);
         scpper.tables.fetchPaginator(event.data.container, event.data.url, payload);
     },
 
@@ -156,11 +187,11 @@ scpper.tables = {
         var payload = event.data.payload;
         var orderCol = null;
         var table = document.getElementById(event.data.container.substring(1));
-        payload.page = $(this).attr('data-page');
-        payload.perPage = $(event.data.container+' select.per-page-control').val();    
-        orderCol = $(event.data.container+' th.ordered');
-        payload.orderBy = orderCol.attr('data-name');
-        payload.ascending = orderCol.attr('data-ascending');
+        payload.page = $(this).attr(scpper.tables.selectors.currentPageAttribute);
+        payload.perPage = $(event.data.container+' '+scpper.tables.selectors.perPageCount).val();    
+        orderCol = $(event.data.container+' '+scpper.tables.selectors.sortColumn);
+        payload.orderBy = orderCol.attr(scpper.tables.selectors.sortAttribute);
+        payload.ascending = orderCol.attr(scpper.tables.selectors.sortOrderAttribute);
         scpper.tables.fetchPaginator(event.data.container, event.data.url, payload);
         if (!scpper.isElementInViewport(table)) {
             table.scrollIntoView();
@@ -174,7 +205,7 @@ scpper.tables = {
     fetchPaginatorFirst: function (event)
     {
         scpper.tables.fetchPaginator(event.data.container, event.data.url, event.data.payload);
-    }
+    }    
 };
 
 /** Tags **/

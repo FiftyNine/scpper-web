@@ -80,7 +80,7 @@
     <?php
 
     echo $this->partial(
-        'partial/tables/table.phtml', 
+        'partial/tables/default/table.phtml', 
         array(
             'table' => $this->pages,
             'data' => array('siteId' => $this->site->getId()),
@@ -93,7 +93,7 @@
     <?php
 
     echo $this->partial(
-        'partial/tables/table.phtml', 
+        'partial/tables/default/table.phtml', 
         array(
             'table' => $this->users,
             'data' => array('siteId' => $this->site->getId()),

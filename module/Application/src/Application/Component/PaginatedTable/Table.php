@@ -15,6 +15,12 @@ namespace Application\Component\PaginatedTable;
  */
 class Table implements TableInterface
 {
+    
+    /**
+     * @var string;
+     */
+    protected $name;    
+    
     /**
      *
      * @var \Application\Component\PaginatedTable\TableColumns;
@@ -38,12 +44,21 @@ class Table implements TableInterface
      */
     protected $preview;
     
-    public function __construct($columns, $paginator, $bodyView, $preview = false) 
+    public function __construct($name, $columns, $paginator, $bodyView, $preview = false) 
     {
+        $this->name = $name;
         $this->columns = new TableColumns($columns);
         $this->paginator = $paginator;
         $this->bodyView = $bodyView;
         $this->preview = $preview;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName() 
+    {
+        return $this->name;
     }
     
     /**

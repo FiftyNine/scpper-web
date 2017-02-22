@@ -1,0 +1,16 @@
+<?php
+    $authors = $this->authors;
+    $one = 1 === count($authors);
+?>    
+<div class="authors">
+<?php foreach ($authors as $author): ?>        
+        <div>            
+        <?php 
+            echo $this->partial('partial/user.phtml', array('user' => $author->getUser()));
+            if (!$one || $author->getRole() !== \Application\Utils\AuthorRole::AUTHOR) {
+                printf("&nbsp;(%s)", \Application\Utils\AuthorRole::getDescription($author->getRole()));
+            }
+        ?>
+        </div>
+<?php endforeach; ?>
+</div>

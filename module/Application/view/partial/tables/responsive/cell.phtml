@@ -1,0 +1,40 @@
+<?php 
+    $table = $this->table;
+    $col = $this->column; 
+    $index = $this->index;
+    $level = $this->level;
+    $values = $this->values;
+    $cols = $col->getSubColumns();
+    $classes = ['responsive-table-cell', $this->prefix];
+    if (!$cols->getCount()) {
+        $classes[] = 'responsive-table-value';
+    }
+?>
+<div class="<?php echo implode($classes, ' ') ?>">    
+    <?php if ($cols->getCount()): ?>
+    <div class="responsive-table-column-group">
+        <?php echo $this->partial('partial/tables/responsive/cells.phtml', [
+            'table' => $table, 
+            'columns' => $cols,
+            'index' => $this->index,
+            'values' => $this->values,
+            'prefix' => $this->prefix,
+            'level' => $level+1,
+            'data' => $this->data]);
+        ?>
+    </div>
+    <?php else: ?>
+        <?php
+            echo $this->partial(
+                $table->getBodyView(), 
+                array(
+                    'index' => $index,
+                    'column' => $col,
+                    'row' => $values,                            
+                    'data' => $this->data
+                )
+            );          
+        ?>
+    <?php endif; ?>
+</div>
+
