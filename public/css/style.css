@@ -54,7 +54,7 @@ div.container a.brand {
   }
   .navbar-collapse.collapse {
     display: none !important;
-  }    
+  }
 }
 
 /* Tables (common) */
@@ -63,13 +63,11 @@ div.container a.brand {
     background-color: #f9f9f9;
 }
 
-.pagination {
-    margin-top: 5px;
-}
-
 .per-page-block {
     margin-left: 25px;
     display: inline-block;
+    flex-grow: 0; 
+    flex-shrink: 0;
 }
 
 .per-page-block label {
@@ -81,10 +79,70 @@ div.container a.brand {
     padding: 0px;
 }
 
+.form-control.per-page-control {
+    width: auto;
+    display: inline-block;    
+}
 .authors {
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
+}
+
+.table-navigation {
+    display: flex; 
+    flex-flow: row nowrap; 
+    justify-content: center; 
+    padding-top: 5px; 
+    margin-bottom: 15px;
+}
+
+.table-pagination {
+    margin: 0px; 
+    flex-grow: 0; 
+    flex-shrink: 0;
+}
+
+.table-pagination-input {
+    float: left; 
+    position: relative; 
+    min-width: 34px; 
+    width: auto; 
+    margin-right: 1px; 
+    border-radius: 0px; 
+    padding: 0px; 
+}
+
+.pagination-hidden-xs {
+    display: inline !important;
+}
+
+.pagination-hidden-sm {
+    display: inline !important;
+}
+
+@media (max-width: 767px) {
+    .pagination-hidden-sm {
+        display: none !important;
+    }    
+}
+
+@media (max-width: 530px) {
+    .per-page-block {
+        margin-left: 15px;
+    }    
+}
+
+@media (max-width: 500px) {
+    .pagination-hidden-xs {
+        display: none !important;
+    }    
+}
+
+@media (max-width: 450px) {
+    .per-page-block label  {
+        display: none !important;
+    }    
 }
 
 /* Responsive tables */

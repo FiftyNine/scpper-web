@@ -84,6 +84,12 @@
     }
 ?>
 
+<?php if (!$table->isPreview()): ?>
+<div class="table-navigation-top <?php if ($table->getPaginator()->getItemCountPerPage() <= 10) {echo "visible-xs";} ?>" >
+    <?php echo $this->paginationControl($table->getPaginator(), 'Sliding', 'partial/paginator'); ?>
+</div>
+<?php endif; ?>
+
 <div class="<?php echo implode($tableClasses, ' ')?>">
     <div class="responsive-table-row responsive-table-header">
         <?php 

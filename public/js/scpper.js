@@ -9,6 +9,13 @@ var scpper = {};
 
 /** Add functionality **/
 
+scpper.isInt = function (value) 
+{
+  return !isNaN(value) && 
+         parseInt(Number(value)) == value && 
+         !isNaN(parseInt(value, 10));
+};
+
 scpper.loadingOverlayOptions = {
     css: {
         border:		'none',
@@ -54,7 +61,17 @@ scpper.isElementInViewport = function(el) {
         rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
         rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
     );
-}
+};
+
+scpper.textInputFocusIn = function (event) {
+    this.setSelectionRange(0, this.value.length);
+};
+
+scpper.textInputFocusOut = function (event) {
+    this.setSelectionRange(0, 0);
+    this.value = this.defaultValue;
+    this.blur();
+};
 
 /** Table functions **/
 
@@ -71,7 +88,9 @@ scpper.tables = {
         sortColumn: 'th.ordered',
         sortAttribute: 'data-name',
         sortOrderAttribute: 'data-ascending',
-        currentPageAttribute: 'data-page'
+        currentPageAttribute: 'data-page',
+        pageInput: '.table-pagination-input',
+        topPagination: '.table-navigation-top'
     },
     RESPONSIVE_SELECTORS:
     {
@@ -85,7 +104,9 @@ scpper.tables = {
         sortColumn: '.responsive-table-column-name.ordered',
         sortAttribute: 'data-name',
         sortOrderAttribute: 'data-ascending',
-        currentPageAttribute: 'data-page'        
+        currentPageAttribute: 'data-page',
+        pageInput: '.table-pagination-input',
+        topPagination: '.table-navigation-top'
     },
     selectors: null,
     
@@ -127,8 +148,8 @@ scpper.tables = {
         }).always(function () {
             table.unblock(); 
         });      
-    },
-
+    },    
+    
     /**
      * 
      * @param {type} containerId
@@ -140,9 +161,57 @@ scpper.tables = {
     {        
         var container = $(containerId);
         if (container) {
-            container.find(scpper.tables.selectors.pageLink).on('click', {container: containerId, url: url, payload: payload}, scpper.tables.fetchPaginatorIndex);
+            container.find(scpper.tables.selectors.pageLink).on('click', {container: containerId, url: url, payload: payload}, scpper.tables.fetchPaginatorFromLink);
             container.find(scpper.tables.selectors.perPageCount).on('change', {container: containerId, url: url, payload: payload}, scpper.tables.changePaginatorSize);
             container.find(scpper.tables.selectors.sortableColumn).on('click', {container: containerId, url: url, payload: payload}, scpper.tables.changePaginatorOrder);
+            container.find(scpper.tables.selectors.pageInput).on('focusin', {}, scpper.textInputFocusIn);
+            container.find(scpper.tables.selectors.pageInput).on('focusout', {}, scpper.textInputFocusOut);
+            container.find(scpper.tables.selectors.pageInput).on('keydown', {container: containerId, url: url, payload: payload}, scpper.tables.pageInputKeyDown);            
+        }
+    },
+
+    fetchPaginatorByIndex: function (index, container, url, payload)
+    {
+        var orderCol = null;
+        var table = document.getElementById(container.substring(1));
+        var topPagination = $(table).find(scpper.tables.selectors.topPagination);
+        var offset = null;
+        var scrollTo = null;
+        if (topPagination.is(':visible')) {
+            scrollTo = topPagination.get(0);
+        } else {
+            scrollTo = table;
+        }
+        payload.page = index;
+        payload.perPage = $(container+' '+scpper.tables.selectors.perPageCount).val();    
+        orderCol = $(container+' '+scpper.tables.selectors.sortColumn);
+        payload.orderBy = orderCol.attr(scpper.tables.selectors.sortAttribute);
+        payload.ascending = orderCol.attr(scpper.tables.selectors.sortOrderAttribute);
+        scpper.tables.fetchPaginator(container, url, payload);
+        if (!scpper.isElementInViewport(scrollTo)) {
+            offset = $(scrollTo).offset();
+            offset.top-=$('.scpper-navbar').height();
+            $('html, body').animate({
+                scrollTop: offset.top,
+                scrollLeft: offset.left
+            });
+        }
+    },
+
+    pageInputKeyDown: function(event) 
+    {  
+        if (event.key === 'Escape') {
+            $(this).trigger('focusout');
+            handled = true;
+        } else if (event.key === 'Enter') {
+            if (scpper.isInt(this.value)) {
+                this.defaultValue = this.value;
+                scpper.tables.fetchPaginatorByIndex(this.value, event.data.container, event.data.url, event.data.payload);                
+                this.blur();
+            } else {
+                this.value = this.defaultValue;
+                this.setSelectionRange(0, this.value.length);
+            }
         }
     },
 
@@ -181,20 +250,10 @@ scpper.tables = {
      * 
      * @param {object} event
      */
-    fetchPaginatorIndex: function (event)
+    fetchPaginatorFromLink: function (event)
     {
-        var payload = event.data.payload;
-        var orderCol = null;
-        var table = document.getElementById(event.data.container.substring(1));
-        payload.page = $(this).attr(scpper.tables.selectors.currentPageAttribute);
-        payload.perPage = $(event.data.container+' '+scpper.tables.selectors.perPageCount).val();    
-        orderCol = $(event.data.container+' '+scpper.tables.selectors.sortColumn);
-        payload.orderBy = orderCol.attr(scpper.tables.selectors.sortAttribute);
-        payload.ascending = orderCol.attr(scpper.tables.selectors.sortOrderAttribute);
-        scpper.tables.fetchPaginator(event.data.container, event.data.url, payload);
-        if (!scpper.isElementInViewport(table)) {
-            table.scrollIntoView();
-        }
+        var index = $(this).attr(scpper.tables.selectors.currentPageAttribute);
+        scpper.tables.fetchPaginatorByIndex(index, event.data.container, event.data.url, event.data.payload);
     },
 
     /**

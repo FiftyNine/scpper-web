@@ -1,10 +1,6 @@
-<!--
-See http://developer.yahoo.com/ypatterns/pattern.php?pattern=searchpagination
--->
-
 <?php if ($this->pageCount): ?>
-<nav class="text-center">
-    <ul class="pagination">
+<nav class="text-center table-navigation">
+    <ul class="pagination table-pagination">
         <?php if ((int) $this->pageCount > 1): ?>
         <!-- First page link -->
         <li class="text-condensed">
@@ -26,17 +22,26 @@ See http://developer.yahoo.com/ypatterns/pattern.php?pattern=searchpagination
               <span class="disabled">&lt;</span>
             <?php endif; ?>
         </li>
-        <!-- Numbered page links -->
+        <!-- Numbered page links -->        
+        <?php $maxDiff = max($this->current-$this->firstPageInRange, $this->lastPageInRange-$this->current); ?>
         <?php foreach ($this->pagesInRange as $page): ?>
-        <li>
+        <?php 
+            $diff = abs($page-$this->current)/$maxDiff;
+            if ($diff >= 0.5) {
+                $class = "pagination-hidden-sm";
+            } else if ($diff > 0.2) {
+                $class = "pagination-hidden-xs";
+            } else {
+                $class = null;
+            }
+        ?>        
+        <li <?php if ($class) { echo 'class="'.$class.'"'; } ?> >
           <?php if ($page != $this->current): ?>
             <a data-page="<?php echo $page ?>" href="javascript:;">
                 <?php echo $page; ?>
             </a>
           <?php else: ?>
-            <span class="active">
-                <?php echo $page; ?>
-            </span>
+            <input type="tel" pattern="[0-9]*" inputmode="numeric" min="1" max="<?php echo $this->last; ?>" size="1" class="form-control table-pagination-input text-center" value="<?php echo $page; ?>">
           <?php endif; ?>
         </li>
         <?php endforeach; ?>
@@ -62,19 +67,19 @@ See http://developer.yahoo.com/ypatterns/pattern.php?pattern=searchpagination
         </li>
         <?php endif; ?>
         <!-- Entries per page selector -->
-        <li class="form-inline per-page-block">
-            <div class="form-group">                    
-                <label for="perPage" class="control-label">Per page</label>
-                <select class="form-control per-page-control" name="perPage">
-                    <?php $pageSizes = array(10, 25, 50, 100); ?>
-                    <?php foreach ($pageSizes as $size): ?>
-                    <option <?php if ($size === $this->itemCountPerPage) {echo "selected";} ?> >
-                        <?php echo $size ?>
-                    </option>
-                    <?php endforeach; ?>
-                </select>                     
-            </div>    
-        </li>        
     </ul>
+    <?php if ($this->totalItemCount > 10): ?>
+    <div class="per-page-block form-inline">
+        <label for="perPage" class="control-label">Show</label>
+        <select class="form-control per-page-control" name="perPage">
+            <?php $pageSizes = array(10, 25, 50, 100); ?>
+            <?php foreach ($pageSizes as $size): ?>
+            <option <?php if ($size === $this->itemCountPerPage) {echo "selected";} ?> >
+                <?php echo $size ?>
+            </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    <?php endif; ?>
 </nav>
 <?php endif; ?>
