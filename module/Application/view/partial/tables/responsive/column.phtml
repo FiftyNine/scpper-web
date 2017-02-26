@@ -3,16 +3,34 @@
     $col = $this->column; 
     $level = $this->level;
     $prefix = $this->prefix;
+    $classes = ['responsive-table-cell', $prefix];
+    switch ($col->getKind()) {
+        case \Application\Component\PaginatedTable\Column::PAGE:
+            $classes[] = 'column-page';
+            break;
+        case \Application\Component\PaginatedTable\Column::USERS:
+            $classes[] = 'column-users';
+            break;
+        case \Application\Component\PaginatedTable\Column::INDEX:
+            $classes[] = 'column-index';
+            break;
+        case \Application\Component\PaginatedTable\Column::DATE:
+            $classes[] = 'column-date';
+            break;
+        case \Application\Component\PaginatedTable\Column::DATE_TIME:
+            $classes[] = 'column-date-time';
+            break;                
+    }    
 ?>
 
-<div class="responsive-table-cell <?php echo $prefix; ?>">
+<div class="<?php echo implode($classes, ' '); ?>">
     <?php if ($col->getName()): ?>
         <?php
             $thisOrder = $col->canOrder() && ($table->getColumns()->getOrderBy() === $col);
             $classes = ['responsive-table-column-name'];
             if ($col->getSubColumns()->getCount()) {
                 $classes[] = 'responsive-table-group-name';
-            }
+            }            
             $attributes = [];
             if ($col->canOrder()) {
                 $classes[] = 'can-order';

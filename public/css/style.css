@@ -240,6 +240,10 @@ div.container a.brand {
     font-weight: bold;
 }
 
+.column-index {
+    min-width: 50px;
+}
+
 /* Basic tables */
 
 .table {
@@ -652,8 +656,8 @@ span.search-tag-delete {
 }
 
 div.tags-search-form {
-    width: 50%; 
-    min-width: 550px;
+    width: 100%; 
+    max-width: 600px;
     margin-bottom: 15px;
 }
 
