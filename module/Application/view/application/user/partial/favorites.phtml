@@ -92,14 +92,12 @@
         </div>
         <?php endif; ?>
     </div>
-    <div class="row" id="favorites-button">        
-        <div class="col-md-offset-5 col-md-2">
-            <?php if ($this->all): ?>
-                <a class="btn btn-default btn-table" id="favorites-hide-all" href="javascript:;" role="button">Collapse</a>
-            <?php else: ?>
-                <a class="btn btn-default btn-table" id="favorites-show-all" href="javascript:;" role="button">Show all</a>
-            <?php endif; ?>            
-        </div>
+    <div id="favorites-button" style="display: flex; justify-content: center">        
+        <?php if ($this->all): ?>
+            <a class="btn btn-default btn-table" id="favorites-hide-all" href="javascript:;" role="button">Collapse</a>
+        <?php else: ?>
+            <a class="btn btn-default btn-table" id="favorites-show-all" href="javascript:;" role="button">Show all</a>
+        <?php endif; ?>            
     </div>
 </div>
 <?php endif; ?>

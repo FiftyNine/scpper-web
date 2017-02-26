@@ -64,6 +64,9 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
         scpper.tables.assignPaginatorEvents('#page-list', '/user/pageList', {siteId: siteId, userId: userId});
         scpper.tables.assignPaginatorEvents('#vote-list', '/user/voteList', {siteId: siteId, userId: userId});
         assignFavoriteEvents();
+        $("#authorship-summary-toggle").click(function(){
+          $(this).toggleClass('expanded');
+        })        
     }
 
     $(document).ready(init);    
@@ -118,20 +121,26 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
             Revisions: <strong><?php echo $activity->getRevisionCount(); ?></strong>
             <br>
             Pages: <strong><?php echo $activity->getAuthorshipCount(); ?></strong>
+            <span id="authorship-summary-toggle" href="javascript:;" data-toggle="collapse" data-target=".user-authorship-summary">
+                <span class="glyphicon glyphicon-menu-down collapse"></span>
+                <span class="glyphicon glyphicon-menu-up in"></span>                                
+            </span>
             <br>
             <?php if ($isAuthor): ?>
                 <?php $summary = $activity->getAuthorSummary(); ?>
-                <ul>
-                    <li>Originals: <strong><?php echo $summary->getOriginalCount(); ?></strong></li>
-                    <li>Translations: <strong><?php echo $summary->getTranslationCount(); ?></strong></li>
-                    <li>SCPs: <strong><?php echo $summary->getSCPCount(); ?></strong></li>
-                    <li>Tales: <strong><?php echo $summary->getTaleCount(); ?></strong></li>
-                    <li>Jokes: <strong><?php echo $summary->getJokeCount(); ?></strong></li>
-                    <li>GOI: <strong><?php echo $summary->getGOICount(); ?></strong></li>
-                    <li>Average rating: <strong><?php echo number_format($summary->getAverageRating(), 1); ?></strong></li>
-                    <li>Highest rating: <strong><?php echo $summary->getHighestRating(); ?></strong></li>
-                    <li>Total: <strong><?php echo $summary->getTotalRating(); ?></strong></li>
-                </ul>
+                <div class="user-authorship-summary collapse">
+                    <ul>
+                        <li>Originals: <strong><?php echo $summary->getOriginalCount(); ?></strong></li>
+                        <li>Translations: <strong><?php echo $summary->getTranslationCount(); ?></strong></li>
+                        <li>SCPs: <strong><?php echo $summary->getSCPCount(); ?></strong></li>
+                        <li>Tales: <strong><?php echo $summary->getTaleCount(); ?></strong></li>
+                        <li>Jokes: <strong><?php echo $summary->getJokeCount(); ?></strong></li>
+                        <li>GOI: <strong><?php echo $summary->getGOICount(); ?></strong></li>
+                        <li>Average rating: <strong><?php echo number_format($summary->getAverageRating(), 1); ?></strong></li>
+                        <li>Highest rating: <strong><?php echo $summary->getHighestRating(); ?></strong></li>
+                        <li>Total: <strong><?php echo $summary->getTotalRating(); ?></strong></li>
+                    </ul>
+                </div>
                 Rank: <strong>#<?php echo $activity->getAuthorRank()+1; ?></strong>
                 <br>
             <?php endif; ?>        

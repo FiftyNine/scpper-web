@@ -554,13 +554,13 @@ div.google-visualization-tooltip {
 
 #page-top {
     display: flex; 
-    flex-direction: row; 
+    flex-flow: row wrap; 
     align-items: flex-start
 }
 
 #page-summary {
     align-self: flex-start; 
-    max-width: 40%;
+    /* max-width: 40%; */
 }
 
 #page-chart {
@@ -572,17 +572,24 @@ div.google-visualization-tooltip {
 
 #user-top {
     display: flex; 
-    flex-direction: row; 
+    flex-flow: row wrap; 
     align-items: flex-start
+}
+
+@media (max-width: 767px) {
+    #user-top {
+        flex-flow: column nowrap;
+    }
 }
 
 #user-summary {
     align-self: flex-start; 
-    max-width: 40%;
+    width: 200px;
+    /* max-width: 40%; */
 }
 
 #user-chart {
-    flex: 1; 
+    flex: 1;     
     align-self: stretch;
 }
 
@@ -607,7 +614,7 @@ div.favorites-column-header {
 }
 
 ol.favorites-list {
-    padding-left: 20px; 
+    padding-left: 30px; 
     margin-bottom: 0px;
 }
 
@@ -617,6 +624,34 @@ p.favorites-hidden {
 
 div#favorites-button {
     margin-top: 20px;
+}
+
+#authorship-summary-toggle:hover {
+    cursor: pointer;
+}
+
+#authorship-summary-toggle>span.collapse {
+    display: inherit;
+}
+
+#authorship-summary-toggle>span.in{
+    display: none;
+}
+
+#authorship-summary-toggle.expanded>span.collapse {
+    display: none;
+}
+
+#authorship-summary-toggle.expanded>span.in {
+    display: inherit;
+}
+
+.user-authorship-summary.collapse {
+    display: none;
+}
+
+.user-authorship-summary.in {
+    display: inherited;
 }
 
 /** Tags **/
