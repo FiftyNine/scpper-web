@@ -3,12 +3,10 @@
     $cols = $this->columns;
     $level = $this->level;
     for ($i=0; $i<$cols->getCount(); $i++) {
-        if (!$cols->getColumn($i)->getHidden()) {
-            echo $this->partial('partial/tables/responsive/column.phtml', [
-                'table' => $table, 
-                'column' => $cols->getColumn($i),
-                'prefix' => $this->prefix."-".($i+1),
-                'level' => $level]);
-        }
+        echo $this->partial('partial/tables/responsive/column.phtml', [
+            'table' => $table, 
+            'column' => $cols->getColumn($i),
+            'prefix' => $this->prefix."-".($i+1),
+            'level' => $level]);
     }
 ?>   

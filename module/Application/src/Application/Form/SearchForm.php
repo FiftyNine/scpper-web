@@ -18,11 +18,13 @@ use Zend\Form\Form;
 class SearchForm extends Form
 {
     const TEXT_FIELD_NAME = 'search-text';
+    const SITE_FIELD_NAME = 'search-site-id';
     const BUTTON_NAME = 'search-button';
     
     public function __construct($name = null, $options = array())
     {
         parent::__construct($name, $options);
+        $this->setAttribute("class", $this->getAttribute("class")." form-inline");
         $this->add(array(
             'name' => self::TEXT_FIELD_NAME,
             'attributes' => array(
@@ -32,6 +34,14 @@ class SearchForm extends Form
             ),
             'type' => 'text'
         ));
+        $this->add(array(
+            'name' => self::SITE_FIELD_NAME,
+            'attributes' => array(
+                'id' => self::SITE_FIELD_NAME,
+                'value' => '',
+                'hidden' => ''
+            ),            
+        ));                
         $this->add(array(
             'type' => 'submit',
             'name' => self::BUTTON_NAME,

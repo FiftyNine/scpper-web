@@ -2,6 +2,9 @@
 $row = $this->row;
 switch($this->column->getName()) {
     case '#':
+        if ($this->collapsed) {
+            echo "#";
+        }
         echo $this->index;
         break;
     case 'Branch':
@@ -11,15 +14,27 @@ switch($this->column->getName()) {
         echo $this->partial('partial/page.phtml', array('page' => $row));
         break;
     case 'Total':
+        if ($this->collapsed) {
+            echo "<b>T</b>&nbsp;";
+        }
         echo $row->getCleanRating();
         break;
     case 'Contributor':
+        if ($this->collapsed) {
+            echo "<b>C</b>&nbsp;";
+        }        
         echo $row->getContributorRating();
         break;
     case 'Adjusted':
+        if ($this->collapsed) {
+            echo "<b>A</b>&nbsp;";
+        }
         echo $row->getAdjustedRating();
         break;
     case 'Wilson':
+        if ($this->collapsed) {
+            echo "<b>W</b>&nbsp;";
+        }        
         echo number_format($row->getWilsonScore()*100, 2).'%';
         break;
     case 'Status':
@@ -32,7 +47,7 @@ switch($this->column->getName()) {
         echo $row->getCreationDate()->format('Y-m-d');
         break;
     case 'Authors':
-        echo $this->partial('partial/authors.phtml', ['authors' => $row->getAuthors()]);
+        echo $this->partial('partial/authors.phtml', ['authors' => $row->getAuthors(), 'collapsed' => $this->collapsed]);
         break;
     default:;    
 }

@@ -2,15 +2,24 @@
 $row = $this->row;
 switch($this->column->getName()) {
     case '#':
+        if ($this->collapsed) {
+            echo "#";
+        }          
         echo $row->getIndex()+1;
         break;
     case 'User':
         echo $this->partial('partial/user.phtml', array('user' => $row->getUser()));
         break;
     case 'Comment':
+        if ($this->collapsed): ?>
+            <span class="glyphicon glyphicon-comment"></span>
+        <?php endif;        
         echo $this->escapeHtml($row->getComments());
         break;
     case 'Time':
+        if ($this->collapsed): ?>
+            <span class="glyphicon glyphicon-time"></span>
+        <?php endif;        
         echo $row->getDateTime()->format('Y-m-d H:i');
         break;
     default:;    

@@ -2,27 +2,48 @@
 $row = $this->row;
 switch($this->column->getName()) {
     case '#':
+        if ($this->collapsed) {
+            echo "#";
+        }        
         echo $this->index;
         break;
     case 'User':
         echo $this->partial('partial/user.phtml', array('user' => $row->getUser()));
         break;
     case 'Pages':
+        if ($this->collapsed): ?>
+            <span class="glyphicon glyphicon-file"></span>
+        <?php endif; 
         echo $row->getPageCount();
         break;
     case 'Originals':
+        if ($this->collapsed): ?>
+            <span class="glyphicon glyphicon-pencil"></span>
+        <?php endif;
         echo $row->getOriginalCount();
         break;
     case 'Translations':
+        if ($this->collapsed): ?>
+            <span class="glyphicon glyphicon-globe"></span>
+        <?php endif;
         echo $row->getTranslationCount();
         break;
     case 'Rating':
+        if ($this->collapsed): ?>
+            <span class="collapsed-text-hint">Sum</span>&nbsp;
+        <?php endif;
         echo $row->getTotalRating();
         break;
     case 'Average':
+        if ($this->collapsed): ?>
+            <span class="collapsed-text-hint">Avg</span>&nbsp;
+        <?php endif;        
         echo number_format($row->getAverageRating(), 1);
         break;
     case 'Highest':
+        if ($this->collapsed): ?>
+            <span class="collapsed-text-hint">Top</span>&nbsp;
+        <?php endif;        
         echo $row->getHighestRating();
         break;
     default:;    

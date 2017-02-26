@@ -1,17 +1,15 @@
 <?php 
     $cols = $this->columns;
     for ($i=0; $i<$cols->getCount(); $i++) {
-        if (!$cols->getColumn($i)->getHidden()) {
-            echo $this->partial('partial/tables/responsive/cell.phtml', [
-                'table' => $this->table, 
-                'columns' => $this->columns,
-                'index' => $this->index,
-                'column' => $cols->getColumn($i),
-                'values' => $this->values,
-                'level' => $this->level,
-                'prefix' => $this->prefix."-".($i+1),
-                'data' => $this->data]);
-        }
+        echo $this->partial('partial/tables/responsive/cell.phtml', [
+            'table' => $this->table, 
+            'columns' => $this->columns,
+            'index' => $this->index,
+            'column' => $cols->getColumn($i),
+            'values' => $this->values,
+            'level' => $this->level,
+            'prefix' => $this->prefix."-".($i+1),
+            'data' => $this->data]);
     }
 ?>   
 

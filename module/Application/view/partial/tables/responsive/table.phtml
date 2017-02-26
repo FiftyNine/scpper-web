@@ -54,8 +54,10 @@
                     foreach ($col->getSubColumns() as $sub) {
                         // Since children are now displayed in column they can take 100% of parent's width
                         // Also, parent now paints border and pads itself to save space
-                        $collapseStyles[] = "div.$cellClass-".$j."{ width: 100%; padding: 0px; border: none}";                    
+                        $collapseStyles[] = "div.$cellClass-".$j."{ width: 100%; padding: 0px; border: none}";
                         $collapseStyles[] = "div.$cellClass-".$j.">.responsive-table-column-name{ padding: 0px; border: none}";
+                        $collapseStyles[] = "div.$cellClass-".$j.">.responsive-table-value-default{ display: none;}";
+                        $collapseStyles[] = "div.$cellClass-".$j.">.responsive-table-value-collapsed{ display: block;}";
                         $j++;
                     }
                     $collapseStyles[] = "}";

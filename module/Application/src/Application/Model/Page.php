@@ -416,7 +416,11 @@ class Page implements PageInterface
     public function getAuthors() 
     {
         if (!isset($this->authors)) {
-            $this->authors = $this->authorMapper->findAuthorshipsOfPage($this->getId());
+            $this->authors = [];
+            $authors = $this->authorMapper->findAuthorshipsOfPage($this->getId());
+            foreach ($authors as $author) {
+                $this->authors[] = $author;
+            }
         }
         return $this->authors;
     }

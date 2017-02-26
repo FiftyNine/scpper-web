@@ -2,6 +2,9 @@
 $row = $this->row;
 switch($this->column->getName()) {
     case '#':
+        if ($this->collapsed) {
+            echo "#";
+        }        
         echo $this->index;
         break;
     case 'User':
@@ -15,12 +18,21 @@ switch($this->column->getName()) {
         if ($deleted) { echo "</del>";}
         break;
     case 'Votes':
+        if ($this->collapsed): ?>
+            <span class="glyphicon glyphicon-sort"></span>
+        <?php endif;        
         echo $row['Votes'];
         break;
     case 'Positive':
+        if ($this->collapsed): ?>
+            <span class="glyphicon glyphicon-plus"></span>
+        <?php endif;        
         echo ($row['Votes']+$row['Sum'])/2;
         break;
     case 'Negative':
+        if ($this->collapsed): ?>
+            <span class="glyphicon glyphicon-minus"></span>
+        <?php endif;        
         echo ($row['Votes']-$row['Sum'])/2;
         break;
     default:;    

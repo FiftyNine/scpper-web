@@ -3,30 +3,48 @@ $row = $this->row;
 $siteId = $this->data['siteId']; 
 switch($this->column->getName()) {
     case '#':
+        if ($this->collapsed) {
+            echo "#";
+        }            
         echo $this->index;
         break;
     case 'User':
         echo $this->partial('partial/user.phtml', array('user' => $row));
         break;
     case 'Votes':
+        if ($this->collapsed): ?>
+            <span class="glyphicon glyphicon-sort"></span>
+        <?php endif;
         echo $row->getActivityOnSite($siteId)->getVoteCount();
         break;
     case 'Revisions':
+        if ($this->collapsed): ?>
+            <span class="glyphicon glyphicon-edit"></span>
+        <?php endif;
         echo $row->getActivityOnSite($siteId)->getRevisionCount();
         break;
     case 'Pages':
+        if ($this->collapsed): ?>
+            <span class="glyphicon glyphicon-file"></span>
+        <?php endif;
         echo $row->getActivityOnSite($siteId)->getAuthorshipCount();
-        break;
-    case 'Active':
-        if ($row->getActivityOnSite($siteId)->isActive()) {echo '&check;';}
         break;
     case 'Joined':
         $member = $row->getMembershipOfSite($siteId);            
         if ($member != null) {
             echo $member->getJoinDate()->format('Y-m-d'); 
         } else {
-            echo '&cross;';
+            echo '<span class="glyphicon glyphicon-remove"></span>';
         }
+        break;        
+    case 'Active':
+        if ($row->getActivityOnSite($siteId)->isActive()) {
+            if ($this->collapsed) {
+                echo 'Active';
+            } else {               
+                echo '&check;';
+            }
+        }        
         break;
     default:;    
 }

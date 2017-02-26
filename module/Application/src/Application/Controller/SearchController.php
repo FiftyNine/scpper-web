@@ -49,10 +49,11 @@ class SearchController extends AbstractActionController
         }
         $pages = $this->services->getPageService()->findByName($mask, $siteIds, $sortOrder, true);
         $pages->setItemCountPerPage($perPage);        
-        $pages->setCurrentPageNumber($page);
-        $table = PaginatedTableFactory::createPagesTable($pages);
+        $pages->setCurrentPageNumber($page);        
         if ($siteIds === null) {
-            $table->getColumns()->findColumn('Branch')->setHidden(false);
+            $table = PaginatedTableFactory::createSitesPagesTable($pages);            
+        } else {
+            $table = PaginatedTableFactory::createPagesTable($pages);
         }
         if ($sortOrder) {
             $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);        
@@ -100,18 +101,30 @@ class SearchController extends AbstractActionController
     {        
         $request = $this->getRequest();
         $form = $this->services->getUtilityService()->getSearchForm();
-        $siteId = $this->services->getUtilityService()->getSiteId();
-        $site = $this->services->getSiteService()->find($siteId);
-        $result = array('form' => $form);
-        if ($request->isPost()) {
+        $currentSiteId = $this->services->getUtilityService()->getSiteId();
+        $siteId = $request->getPost('search-site-id', $currentSiteId);
+        if ($siteId !== 'all' && (int)$siteId != $siteId ) {
+            $siteId = $currentSiteId;
+        }
+        $currentSite = $this->services->getSiteService()->find($currentSiteId);        
+        $result = [
+            'form' => $form,
+            'site' => $currentSite,
+            'querySiteId' => $siteId
+        ];
+        if ($request->isPost()) {            
             $form->setData($request->getPost());
             if ($form->isValid()) {
                 $text = $form->get(SearchForm::TEXT_FIELD_NAME)->getValue();
                 $text = trim($text);
                 if (mb_strlen($text) >= 3) {
-                    $result['pages'] = $this->getPagesTable($text, [$siteId], null, null, 1, 10);
-                    $result['users'] = $this->getUsersTable($text, [$siteId], null, null, 1, 10);
-                    $result['site'] = $site;
+                    if ($siteId === 'all') {
+                        $siteIds = null;
+                    } else {
+                        $siteIds = [(int)$siteId];
+                    }                    
+                    $result['pages'] = $this->getPagesTable($text, $siteIds, null, null, 1, 10);
+                    $result['users'] = $this->getUsersTable($text, $siteIds, null, null, 1, 10);                    
                     $pageCount = $result['pages']->getPaginator()->getTotalItemCount();
                     $userCount = $result['users']->getPaginator()->getTotalItemCount();
                     if ($pageCount === 1 && $userCount === 0) {

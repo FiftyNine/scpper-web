@@ -21,7 +21,6 @@
     <?php $levelCols = $colArray[$level]; ?>
     <tr>
         <?php foreach ($levelCols as $col): ?>
-        <?php if (!$col->getHidden()): ?>
         <th 
             <?php 
             $thisOrder = $col->canOrder() && ($cols->getOrderBy() === $col);
@@ -91,7 +90,6 @@
             </abbr>
             <?php endif; ?>                            
         </th>  
-        <?php endif; ?>
         <?php endforeach;?>
     </tr>
     <?php endfor; ?>
@@ -101,7 +99,6 @@
     ?>
     <tr>
         <?php foreach ($table->getColumns() as $col): ?>
-            <?php if (!$col->getHidden()): ?>
             <td>
                 <?php
                     echo $this->partial(
@@ -115,7 +112,6 @@
                     );                 
                 ?>
             </td>
-            <?php endif; ?>
         <?php endforeach; ?>
     </tr>
     <?php

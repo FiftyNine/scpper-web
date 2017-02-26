@@ -50,13 +50,7 @@ class Column
      *
      * @var int
      */
-    protected $kind;   
-    
-    /**
-     *
-     * @var bool
-     */
-    protected $hidden;    
+    protected $kind;       
 
     /**
      * 
@@ -80,13 +74,12 @@ class Column
      * @param string $name
      * @param double $width 
      * @param string $orderName
-     * @param bool $defaultAsc     
-     * @param bool $hidden
+     * @param bool $defaultAsc         
      * @param int $collapseAt
      * @param int $kind 
      * @param mixed $subColumns Associative array of column names => descriptions or array of Column objects     
      */
-    protected function __construct($name, $width, $orderName = '', $defaultAsc = true, $tooltip = '', $hidden = false, $collapseAt = 0, $kind = self::OTHER, $subColumns = [])
+    protected function __construct($name, $width, $orderName = '', $defaultAsc = true, $tooltip = '', $collapseAt = 0, $kind = self::OTHER, $subColumns = [])
     {
         if (is_string($name)) {
             $this->name = $name;
@@ -100,7 +93,6 @@ class Column
         $this->defaultAscending = $defaultAsc;
         $this->tooltip = $tooltip;
         $this->kind = $kind;
-        $this->hidden = $hidden;
         $this->collapseAt = $collapseAt;
         $this->subColumns = new ColumnList($subColumns);
     }
@@ -112,11 +104,10 @@ class Column
      * @param string $orderName
      * @param bool $defaultAsc   
      * @param int $kind 
-     * @param bool $hidden
      */    
-    public static function column($name, $width, $orderName = '', $defaultAsc = true, $tooltip = '', $kind = self::OTHER, $hidden = false)
+    public static function column($name, $width, $orderName = '', $defaultAsc = true, $tooltip = '', $kind = self::OTHER)
     {
-        return new self($name, $width, $orderName, $defaultAsc, $tooltip, $hidden, 0, $kind, []);
+        return new self($name, $width, $orderName, $defaultAsc, $tooltip, 0, $kind, []);
     }
 
     /**
@@ -127,7 +118,7 @@ class Column
      */    
     public static function group($subColumns, $width, $collapseAt = 0, $name = '')
     {
-        return new self($name, $width, '', true, '', false, $collapseAt, self::OTHER, $subColumns);
+        return new self($name, $width, '', true, '', $collapseAt, self::OTHER, $subColumns);
     }
     
     /**
@@ -192,24 +183,6 @@ class Column
     {
         return $this->kind;
     }  
-
-    /**
-     * Hidden
-     * @return bool
-     */
-    public function getHidden()
-    {
-        return $this->hidden;
-    }
-
-    /**
-     * Hidden
-     * @return bool
-     */
-    public function setHidden($value)
-    {
-        $this->hidden = $value;
-    }
 
     /**
      * Screen width value, under which subcolumns will collapse into a vertical list

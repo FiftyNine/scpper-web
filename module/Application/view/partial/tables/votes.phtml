@@ -2,29 +2,56 @@
 $row = $this->row;
 switch($this->column->getName()) {
     case '#':
+        if ($this->collapsed) {
+            echo "#";
+        }        
         echo $this->index;
         break;
     case 'User':
+        if ($this->collapsed): ?>
+            <span class="glyphicon glyphicon-user"></span>
+        <?php endif;
         echo $this->partial('partial/user.phtml', array('user' => $row->getUser()));
         break;
     case 'Page':
+        if ($this->collapsed): ?>
+            <span class="glyphicon glyphicon-file"></span>
+        <?php endif;        
         echo $this->partial('partial/page.phtml', array('page' => $row->getPage()));
         break;
-    case 'Vote':
+    case 'Vote':        
         if ($row->getValue() > 0) {echo '+';} else {echo '-';}
-        break;
-    case 'Member':
-        if ($row->getFromMember()) {echo '&check;';}
-        break;
-    case 'Contributor':
-        if ($row->getFromContributor()) {echo '&check;';}
-        break;
-    case 'Active':
-        if ($row->getFromActive()) {echo '&check;';}
         break;
     case 'Date':
         echo $row->getDateTime()->format('Y-m-d');
         break;        
+    case 'Member':
+        if ($row->getFromMember()) {
+            if ($this->collapsed) {
+                echo 'Member';
+            } else {               
+                echo '&check;';
+            }
+        }
+        break;
+    case 'Contributor':
+        if ($row->getFromContributor()) {
+            if ($this->collapsed) {
+                echo 'Contributor';
+            } else {               
+                echo '&check;';
+            }
+        }
+        break;
+    case 'Active':
+        if ($row->getFromActive()) {
+            if ($this->collapsed) {
+                echo 'Active';
+            } else {               
+                echo '&check;';
+            }
+        }
+        break;
     default:;    
 }
 ?> 

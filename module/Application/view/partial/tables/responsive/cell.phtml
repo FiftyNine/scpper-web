@@ -7,7 +7,7 @@
     $cols = $col->getSubColumns();
     $classes = ['responsive-table-cell', $this->prefix];
     if (!$cols->getCount()) {
-        $classes[] = 'responsive-table-value';
+        $classes[] = 'responsive-table-cell-data';
     }
 ?>
 <div class="<?php echo implode($classes, ' ') ?>">    
@@ -24,17 +24,34 @@
         ?>
     </div>
     <?php else: ?>
+        <div class="responsive-table-value responsive-table-value-default">
         <?php
             echo $this->partial(
                 $table->getBodyView(), 
-                array(
+                [
                     'index' => $index,
                     'column' => $col,
                     'row' => $values,                            
-                    'data' => $this->data
-                )
+                    'data' => $this->data,
+                    'collapsed' => false
+                ]
             );          
         ?>
+        </div>
+        <div class="responsive-table-value responsive-table-value-collapsed">
+        <?php
+            echo $this->partial(
+                $table->getBodyView(), 
+                [
+                    'index' => $index,
+                    'column' => $col,
+                    'row' => $values,                            
+                    'data' => $this->data,
+                    'collapsed' => true
+                ]
+            );          
+        ?>
+        </div>
     <?php endif; ?>
 </div>
 

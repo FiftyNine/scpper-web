@@ -92,7 +92,7 @@ class AuthorshipDbSqlMapper extends ZendDbSqlMapper implements AuthorshipMapperI
         $select = $sql->select(DbViewAuthors::TABLE)
                 ->columns(self::COLUMNS)
                 ->where(array(DbViewAuthors::PAGEID.' = ?' => $pageId));
-        return $this->fetchResultSet($sql, $select);        
+        return $this->fetchResultSet($sql, $select);
     }
 
     /**

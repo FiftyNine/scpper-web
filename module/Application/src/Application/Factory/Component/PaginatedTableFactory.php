@@ -32,8 +32,41 @@ class PaginatedTableFactory
             [
                 Column::group([
                     Column::column('#', 8, '', true, '', Column::INDEX),
-                    Column::column('Branch', 40, DbViewPages::SITENAME, true, '', Column::OTHER, true),
                     Column::column('Page', 92, DbViewPages::TITLE, true, '', Column::PAGE),
+                ], 35, 768),
+                Column::group([
+                        Column::column('Total', 20, DbViewPages::CLEANRATING, false, 'Total rating - only counts votes from members of the site'),
+                        Column::column('Contributor', 30, DbViewPages::CONTRIBUTORRATING, false, 'Contributors rating - only counts votes from members who have at least one successful page'),
+                        Column::column('Adjusted', 25, DbViewPages::ADJUSTEDRATING, false, 'Adjusted rating - only counts votes from active members'),
+                        Column::column('Wilson', 25, DbViewPages::WILSONSCORE, false, 'Wilson score - calculated as ratio of upvotes to downvotes corrected by total amount of votes'),
+                ], 30, 991, 'Rating'),
+                Column::group([
+                    Column::group([
+                        Column::column('Status', 60, DbViewPages::STATUSID),
+                        Column::column('Kind', 40, DbViewPages::KINDID),
+                    ], 40, 991),
+                    Column::group([
+                        Column::column('Posted', 40, DbViewPages::CREATIONDATE, false, '', Column::DATE),
+                        Column::column('Authors', 60, '', true, '', Column::USERS)
+                    ], 60, 991),
+                ], 35, 768)
+            ], 
+            $paginator, 
+            'partial/tables/pages.phtml', 
+            $preview
+        );
+        return $table;
+    }
+
+    static public function createSitesPagesTable($paginator, $preview = false)
+    {
+        $table = new \Application\Component\PaginatedTable\Table(
+            'sites-pages',
+            [
+                Column::group([
+                    Column::column('#', 13, '', true, '', Column::INDEX),
+                    Column::column('Branch', 20, DbViewPages::SITENAME, true, '', Column::OTHER),
+                    Column::column('Page', 72, DbViewPages::TITLE, true, '', Column::PAGE),
                 ], 35, 768),
                 Column::group([
                         Column::column('Total', 20, DbViewPages::CLEANRATING, false, 'Total rating - only counts votes from members of the site'),

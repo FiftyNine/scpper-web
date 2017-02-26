@@ -2,26 +2,44 @@
 $row = $this->row;
 switch($this->column->getName()) {
     case '#':
+        if ($this->collapsed) {
+            echo "#";
+        }               
         echo $this->index;
         break;
     case 'User':
         echo $this->partial('partial/user.phtml', array('user' => $row->getUser()));
         break;
     case 'Votes':
+        if ($this->collapsed): ?>
+            <span class="glyphicon glyphicon-sort"></span>
+        <?php endif;        
         echo $row->getActivity()->getVoteCount();
         break;
     case 'Revisions':
+        if ($this->collapsed): ?>
+            <span class="glyphicon glyphicon-edit"></span>
+        <?php endif;        
         echo $row->getActivity()->getRevisionCount();
         break;
     case 'Pages':
+        if ($this->collapsed): ?>
+            <span class="glyphicon glyphicon-file"></span>
+        <?php endif;        
         echo $row->getActivity()->getAuthorshipCount();
-        break;
-    case 'Active':
-        if ($row->getActivity()->isActive()) {echo '&check;';}
         break;
     case 'Joined':
         if ($row->getJoinDate() != null) {
             echo $row->getJoinDate()->format('Y-m-d'); 
+        }
+        break;        
+    case 'Active':
+        if ($row->getActivity()->isActive()) {
+            if ($this->collapsed) {
+                echo 'Active';
+            } else {               
+                echo '&check;';
+            }
         }
         break;
     default:;    

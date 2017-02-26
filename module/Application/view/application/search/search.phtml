@@ -3,8 +3,12 @@
 <?php
     $form = $this->form;
     $form->setAttribute('action', $this->url('search'));
-    $field = $form->get(\Application\Form\SearchForm::TEXT_FIELD_NAME);
+    $queryField = $form->get(\Application\Form\SearchForm::TEXT_FIELD_NAME);
+    $siteField = $form->get(\Application\Form\SearchForm::SITE_FIELD_NAME);
+    $siteField->setValue($this->querySiteId);
     $form->prepare();
+    $currentSiteId = $this->site->getId();
+    $searchForCurrent = (int)$this->querySiteId===$currentSiteId;
 ?>
 
 <?php $this->headScript()->captureStart(); ?>
@@ -12,25 +16,21 @@
 // Anonymous self-executing function not to clutter global scope with temporary stuff
 (function () {
     
-    var siteId = <?php echo $this->site->getId(); ?>;
+    var siteId = <?php echo $currentSiteId; ?>;
     var paginatorData = {
-        siteId: "all",
-        query: "<?php echo $field->getValue(); ?>",
+        siteId: <?php echo $searchForCurrent?$currentSiteId:'"all"'; ?>,
+        query: "<?php echo $queryField->getValue(); ?>",
         page: 1, 
         perPage: 10
     };
     
     function switchSites(event)
     {
-        scpper.tables.fetchPaginator("#page-list", "/search/pageList", paginatorData);
-        scpper.tables.fetchPaginator("#user-list", "/search/userList", paginatorData);
-        if (paginatorData.siteId === "all") {
-            event.target.text="Current branch";
-            paginatorData.siteId = siteId;
-        } else {
-            event.target.text="All branches";
-            paginatorData.siteId = "all";
-        }
+        <?php if ($searchForCurrent): ?>            
+            scpper.post('/search', {"search-site-id": "all", "search-text": paginatorData.query});
+        <?php else: ?>
+            scpper.post('/search', {"search-site-id": siteId, "search-text": paginatorData.query});
+        <?php endif; ?>
     }
 
     function init()
@@ -39,18 +39,18 @@
         scpper.tables.assignPaginatorEvents('#page-list', 
             '/search/pageList', 
             {
-                siteId: <?php echo $this->site->getId();?>,
-                query: "<?php echo $field->getValue(); ?>"
+                siteId: paginatorData.siteId,
+                query: paginatorData.query
             }
         );
         scpper.tables.assignPaginatorEvents('#user-list', 
             '/search/userList', 
             {
-                siteId: <?php echo $this->site->getId();?>,
-                query: "<?php echo $field->getValue(); ?>"
+                siteId: paginatorData.siteId,
+                query: paginatorData.query
             }
         );        
-        $('#all-site-pages').on('click', switchSites);
+        $('#switch-query-sites').on('click', switchSites);
     }
 
     $(document).ready(init);
@@ -59,46 +59,56 @@
 
 <?php $this->headScript()->captureEnd(); ?>
 <div class="row">
-    <div class="col-md-8 col-md-offset-2 text-center">
+    <div class="col-md-8 col-md-offset-2">
         <h2>Search</h2>
         <?php echo $this->form()->openTag($form); ?>
-        <div class="input-group">
-        <?php echo $this->formElement($field); ?>
-            <span class="input-group-btn">
-        <?php echo $this->formElement($form->get(\Application\Form\SearchForm::BUTTON_NAME)); ?>
+        <div class="input-group" id="search-group-main">
+        <?php echo $this->formElement($queryField); ?>
+            <span class="input-group-btn" id="search-group-main-button">
+                <?php echo $this->formElement($form->get(\Application\Form\SearchForm::BUTTON_NAME)); ?>
             </span>            
-            &nbsp;&nbsp;
-            <a class="btn btn-default input-group-btn" id="all-site-pages" href="javascript:;" role="button">All branches</a>
-        </div>             
+        </div>
+        <a class="btn btn-default" id="switch-query-sites" href="javascript:;" role="button">
+            <?php if ($searchForCurrent): ?>
+            <span class="glyphicon glyphicon-globe"></span><span class="switch-search-sites-caption" aria-label="All branches"> All branches</span>
+            <?php else: ?>
+            <span class="glyphicon glyphicon-home"></span><span class="switch-search-sites-caption" aria-label="Current branche"> Current branch</span>
+            <?php endif; ?>
+        </a>        
+        <?php echo $this->formElement($form->get(\Application\Form\SearchForm::SITE_FIELD_NAME)); ?>
         <?php echo $this->form()->closeTag(); ?>
     </div>
 </div>
-<?php if ($field->getValue() !== ''): ?>
-    <?php $this->headTitle('"'.$field->getValue().'"'); ?>
-    <h3>Pages</h3>
-    <div class="table-container" id="page-list">
-    <?php
+<?php if ($queryField->getValue() !== ''): ?>
+    <?php $this->headTitle('"'.$queryField->getValue().'"'); ?>
+    <?php if ($this->pages): ?>
+        <h3>Pages</h3>
+        <div class="table-container" id="page-list">
+        <?php
 
-    echo $this->partial(
-        'partial/tables/default/table.phtml', 
-        array(
-            'table' => $this->pages,
-            'data' => array('siteId' => $this->site->getId()),
-        )
-    );    
-    ?>
-    </div>       
-    <h3>Users</h3>
-    <div class="table-container" id="user-list">
-    <?php
+        echo $this->partial(
+            'partial/tables/default/table.phtml', 
+            array(
+                'table' => $this->pages,
+                'data' => array('siteId' => $this->site->getId()),
+            )
+        );    
+        ?>
+        </div>       
+    <?php endif; ?>
+    <?php if ($this->users): ?>
+        <h3>Users</h3>
+        <div class="table-container" id="user-list">
+        <?php
 
-    echo $this->partial(
-        'partial/tables/default/table.phtml', 
-        array(
-            'table' => $this->users,
-            'data' => array('siteId' => $this->site->getId()),
-        )
-    );    
-    ?>
-    </div>  
+        echo $this->partial(
+            'partial/tables/default/table.phtml', 
+            array(
+                'table' => $this->users,
+                'data' => array('siteId' => $this->site->getId()),
+            )
+        );    
+        ?>
+        </div>  
+    <?php endif; ?>
 <?php endif; ?>

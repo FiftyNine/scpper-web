@@ -2,6 +2,9 @@
 $row = $this->row;
 switch($this->column->getName()) {
     case '#':
+        if ($this->collapsed) {
+            echo "#";
+        }
         echo $this->index;
         break;
     case 'User':
@@ -15,9 +18,15 @@ switch($this->column->getName()) {
         if ($deleted) { echo "</del>";}
         break;
     case 'Revisions':
+        if ($this->collapsed): ?>
+            <span class="glyphicon glyphicon-edit"></span>
+        <?php endif;        
         echo $row['Revisions'];
         break;
     case '%':
+        if ($this->collapsed): ?>
+            <b>%</b>&nbsp;
+        <?php endif;        
         echo number_format($row['Revisions']/$this->data['total']*100, 2);
         break;
     default:;    
