@@ -39,14 +39,20 @@
         <script type="text/javascript">
         (function () {
 
-        function initSearch()
+        function init()
         {   
+            // Prepare search form
             scpper.search.siteId = <?php echo $this->site->getId(); ?>;
             scpper.search.registerSearchAutocomplete();
             scpper.search.initSearchControl('.search-control');
+            // Adjust content to the height of top navbar
+            $(document).ready(function() {
+                var contentPlacement = $('.scpper-navbar').position().top + $('.scpper-navbar').height()+10;
+                $('body').css('margin-top', contentPlacement);
+            });
         }
 
-         $(document).ready(initSearch);
+         $(document).ready(init);
 
         }()); 
         </script>

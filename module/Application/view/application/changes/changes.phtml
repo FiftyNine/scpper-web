@@ -28,6 +28,15 @@ $this->headTitle(sprintf('Changes from %s to %s', $fromDate->getValue(), $toDate
     // Variables for pagination
     paginatorData = $.extend({page: 1, perPage: 10}, chartsData);
 
+    function activateTab(tab, loader)
+    {
+        $('.activity-tabs-row>.activity-tab').removeClass('active');
+        $('.activity-data').addClass('collapse');
+        $('.activity-tabs-row>'+tab).addClass('active');
+        $(tab+'+.activity-data').toggleClass('collapse').show();
+        loader(chartsData);
+    }
+    
     function init()
     {
         $('#show-members').on('click', {container: "#members-list", url: "/changes/members", payload: paginatorData}, scpper.tables.fetchPaginatorFirst);
@@ -35,42 +44,51 @@ $this->headTitle(sprintf('Changes from %s to %s', $fromDate->getValue(), $toDate
         $('#show-editors').on('click', {container: "#editors-list", url: "/changes/editors", payload: paginatorData}, scpper.tables.fetchPaginatorFirst);
         $('#show-voters').on('click', {container: "#voters-list", url: "/changes/voters", payload: paginatorData}, scpper.tables.fetchPaginatorFirst);    
         $('.datepicker').datepicker({autoSize: true, dateFormat: "yy-mm-dd", maxDate: "<?php echo $site->getLastUpdate()->format('Y-m-d');?>"});
+        $('.activity-tabs-stack>.activity-tab').on('click', null, function(event) {$(this).toggleClass('active');});
+        $('.activity-tabs-row>.activity-tab-users').on('click', null, function(event) {activateTab('.activity-tab-users', scpper.charts.changes.drawMemberCharts)});
+        $('.activity-tabs-row>.activity-tab-pages').on('click', null, function(event) {activateTab('.activity-tab-pages', scpper.charts.changes.drawPageCharts)});
+        $('.activity-tabs-row>.activity-tab-revisions').on('click', null, function(event) {activateTab('.activity-tab-revisions', scpper.charts.changes.drawRevisionCharts)});
+        $('.activity-tabs-row>.activity-tab-votes').on('click', null, function(event) {activateTab('.activity-tab-votes', scpper.charts.changes.drawVoteCharts)});
+        $('.activity-tabs-stack>.activity-tab-users').on('click', null, function(event) {scpper.charts.changes.drawMemberCharts(chartsData)});
+        $('.activity-tabs-stack>.activity-tab-pages').on('click', null, function(event) {scpper.charts.changes.drawPageCharts(chartsData)});
+        $('.activity-tabs-stack>.activity-tab-revisions').on('click', null, function(event) {scpper.charts.changes.drawRevisionCharts(chartsData)});
+        $('.activity-tabs-stack>.activity-tab-votes').on('click', null, function(event) {scpper.charts.changes.drawVoteCharts(chartsData)});
+        if (window.innerWidth >= 768) {
+            activateTab('.activity-tab-users', scpper.charts.changes.drawMemberCharts);
+        }        
     }
 
     $(document).ready(init);
 
     // Call google graphing API
     google.charts.load('current', {packages: ['corechart']});
-    google.charts.setOnLoadCallback(function () {scpper.charts.changes.go(chartsData);});
+    // google.charts.setOnLoadCallback(function () {scpper.charts.changes.go(chartsData);});
 }());
 
 <?php $this->headScript()->captureEnd(); ?>
-<div class="form-inline">
-    <?php
+
+<?php
     $form->prepare();
     echo $this->form()->openTag($form);
-    ?>
-        <div class="form-group">
+?>
+    <div id="date-interval-form">
+        <div id="date-interval-inputs">
             <?php echo $this->formElement($fromDate); ?>
-        </div>
-    –
-        <div class="form-group">
+            <span id="date-interval-separator">–</span>
             <?php echo $this->formElement($toDate); ?>
         </div>
-        <div class="form-group">
-            <?php echo $this->formElement($submit); ?>
-        </div>
-    <?php $this->form()->closeTag(); ?>
-</div>
+        <?php echo $this->formElement($submit); ?>
+    </div>
+    <?php echo $this->form()->closeTag(); ?>
+
 <?php
 
 function printInfoLabel($data)
 {
     foreach ($data['header'] as $name => $number) {
-        echo "<h3>$number $name</h3>";
+        echo "<h4>$number total</h4>";
     }
     if (count($data['list']) > 0) {
-        echo '<hr>';
         echo '<ul class="list-unstyled">';
         foreach ($data['list'] as $name => $number) {
             echo "<li>$number $name</li>";
@@ -80,165 +98,147 @@ function printInfoLabel($data)
 }
 
 ?>
-<!-- USERS -->
-<h1>Users</h1>
-<hr>
-<div class="container top-buffer">
-    <div class="row">
-        <div class="col-md-2 info-box background-green">
+
+<nav class="activity-tabs activity-tabs-row">
+    <div class="activity-tab activity-tab-users"><a href="javascript:;">Members</a></div>
+    <div class="activity-tab activity-tab-pages"><a href="javascript:;">Pages</a></div>
+    <div class="activity-tab activity-tab-revisions"><a href="javascript:;">Revisions</a></div>
+    <div class="activity-tab activity-tab-votes"><a href="javascript:;">Votes</a></div>
+</nav>
+
+<nav class="activity-tabs activity-tabs-stack bottom-buffer">
+    <!-- USERS -->
+    <div class="activity-tab activity-tab-users">
+        <a href="javascript:;" data-toggle="collapse" data-target=".activity-users">
+            Members
+            <span class="glyphicon glyphicon-menu-down"></span>
+            <span class="glyphicon glyphicon-menu-up"></span>
+        </a>
+    </div>    
+    <div class="activity-data activity-users collapse">
+        <div class="info-box">
             <?php printInfoLabel($this->members); ?>
         </div>
-        <div class="col-md-8">
-            <div class="chart-container" id="members-joined">
+        <div class='activity-charts'>
+            <div class="chart-container top-buffer-small" id="members-joined"></div>
+            <div class="chart-container top-buffer-small" id="members-total"></div>
+        </div>
+        <div class="table-container top-buffer-small" id="members-list">
+            <?php 
+                $membersTable = $this->members['table'];
+                echo $this->partial(
+                    'partial/tables/default/table.phtml', 
+                    array(
+                        'table' => $membersTable,
+                        'data' => array('siteId' => $site->getId()),
+                    )
+                );
+            ?>
+            <div class="text-center">
+                <a class="btn btn-default btn-table" id="show-members" href="javascript:;" role="button">Show more</a>               
             </div>
         </div>
     </div>
-    <div class="row top-buffer">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="chart-container" id="members-total">                
-            </div>
-        </div>
-    </div>
-    <div class="row top-buffer">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="table-container" id="members-list">
-                <?php 
-                    $membersTable = $this->members['table'];
-                    echo $this->partial(
-                        'partial/tables/default/table.phtml', 
-                        array(
-                            'table' => $membersTable,
-                            'data' => array('siteId' => $site->getId()),
-                        )
-                    );
-                ?>
-                <div class="text-center">
-                    <a class="btn btn-default btn-table" id="show-members" href="javascript:;" role="button">Show more</a>               
-                </div>
-            </div>
-        </div>
+    <!-- PAGES -->
+    <div class="activity-tab activity-tab-pages">
+        <a href="javascript:;" data-toggle="collapse" data-target=".activity-pages">
+            Pages
+            <span class="glyphicon glyphicon-menu-down"></span>
+            <span class="glyphicon glyphicon-menu-up"></span>            
+        </a>
     </div>    
-</div>
-<!-- PAGES -->
-<h1>Pages</h1>
-<hr>
-<div class="container top-buffer">
-    <div class="row">
-        <div class="col-md-2 info-box background-blue">
+    <div class="activity-data activity-pages collapse">
+        <div class="info-box">
             <?php printInfoLabel($this->pages); ?>
         </div>
-        <div class="col-md-8">
-            <div class="chart-container" id="pages-created">
+        <div class='activity-charts'>
+            <div class="chart-container top-buffer-small" id="pages-created"></div>
+            <div class="chart-container top-buffer-small" id="pages-total"></div>
+        </div>
+        <div class="table-container top-buffer-small" id="pages-list">
+            <?php 
+                $pagesTable = $this->pages['table'];
+                echo $this->partial(
+                    'partial/tables/default/table.phtml', 
+                    array(
+                        'table' => $pagesTable,
+                        'data' => array(),
+                    )
+                );
+            ?>
+            <div class="text-center">
+                <a class="btn btn-default btn-table" id="show-pages" href="javascript:;" role="button">Show more</a>               
             </div>
         </div>
     </div>
-    <div class="row top-buffer">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="chart-container" id="pages-total">
-            </div>
-        </div>
-    </div>
-    <div class="row top-buffer">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="table-container" id="pages-list">
-                <?php 
-                    $pagesTable = $this->pages['table'];
-                    echo $this->partial(
-                        'partial/tables/default/table.phtml', 
-                        array(
-                            'table' => $pagesTable,
-                            'data' => array(),
-                        )
-                    );
-                ?>
-                <div class="text-center">
-                    <a class="btn btn-default btn-table" id="show-pages" href="javascript:;" role="button">Show more</a>               
-                </div>
-            </div>
-        </div>
-    </div>        
-</div>
-<!-- REVISIONS -->
-<h1>Revisions</h1>
-<hr>
-<div class="container top-buffer">
-    <div class="row">
-        <div class="col-md-2 info-box background-red">
+    <!-- REVISIONS -->
+    <div class="activity-tab activity-tab-revisions">
+        <a href="javascript:;" data-toggle="collapse" data-target=".activity-revisions">
+            Revisions
+            <span class="glyphicon glyphicon-menu-down"></span>
+            <span class="glyphicon glyphicon-menu-up"></span>            
+        </a>
+    </div>    
+    <div class="activity-data activity-revisions collapse">       
+        <div class="info-box">
             <?php printInfoLabel($this->revisions); ?>
         </div>
-        <div class="col-md-8">
-            <div class="chart-container" id="revisions-created">
-            </div>
+        <div class='activity-charts'>
+            <div class="chart-container top-buffer-small" id="revisions-created"></div>
+            <div class="chart-container top-buffer-small" id="revisions-total"></div>
         </div>
+        <div class="table-container top-buffer-small" id="editors-list">
+            <?php 
+                $revisionsTable = $this->revisions['table'];
+                echo $this->partial(
+                    'partial/tables/default/table.phtml', 
+                    array(
+                        'table' => $revisionsTable,
+                        'data' => array(
+                            'total' => $this->revisions['header']['revisions']
+                        ),
+                    )
+                );
+            ?>
+            <div class="text-center">
+                <a class="btn btn-default btn-table" id="show-editors" href="javascript:;" role="button">Show more</a>               
+            </div>
+        </div>    
     </div>
-    <div class="row top-buffer">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="chart-container" id="revisions-total">
-            </div>
-        </div>
+    <!-- VOTES -->
+    <div class="activity-tab activity-tab-votes">
+        <a href="javascript:;" data-toggle="collapse" data-target=".activity-votes">
+            Votes
+            <span class="glyphicon glyphicon-menu-down"></span>
+            <span class="glyphicon glyphicon-menu-up"></span>            
+        </a>
     </div>
-    <div class="row top-buffer">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="table-container" id="editors-list">
-                <?php 
-                    $revisionsTable = $this->revisions['table'];
-                    echo $this->partial(
-                        'partial/tables/default/table.phtml', 
-                        array(
-                            'table' => $revisionsTable,
-                            'data' => array(
-                                'total' => $this->revisions['header']['revisions']
-                            ),
-                        )
-                    );
-                ?>
-                <div class="text-center">
-                    <a class="btn btn-default btn-table" id="show-editors" href="javascript:;" role="button">Show more</a>               
-                </div>
-            </div>
-        </div>
-    </div>            
-</div>
-<!-- VOTES -->
-<h1>Votes</h1>
-<hr>
-<div class="container top-buffer">
-    <div class="row">
-        <div class="col-md-2 info-box background-orange">
+    <div class="activity-data activity-votes collapse">                    
+        <div class="info-box">
             <?php printInfoLabel($this->votes); ?>
         </div>
-        <div class="col-md-8">
-            <div class="chart-container" id="votes-cast">
+        <div class='activity-charts'>
+            <div class="chart-container top-buffer-small" id="votes-cast"></div>
+            <div class="chart-container top-buffer-small" id="votes-total"></div>
+        </div>
+        <div class="table-container top-buffer-small" id="voters-list">
+            <?php 
+                $votersTable = $this->votes['table'];
+                echo $this->partial(
+                    'partial/tables/default/table.phtml', 
+                    array(
+                        'table' => $votersTable,
+                        'data' => array(
+                        ),
+                    )
+                );
+            ?>
+            <div class="text-center">
+                <a class="btn btn-default btn-table" id="show-voters" href="javascript:;" role="button">Show more</a>               
             </div>
         </div>
     </div>
-    <div class="row top-buffer">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="chart-container" id="votes-total">
-            </div>
-        </div>
-    </div>
-    <div class="row top-buffer">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="table-container" id="voters-list">
-                <?php 
-                    $votersTable = $this->votes['table'];
-                    echo $this->partial(
-                        'partial/tables/default/table.phtml', 
-                        array(
-                            'table' => $votersTable,
-                            'data' => array(
-                            ),
-                        )
-                    );
-                ?>
-                <div class="text-center bottom-buffer">
-                    <a class="btn btn-default btn-table" id="show-voters" href="javascript:;" role="button">Show more</a>               
-                </div>
-            </div>
-        </div>
-    </div>                
-</div>
+</nav>
 <div id="basic-table-error-row" hidden>
     <table>
     <tr>

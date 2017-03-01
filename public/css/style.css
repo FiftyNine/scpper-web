@@ -65,6 +65,7 @@ div.container a.brand {
 
 .btn-table {
     background-color: #f9f9f9;
+    margin-bottom: 10px;
 }
 
 .per-page-block {
@@ -299,7 +300,7 @@ html {
 body {
   /* Margin bottom by footer height */
   margin-bottom: 4em;
-  padding-top: 60px;
+  margin-top: 60px; 
 }
 
 footer {
@@ -331,6 +332,10 @@ footer > hr {
 .small-text > a {
     color: #AAAAAA;
     text-decoration: underline;
+}
+
+.top-buffer-small {
+    margin-top: 10px;
 }
 
 .top-buffer { 
@@ -507,22 +512,167 @@ span.tile-whitespace {
 
 /* Changes */
 
+.activity-tabs-row {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.activity-tabs-stack {
+    display: flex;
+    flex-flow: column nowrap;    
+}
+
+.activity-tab {
+    flex: auto 1 1;
+    text-align: center;
+    font-size: larger;
+}
+
+.activity-tabs-stack > .activity-tab {
+    display: none;
+}
+
+.activity-tab-users.active {
+    background-color: #E5F5DF;
+}
+
+@media (min-width: 768px) {
+    .activity-tab-users:hover {
+        background-color: #E5F5DF;
+    }
+}
+
+.activity-tab-pages.active, .activity-tab-pages:hover {
+    background-color: #d9edf7;
+}
+
+.activity-tab-revisions.active, .activity-tab-revisions:hover {
+    background-color: #f2dede;
+}
+
+.activity-tab-votes.active, .activity-tab-votes:hover {
+    background-color: #F7E3CD;
+}
+
+.activity-tab>a {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 15px;
+    padding-right: 15px;    
+    line-height: 20px;
+    display: block;    
+    border: 1px solid #ddd;
+    color: #333;
+    width: 100%;
+}
+
+.activity-tab>a:hover, .activity-tab>a:active, .activity-tab>a:focus {
+    text-decoration: none;
+}
+
+.activity-tab > a > .glyphicon-menu-up {
+    display: none;
+}
+
+.activity-tab > a > .glyphicon-menu-down {
+    display: initial;
+}
+
+.activity-tab.active > a > .glyphicon-menu-up {
+    display: initial;
+}
+
+.activity-tab.active > a > .glyphicon-menu-down {
+    display: none;
+}
+
+.activity-data {
+    display: flex; 
+    flex-flow: column nowrap;
+}
+
+.activity-data.collapse {
+    display: none;
+}
+
+@media (max-width: 767px) {
+    .activity-tabs-row> .activity-tab {
+        display: none;
+    }    
+    .activity-tabs-stack > .activity-tab {
+        display: inherit;
+    }
+}
+
+
 .info-box {
-   border-width: 1px; 
-   border-color: #aaaaaa; 
-   border-radius: 6px; 
-   border-style: solid; 
-   margin-top: 15px;
+    border-top-width: 0px;
+    border-bottom-width: 1px;
+    border-right-width: 1px;
+    border-left-width: 1px;
+    border-color: #ddd;     
+    border-style: solid; 
+    text-align: center;
 }
-
-.info-box > hr {
-    border-color: inherit;
-    margin: 5px;
-}
-
-.info-box > h3 {    
-    margin-top: 15px;
+.info-box > h4 {    
+    margin-top: 0px;
+    padding-top: 10px;
     margin-bottom: 5px;
+}
+
+.activity-charts {
+    display: flex;
+    flex-flow: row wrap;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.activity-charts>div {
+    flex: 50% 1 1;
+}
+
+@media (max-width: 1023px) {
+    .activity-charts {
+        flex-flow: column nowrap;
+    }
+}
+
+#date-interval-form {
+    width: auto; 
+    display: flex; 
+    flex-flow: row wrap; 
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
+
+#date-interval-inputs {
+    display: flex; 
+    flex-flow: row wrap;     
+    align-items: center;    
+}
+
+#date-interval-from,#date-interval-to{
+    width: auto;
+}
+
+#date-interval-to {
+    margin-right: 5px;
+}
+
+#date-interval-separator {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+@media (max-width: 374px) {
+    #date-interval-form {        
+        align-items: flex-start;
+        flex-flow: column nowrap;
+    }
+    #date-interval-button {
+        margin-top: 5px;
+    }    
 }
 
 /* Charts */
