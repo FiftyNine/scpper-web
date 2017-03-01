@@ -31,7 +31,7 @@ use Application\Utils\Order;
  *
  * @author Alexander
  */
-class ChangesController extends AbstractActionController
+class ActivityController extends AbstractActionController
 {
     /**
      *
@@ -86,12 +86,12 @@ class ChangesController extends AbstractActionController
         return $from && $to && $siteId > 0;
     }
     
-    protected function getMembersData($siteId, $from, $to)
+    protected function getUsersData($siteId, $from, $to)
     {
-        $members = $this->services->getUserService()->findSiteMembers($siteId, UserType::ANY, false, $from, $to, array(DbViewMembership::JOINDATE => Order::ASCENDING), true);
-        $members->setCurrentPageNumber(1);
-        $members->setItemCountPerPage(3);
-        $table = PaginatedTableFactory::createMembersTable($members, true);
+        $users = $this->services->getUserService()->findSiteMembers($siteId, UserType::ANY, false, $from, $to, array(DbViewMembership::JOINDATE => Order::ASCENDING), true);
+        $users->setCurrentPageNumber(1);
+        $users->setItemCountPerPage(3);
+        $table = PaginatedTableFactory::createMembersTable($users, true);
         $table->getColumns()->setOrder(DbViewMembership::JOINDATE);
         $result = array(
             'header' => array(
@@ -175,7 +175,7 @@ class ChangesController extends AbstractActionController
         $this->dateIntervalForm = $dateIntervalForm;
     }
 
-    public function changesAction()
+    public function activityAction()
     {        
         $siteId = $this->services->getUtilityService()->getSiteId();
         $site = $this->services->getSiteService()->find($siteId);        
@@ -203,7 +203,7 @@ class ChangesController extends AbstractActionController
         $result = array(            
             'intervalForm' => $this->dateIntervalForm,
             'site' => $site,
-            'members' => $this->getMembersData($siteId, $from, $to),
+            'users' => $this->getUsersData($siteId, $from, $to),
             'pages' => $this->getPagesData($siteId, $from, $to),
             'revisions' => $this->getRevisionsData($siteId, $from, $to),
             'votes' => $this->getVotesData($siteId, $from, $to),
@@ -211,7 +211,7 @@ class ChangesController extends AbstractActionController
         return new ViewModel($result);
     }
     
-    public function getMemberChartDataAction()
+    public function getUserChartDataAction()
     {
         $result = array('success' => false);
         $siteId = -1;
@@ -295,7 +295,7 @@ class ChangesController extends AbstractActionController
         return new JsonModel($result);
     }
     
-    public function membersAction()
+    public function usersAction()
     {
         $result = array('success' => false);
         $siteId = -1;
@@ -314,11 +314,11 @@ class ChangesController extends AbstractActionController
             } else {
                 $order = Order::DESCENDING;
             }
-            $members = $this->services->getUserService()->findSiteMembers($siteId, UserType::ANY, false, $from, $to, array($orderBy => $order), true);
-            $members->setCurrentPageNumber($page);
-            $members->setItemCountPerPage($perPage);
+            $users = $this->services->getUserService()->findSiteMembers($siteId, UserType::ANY, false, $from, $to, array($orderBy => $order), true);
+            $users->setCurrentPageNumber($page);
+            $users->setItemCountPerPage($perPage);
             $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
-            $table = PaginatedTableFactory::createMembersTable($members, false);
+            $table = PaginatedTableFactory::createMembersTable($users, false);
             $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);
             if ($renderer) {
                 $result['success'] = true;                

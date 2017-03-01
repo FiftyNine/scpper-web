@@ -87,13 +87,13 @@ return array(
                     ),
                 ),                                
             ),            
-            'changes' => array(
+            'activity' => array(
                 'type' => 'Literal',
                 'options' => array(
-                    'route' => '/changes',
+                    'route' => '/activity',
                     'defaults' => array(
-                        'controller' => 'Application\Controller\Changes',
-                        'action' => 'changes',
+                        'controller' => 'Application\Controller\Activity',
+                        'action' => 'activity',
                     )
                 ),
                 'may_terminate' => true,
@@ -106,7 +106,7 @@ return array(
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ),
                             'defaults' => array(
-                                'controller' => 'Application\Controller\Changes',
+                                'controller' => 'Application\Controller\Activity',
                             ),
                         ),
                     ),
@@ -385,7 +385,7 @@ return array(
         'factories' => array(
             'Application\Controller\Index' => 'Application\Factory\Controller\IndexControllerFactory',
             'Application\Controller\Search' => 'Application\Factory\Controller\SearchControllerFactory',
-            'Application\Controller\Changes' => 'Application\Factory\Controller\ChangesControllerFactory',
+            'Application\Controller\Activity' => 'Application\Factory\Controller\ActivityControllerFactory',
             'Application\Controller\Users' => 'Application\Factory\Controller\UsersControllerFactory',
             'Application\Controller\Pages' => 'Application\Factory\Controller\PagesControllerFactory',
             'Application\Controller\Revisions' => 'Application\Factory\Controller\RevisionsControllerFactory',
@@ -449,8 +449,8 @@ return array(
                 'route' => 'tags',
             ),
             array(
-                'label' => 'Changes',
-                'route' => 'changes',
+                'label' => 'Activity',
+                'route' => 'activity',
             ),
             array(
                 'label' => 'About',

@@ -1,4 +1,3 @@
-/** Changes charts **/
 scpper.charts = {
     
     getDateGroupTooltip: function (date, group) {
@@ -41,7 +40,9 @@ scpper.charts = {
     }
 };
 
-scpper.charts.changes = {
+/** Activity charts **/
+
+scpper.charts.activity = {
 
     drawColumnChart: function (rawData, label, title, id, color) {
         var data = new google.visualization.DataTable();
@@ -97,7 +98,7 @@ scpper.charts.changes = {
             barData[i][2] = scpper.charts.getDateTooltipContent(barData[i][0], group, barLabel, barData[i][1]);
         }
         // Draw bar chart
-        scpper.charts.changes.drawColumnChart(barData, barLabel, barTitle, barId, color);
+        scpper.charts.activity.drawColumnChart(barData, barLabel, barTitle, barId, color);
         // Prepare data for line chart
         var lineData = $.extend(true, [], result.data);
         lineData[0][1] = lineData[0][1]+result.starting;
@@ -105,25 +106,25 @@ scpper.charts.changes = {
             lineData[i][1] = lineData[i-1][1]+lineData[i][1];
         }
         // Draw line chart
-        scpper.charts.changes.drawLineChart(lineData, lineLabel, lineTitle, lineId, color);
+        scpper.charts.activity.drawLineChart(lineData, lineLabel, lineTitle, lineId, color);
     },
 
-    drawMemberCharts: function (chartsData) {
-        if ($('#members-joined.chart-container').length && $('#members-joined.chart-container').length) {
-            $('#members-joined').block(scpper.loadingOverlayOptions);
-            $('#members-total').block(scpper.loadingOverlayOptions);        
+    drawUserCharts: function (chartsData) {
+        if ($('#users-joined.chart-container').length && $('#users-joined.chart-container').length) {
+            $('#users-joined').block(scpper.loadingOverlayOptions);
+            $('#users-total').block(scpper.loadingOverlayOptions);        
             $.ajax({
-                url: "/changes/getMemberChartData",
+                url: "/activity/getUserChartData",
                 type: "get",
                 data: chartsData
             }).done(function (result) {
-                scpper.charts.changes.drawTimeLineCharts(result, 'Joined', 'New members', 'members-joined', 'Members', 'Total members', 'members-total', '#94C282');
+                scpper.charts.activity.drawTimeLineCharts(result, 'Joined', 'New users', 'users-joined', 'Users', 'Total users', 'users-total', '#94C282');
             }).fail(function () {
-                scpper.charts.setFailedBackground('members-joined');
-                scpper.charts.removeChartContainer('members-total');
+                scpper.charts.setFailedBackground('users-joined');
+                scpper.charts.removeChartContainer('users-total');
             }).always(function () {
-                $('#members-joined').unblock();
-                $('#members-total').unblock();
+                $('#users-joined').unblock();
+                $('#users-total').unblock();
             });            
         } 
     },
@@ -133,11 +134,11 @@ scpper.charts.changes = {
             $('#pages-created').block(scpper.loadingOverlayOptions);
             $('#pages-total').block(scpper.loadingOverlayOptions);        
             $.ajax({
-                url: "/changes/getPageChartData",
+                url: "/activity/getPageChartData",
                 type: "get",
                 data: chartsData
             }).done(function (result) {
-                scpper.charts.changes.drawTimeLineCharts(result, 'Created', 'New pages', 'pages-created', 'Pages', 'Total pages', 'pages-total', '#6DAECF');
+                scpper.charts.activity.drawTimeLineCharts(result, 'Created', 'New pages', 'pages-created', 'Pages', 'Total pages', 'pages-total', '#6DAECF');
             }).fail(function () {
                 scpper.charts.setFailedBackground('pages-created');
                 scpper.charts.removeChartContainer('pages-total');
@@ -153,11 +154,11 @@ scpper.charts.changes = {
             $('#revisions-created').block(scpper.loadingOverlayOptions);
             $('#revisions-total').block(scpper.loadingOverlayOptions);        
             $.ajax({
-                url: "/changes/getRevisionChartData",
+                url: "/activity/getRevisionChartData",
                 type: "get",
                 data: chartsData
             }).done(function (result) {
-                scpper.charts.changes.drawTimeLineCharts(result, 'Created', 'New revisions', 'revisions-created', 'Revisions', 'Total revisions', 'revisions-total', '#DB9191');
+                scpper.charts.activity.drawTimeLineCharts(result, 'Created', 'New revisions', 'revisions-created', 'Revisions', 'Total revisions', 'revisions-total', '#DB9191');
             }).fail(function () {
                 scpper.charts.setFailedBackground('revisions-created');
                 scpper.charts.removeChartContainer('revisions-total');
@@ -173,11 +174,11 @@ scpper.charts.changes = {
             $('#votes-cast').block(scpper.loadingOverlayOptions);
             $('#votes-total').block(scpper.loadingOverlayOptions);
             $.ajax({
-                url: "/changes/getVoteChartData",
+                url: "/activity/getVoteChartData",
                 type: "get",
                 data: chartsData
             }).done(function (result) {
-                scpper.charts.changes.drawTimeLineCharts(result, 'Votes', 'New votes', 'votes-cast', 'Votes', 'Total votes', 'votes-total', '#E0A96E');
+                scpper.charts.activity.drawTimeLineCharts(result, 'Votes', 'New votes', 'votes-cast', 'Votes', 'Total votes', 'votes-total', '#E0A96E');
             }).fail(function () {
                 scpper.charts.setFailedBackground('votes-cast');
                 scpper.charts.removeChartContainer('votes-total');
@@ -191,10 +192,10 @@ scpper.charts.changes = {
     go: function (chartsData) {
         if (chartsData.siteId < 0)
             return;
-        scpper.charts.changes.drawMemberCharts(chartsData);
-        scpper.charts.changes.drawPageCharts(chartsData);
-        scpper.charts.changes.drawRevisionCharts(chartsData);
-        scpper.charts.changes.drawVoteCharts(chartsData);
+        scpper.charts.activity.drawUserCharts(chartsData);
+        scpper.charts.activity.drawPageCharts(chartsData);
+        scpper.charts.activity.drawRevisionCharts(chartsData);
+        scpper.charts.activity.drawVoteCharts(chartsData);
     }
 };
 

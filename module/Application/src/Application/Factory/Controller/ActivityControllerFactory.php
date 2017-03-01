@@ -10,20 +10,20 @@ namespace Application\Factory\Controller;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Application\Controller\ChangesController;
+use Application\Controller\ActivityController;
 
 /**
  * Description of RecentControllerFactory
  *
  * @author Alexander
  */
-class ChangesControllerFactory implements FactoryInterface
+class ActivityControllerFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator) 
     {
         $realLocator = $serviceLocator->getServiceLocator();
         $hubService = $realLocator->get('Application\Service\HubServiceInterface');
         $form = $realLocator->get('FormElementManager')->get('Application\Form\DateIntervalForm');
-        return new ChangesController($hubService, $form);
+        return new ActivityController($hubService, $form);
     }
 }

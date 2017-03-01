@@ -5,7 +5,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 $this->headLink()->prependStylesheet($this->basePath('css/jquery-ui.min.css'));
 
 $form = $this->intervalForm;
-$form->setAttribute('action', $this->url('changes'));
+$form->setAttribute('action', $this->url('activity'));
 //$form->setAttribute('method', 'GET');
 $fromDate = $form->get('from-date');
 $toDate = $form->get('to-date');
@@ -39,22 +39,22 @@ $this->headTitle(sprintf('Changes from %s to %s', $fromDate->getValue(), $toDate
     
     function init()
     {
-        $('#show-members').on('click', {container: "#members-list", url: "/changes/members", payload: paginatorData}, scpper.tables.fetchPaginatorFirst);
-        $('#show-pages').on('click', {container: "#pages-list", url: "/changes/pages", payload: paginatorData}, scpper.tables.fetchPaginatorFirst);
-        $('#show-editors').on('click', {container: "#editors-list", url: "/changes/editors", payload: paginatorData}, scpper.tables.fetchPaginatorFirst);
-        $('#show-voters').on('click', {container: "#voters-list", url: "/changes/voters", payload: paginatorData}, scpper.tables.fetchPaginatorFirst);    
+        $('#show-users').on('click', {container: "#users-list", url: "/activity/users", payload: paginatorData}, scpper.tables.fetchPaginatorFirst);
+        $('#show-pages').on('click', {container: "#pages-list", url: "/activity/pages", payload: paginatorData}, scpper.tables.fetchPaginatorFirst);
+        $('#show-editors').on('click', {container: "#editors-list", url: "/activity/editors", payload: paginatorData}, scpper.tables.fetchPaginatorFirst);
+        $('#show-voters').on('click', {container: "#voters-list", url: "/activity/voters", payload: paginatorData}, scpper.tables.fetchPaginatorFirst);    
         $('.datepicker').datepicker({autoSize: true, dateFormat: "yy-mm-dd", maxDate: "<?php echo $site->getLastUpdate()->format('Y-m-d');?>"});
         $('.activity-tabs-stack>.activity-tab').on('click', null, function(event) {$(this).toggleClass('active');});
-        $('.activity-tabs-row>.activity-tab-users').on('click', null, function(event) {activateTab('.activity-tab-users', scpper.charts.changes.drawMemberCharts)});
-        $('.activity-tabs-row>.activity-tab-pages').on('click', null, function(event) {activateTab('.activity-tab-pages', scpper.charts.changes.drawPageCharts)});
-        $('.activity-tabs-row>.activity-tab-revisions').on('click', null, function(event) {activateTab('.activity-tab-revisions', scpper.charts.changes.drawRevisionCharts)});
-        $('.activity-tabs-row>.activity-tab-votes').on('click', null, function(event) {activateTab('.activity-tab-votes', scpper.charts.changes.drawVoteCharts)});
-        $('.activity-tabs-stack>.activity-tab-users').on('click', null, function(event) {scpper.charts.changes.drawMemberCharts(chartsData)});
-        $('.activity-tabs-stack>.activity-tab-pages').on('click', null, function(event) {scpper.charts.changes.drawPageCharts(chartsData)});
-        $('.activity-tabs-stack>.activity-tab-revisions').on('click', null, function(event) {scpper.charts.changes.drawRevisionCharts(chartsData)});
-        $('.activity-tabs-stack>.activity-tab-votes').on('click', null, function(event) {scpper.charts.changes.drawVoteCharts(chartsData)});
+        $('.activity-tabs-row>.activity-tab-users').on('click', null, function(event) {activateTab('.activity-tab-users', scpper.charts.activity.drawUserCharts)});
+        $('.activity-tabs-row>.activity-tab-pages').on('click', null, function(event) {activateTab('.activity-tab-pages', scpper.charts.activity.drawPageCharts)});
+        $('.activity-tabs-row>.activity-tab-revisions').on('click', null, function(event) {activateTab('.activity-tab-revisions', scpper.charts.activity.drawRevisionCharts)});
+        $('.activity-tabs-row>.activity-tab-votes').on('click', null, function(event) {activateTab('.activity-tab-votes', scpper.charts.activity.drawVoteCharts)});
+        $('.activity-tabs-stack>.activity-tab-users').on('click', null, function(event) {scpper.charts.activity.drawUserCharts(chartsData)});
+        $('.activity-tabs-stack>.activity-tab-pages').on('click', null, function(event) {scpper.charts.activity.drawPageCharts(chartsData)});
+        $('.activity-tabs-stack>.activity-tab-revisions').on('click', null, function(event) {scpper.charts.activity.drawRevisionCharts(chartsData)});
+        $('.activity-tabs-stack>.activity-tab-votes').on('click', null, function(event) {scpper.charts.activity.drawVoteCharts(chartsData)});
         if (window.innerWidth >= 768) {
-            activateTab('.activity-tab-users', scpper.charts.changes.drawMemberCharts);
+            activateTab('.activity-tab-users', scpper.charts.activity.drawUserCharts);
         }        
     }
 
@@ -62,7 +62,6 @@ $this->headTitle(sprintf('Changes from %s to %s', $fromDate->getValue(), $toDate
 
     // Call google graphing API
     google.charts.load('current', {packages: ['corechart']});
-    // google.charts.setOnLoadCallback(function () {scpper.charts.changes.go(chartsData);});
 }());
 
 <?php $this->headScript()->captureEnd(); ?>
@@ -100,7 +99,7 @@ function printInfoLabel($data)
 ?>
 
 <nav class="activity-tabs activity-tabs-row">
-    <div class="activity-tab activity-tab-users"><a href="javascript:;">Members</a></div>
+    <div class="activity-tab activity-tab-users"><a href="javascript:;">Users</a></div>
     <div class="activity-tab activity-tab-pages"><a href="javascript:;">Pages</a></div>
     <div class="activity-tab activity-tab-revisions"><a href="javascript:;">Revisions</a></div>
     <div class="activity-tab activity-tab-votes"><a href="javascript:;">Votes</a></div>
@@ -110,32 +109,32 @@ function printInfoLabel($data)
     <!-- USERS -->
     <div class="activity-tab activity-tab-users">
         <a href="javascript:;" data-toggle="collapse" data-target=".activity-users">
-            Members
+            Users
             <span class="glyphicon glyphicon-menu-down"></span>
             <span class="glyphicon glyphicon-menu-up"></span>
         </a>
     </div>    
     <div class="activity-data activity-users collapse">
         <div class="info-box">
-            <?php printInfoLabel($this->members); ?>
+            <?php printInfoLabel($this->users); ?>
         </div>
         <div class='activity-charts'>
-            <div class="chart-container top-buffer-small" id="members-joined"></div>
-            <div class="chart-container top-buffer-small" id="members-total"></div>
+            <div class="chart-container top-buffer-small" id="users-joined"></div>
+            <div class="chart-container top-buffer-small" id="users-total"></div>
         </div>
-        <div class="table-container top-buffer-small" id="members-list">
+        <div class="table-container top-buffer-small" id="users-list">
             <?php 
-                $membersTable = $this->members['table'];
+                $usersTable = $this->users['table'];
                 echo $this->partial(
                     'partial/tables/default/table.phtml', 
                     array(
-                        'table' => $membersTable,
+                        'table' => $usersTable,
                         'data' => array('siteId' => $site->getId()),
                     )
                 );
             ?>
             <div class="text-center">
-                <a class="btn btn-default btn-table" id="show-members" href="javascript:;" role="button">Show more</a>               
+                <a class="btn btn-default btn-table" id="show-users" href="javascript:;" role="button">Show more</a>               
             </div>
         </div>
     </div>

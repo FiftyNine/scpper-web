@@ -4,7 +4,7 @@
 ?>    
 <div class="authors">
 <?php foreach ($authors as $author): ?>        
-    <div>            
+    <div class="author">
     <?php if (!$one || $this->collapsed || $author->getRole() !== \Application\Utils\AuthorRole::AUTHOR): ?>
         <?php 
             switch ($author->getRole()) {
