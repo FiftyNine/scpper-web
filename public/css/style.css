@@ -513,6 +513,13 @@ span.tile-whitespace {
     background-color: #F0D4B6;
 }
 
+.tile-patreon {
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    margin-top: 20px; 
+    padding: 10px;
+}
+
 /* Activity */
 
 .activity-tabs-row {

@@ -17,9 +17,8 @@
 
 <?php $this->headScript()->captureEnd(); ?>
 <?php $site = $this->site; ?>
-
-<div class="row text-center bottom-buffer">    
-    <div class="col-sm-6 col-xs-8 col-sm-offset-3 col-xs-offset-2">        
+<div class="row text-center bottom-buffer">        
+    <div class="col-sm-6 col-xs-8 col-sm-offset-3 col-xs-offset-2">                
         <div class="row tile-row">                        
             <div class="col-xs-12 tile-main" onclick="window.location.assign('<?php echo $this->site->getUrl(); ?>')">
                 <h1>
@@ -83,6 +82,12 @@
                 </div>                            
             </div>            
         </div>
-        
-    </div>
-</div>              
+        <div class="row text-center tile-patreon">
+            <span> If you enjoy ScpperDB please consider supporting it on Patreon. </span>
+            <div class="top-buffer-small">
+            <a href="https://www.patreon.com/bePatron?u=3965575" data-patreon-widget-type="become-patron-button">Become a Patron!</a>
+            <script async src="https://c6.patreon.com/becomePatronButton.bundle.js"></script>
+            </div>
+        </div>
+    </div>    
+</div>
