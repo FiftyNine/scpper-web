@@ -1,3 +1,16 @@
+
+.input-invalid {
+    background-color: #f7cfcf;
+}
+
+#report-dialog .form-group {
+    margin-right: 0px;
+}
+
+button[name="contributors[0][user-delete]"] {
+    visibility: hidden;
+}
+
 /* Navigation */
 
 .navbar-brand {
@@ -520,6 +533,26 @@ span.tile-whitespace {
     padding: 10px;
 }
 
+#patreon-button {
+    display: flex; 
+    justify-content: center;
+}
+
+#patreon-button-content {
+    background-color: #F96854; 
+    border: 2px solid #F96854; 
+    color: #FFFFFF; 
+    font-size: 0.8090234857849197rem; 
+    font-weight: 700; 
+    text-transform: uppercase; 
+    text-decoration: none; 
+    cursor: pointer; 
+    width: 178px; 
+    font-size: 1pc; 
+    padding-top: 5px; 
+    padding-bottom: 5px
+}
+
 /* Activity */
 
 .activity-tabs-row {
@@ -728,6 +761,13 @@ div.google-visualization-tooltip {
     align-self: stretch;
 }
 
+#show-report {
+    margin-top: 5px; 
+    margin-bottom: 5px; 
+    padding-bottom: 3px; 
+    padding-top: 3px;
+}
+
 /** User **/
 
 #user-top {
@@ -913,3 +953,31 @@ ul.search-autocomplete {
     }
 }
     
+/** Reports **/
+
+select.contributor-role {
+    margin-left: 5px;
+}
+
+button.contributor-delete {
+    margin-left: 10px; 
+    vertical-align: baseline;
+}
+
+button.contributor-add {
+    vertical-align: baseline;
+}
+
+button.report-accept {
+    margin-right: .4em;
+}
+
+div.contributor-role-button {
+    display: flex; 
+    flex-direction: row;
+}
+
+legend.report-legend {
+    border-bottom: none; 
+    margin-bottom: 0px;
+}

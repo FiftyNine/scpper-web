@@ -95,6 +95,10 @@ scpper.post = function (path, parameters) {
     form.submit();
 };
 
+scpper.sleep = function (ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 /** Table functions **/
 
 scpper.tables = {
