@@ -23,7 +23,7 @@ class IndexController extends AbstractActionController
      * @var HubServiceInterface 
      */
     protected $services;
-        
+            
     private function fillExtensionAuthorsInfo($authors, &$info)
     {
         foreach ($authors as $author) {
@@ -92,7 +92,7 @@ class IndexController extends AbstractActionController
     {
         return new ViewModel();
     }
-    
+       
     public function extensionPageInfoAction()
     {
         // log request to db

@@ -39,7 +39,7 @@ class EventLogger implements EventManagerAwareInterface, PostInitializationInter
      */
     public function logQuery(EventInterface $e)
     {
-        $text = $e->getParam('query');
+        $text = $e->getParam('text');
         $this->logger->debug($text);
     }
     

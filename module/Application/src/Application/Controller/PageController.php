@@ -13,11 +13,16 @@ use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Application\Service\HubServiceInterface;
 use Application\Factory\Component\PaginatedTableFactory;
+use Application\Form\PageReport\NewPageReportForm;
+use Application\Form\PageReport\PageReportFieldset;
+use Application\Form\PageReport\PageReportContributorFieldset;
+use Application\Model\PageReport;
 use Application\Utils\Aggregate;
 use Application\Utils\DateAggregate;
 use Application\Utils\Order;
 use Application\Utils\DbConsts\DbViewVotes;
 use Application\Utils\DbConsts\DbViewRevisions;
+use Application\Utils\DbConsts\DbViewPages;
 
 /**
  * Description of PageController
@@ -81,11 +86,34 @@ class PageController extends AbstractActionController
         }
         if (!$page) {
             return $this->notFoundAction();
+        }        
+        $reportForm = new NewPageReportForm($this->services->getSiteService());
+        $fieldset = $reportForm->getBaseFieldset();
+        $fieldset->get(PageReportFieldset::PAGE_ID)->setValue($page->getId());
+        $fieldset->get(PageReportFieldset::SITE_NAME)->setValue($page->getSite()->getEnglishName());
+        $fieldset->get(PageReportFieldset::PAGE_NAME)->setValue($page->getTitle());
+        $fieldset->get(PageReportFieldset::STATUS)->setValue($page->getStatus());        
+        $fieldset->get(PageReportFieldset::HAS_ORIGINAL)->setChecked($page->getOriginal() !== null);
+        if ($page->getOriginal()) {
+            $fieldset->get(PageReportFieldset::ORIGINAL_ID)->setValue($page->getOriginal()->getId());
+            $fieldset->get(PageReportFieldset::ORIGINAL_SITE)->setValue($page->getOriginal()->getSite()->getEnglishName());
+            $fieldset->get(PageReportFieldset::ORIGINAL_PAGE)->setValue($page->getOriginal()->getTitle());
         }
+        $fieldset->get(PageReportFieldset::KIND)->setValue($page->getKind());
+        $contributors = [];
+        foreach ($page->getAuthors() as $authorship) {            
+            $contributors[] = [
+                PageReportContributorFieldset::USER_NAME => $authorship->getUser()->getDisplayName(),
+                PageReportContributorFieldset::USER_ID => $authorship->getUser()->getId(),
+                PageReportContributorFieldset::ROLE => $authorship->getRole(),
+            ];
+        }
+        $fieldset->get(PageReportFieldset::CONTRIBUTORS)->populateValues($contributors);
         return new ViewModel(array(
             'page' => $page,
             'revisions' => $this->getRevisionsTable($pageId, DbViewRevisions::REVISIONINDEX, Order::DESCENDING, 1, 10),
-            'votes' => $this->getVotesTable($pageId, DbViewVotes::DATETIME, Order::DESCENDING, 1, 10)
+            'votes' => $this->getVotesTable($pageId, DbViewVotes::DATETIME, Order::DESCENDING, 1, 10),
+            'reportForm' => $reportForm
         ));
     }
     
@@ -170,4 +198,46 @@ class PageController extends AbstractActionController
         }
         return new JsonModel($result);                
     }
+    
+    public function reportAction()
+    {
+        $response = ['success' => false];
+        $form = new NewPageReportForm($this->services->getSiteService());
+        $report = new PageReport($this->getServiceLocator()->get('PageMapper'));
+        $form->bind($report);
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {            
+            $form->setData($request->getPost());
+            if ($form->isValid()) {                
+                $response['success'] = true;                
+                $mapper = $this->getServiceLocator()->get('PageReportMapper');
+                $mapper->save($report);
+            } else {
+                $response['messages'] = $form->getMessages();
+            }            
+        } else {
+            $response['messages'] = ['Not a POST'];
+        }
+        return new JsonModel($response);
+    }
+    
+    public function searchAction()
+    {
+        $maxItems = 50;
+        $result = ['success' => true];
+        $siteId = (int)$this->params()->fromQuery('siteId', $this->services->getUtilityService()->getSiteId());
+        $query = $this->params()->fromQuery('query', '');
+        $pages = $this->services->getPageService()->findByName($query, [$siteId], [DbViewPages::CLEANRATING => Order::DESCENDING], true);
+        $pages->setItemCountPerPage($maxItems);
+        $result['pages'] = [];
+        foreach ($pages as $page) {
+            $result['pages'][] = [
+                'id' => $page->getId(),
+                'label' => $page->getTitle(),
+                'altTitle' => $page->getAltTitle()            
+            ];
+        }
+        return new JsonModel($result);
+    }  
 }

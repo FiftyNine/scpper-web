@@ -22,6 +22,16 @@ return array(
                     ),
                 ),
             ),
+            'login' => [
+                'type' => 'Literal',
+                'options' => [
+                    'route'    => '/login',
+                    'defaults' => [
+                        'controller' => 'Application\Controller\Login',
+                        'action'     => 'login',
+                    ],
+                ],                
+            ],
             'about' => array(
                 'type' => 'Literal',
                 'options' => array(
@@ -232,6 +242,16 @@ return array(
                             ),
                         ),                        
                     ),
+                    'report' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/report',
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\Page',
+                                'action' => 'report'
+                            ),
+                        ),                        
+                    ),                    
                     'default' => array(
                         'type'    => 'Segment',
                         'options' => array(
@@ -304,9 +324,57 @@ return array(
                         ),
                     ),
                 ),                                
-            ), 
+            ),
+            'admin' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/admin',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\AdminPanel',
+                        'action' => 'admin'
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+/*                    'reports' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/reports',
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\Page',
+                                'action' => 'report'
+                            ),
+                        ),                        
+                    ),                    */
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/:action',
+                            'constraints' => array(                                
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\AdminPanel',
+                            ),
+                        ),
+                    ),
+                ),                     
+            ),            
         ),
     ),
+    'session' => [
+           'config' => [
+               'class' => 'Zend\Session\Config\SessionConfig',
+               'options' => [
+                   'name' => 'scpper',
+               ],
+           ],
+           'storage' => 'Zend\Session\Storage\SessionArrayStorage',
+           'validators' => [
+               'Zend\Session\Validator\RemoteAddr',
+               'Zend\Session\Validator\HttpUserAgent'
+        ],
+    ],    
     'service_manager' => array(
         'abstract_factories' => array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
@@ -333,6 +401,7 @@ return array(
             'UserActivityMapper' => 'Application\Factory\Mapper\UserActivityDbSqlMapperFactory',
             'MembershipMapper' => 'Application\Factory\Mapper\MembershipDbSqlMapperFactory',
             'TagMapper' => 'Application\Factory\Mapper\TagDbSqlMapperFactory',
+            'PageReportMapper' => 'Application\Factory\Mapper\PageReportDbSqlMapperFactory',
             // Model object prototypes
             'SitePrototype' => 'Application\Factory\Prototype\SitePrototypeFactory',
             'UserPrototype' => 'Application\Factory\Prototype\UserPrototypeFactory',
@@ -342,11 +411,14 @@ return array(
             'AuthorshipPrototype' => 'Application\Factory\Prototype\AuthorshipPrototypeFactory',
             'UserActivityPrototype' => 'Application\Factory\Prototype\UserActivityPrototypeFactory',
             'MembershipPrototype' => 'Application\Factory\Prototype\MembershipPrototypeFactory',
+            'PageReportPrototype' => 'Application\Factory\Prototype\PageReportPrototypeFactory',
             // Overrides
             'translator' => 'Zend\Mvc\Service\TranslatorServiceFactory',            
             'Zend\Db\Adapter\Adapter' => 'Application\Factory\Service\DbAdapterFactory',
             'navigation' => 'Application\Factory\Service\NavigationFactory', // Zend\Navigation\Service\DefaultNavigationFactory',         
             'LazyServiceFactory' => 'Zend\ServiceManager\Proxy\LazyServiceFactoryFactory',            
+            'Zend\Session\SessionManager' => 'Application\Factory\Service\SessionManagerFactory',
+            'Zend\Authentification\AuthentificationService' => 'Application\Factory\Service\AuthentificationServiceFactory'
         ),
         'delegators' => array(
             'SiteMapper' => array('LazyServiceFactory'),
@@ -356,7 +428,8 @@ return array(
             'VoteMapper' => array('LazyServiceFactory'),            
             'AuthorshipMapper' => array('LazyServiceFactory'),            
             'UserActivityMapper' => array('LazyServiceFactory'),            
-            'MembershipMapper' => array('LazyServiceFactory'),            
+            'MembershipMapper' => array('LazyServiceFactory'),
+            'PageReportMapper' => array('LazyServiceFactory'),
         ),        
     ),
     'lazy_services' => array(
@@ -369,6 +442,7 @@ return array(
             'AuthorshipMapper' => 'Application\Mapper\AuthorshipDbSqlMapper',
             'UserActivityMapper' => 'Application\Mapper\UserActivityDbSqlMapper',
             'MembershipMapper' => 'Application\Mapper\MembershipDbSqlMapper',
+            'PageReportMapper' => 'Application\Mapper\PageReportDbSqlMapper',
         ),
     ),    
     'translator' => array(
@@ -393,6 +467,8 @@ return array(
             'Application\Controller\Page' => 'Application\Factory\Controller\PageControllerFactory',
             'Application\Controller\User' => 'Application\Factory\Controller\UserControllerFactory',
             'Application\Controller\Tags' => 'Application\Factory\Controller\TagsControllerFactory',
+            'Application\Controller\AdminPanel' => 'Application\Factory\Controller\AdminPanelControllerFactory',
+            'Application\Controller\Login' => 'Application\Factory\Controller\LoginControllerFactory',
         ),
     ),
     'view_manager' => array(

@@ -1,0 +1,40 @@
+<?php
+
+use \Application\Form\LoginForm;
+
+$this->headScript()->appendFile('/js/scpper_charts.js');
+$this->headScript()->appendFile('/js/jquery-ui/jquery-ui.min.js');
+$this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
+$this->headLink()->prependStylesheet($this->basePath('css/jquery-ui.min.css'));
+
+$form = $this->form;
+$form->setAttribute('action', $this->url('login'));
+?>
+
+<?php echo $this->form()->openTag($form); ?>
+<?php if ($this->failed): ?>
+<div class="form-group">
+    <span class="col-sm-offset-3 col-sm-5 text-center">Entered combination of username and password doesn't exist</span>
+</div>    
+<?php endif; ?>
+<div class="form-group">
+    <?php $userElem = $form->get(LoginForm::USER_FIELD_NAME); ?>
+    <?php echo $this->formLabel($userElem); ?>
+    <div class="col-sm-3">
+        <?php echo $this->formElement($userElem); ?>
+    </div>
+</div>
+<div class="form-group">
+    <?php $passElem = $form->get(LoginForm::PASSWORD_FIELD_NAME); ?>
+    <?php echo $this->formLabel($passElem); ?>
+    <div class="col-sm-3">
+        <?php echo $this->formElement($passElem); ?>
+    </div>
+</div>
+<?php echo $this->formElement($form->get(LoginForm::REDIRECT_FIELD_NAME)); ?>    
+<div class="form-group">
+    <div class="col-sm-offset-4 col-sm-3">
+        <?php echo $this->formElement($form->get(LoginForm::BUTTON_NAME)); ?>    
+    </div>
+</div>
+<?php echo $this->form()->closeTag(); ?>

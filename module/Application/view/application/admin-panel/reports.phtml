@@ -1,0 +1,62 @@
+<?php
+$this->headScript()->appendFile('/js/scpper_reports.js');
+$this->headScript()->appendFile('/js/jquery-ui/jquery-ui.min.js');
+$this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
+$this->headLink()->prependStylesheet($this->basePath('css/jquery-ui.min.css'));
+?>
+
+<?php $this->headScript()->captureStart(); ?>
+
+// Anonymous self-executing function not to clutter global scope with temporary stuff
+(function () {
+
+    function init()
+    {
+        var form = $("#review-report-form");
+        scpper.reports.initReportForm(form);
+        form.find("button[name=accept]").click(
+            function(e) {
+                form.find("[name=action]").val("1");
+                form[0].submit();
+            }
+        );
+        form.find("button[name=ignore]").click(
+            function(e) {
+                form.find("[name=action]").val("0");
+                form[0].submit();
+            }
+        );        
+    }
+
+    $(document).ready(init);       
+
+}());
+
+<?php $this->headScript()->captureEnd(); ?>
+
+<?php if ($this->reportForm): ?>
+    <div class="col-sm-offset-2 col-sm-8">
+    <?php $this->reportForm->setAttribute('id', 'review-report-form'); ?>
+    <?php $this->reportForm->setAttribute('action', '/admin/reports'); ?>
+    <?php $this->reportForm->prepare(); ?>
+    <?php echo $this->form()->openTag($this->reportForm); ?>
+    <div id="report-fieldset">
+    <?php echo $this->partial(
+            'partial/pageReportFieldset.phtml',
+            ['fieldset' => $this->reportForm->get('report')]);
+    ?>
+    </div>
+    <hr>
+    <?php echo $this->formElement($this->reportForm->get('action')); ?>
+    <div class="form-group">
+        <div class="col-sm-12" style="display: flex; flex-direction: row; justify-content: flex-end">
+            <?php echo $this->formButton($this->reportForm->get('accept')); ?>
+            <?php echo $this->formButton($this->reportForm->get('ignore')); ?>    
+        </div>    
+    </div>    
+    <?php echo $this->form()->closeTag($this->reportForm); ?>
+    </div>
+<?php else: ?>
+<span class="col-sm-offset-5 col-sm-2">No new reports</span>
+<?php endif; ?>
+

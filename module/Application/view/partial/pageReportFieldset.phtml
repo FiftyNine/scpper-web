@@ -1,0 +1,102 @@
+<?php use Application\Form\PageReport\PageReportFieldset; ?>
+
+<?php $fieldset = $this->fieldset; ?>
+<!--
+<div class="form-group">
+    <div class="col-sm-2 text-right">
+        <legend class="report-legend">General</legend>
+    </div>
+</div>
+-->
+<div style="margin-top: 15px"></div>
+<?php echo $this->formRow($fieldset->get(PageReportFieldset::REPORT_ID)); ?>
+<?php echo $this->formRow($fieldset->get(PageReportFieldset::PAGE_ID)); ?>
+<div class="form-group">
+    <div class="col-sm-2 text-right">
+    <?php echo $this->formLabel($fieldset->get(PageReportFieldset::SITE_NAME)); ?>
+    </div>
+    <div class="col-sm-10">
+    <?php echo $this->formElement($fieldset->get(PageReportFieldset::SITE_NAME)); ?>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-2 text-right">
+    <?php echo $this->formLabel($fieldset->get(PageReportFieldset::PAGE_NAME)); ?>
+    </div>
+    <div class="col-sm-10">
+    <?php echo $this->formElement($fieldset->get(PageReportFieldset::PAGE_NAME)); ?>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-2 text-right">
+    <?php echo $this->formLabel($fieldset->get(PageReportFieldset::REPORTER)); ?>
+    </div>
+    <div class="col-sm-10">
+    <?php echo $this->formElement($fieldset->get(PageReportFieldset::REPORTER)); ?>
+    </div>
+</div>        
+<div class="form-group">
+    <div class="col-sm-2 text-right">
+    <?php echo $this->formLabel($fieldset->get(PageReportFieldset::KIND)); ?>
+    </div>
+    <div class="col-sm-10">
+    <?php echo $this->formElement($fieldset->get(PageReportFieldset::KIND)); ?>
+    </div>
+</div>    
+<div class="form-group">
+    <div class="col-sm-2 text-right">
+    <?php echo $this->formLabel($fieldset->get(PageReportFieldset::STATUS)); ?>
+    </div>
+    <div class="col-sm-10">
+    <?php echo $this->formElement($fieldset->get(PageReportFieldset::STATUS)); ?>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-3 text-right">
+    <?php echo $this->formLabel($fieldset->get(PageReportFieldset::HAS_ORIGINAL)); ?>
+    </div>
+    <div class="col-sm-9">
+        <div class="report-has-original">
+    <?php echo $this->formCheckbox($fieldset->get(PageReportFieldset::HAS_ORIGINAL)); ?>
+    <span> Check to select the original page of this translation </span>
+        </div>
+    </div>
+</div>
+<?php echo $this->formRow($fieldset->get(PageReportFieldset::ORIGINAL_ID)); ?>
+<div class="form-group">
+    <div class="col-sm-3 text-right">
+    <?php echo $this->formLabel($fieldset->get(PageReportFieldset::ORIGINAL_SITE)); ?>
+    </div>
+    <div class="col-sm-9">
+    <?php echo $this->formElement($fieldset->get(PageReportFieldset::ORIGINAL_SITE)); ?>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-3 text-right">
+    <?php echo $this->formLabel($fieldset->get(PageReportFieldset::ORIGINAL_PAGE)); ?>
+    </div>
+    <div class="col-sm-9">
+    <?php echo $this->formElement($fieldset->get(PageReportFieldset::ORIGINAL_PAGE)); ?>
+    </div>
+</div>    
+<?php $fieldsetHelper = new Application\Form\PageReport\Helper\PageReportContributorFieldsetHelper($this); ?>
+<?php $this->formCollection()->setFieldsetHelper($fieldsetHelper); ?>
+<?php $contributors = $fieldset->get('contributors'); ?>
+<div>
+    <div class="form-group">
+        <div class="col-sm-2 text-right">
+            <legend class="report-legend">Contributors</legend>
+        </div>
+    </div>
+    <div class="contributors">
+        <?php echo $this->formCollection()->renderTemplate($contributors); ?>
+        <?php foreach ($contributors as $contrib): ?>
+            <?php echo $fieldsetHelper($contrib); ?>
+        <?php endforeach; ?>    
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-3">
+            <?php echo $this->formButton($fieldset->get(PageReportFieldset::USER_ADD)); ?>
+        </div>
+    </div>
+</div>

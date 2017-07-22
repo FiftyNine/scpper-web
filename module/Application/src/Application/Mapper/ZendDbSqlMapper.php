@@ -6,6 +6,7 @@ use Zend\Db\Adapter\AdapterInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Select;
+use Zend\Db\Sql\AbstractSql;
 use Zend\Db\Adapter\Driver\ResultInterface;
 use Zend\Db\ResultSet\HydratingResultSet;
 use Zend\Db\Sql\Expression;
@@ -53,17 +54,17 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
     
     /**
      * Sends event for a logger to write down query text
-     * @param mixed $select
+     * @param mixed $query
      */
-    protected function logQuery($select)
+    protected function logQuery($query)
     {
-        if ($select instanceof Select) {
+        if ($query instanceof AbstractSql) {
             $platform = $this->dbAdapter->getPlatform();
-            $query = $select->getSqlString($platform);
+            $text = $query->getSqlString($platform);
         } else {
-            $query = json_encode($select);
+            $text = json_encode($query);
         }
-        $this->getEventManager()->trigger(\Application\Utils\Events::LOG_SQL_QUERY, $this, compact('query'));               
+        $this->getEventManager()->trigger(\Application\Utils\Events::LOG_SQL_QUERY, $this, compact('text'));
     }
     
     /**

@@ -2,6 +2,7 @@
 <?php $this->headTitle($this->escapeHtml($page->getTitle())); ?>
 <?php
 $this->headScript()->appendFile('/js/scpper_charts.js');
+$this->headScript()->appendFile('/js/scpper_reports.js');
 $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 ?>
 <?php $this->headScript()->captureStart(); ?>
@@ -14,8 +15,15 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 
     function init()
     {
+        var dialog = scpper.reports.initReportDialog('#report-dialog', false);
         scpper.tables.assignPaginatorEvents('#revision-list', '/page/revisionList', {pageId: pageId});
-        scpper.tables.assignPaginatorEvents('#vote-list', '/page/voteList', {pageId: pageId});
+        scpper.tables.assignPaginatorEvents('#vote-list', '/page/voteList', {pageId: pageId});        
+        $('#show-report').click(
+            function() {
+                dialog.dialog("open");
+            }
+        );
+                
     }
 
     $(document).ready(init);    
@@ -183,11 +191,13 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
             <a href="/tags?tags=<?php echo urlencode($tags[$j]);?>" ><?php echo $this->escapeHtml($tags[$j]); ?></a><?php if ($j < count($tags)-1) {echo ',';}?>
             <?php endfor; ?>
         </em>
+        <br>        
+        <button id="show-report" href="javascript:;" class="btn btn-danger">Found an error?</button>
     </div>
     <div id="page-chart">
         <div class="chart-container" id="page-rating-chart">
         </div>
-    </div>
+    </div>    
 </div>
 <hr>
 <h4><?php echo $this->page->getRevisionCount();?> revisions</h4>
@@ -221,3 +231,16 @@ echo $this->partial(
 ?>    
 </div>
 <?php endif; ?>
+
+
+<div id="report-dialog" title="Enter correct information">
+<?php $this->reportForm->setAttribute('action', '/page/report'); ?>
+<?php $this->reportForm->prepare(); ?>
+<?php echo $this->form()->openTag($this->reportForm); ?>
+<?php echo $this->partial(
+        'partial/pageReportFieldset.phtml',
+        ['fieldset' => $this->reportForm->get('report')]);
+?>
+<?php echo $this->form()->closeTag($this->reportForm); ?>
+
+</div>
