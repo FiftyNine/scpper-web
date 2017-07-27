@@ -237,6 +237,7 @@ echo $this->partial(
 <?php $this->reportForm->setAttribute('action', '/page/report'); ?>
 <?php $this->reportForm->prepare(); ?>
 <?php echo $this->form()->openTag($this->reportForm); ?>
+    <div id="report-error" hidden="" class="bg-danger"></div>
 <?php echo $this->partial(
         'partial/pageReportFieldset.phtml',
         ['fieldset' => $this->reportForm->get('report')]);

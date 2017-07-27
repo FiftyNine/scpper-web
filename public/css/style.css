@@ -981,3 +981,9 @@ legend.report-legend {
     border-bottom: none; 
     margin-bottom: 0px;
 }
+
+div#report-error {
+    border: #dca7a7 1.5px solid; 
+    padding: 5px; 
+    border-radius: 3px;
+}

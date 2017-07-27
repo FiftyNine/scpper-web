@@ -96,7 +96,7 @@ class PageController extends AbstractActionController
         $fieldset->get(PageReportFieldset::HAS_ORIGINAL)->setChecked($page->getOriginal() !== null);
         if ($page->getOriginal()) {
             $fieldset->get(PageReportFieldset::ORIGINAL_ID)->setValue($page->getOriginal()->getId());
-            $fieldset->get(PageReportFieldset::ORIGINAL_SITE)->setValue($page->getOriginal()->getSite()->getEnglishName());
+            $fieldset->get(PageReportFieldset::ORIGINAL_SITE)->setValue($page->getOriginal()->getSite()->getId());
             $fieldset->get(PageReportFieldset::ORIGINAL_PAGE)->setValue($page->getOriginal()->getTitle());
         }
         $fieldset->get(PageReportFieldset::KIND)->setValue($page->getKind());

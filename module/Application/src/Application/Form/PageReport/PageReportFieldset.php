@@ -222,7 +222,7 @@ class PageReportFieldset extends Fieldset implements InputFilterProviderInterfac
                 'validators' => [
                     new \Zend\Validator\Digits()
                 ]
-            ],
+            ], 
             self::HAS_ORIGINAL => [
                 'allow_empty' => true,
             ],

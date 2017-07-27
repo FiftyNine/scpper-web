@@ -8,8 +8,10 @@
 scpper.reports = {
     SELECTORS:
     {
+        error: 'div#report-error',
         pageId: '[name*="pageId"]',
         pageName: '[name*="page-name"]',
+        kind: '[name*="kind"]',
         status: '[name*="status"]',
         hasOriginal: '[name*="has-original"]',
         originalId: '[name*="original-id"]',
@@ -275,13 +277,19 @@ scpper.reports = {
     validateForm: async function (form)
     {
         var result = true;           
+        var kind = $(form).find(scpper.reports.SELECTORS.kind);
         var status = $(form).find(scpper.reports.SELECTORS.status);
         var contributors = $(form).find('fieldset.page-report-contributor');
         var hasOriginal = $(form).find(scpper.reports.SELECTORS.hasOriginal).last();
         var originalId = $(form).find(scpper.reports.SELECTORS.originalId);
         var originalPage = $(form).find(scpper.reports.SELECTORS.originalPage);
         var firstInvalid = null;
-        var i=0;
+        var i=0;        
+        if (!kind.val()) {
+            firstInvalid = firstInvalid || kind;
+            kind.addClass('input-invalid');
+            result = false;
+        }
         // Wait until all ajax requests are done or timeout is over
         while ($(form).find('.input-loading').length > 0 && i < 10) {
             await scpper.sleep(500);
@@ -317,13 +325,50 @@ scpper.reports = {
         return result;
     },
     
+    responseToList: function (messageObj, list) {
+        $.each(messageObj, function (name, value) {
+            var li = $('<li>');
+            var ul;
+            if (typeof value === 'object') {
+                li.append('<span>'+name+'</span>');
+                ul = $('<ul>');
+                scpper.reports.responseToList(value, ul);
+                li.append(ul);
+            } else {
+                li.text(name+': '+value);
+            }
+            list.append(li);
+        });
+    },
+    
+    showSubmitResponse: function(dialog, data) {
+        var errorBlock;
+        var ul;
+        if (data.success) {
+            dialog.dialog('close');
+        } else {
+            errorBlock = dialog.find(scpper.reports.SELECTORS.error);
+            errorBlock.empty();
+            errorBlock.append('<span><strong>Report wasn\'t submitted due to an error!</strong></span>');
+            ul = $('<ul>');
+            scpper.reports.responseToList(data.messages, ul);
+            errorBlock.append(ul);
+            errorBlock.show();            
+        }
+    },
+    
     submitReportForm: function (event)
     {
         var form = $(this).find('form');       
+        var dialog = $(this);
         scpper.reports.validateForm(form).then(success => {
             if (success) {
-                $.post('/page/report', form.serialize());                
-                $(this).dialog('close');
+                $.post(
+                    '/page/report', 
+                    form.serialize(), 
+                    function(data, textStatus) {
+                        scpper.reports.showSubmitResponse(dialog, data);
+                    });
                 // form[0].submit();
                 
             }
@@ -341,6 +386,11 @@ scpper.reports = {
     initReportForm: function (form)
     {
         var pageControl = form.find(scpper.reports.SELECTORS.originalPage);
+        form.find(scpper.reports.SELECTORS.kind).change(function() {
+            if ($(this).val()) {
+                $(this).removeClass('input-invalid');
+            }            
+        });
         pageControl.change(scpper.reports.originalPageChanged);
         scpper.reports.initPageLookup(pageControl);
         form.find(scpper.reports.SELECTORS.hasOriginal).click(scpper.reports.hasOriginalClick);
