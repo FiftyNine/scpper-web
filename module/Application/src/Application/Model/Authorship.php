@@ -131,5 +131,5 @@ class Authorship implements AuthorshipInterface
     public function setPageId($value)
     {
         $this->pageId = $value;
-    }
+    }    
 }

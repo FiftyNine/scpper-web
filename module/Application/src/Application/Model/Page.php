@@ -550,4 +550,34 @@ class Page implements PageInterface
     {
         return sprintf('/page/%d', $this->getId());
     }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        $authors = [];
+        foreach ($this->getAuthors() as $author) {
+            $authors[] = [
+                'user' => $author->getUser()->getDisplayName(),
+                'role' => \Application\Utils\AuthorRole::getDescription($author->getRole())
+            ];
+        }        
+        $result = [
+            'name' => $this->getName(),
+            'title' => $this->getTitle(),
+            'altTitle' => $this->getAltTitle(),
+            'status' => \Application\Utils\PageStatus::getDescription($this->getStatus()),
+            'kind' => \Application\Utils\PageKind::getDescription($this->getKind()),
+            'creationDate' => $this->getCreationDate(),
+            'rating' => $this->getRating(),
+            'cleanRating' => $this->getCleanRating(),
+            'contributorRating' => $this->getContributorRating(),
+            'adjustedRating' => $this->getAdjustedRating(),
+            'wilsonScore' => $this->getWilsonScore(),
+            'rank' => $this->getRank(),
+            'authors' => $authors
+            ];        
+        return $result;
+    }
 }

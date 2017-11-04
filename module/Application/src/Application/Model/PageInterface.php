@@ -129,4 +129,11 @@ interface PageInterface
      * @return string
      */
     public function getUrl();
+    
+    /**
+     * Returns an associative array of an object fields, 
+     * easily convertable into json or other human-readable format
+     * @return [... => ...]
+     */
+    public function toArray();
 }

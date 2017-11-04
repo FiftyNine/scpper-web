@@ -32,6 +32,19 @@ class SiteService implements SiteServiceInterface
     /**
      * 
      * {@inheritDoc}
+     */
+    public function findByShortName($site)
+    {
+        $sites = $this->mapper->findAll([\Application\Utils\DbConsts\DbViewSites::SHORTNAME => $site]);
+        if ($sites->count() != 1) {
+            throw new \InvalidArgumentException();
+        }
+        return $sites->current();
+    }
+    
+    /**
+     * 
+     * {@inheritDoc}
      */    
     public function findAll() 
     {

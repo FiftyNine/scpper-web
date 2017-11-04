@@ -336,16 +336,6 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
-/*                    'reports' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/reports',
-                            'defaults' => array(
-                                'controller' => 'Application\Controller\Page',
-                                'action' => 'report'
-                            ),
-                        ),                        
-                    ),                    */
                     'default' => array(
                         'type'    => 'Segment',
                         'options' => array(
@@ -358,6 +348,25 @@ return array(
                             ),
                         ),
                     ),
+                ),                     
+            ),
+            'api' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/api',
+                ),
+                'may_terminate' => false,
+                'child_routes' => array(
+                    'report' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/tags',
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\Tags',
+                                'action' => 'apiSearch'
+                            ),
+                        ),                        
+                    ),                       
                 ),                     
             ),            
         ),

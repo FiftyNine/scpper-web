@@ -14,6 +14,15 @@ interface SiteServiceInterface
      * @throws \InvalidArgumentException
      */
     public function find($site);
+
+    /**
+     * Returns a single site
+     * 
+     * @param int|string $site Sites short name (en|ru|pl...)
+     * @return SiteInterface
+     * @throws \InvalidArgumentException
+     */
+    public function findByShortName($site);
     
     /**
      * Returns all available sites

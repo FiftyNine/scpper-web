@@ -85,6 +85,21 @@ class TagsController extends AbstractActionController
             'searchTags' => $searchTags
         ));
     }
+
+    public function apiSearchAction()
+    {
+        $result = ['pages' => []];
+        $siteName = $this->params()->fromQuery('site', 'en');        
+        $site = $this->services->getSiteService()->findByShortName($siteName);        
+        $this->extractTagParameters($method, $searchTags, $includeTags, $excludeTags);
+        $pages = $this->services->getPageService()->findPagesByTags($site->getId(), $includeTags, $excludeTags, $method==='and', array(DbViewPages::CLEANRATING => Order::DESCENDING), true);
+        $pages->setItemCountPerPage(50);        
+        foreach ($pages as $page) {
+            $result['pages'][] = $page->toArray();
+        }
+        return new JsonModel($result);
+    }
+       
     
     public function pageListAction()
     {
@@ -113,5 +128,5 @@ class TagsController extends AbstractActionController
             );
         }
         return new JsonModel($result);        
-    }        
+    }
 }
