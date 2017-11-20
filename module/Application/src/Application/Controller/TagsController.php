@@ -90,8 +90,8 @@ class TagsController extends AbstractActionController
     {
         $result = ['pages' => []];
         $siteName = $this->params()->fromQuery('site', 'en');        
-        $limit = $this->params()->fromQuery('limit', 50);
-        if (!is_int($limit) || ($limit < 1) || ($limit > 50)) {
+        $limit = filter_var($this->params()->fromQuery('limit', 50), FILTER_VALIDATE_INT);
+        if (!$limit || ($limit < 1) || ($limit > 50)) {
             $limit = 50;
         }
         $randomize = $this->params()->fromQuery('random', 0);        
