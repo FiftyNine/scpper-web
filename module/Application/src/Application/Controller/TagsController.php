@@ -90,10 +90,20 @@ class TagsController extends AbstractActionController
     {
         $result = ['pages' => []];
         $siteName = $this->params()->fromQuery('site', 'en');        
+        $limit = $this->params()->fromQuery('limit', 50);
+        if (!is_int($limit) || ($limit < 1) || ($limit > 50)) {
+            $limit = 50;
+        }
+        $randomize = $this->params()->fromQuery('random', 1);        
         $site = $this->services->getSiteService()->findByShortName($siteName);        
         $this->extractTagParameters($method, $searchTags, $includeTags, $excludeTags);
-        $pages = $this->services->getPageService()->findPagesByTags($site->getId(), $includeTags, $excludeTags, $method==='and', array(DbViewPages::CLEANRATING => Order::DESCENDING), true);
-        $pages->setItemCountPerPage(50);        
+        if ($randomize) {
+            $orderBy = 'random';
+        } else {
+            $orderBy = array(DbViewPages::CLEANRATING => Order::DESCENDING);
+        }
+        $pages = $this->services->getPageService()->findPagesByTags($site->getId(), $includeTags, $excludeTags, $method==='and', $orderBy, true);
+        $pages->setItemCountPerPage($limit);
         foreach ($pages as $page) {
             $result['pages'][] = $page->toArray();
         }

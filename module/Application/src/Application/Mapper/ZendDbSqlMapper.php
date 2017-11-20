@@ -223,11 +223,24 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
         return $select;
     }    
 
+    /**
+     * Adds ordering to a select statement
+     * @param Select $select
+     * @param string|array $order
+     * @return Select
+     */
     protected function orderSelect(Select $select, $order)
     {
         $newOrder = array(); // We run this place now
-        foreach ($order as $name => $type) {
-            $newOrder[] = new Expression($name.' '.Order::getTypeSql($type));
+        if ($order === 'random') {
+            $columns = $select->getRawState(Select::COLUMNS);
+            $columns['RANDOM_ORDER'] = new Expression('rand()');
+            $select->columns($columns, false);
+            $newOrder[] = new Expression('RANDOM_ORDER');
+        } else if (is_array($order)) {
+            foreach ($order as $name => $type) {
+                $newOrder[] = new Expression($name.' '.Order::getTypeSql($type));
+            }
         }
         $select->order($newOrder);
         return $select;

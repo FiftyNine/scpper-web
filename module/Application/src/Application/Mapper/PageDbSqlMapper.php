@@ -130,9 +130,7 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
             $query = $excludeSubSelect->getSqlString($platform);                        
             $select->where(array(vsprintf('NOT EXISTS(%s)', [$query])));                        
         }       
-        if (is_array($order)) {
-            $this->orderSelect($select, $order);
-        }
+        $this->orderSelect($select, $order);
         if ($paginated) {
             return $this->getPaginator($select);
         }
