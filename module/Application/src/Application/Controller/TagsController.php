@@ -94,7 +94,7 @@ class TagsController extends AbstractActionController
         if (!is_int($limit) || ($limit < 1) || ($limit > 50)) {
             $limit = 50;
         }
-        $randomize = $this->params()->fromQuery('random', 1);        
+        $randomize = $this->params()->fromQuery('random', 0);        
         $site = $this->services->getSiteService()->findByShortName($siteName);        
         $this->extractTagParameters($method, $searchTags, $includeTags, $excludeTags);
         if ($randomize) {
