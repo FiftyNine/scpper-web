@@ -559,11 +559,13 @@ class Page implements PageInterface
         $authors = [];
         foreach ($this->getAuthors() as $author) {
             $authors[] = [
-                'user' => $author->getUser()->getDisplayName(),
+                'id' => $author->getUser()->getId(),
+                'user' => $author->getUser()->getDisplayName(),                
                 'role' => \Application\Utils\AuthorRole::getDescription($author->getRole())
             ];
         }        
         $result = [
+            'id' => $this->getId(),
             'name' => $this->getName(),
             'title' => $this->getTitle(),
             'altTitle' => $this->getAltTitle(),

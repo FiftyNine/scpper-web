@@ -140,6 +140,73 @@ class SearchController extends AbstractActionController
         return new ViewModel($result);
     }    
 
+    public function apiFindUsersAction()
+    {
+        $result = ['users' => []];
+        $site = null;
+        $siteName = $this->params()->fromQuery('site', null);
+        if ($siteName) {
+            try {
+                $site = $this->services->getSiteService()->findByShortName($siteName);
+            } catch (\InvalidArgumentException $e) {
+                $result['error'] = 'Invalid site';
+                return new JsonModel($result);
+            }        
+        }
+        $name = $this->params()->fromQuery('name', null);       
+        if (!is_string($name) || strlen($name) > 256 || strlen($name) < 3) {
+            $result['error'] = 'Name must be between 3 and 256 characters long';
+            return new JsonModel($result);
+        }        
+        $limit = filter_var($this->params()->fromQuery('limit', 50), FILTER_VALIDATE_INT);
+        if (!$limit || ($limit < 1) || ($limit > 50)) {
+            $limit = 50;
+        }        
+        if ($site) {
+            $users = $this->services->getUserService()->findUsersOfSiteByName($site->getId(), $name, null, true);
+        } else {
+            $users = $this->services->getUserService()->findByName($name, null, true);
+        }        
+        $users->setItemCountPerPage($limit);
+        foreach ($users as $user) {
+            $result['users'][] = $user->toArray();
+        }
+        return new JsonModel($result);        
+    }
+
+    public function apiFindPagesAction()
+    {
+        $result = ['pages' => []];
+        $siteName = $this->params()->fromQuery('site', 'en');        
+        try {
+            $site = $this->services->getSiteService()->findByShortName($siteName);
+        } catch (\InvalidArgumentException $e) {
+            $result['error'] = 'Invalid site';
+            return new JsonModel($result);
+        }        
+        $title = $this->params()->fromQuery('title', null);       
+        if (!is_string($title) || strlen($title) > 256 || strlen($title) < 3) {
+            $result['error'] = 'Title must be between 3 and 256 characters long';
+            return new JsonModel($result);
+        }         
+        $limit = filter_var($this->params()->fromQuery('limit', 50), FILTER_VALIDATE_INT);
+        if (!$limit || ($limit < 1) || ($limit > 50)) {
+            $limit = 50;
+        }
+        $randomize = $this->params()->fromQuery('random', 0);        
+        if ($randomize) {
+            $orderBy = 'random';
+        } else {
+            $orderBy = array(DbViewPages::CLEANRATING => Order::DESCENDING);
+        }        
+        $pages = $this->services->getPageService()->findByName($title, [$site->getId()], $orderBy, true);
+        $pages->setItemCountPerPage($limit);
+        foreach ($pages as $page) {
+            $result['pages'][] = $page->toArray();
+        }
+        return new JsonModel($result);        
+    }    
+
     public function pageListAction()
     {
         $result = array('success' => false);

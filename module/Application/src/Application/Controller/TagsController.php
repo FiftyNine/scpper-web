@@ -90,13 +90,18 @@ class TagsController extends AbstractActionController
     {
         $result = ['pages' => []];
         $siteName = $this->params()->fromQuery('site', 'en');        
+        try {
+            $site = $this->services->getSiteService()->findByShortName($siteName);
+        } catch (\InvalidArgumentException $e) {
+            $result['error'] = 'Invalid site';
+            return new JsonModel($result);
+        }
+        $this->extractTagParameters($method, $searchTags, $includeTags, $excludeTags);
         $limit = filter_var($this->params()->fromQuery('limit', 50), FILTER_VALIDATE_INT);
         if (!$limit || ($limit < 1) || ($limit > 50)) {
             $limit = 50;
         }
-        $randomize = $this->params()->fromQuery('random', 0);        
-        $site = $this->services->getSiteService()->findByShortName($siteName);        
-        $this->extractTagParameters($method, $searchTags, $includeTags, $excludeTags);
+        $randomize = $this->params()->fromQuery('random', 0);                
         if ($randomize) {
             $orderBy = 'random';
         } else {

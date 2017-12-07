@@ -117,6 +117,17 @@ class PageController extends AbstractActionController
         ));
     }
     
+    public function apiPageAction()
+    {
+        $pageId = (int)$this->params()->fromQuery('id');
+        try {
+            $page = $this->services->getPageService()->find($pageId);
+        } catch (\InvalidArgumentException $e) {
+            return new JsonModel(['error' => 'Page not found']);
+        }
+        return new JsonModel($page->toArray());
+    }
+    
     public function ratingChartAction()
     {
         $pageId = (int)$this->params()->fromQuery('pageId');

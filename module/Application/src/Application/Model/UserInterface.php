@@ -72,4 +72,11 @@ interface UserInterface
      * @param \Application\Model\MembershipInterface $membership
      */
     public function setMembership(MembershipInterface $membership);
+    
+    /**
+     * Returns an associative array of an object fields, 
+     * easily convertable into json or other human-readable format
+     * @return [... => ...]
+     */
+    public function toArray();    
 }

@@ -357,7 +357,7 @@ return array(
                 ),
                 'may_terminate' => false,
                 'child_routes' => array(
-                    'report' => array(
+                    'tags' => array(
                         'type'    => 'Segment',
                         'options' => array(
                             'route'    => '/tags',
@@ -367,6 +367,46 @@ return array(
                             ),
                         ),                        
                     ),                       
+                    'findPages' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/find-pages',
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\Search',
+                                'action' => 'apiFindPages'
+                            ),
+                        ),                        
+                    ),
+                    'findUsers' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/find-users',
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\Search',
+                                'action' => 'apiFindUsers'
+                            ),
+                        ),                        
+                    ),
+                    'page' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/page',
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\Page',
+                                'action' => 'apiPage'
+                            ),
+                        ),
+                    ),
+                    'user' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/user',
+                            'defaults' => array(
+                                'controller' => 'Application\Controller\User',
+                                'action' => 'apiUser'
+                            ),
+                        ),
+                    ),                    
                 ),                     
             ),            
         ),

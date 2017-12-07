@@ -131,6 +131,17 @@ class UserController extends AbstractActionController
             'votes' => $this->getVotesTable($userId, $siteId, DbViewVotes::DATETIME, ORDER::DESCENDING, 1, 10)
         ));
     }
+
+    public function apiUserAction()
+    {
+        $userId = (int)$this->params()->fromQuery('id');
+        try {
+            $user = $this->services->getUserService()->find($userId);
+        } catch (\InvalidArgumentException $e) {
+            return new JsonModel(['error' => 'User not found']);
+        }
+        return new JsonModel($user->toArray());
+    }
     
     public function ratingChartAction()
     {

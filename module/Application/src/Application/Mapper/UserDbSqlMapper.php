@@ -81,13 +81,11 @@ class UserDbSqlMapper extends ZendDbSqlMapper implements UserMapperInterface
                 ->where($conditions);
         if (is_array($order)) {
             $this->orderSelect($select, $order);            
-        }
-        $resultSet = new \Zend\Db\ResultSet\HydratingResultSet($this->userSiteHydrator, $this->objectPrototype);
-        if ($paginated) {
-            $adapter = new \Zend\Paginator\Adapter\DbSelect($select, $this->dbAdapter, $resultSet);
-            return new \Zend\Paginator\Paginator($adapter);
         }        
-        return $resultSet->initialize($this->fetch($sql, $select));        
+        if ($paginated) {
+            return $this->getPaginator($select, false, $this->userSiteHydrator, $this->objectPrototype);
+        }
+        return $this->fetchResultSet($sql, $select, $this->userSiteHydrator, $this->objectPrototype);
     }
     
     /**

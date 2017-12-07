@@ -209,4 +209,53 @@ class User implements UserInterface
         $this->membershipsBySite[$membership->getSiteId()] = $membership;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        $activities = [];
+        $empty = [
+            'votes' => 0,
+            'revisions' => 0,
+            'pages' => 0,
+            'lastActive' => null,
+            'member' => null,
+            //'rank' => null,
+            'highestRating' => null,
+            'totalRating' => null
+        ];
+        foreach ($this->getActivities() as $activity) {
+            if ($activity->getLastActivity()) {
+                $site = $activity->getSite()->getShortName();
+                $array = $empty;
+                $array['votes'] = $activity->getVoteCount();
+                $array['revisions'] = $activity->getRevisionCount();
+                $array['pages'] = $activity->getAuthorshipCount();
+                $array['lastActive'] = $activity->getLastActivity();
+                if ($activity->getAuthorshipCount()) {
+                    //$array['rank'] = $activity->getAuthorRank(); // Very slow
+                    $array['highestRating'] = $activity->getAuthorSummary()->getHighestRating();
+                    $array['totalRating'] = $activity->getAuthorSummary()->getTotalRating();
+                }
+                $activities[$site] = $array;
+            }
+        }
+        foreach ($this->getMemberships() as $membership) {
+            $site = $membership->getSite()->getShortName();
+            if (!array_key_exists($site, $activities)) {
+                $activities[$site] = $empty;
+            }
+            $activities[$site]['member'] = $membership->getJoinDate();
+        }
+        $result = [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'displayName' => $this->getDisplayName(),
+            'deleted' => $this->getDeleted(),
+            'activity' => $activities
+        ];        
+        return $result;        
+    }    
+    
 }
