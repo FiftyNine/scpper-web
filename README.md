@@ -154,7 +154,7 @@ Selects a user with WikidotId = 224440 (TheDuckman)
 + "**title**": Search query, part of page's name (i.e. "173" will match "SCP-173", "SCP-1173", etc). Between 3 and 256 characters. 
 + "**limit**": Maximum number of rows returned by the query. Limited to 50.  
 + "**random**": Bit flag indicating whether resulting list of pages should be randomized.  
-&nbsp;&nbsp;&nbsp;&nbsp;"0" - returns *limit* pages ordered by clean rating, descending (default)  
+&nbsp;&nbsp;&nbsp;&nbsp;"0" - returns *limit* pages ordered by (kind of) relevance, descending (default)  
 &nbsp;&nbsp;&nbsp;&nbsp;"1" - returns random selection of *limit* pages from the original query.  
 
 **Returns**:  

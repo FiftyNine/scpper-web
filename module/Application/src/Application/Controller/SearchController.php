@@ -197,8 +197,8 @@ class SearchController extends AbstractActionController
         if ($randomize) {
             $orderBy = 'random';
         } else {
-            $orderBy = array(DbViewPages::CLEANRATING => Order::DESCENDING);
-        }        
+            $orderBy = null; // array(DbViewPages::CLEANRATING => Order::DESCENDING);
+        }
         $pages = $this->services->getPageService()->findByName($title, [$site->getId()], $orderBy, true);
         $pages->setItemCountPerPage($limit);
         foreach ($pages as $page) {
