@@ -36,7 +36,7 @@ class PageReportFormHydrator extends ClassMethods
             PageReportFieldset::PAGE_NAME => 'pageName',
             PageReportFieldset::SITE_NAME => 'siteName',
             PageReportFieldset::ORIGINAL_PAGE => 'originalPageName',
-            PageReportFieldset::ORIGINAL_SITE => 'originalSiteName',
+            PageReportFieldset::ORIGINAL_SITE => 'originalSiteId',
             PageReportFieldset::HAS_ORIGINAL => 'hasOriginal']);
         $this->setNamingStrategy($namingStrat);        
         $this->addFilter('contributors', new MethodMatchFilter('getContributorsJson'));

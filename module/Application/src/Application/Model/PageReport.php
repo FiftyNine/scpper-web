@@ -338,6 +338,18 @@ class PageReport implements PageReportInterface
             return null;
         }        
     }    
+
+    /**
+     * @return int|null
+     */
+    public function getOriginalSiteId()
+    {
+        if ($this->getOriginalPage()) {
+            return $this->getOriginalPage()->getSite()->getId();
+        } else {
+            return null;
+        }        
+    }        
     
     /**
      * @return boolean

@@ -40,9 +40,10 @@ class PageReportDbSqlMapperFactory implements FactoryInterface
                         'getOriginalPage',
                         'getPageName',
                         'getSiteName',
+                        'hasOriginal',
                         'getOriginalPageName',
                         'getOriginalSiteName',
-                        'hasOriginal',
+                        'getOriginalSiteId',                        
                         'getContributors'];
                     $pos = strpos($prop, '::');
                     if ($pos !== false) {

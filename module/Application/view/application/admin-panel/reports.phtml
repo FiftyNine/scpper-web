@@ -43,7 +43,10 @@ $this->headLink()->prependStylesheet($this->basePath('css/jquery-ui.min.css'));
     <div id="report-fieldset">
     <?php echo $this->partial(
             'partial/pageReportFieldset.phtml',
-            ['fieldset' => $this->reportForm->get('report')]);
+            [
+                'fieldset' => $this->reportForm->get('report'),
+                'review' => true
+            ]);
     ?>
     </div>
     <hr>

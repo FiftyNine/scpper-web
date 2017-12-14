@@ -56,7 +56,7 @@ class ReviewPageReportForm extends Form
             'type' => 'button',
             'name' => 'ignore',
             'options' => [
-                'label' => 'Ignore'
+                'label' => 'Dismiss'
             ],            
             'attributes' => [
                 'value' => '0',

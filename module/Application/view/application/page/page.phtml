@@ -127,71 +127,6 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
         <br>
         Kind: <strong><?php echo \Application\Utils\PageKind::getDescription($page->getKind()); ?></strong>
         <br>
-        <?php if ($page->getStatus() === \Application\Utils\PageStatus::ORIGINAL): ?>
-            <?php if (count($page->getTranslations()) > 0): ?>
-            Translations of this page:
-            <ul>
-                <?php foreach ($page->getTranslations() as $trans): ?>
-                <li>
-                    <?php echo $this->partial('partial/page.phtml', array('page' => $trans)); ?>
-                    on
-                    <em>
-                        <?php echo $this->partial('partial/site.phtml', array('site' => $trans->getSite(), 'link' => false));?>
-                    </em>
-                    by
-                    <em>
-                        <?php $i=0; foreach ($trans->getAuthors() as $auth): ?>
-                            <?php if ($i>0): ?>, <?php endif; ?>
-                            <?php echo $this->partial('partial/user.phtml', array('user' => $auth->getUser())); ?>
-                        <?php $i++; endforeach; ?>
-                    </em>
-                    at
-                    <em>
-                        <?php echo sprintf('%+d', $trans->getCleanRating()) ?>
-                    </em>
-                </li>
-                <?php endforeach; ?>
-            </ul>
-            <?php else: ?>
-            <br>
-            <?php endif; ?>
-        <?php else: ?>
-            <?php $orig = $page->getOriginal(); ?>
-            <?php if ($orig !== null): ?>
-                <strong>Original page:</strong>
-                <?php echo $this->partial('partial/page.phtml', array('page' => $orig)); ?>
-                on
-                <em>
-                    <?php echo $this->partial('partial/site.phtml', array('site' => $orig->getSite(), 'link' => false));?>
-                </em>
-                by
-                <em>
-                    <?php $i=0; $one=count($orig->getAuthors())===1; foreach ($orig->getAuthors() as $auth): ?>
-                        <?php if ($i>0): ?>, <?php endif; ?>
-                        <?php echo $this->partial('partial/user.phtml', array('user' => $auth->getUser())); ?>                        
-                        <?php if (!$one || $auth->getRole() !== \Application\Utils\AuthorRole::AUTHOR) {
-                          printf('(%s)', \Application\Utils\AuthorRole::getDescription($auth->getRole())); }
-                        ?>
-                    <?php $i++; endforeach; ?>
-                </em>
-                at
-                <em>
-                    <?php echo sprintf('%+d', $orig->getCleanRating()) ?>
-                </em>
-            <?php else: ?>
-                Original page not found
-            <?php endif; ?>
-            <br>
-        <?php endif; ?>
-        <strong>Tags</strong>: <em>
-            <?php 
-            $tags = $page->getTags();
-            for ($j=0; $j<count($tags); $j++):
-            ?>
-            <a href="/tags?tags=<?php echo urlencode($tags[$j]);?>" ><?php echo $this->escapeHtml($tags[$j]); ?></a><?php if ($j < count($tags)-1) {echo ',';}?>
-            <?php endfor; ?>
-        </em>
-        <br>        
         <button id="show-report" href="javascript:;" class="btn btn-danger">Found an error?</button>
     </div>
     <div id="page-chart">
@@ -199,6 +134,72 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
         </div>
     </div>    
 </div>
+<?php if ($page->getStatus() === \Application\Utils\PageStatus::ORIGINAL): ?>
+    <?php if (count($page->getTranslations()) > 0): ?>
+    Translations of this page:
+    <ul>
+        <?php foreach ($page->getTranslations() as $trans): ?>
+        <li>
+            <?php echo $this->partial('partial/page.phtml', array('page' => $trans)); ?>
+            on
+            <em>
+                <?php echo $this->partial('partial/site.phtml', array('site' => $trans->getSite(), 'link' => false));?>
+            </em>
+            by
+            <em>
+                <?php $i=0; foreach ($trans->getAuthors() as $auth): ?>
+                    <?php if ($i>0): ?>, <?php endif; ?>
+                    <?php echo $this->partial('partial/user.phtml', array('user' => $auth->getUser())); ?>
+                <?php $i++; endforeach; ?>
+            </em>
+            at
+            <em>
+                <?php echo sprintf('%+d', $trans->getCleanRating()) ?>
+            </em>
+        </li>
+        <?php endforeach; ?>
+    </ul>
+    <?php else: ?>
+    <br>
+    <?php endif; ?>
+<?php else: ?>
+    <?php $orig = $page->getOriginal(); ?>
+    <?php if ($orig !== null): ?>
+        <strong>Original page:</strong>
+        <?php echo $this->partial('partial/page.phtml', array('page' => $orig)); ?>
+        on
+        <em>
+            <?php echo $this->partial('partial/site.phtml', array('site' => $orig->getSite(), 'link' => false));?>
+        </em>
+        by
+        <em>
+            <?php $i=0; $one=count($orig->getAuthors())===1; foreach ($orig->getAuthors() as $auth): ?>
+                <?php if ($i>0): ?>, <?php endif; ?>
+                <?php echo $this->partial('partial/user.phtml', array('user' => $auth->getUser())); ?>                        
+                <?php if (!$one || $auth->getRole() !== \Application\Utils\AuthorRole::AUTHOR) {
+                  printf('(%s)', \Application\Utils\AuthorRole::getDescription($auth->getRole())); }
+                ?>
+            <?php $i++; endforeach; ?>
+        </em>
+        at
+        <em>
+            <?php echo sprintf('%+d', $orig->getCleanRating()) ?>
+        </em>
+    <?php else: ?>
+        Original page not found
+    <?php endif; ?>
+    <br>
+<?php endif; ?>
+<?php 
+    $tags = $page->getTags();
+    if (count($tags) > 0):
+?>
+    <strong>Tags</strong>: <em>
+        <?php for ($j=0; $j<count($tags); $j++): ?>
+            <a href="/tags?tags=<?php echo urlencode($tags[$j]);?>" ><?php echo $this->escapeHtml($tags[$j]); ?></a><?php if ($j < count($tags)-1) {echo ',';}?>
+        <?php endfor; ?>
+    </em>
+<?php endif; ?>
 <hr>
 <h4><?php echo $this->page->getRevisionCount();?> revisions</h4>
 <div class="table-container" id="revision-list">
@@ -240,7 +241,10 @@ echo $this->partial(
     <div id="report-error" hidden="" class="bg-danger"></div>
 <?php echo $this->partial(
         'partial/pageReportFieldset.phtml',
-        ['fieldset' => $this->reportForm->get('report')]);
+        [
+            'fieldset' => $this->reportForm->get('report'),
+            'review' => false
+        ]);
 ?>
 <?php echo $this->form()->closeTag($this->reportForm); ?>
 

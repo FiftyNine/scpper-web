@@ -109,6 +109,9 @@ class PageReportFieldset extends Fieldset implements InputFilterProviderInterfac
             'name' => self::KIND,
             'options' => [
                 'label' => 'Kind*',
+                'label_attributes' => [
+                    'class' => 'control-label'
+                ],                  
                 'value_options' => $kinds,
                 'empty_option' => 'Unknown'
             ],
