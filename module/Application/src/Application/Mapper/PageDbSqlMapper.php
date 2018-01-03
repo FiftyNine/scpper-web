@@ -3,7 +3,10 @@
 namespace Application\Mapper;
 
 use Zend\Db\Sql\Sql;
+use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Expression;
+use Zend\Db\Sql\Predicate;
+use Application\Utils\Order;
 use Application\Utils\PageStatus;
 use Application\Utils\PageKind;
 use Application\Utils\DbConsts\DbViewPages;
@@ -84,6 +87,41 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
         if (is_array($order)) {
             $this->orderSelect($select, $order);
         }
+        if ($paginated) {
+            return $this->getPaginator($select);
+        }
+        return $this->fetchResultSet($sql, $select);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function findPagesByName($sites, $mask, $order = null, $paginated = false)
+    {
+        $lower = mb_strtolower($mask);
+        $regexp = sprintf('(^|[^[:alnum:]])%s($|[^[:alnum:]])', $lower);
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select(['p' => DbViewPages::TABLE])
+                ->columns([
+                    '' => Select::SQL_STAR, 
+                    'InTitle' => new Expression(sprintf('CASE WHEN %s RLIKE ? THEN 1 ELSE 0 END', DbViewPages::TITLE), [$regexp]),
+                    'InAltTitle' => new Expression(sprintf('CASE WHEN %s RLIKE ? THEN 1 ELSE 0 END', DbViewPages::ALTTITLE), [$regexp]),
+                    'Relevance' => new Expression(sprintf('MATCH (%s, %s) AGAINST (? IN NATURAL LANGUAGE MODE)', DbViewPages::TITLE, DbViewPages::ALTTITLE), [$lower])
+                ])
+                ->where(new Predicate\Expression(sprintf('MATCH (%s, %s) AGAINST (? IN NATURAL LANGUAGE MODE)', DbViewPages::TITLE, DbViewPages::ALTTITLE), [$lower]));
+        if (is_array($sites)) {
+            $select = $select->where(new Predicate\In(DbViewPages::SITEID, $sites));
+        }
+        if (!is_array($order)) {
+            $order = [
+                'InTitle' => Order::DESCENDING,
+                'InAltTitle' => Order::DESCENDING,
+                'Relevance' => Order::DESCENDING,
+                DbViewPages::CLEANRATING => Order::DESCENDING, 
+                DbViewPages::CREATIONDATE => Order::ASCENDING
+            ];
+        }
+        $this->orderSelect($select, $order);
         if ($paginated) {
             return $this->getPaginator($select);
         }
