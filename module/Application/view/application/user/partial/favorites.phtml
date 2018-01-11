@@ -26,7 +26,13 @@
                         <?php echo $this->partial('partial/user.phtml', array('user' => $fav['user'])); ?>
                         with 
                         <strong>
-                        <?php printf('%+d (%+d/%+d)', $rating, $positive, -$negative); ?>
+                        <?php 
+                            if ($this->hideVotes) {
+                                printf('%+d', $rating); 
+                            } else {
+                                printf('%+d (%+d/%+d)', $rating, $positive, -$negative); 
+                            }
+                        ?>
                         </strong>
                     </li>
                 <?php 
@@ -52,7 +58,11 @@
                         $positive = (int)$tag['positive'];
                         $negative = (int)$tag['negative'];
                         $rating = $positive-$negative;
-                        printf('%+d (%+d/%+d)', $rating, $positive, -$negative); 
+                        if ($this->hideVotes) {
+                            printf('%+d', $rating); 
+                        } else {
+                            printf('%+d (%+d/%+d)', $rating, $positive, -$negative); 
+                        }
                     ?>
                      </strong>
                 </li>
@@ -76,7 +86,13 @@
                     <?php echo $this->partial('partial/user.phtml', array('user' => $fan['user'])); ?>
                     with 
                     <strong>
-                    <?php printf('%+d (%+d/%+d)', $rating, $positive, -$negative); ?>
+                    <?php 
+                        if ($this->hideVotes) {
+                            printf('%+d', $rating); 
+                        } else {
+                            printf('%+d (%+d/%+d)', $rating, $positive, -$negative); 
+                        }                    
+                    ?>
                     </strong>
                 </li>
                 <?php 

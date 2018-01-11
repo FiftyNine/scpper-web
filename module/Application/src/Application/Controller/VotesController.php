@@ -39,7 +39,7 @@ class VotesController extends AbstractActionController
      * @param int $perPage
      * @return Application\Component\TableInterface
      */
-    protected function getVotersTable($siteId, $orderBy, $order, $page, $perPage)
+    protected function getVotersTable($site, $orderBy, $order, $page, $perPage)
     {
         $aggregates = array(
             new Aggregate(DbViewVotes::USERID, Aggregate::NONE, null, true),
@@ -49,10 +49,10 @@ class VotesController extends AbstractActionController
             new Aggregate('*', Aggregate::COUNT, 'Votes'),
             new Aggregate(DbViewVotes::VALUE, Aggregate::SUM, 'Sum'),
         );
-        $voters = $this->services->getVoteService()->getAggregatedForSite($siteId, $aggregates, null, null, array($orderBy => $order), true);
+        $voters = $this->services->getVoteService()->getAggregatedForSite($site->getId(), $aggregates, null, null, array($orderBy => $order), true);
         $voters->setCurrentPageNumber($page);
         $voters->setItemCountPerPage($perPage);
-        $table = PaginatedTableFactory::createVotersTable($voters);
+        $table = PaginatedTableFactory::createVotersTable($voters, $site->getHideVotes());
         $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);        
         return $table;
     }
@@ -83,7 +83,7 @@ class VotesController extends AbstractActionController
     {
         $siteId = $this->services->getUtilityService()->getSiteId();
         $site = $this->services->getSiteService()->find($siteId);
-        $voters = $this->getVotersTable($siteId, 'Votes', Order::DESCENDING, 1, 10);
+        $voters = $this->getVotersTable($site, 'Votes', Order::DESCENDING, 1, 10);
         $votes = $this->getVotesTable($siteId, DbViewVotes::DATETIME, Order::DESCENDING, 1, 10);
         $result = array(
             'site' => $site,
@@ -97,6 +97,7 @@ class VotesController extends AbstractActionController
     {
         $result = array('success' => false);
         $siteId = (int)$this->params()->fromQuery('siteId', $this->services->getUtilityService()->getSiteId());
+        $site = $this->services->getSiteService()->find($siteId);
         $page = (int)$this->params()->fromQuery('page', 1);
         $perPage = (int)$this->params()->fromQuery('perPage', 10);
         $orderBy = $this->params()->fromQuery('orderBy', 'Votes');
@@ -106,7 +107,7 @@ class VotesController extends AbstractActionController
         } else {
             $order = Order::DESCENDING;
         }
-        $table = $this->getVotersTable($siteId, $orderBy, $order, $page, $perPage);
+        $table = $this->getVotersTable($site, $orderBy, $order, $page, $perPage);
         $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
         if ($renderer) {
             $result['success'] = true;                

@@ -198,6 +198,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
                 'byRatio' => true,
                 'hasVotes' => $user->getActivityOnSite($site->getId())->getVoteCount() > 0,
                 'isAuthor' => $isAuthor,
+                'hideVotes' => $site->getHideVotes(),
                 'authors' => $this->authors,
                 'tags' => $this->tags,
                 'fans' => $this->fans,

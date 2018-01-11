@@ -140,20 +140,24 @@ class PaginatedTableFactory
         return $table;
     }
     
-    static public function createVotersTable($paginator, $preview = false)
+    static public function createVotersTable($paginator, $hideVotes = false, $preview = false)
     {
+        $voteColumns = [Column::column('Votes', 30, 'Votes', false)];        
+        if ($hideVotes) {
+            $widthRatio = 90;
+        } else {
+            $voteColumns[] = Column::column('Positive', 35);
+            $voteColumns[] = Column::column('Negative', 35);
+            $widthRatio = 70;
+        }            
         $table = new \Application\Component\PaginatedTable\Table(
             'voters',
             [
                 Column::group([
                     Column::column('#', 5, '', true, '', Column::INDEX),
                     Column::column('User', 95, DbViewRevisions::USERDISPLAYNAME, true, '', Column::USERS),
-                ], 70, 768),
-                Column::group([
-                    Column::column('Votes', 30, 'Votes', false),                    
-                    Column::column('Positive', 35),
-                    Column::column('Negative', 35),
-                ], 30, 768)
+                ], $widthRatio, 768),
+                Column::group($voteColumns, 100-$widthRatio, 768),
             ],
             $paginator,
             'partial/tables/voters.phtml', 

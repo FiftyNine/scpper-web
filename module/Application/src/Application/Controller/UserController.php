@@ -241,6 +241,7 @@ class UserController extends AbstractActionController
     {
         $userId = (int)$this->params()->fromQuery('userId');
         $siteId = (int)$this->params()->fromQuery('siteId');
+        $site = $this->services->getSiteService()->find($siteId);
         $orderByRatio = (bool)$this->params()->fromQuery('orderByRatio');
         $all = (bool)$this->params()->fromQuery('all');
         if ($all) {
@@ -259,6 +260,7 @@ class UserController extends AbstractActionController
                 array(
                     'byRatio' => $orderByRatio,
                     'hasVotes' => count($favorites),
+                    'hideVotes' => $site->getHideVotes(),
                     'isAuthor' => count($fans),
                     'authors' => $favorites,
                     'tags' => $tags,

@@ -33,6 +33,7 @@ echo $this->partial(
 );
 ?>
 </div>
+<?php if (!$this->site->getHideVotes()): ?>
 <hr>
 <h3>Votes (<?php echo $this->votesTable->getPaginator()->getTotalItemCount();?> total)</h3>
 <div class="table-container" id="vote-list">
@@ -49,3 +50,5 @@ echo $this->partial(
 
 ?>
 </div>
+
+<?php endif; ?>

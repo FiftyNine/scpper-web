@@ -152,17 +152,17 @@ class ActivityController extends AbstractActionController
         return $result;
     }        
 
-    protected function getVotesData($siteId, $from, $to)
+    protected function getVotesData($site, $from, $to)
     {
-        $voters = $this->getVotersPaginator($siteId, $from, $to, 'Votes', Order::DESCENDING, 1, 3);
-        $table = PaginatedTableFactory::createVotersTable($voters, true);
+        $voters = $this->getVotersPaginator($site->getId(), $from, $to, 'Votes', Order::DESCENDING, 1, 3);
+        $table = PaginatedTableFactory::createVotersTable($voters, $site->getHideVotes(), true);
         $result = array(
             'header' => array(
-                'votes' => $this->services->getVoteService()->countSiteVotes($siteId, VoteType::ANY, $from, $to),
+                'votes' => $this->services->getVoteService()->countSiteVotes($site->getId(), VoteType::ANY, $from, $to),
             ),
             'list' => array(
-                'positive' => $this->services->getVoteService()->countSiteVotes($siteId, VoteType::POSITIVE, $from, $to),
-                'negative' => $this->services->getVoteService()->countSiteVotes($siteId, VoteType::NEGATIVE, $from, $to),
+                'positive' => $this->services->getVoteService()->countSiteVotes($site->getId(), VoteType::POSITIVE, $from, $to),
+                'negative' => $this->services->getVoteService()->countSiteVotes($site->getId(), VoteType::NEGATIVE, $from, $to),
             ),
             'table' => $table
         );
@@ -206,7 +206,7 @@ class ActivityController extends AbstractActionController
             'users' => $this->getUsersData($siteId, $from, $to),
             'pages' => $this->getPagesData($siteId, $from, $to),
             'revisions' => $this->getRevisionsData($siteId, $from, $to),
-            'votes' => $this->getVotesData($siteId, $from, $to),
+            'votes' => $this->getVotesData($site, $from, $to),
         );
         return new ViewModel($result);
     }
@@ -419,6 +419,7 @@ class ActivityController extends AbstractActionController
         $from = null;
         $to = null;
         if ($this->getCommonParams($siteId, $from, $to)) {
+            $site = $this->services->getSiteService()->find($siteId);
             $page = (int)$this->params()->fromQuery('page', 1);
             $perPage = (int)$this->params()->fromQuery('perPage', 10);
             $orderBy = $this->params()->fromQuery('orderBy');
@@ -432,7 +433,7 @@ class ActivityController extends AbstractActionController
                 $order = Order::DESCENDING;
             }
             $voters = $this->getVotersPaginator($siteId, $from, $to, $orderBy, $order, $page, $perPage);
-            $table = PaginatedTableFactory::createVotersTable($voters);
+            $table = PaginatedTableFactory::createVotersTable($voters, $site->getHideVotes());
             $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
             $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);
             if ($renderer) {
