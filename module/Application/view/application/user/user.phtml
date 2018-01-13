@@ -15,8 +15,8 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
     // Initialize global variables
     var userId = <?php echo $user->getId() ?>;
     var siteId = <?php echo $site->getId() ?>;
-    var allFavorites = false;
-    var orderFavoritesByRatio = true;
+    var allFavorites = 0;
+    var orderFavoritesByRatio = 1;
     
     function fetchFavorites(all, byRatio)
     {
