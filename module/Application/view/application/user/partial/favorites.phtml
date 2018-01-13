@@ -21,7 +21,7 @@
                     $rating = $positive-$negative;  
                     $hiding = false;
                 ?>
-                <?php if ($rating >= 0): ?>
+                <?php if ($rating > 0): ?>
                     <li>
                         <?php echo $this->partial('partial/user.phtml', array('user' => $fav['user'])); ?>
                         with 
@@ -50,24 +50,36 @@
             <h4 class="favorites-column-header">Tags</h4>
             <ol class="favorites-list">
                 <?php foreach ($this->tags as $tag): ?>
-                <li>
-                    <a href="/tags?tags=<?php echo urlencode($tag['tag']);?>" ><?php echo $this->escapeHtml($tag['tag']); ?></a>
-                     with 
-                     <strong>
-                    <?php
-                        $positive = (int)$tag['positive'];
-                        $negative = (int)$tag['negative'];
-                        $rating = $positive-$negative;
-                        if ($this->hideVotes) {
-                            printf('%+d', $rating); 
-                        } else {
-                            printf('%+d (%+d/%+d)', $rating, $positive, -$negative); 
-                        }
-                    ?>
-                     </strong>
-                </li>
-                <?php endforeach; ?>
-            </ol>        
+                <?php
+                    $positive = (int)$tag['positive'];
+                    $negative = (int)$tag['negative'];
+                    $rating = $positive-$negative;  
+                    $hiding = false;
+                ?>
+                <?php if ($rating > 0 || !$this->hideVotes): ?>
+                    <li>
+                        <a href="/tags?tags=<?php echo urlencode($tag['tag']);?>" ><?php echo $this->escapeHtml($tag['tag']); ?></a>
+                        with 
+                        <strong>
+                        <?php 
+                            if ($this->hideVotes) {
+                                printf('%+d', $rating); 
+                            } else {
+                                printf('%+d (%+d/%+d)', $rating, $positive, -$negative); 
+                            }
+                        ?>
+                        </strong>
+                    </li>
+                <?php 
+                    else: 
+                        $hiding = true;
+                    endif; 
+                ?>                
+                <?php endforeach; ?>                
+            </ol>      
+            <?php if ($hiding): ?>
+            <p class="favorites-hidden"><i>Hiding negative</i></p>
+            <?php endif; ?>            
         </div>        
         <?php endif; ?>
         <?php if ($this->isAuthor): ?>
@@ -81,7 +93,7 @@
                     $rating = $positive-$negative;  
                     $hiding = false;
                 ?>
-                <?php if ($rating >= 0): ?>
+                <?php if ($rating > 0): ?>
                 <li>
                     <?php echo $this->partial('partial/user.phtml', array('user' => $fan['user'])); ?>
                     with 
