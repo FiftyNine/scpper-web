@@ -31,8 +31,8 @@
             {
                 siteId: paginatorData.siteId,
                 query: paginatorData.query,
-                withDeleted: <?php echo (int)$form->get(\Application\Form\SearchForm::ALL_BRANCHES_NAME)->isChecked(); ?>,
-                allBranches: <?php echo (int)$form->get(\Application\Form\SearchForm::WITH_DELETED_NAME)->isChecked(); ?>
+                withDeleted: <?php echo (int)$form->get(\Application\Form\SearchForm::WITH_DELETED_NAME)->isChecked(); ?>,
+                allBranches: <?php echo (int)$form->get(\Application\Form\SearchForm::ALL_BRANCHES_NAME)->isChecked(); ?>
             }
         );
         scpper.tables.assignPaginatorEvents('#user-list', 
@@ -40,8 +40,8 @@
             {
                 siteId: paginatorData.siteId,
                 query: paginatorData.query,
-                withDeleted: <?php echo (int)$form->get(\Application\Form\SearchForm::ALL_BRANCHES_NAME)->isChecked(); ?>,
-                allBranches: <?php echo (int)$form->get(\Application\Form\SearchForm::WITH_DELETED_NAME)->isChecked(); ?>                
+                withDeleted: <?php echo (int)$form->get(\Application\Form\SearchForm::WITH_DELETED_NAME)->isChecked(); ?>,
+                allBranches: <?php echo (int)$form->get(\Application\Form\SearchForm::ALL_BRANCHES_NAME)->isChecked(); ?>                
             }
         );        
         $('#switch-query-sites').on('click', switchSites);
