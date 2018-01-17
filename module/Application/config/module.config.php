@@ -9,19 +9,19 @@
 
 namespace Application;
 
-return array(
-    'router' => array(
-        'routes' => array(
-            'home' => array(
+return [
+    'router' => [
+        'routes' => [
+            'home' => [
                 'type' => 'Literal',
-                'options' => array(
+                'options' => [
                     'route'    => '/',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'Application\Controller\Index',
                         'action'     => 'index',
-                    ),
-                ),
-            ),
+                    ],
+                ],
+            ],
             'login' => [
                 'type' => 'Literal',
                 'options' => [
@@ -32,385 +32,395 @@ return array(
                     ],
                 ],                
             ],
-            'about' => array(
+            'about' => [
                 'type' => 'Literal',
-                'options' => array(
+                'options' => [
                     'route'    => '/about',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'Application\Controller\Index',
                         'action'     => 'about',
-                    ),                    
-                )
-            ),
-/*            'generate-consts' => array(
+                    ],                    
+                ]
+            ],
+/*            'generate-consts' => [
                 'type' => 'Literal',
-                'options' => array(
+                'options' => [
                     'route'    => '/generateConsts',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'Application\Controller\Index',
                         'action'     => 'generateConsts',
-                    ),
-                ),
-            ),            */
-            'select-site' => array(
+                    ],
+                ],
+            ],            */
+            'select-site' => [
                 'type' => 'Literal',
-                'options' => array(
+                'options' => [
                     'route' => '/select-site',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'Application\Controller\Index',
                         'action' => 'selectSite',
-                    )
-                )            
-            ),
-            'extension-page-info' => array(
+                    ]
+                ]            
+            ],
+            'extension-page-info' => [
                 'type' => 'Literal',
-                'options' => array(
+                'options' => [
                     'route' => '/extension-page-info',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'Application\Controller\Index',
                         'action' => 'extensionPageInfo',
-                    )
-                )            
-            ),
-            'search' => array(
+                    ]
+                ]            
+            ],
+            'search' => [
                 'type' => 'Literal',
-                'options' => array(
+                'options' => [
                     'route'    => '/search',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'Application\Controller\Search',
                         'action'     => 'search',
-                    ),
-                ),
+                    ],
+                ],
                 'may_terminate' => true,
-                'child_routes' => array(
-                    'default' => array(
+                'child_routes' => [
+                    'default' => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route'    => '/:action',
-                            'constraints' => array(                                
+                            'constraints' => [                                
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
+                            ],
+                            'defaults' => [
                                 'controller' => 'Application\Controller\Search',
-                            ),
-                        ),
-                    ),
-                ),                                
-            ),            
-            'activity' => array(
+                            ],
+                        ],
+                    ],
+                ],                                
+            ],            
+            'activity' => [
                 'type' => 'Literal',
-                'options' => array(
+                'options' => [
                     'route' => '/activity',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'Application\Controller\Activity',
                         'action' => 'activity',
-                    )
-                ),
+                    ]
+                ],
                 'may_terminate' => true,
-                'child_routes' => array(
-                    'default' => array(
+                'child_routes' => [
+                    'default' => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route'    => '/:action',
-                            'constraints' => array(                                
+                            'constraints' => [                                
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
+                            ],
+                            'defaults' => [
                                 'controller' => 'Application\Controller\Activity',
-                            ),
-                        ),
-                    ),
-                ),                
-            ),            
-            'users' => array(
+                            ],
+                        ],
+                    ],
+                ],                
+            ],            
+            'users' => [
                 'type' => 'Literal',
-                'options' => array(
+                'options' => [
                     'route'    => '/users',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'Application\Controller\Users',
                         'action'     => 'users',
-                    ),
-                ),
+                    ],
+                ],
                 'may_terminate' => true,
-                'child_routes' => array(
-                    'default' => array(
+                'child_routes' => [
+                    'default' => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route'    => '/:action',
-                            'constraints' => array(                                
+                            'constraints' => [                                
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
+                            ],
+                            'defaults' => [
                                 'controller' => 'Application\Controller\Users',
-                            ),
-                        ),
-                    ),
-                ),                                
-            ),            
-            'pages' => array(
+                            ],
+                        ],
+                    ],
+                ],                                
+            ],            
+            'pages' => [
                 'type' => 'Literal',
-                'options' => array(
+                'options' => [
                     'route'    => '/pages',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'Application\Controller\Pages',
                         'action'     => 'pages',
-                    ),
-                ),
+                    ],
+                ],
                 'may_terminate' => true,
-                'child_routes' => array(
-                    'default' => array(
+                'child_routes' => [
+                    'deleted' => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
+                            'route'    => '/deleted',
+                            'defaults' => [
+                                'controller' => 'Application\Controller\Page',
+                                'action' => 'deleted'
+                            ],
+                        ],                        
+                    ],
+                    'default' => [
+                        'type'    => 'Segment',
+                        'options' => [
                             'route'    => '/:action',
-                            'constraints' => array(                                
+                            'constraints' => [                                
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
+                            ],
+                            'defaults' => [
                                 'controller' => 'Application\Controller\Pages',
-                            ),
-                        ),
-                    ),
-                ),                                
-            ),            
-            'revisions' => array(
+                            ],
+                        ],
+                    ],
+                ],                                
+            ],            
+            'revisions' => [
                 'type' => 'Literal',
-                'options' => array(
+                'options' => [
                     'route'    => '/revisions',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'Application\Controller\Revisions',
                         'action'     => 'revisions',
-                    ),
-                ),
+                    ],
+                ],
                 'may_terminate' => true,
-                'child_routes' => array(
-                    'default' => array(
+                'child_routes' => [
+                    'default' => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route'    => '/:action',
-                            'constraints' => array(                                
+                            'constraints' => [                                
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
+                            ],
+                            'defaults' => [
                                 'controller' => 'Application\Controller\Revisions',
-                            ),
-                        ),
-                    ),
-                ),                                
-            ),            
-            'votes' => array(
+                            ],
+                        ],
+                    ],
+                ],                                
+            ],            
+            'votes' => [
                 'type' => 'Literal',
-                'options' => array(
+                'options' => [
                     'route'    => '/votes',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'Application\Controller\Votes',
                         'action'     => 'votes',
-                    ),
-                ),
+                    ],
+                ],
                 'may_terminate' => true,
-                'child_routes' => array(
-                    'default' => array(
+                'child_routes' => [
+                    'default' => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route'    => '/:action',
-                            'constraints' => array(                                
+                            'constraints' => [                                
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
+                            ],
+                            'defaults' => [
                                 'controller' => 'Application\Controller\Votes',
-                            ),
-                        ),
-                    ),
-                ),                                
-            ),            
-            'page' => array(
+                            ],
+                        ],
+                    ],
+                ],                                
+            ],            
+            'page' => [
                 'type' => 'Literal',
-                'options' => array(
+                'options' => [
                     'route'    => '/page',
-                ),
+                ],
                 'may_terminate' => false,
-                'child_routes' => array(
-                    'page' => array(
+                'child_routes' => [
+                    'page' => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route'    => '/:pageId',
-                            'constraints' => array(                                
+                            'constraints' => [                                
                                 'pageId'     => '[1-9][0-9]*',
-                            ),                                                
-                            'defaults' => array(
+                            ],                                                
+                            'defaults' => [
                                 'controller' => 'Application\Controller\Page',
                                 'action' => 'page'
-                            ),
-                        ),                        
-                    ),
-                    'report' => array(
+                            ],
+                        ],                        
+                    ],
+                    'report' => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route'    => '/report',
-                            'defaults' => array(
+                            'defaults' => [
                                 'controller' => 'Application\Controller\Page',
                                 'action' => 'report'
-                            ),
-                        ),                        
-                    ),                    
-                    'default' => array(
+                            ],
+                        ],                        
+                    ],                    
+                    'default' => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route'    => '/:action',
-                            'constraints' => array(                                
+                            'constraints' => [                                
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
+                            ],
+                            'defaults' => [
                                 'controller' => 'Application\Controller\Page',
-                            ),
-                        ),
-                    ),
-                ),                                                
-            ),
-            'user' => array(
+                            ],
+                        ],
+                    ],
+                ],                                                
+            ],
+            'user' => [
                 'type' => 'Literal',
-                'options' => array(
+                'options' => [
                     'route'    => '/user',
-                ),
+                ],
                 'may_terminate' => false,
-                'child_routes' => array(
-                    'user' => array(
+                'child_routes' => [
+                    'user' => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route'    => '/:userId',
-                            'constraints' => array(                                
+                            'constraints' => [                                
                                 'pageId'     => '[1-9][0-9]*',
-                            ),                                                
-                            'defaults' => array(
+                            ],                                                
+                            'defaults' => [
                                 'controller' => 'Application\Controller\User',
                                 'action' => 'user'
-                            ),
-                        ),                        
-                    ),
-                    'default' => array(
+                            ],
+                        ],                        
+                    ],
+                    'default' => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route'    => '/:action',
-                            'constraints' => array(                                
+                            'constraints' => [                                
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
+                            ],
+                            'defaults' => [
                                 'controller' => 'Application\Controller\User',
-                            ),
-                        ),
-                    ),
-                ),                                                
-            ),            
-            'tags' => array(
+                            ],
+                        ],
+                    ],
+                ],                                                
+            ],            
+            'tags' => [
                 'type' => 'Literal',
-                'options' => array(
+                'options' => [
                     'route'    => '/tags',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'Application\Controller\Tags',
                         'action'     => 'tags',
-                    ),
-                ),
+                    ],
+                ],
                 'may_terminate' => true,
-                'child_routes' => array(
-                    'default' => array(
+                'child_routes' => [
+                    'default' => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route'    => '/:action',
-                            'constraints' => array(                                
+                            'constraints' => [                                
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
+                            ],
+                            'defaults' => [
                                 'controller' => 'Application\Controller\Tags',
-                            ),
-                        ),
-                    ),
-                ),                                
-            ),
-            'admin' => array(
+                            ],
+                        ],
+                    ],
+                ],                                
+            ],
+            'admin' => [
                 'type' => 'Literal',
-                'options' => array(
+                'options' => [
                     'route' => '/admin',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'Application\Controller\AdminPanel',
                         'action' => 'admin'
-                    ),
-                ),
+                    ],
+                ],
                 'may_terminate' => true,
-                'child_routes' => array(
-                    'default' => array(
+                'child_routes' => [
+                    'default' => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route'    => '/:action',
-                            'constraints' => array(                                
+                            'constraints' => [                                
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
+                            ],
+                            'defaults' => [
                                 'controller' => 'Application\Controller\AdminPanel',
-                            ),
-                        ),
-                    ),
-                ),                     
-            ),
-            'api' => array(
+                            ],
+                        ],
+                    ],
+                ],                     
+            ],
+            'api' => [
                 'type' => 'Literal',
-                'options' => array(
+                'options' => [
                     'route' => '/api',
-                ),
+                ],
                 'may_terminate' => false,
-                'child_routes' => array(
-                    'tags' => array(
+                'child_routes' => [
+                    'tags' => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route'    => '/tags',
-                            'defaults' => array(
+                            'defaults' => [
                                 'controller' => 'Application\Controller\Tags',
                                 'action' => 'apiSearch'
-                            ),
-                        ),                        
-                    ),                       
-                    'findPages' => array(
+                            ],
+                        ],                        
+                    ],                       
+                    'findPages' => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route'    => '/find-pages',
-                            'defaults' => array(
+                            'defaults' => [
                                 'controller' => 'Application\Controller\Search',
                                 'action' => 'apiFindPages'
-                            ),
-                        ),                        
-                    ),
-                    'findUsers' => array(
+                            ],
+                        ],                        
+                    ],
+                    'findUsers' => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route'    => '/find-users',
-                            'defaults' => array(
+                            'defaults' => [
                                 'controller' => 'Application\Controller\Search',
                                 'action' => 'apiFindUsers'
-                            ),
-                        ),                        
-                    ),
-                    'page' => array(
+                            ],
+                        ],                        
+                    ],
+                    'page' => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route'    => '/page',
-                            'defaults' => array(
+                            'defaults' => [
                                 'controller' => 'Application\Controller\Page',
                                 'action' => 'apiPage'
-                            ),
-                        ),
-                    ),
-                    'user' => array(
+                            ],
+                        ],
+                    ],
+                    'user' => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route'    => '/user',
-                            'defaults' => array(
+                            'defaults' => [
                                 'controller' => 'Application\Controller\User',
                                 'action' => 'apiUser'
-                            ),
-                        ),
-                    ),                    
-                ),                     
-            ),            
-        ),
-    ),
+                            ],
+                        ],
+                    ],                    
+                ],                     
+            ],            
+        ],
+    ],
     'session' => [
            'config' => [
                'class' => 'Zend\Session\Config\SessionConfig',
@@ -424,12 +434,12 @@ return array(
                'Zend\Session\Validator\HttpUserAgent'
         ],
     ],    
-    'service_manager' => array(
-        'abstract_factories' => array(
+    'service_manager' => [
+        'abstract_factories' => [
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
             'Zend\Log\LoggerAbstractServiceFactory',
-        ),
-        'factories' => array(
+        ],
+        'factories' => [
             // Services
             'Application\Service\SiteServiceInterface' => 'Application\Factory\Service\SiteServiceFactory',
             'Application\Service\UserServiceInterface' => 'Application\Factory\Service\UserServiceFactory',
@@ -468,21 +478,21 @@ return array(
             'LazyServiceFactory' => 'Zend\ServiceManager\Proxy\LazyServiceFactoryFactory',            
             'Zend\Session\SessionManager' => 'Application\Factory\Service\SessionManagerFactory',
             'Zend\Authentification\AuthentificationService' => 'Application\Factory\Service\AuthentificationServiceFactory'
-        ),
-        'delegators' => array(
-            'SiteMapper' => array('LazyServiceFactory'),
-            'UserMapper' => array('LazyServiceFactory'),
-            'PageMapper' => array('LazyServiceFactory'),
-            'RevisionMapper' => array('LazyServiceFactory'),
-            'VoteMapper' => array('LazyServiceFactory'),            
-            'AuthorshipMapper' => array('LazyServiceFactory'),            
-            'UserActivityMapper' => array('LazyServiceFactory'),            
-            'MembershipMapper' => array('LazyServiceFactory'),
-            'PageReportMapper' => array('LazyServiceFactory'),
-        ),        
-    ),
-    'lazy_services' => array(
-        'class_map' => array(
+        ],
+        'delegators' => [
+            'SiteMapper' => ['LazyServiceFactory'],
+            'UserMapper' => ['LazyServiceFactory'],
+            'PageMapper' => ['LazyServiceFactory'],
+            'RevisionMapper' => ['LazyServiceFactory'],
+            'VoteMapper' => ['LazyServiceFactory'],            
+            'AuthorshipMapper' => ['LazyServiceFactory'],            
+            'UserActivityMapper' => ['LazyServiceFactory'],            
+            'MembershipMapper' => ['LazyServiceFactory'],
+            'PageReportMapper' => ['LazyServiceFactory'],
+        ],        
+    ],
+    'lazy_services' => [
+        'class_map' => [
             'SiteMapper' => 'Application\Mapper\SiteDbSqlMapper',
             'UserMapper' => 'Application\Mapper\UserDbSqlMapper',
             'PageMapper' => 'Application\Mapper\PageDbSqlMapper',
@@ -492,20 +502,20 @@ return array(
             'UserActivityMapper' => 'Application\Mapper\UserActivityDbSqlMapper',
             'MembershipMapper' => 'Application\Mapper\MembershipDbSqlMapper',
             'PageReportMapper' => 'Application\Mapper\PageReportDbSqlMapper',
-        ),
-    ),    
-    'translator' => array(
+        ],
+    ],    
+    'translator' => [
         'locale' => 'en_US',
-        'translation_file_patterns' => array(
-            array(
+        'translation_file_patterns' => [
+            [
                 'type'     => 'gettext',
                 'base_dir' => __DIR__ . '/../language',
                 'pattern'  => '%s.mo',
-            ),
-        ),
-    ),
-    'controllers' => array(
-        'factories' => array(
+            ],
+        ],
+    ],
+    'controllers' => [
+        'factories' => [
             'Application\Controller\Index' => 'Application\Factory\Controller\IndexControllerFactory',
             'Application\Controller\Search' => 'Application\Factory\Controller\SearchControllerFactory',
             'Application\Controller\Activity' => 'Application\Factory\Controller\ActivityControllerFactory',
@@ -518,69 +528,79 @@ return array(
             'Application\Controller\Tags' => 'Application\Factory\Controller\TagsControllerFactory',
             'Application\Controller\AdminPanel' => 'Application\Factory\Controller\AdminPanelControllerFactory',
             'Application\Controller\Login' => 'Application\Factory\Controller\LoginControllerFactory',
-        ),
-    ),
-    'view_manager' => array(
+        ],
+    ],
+    'view_manager' => [
         'display_not_found_reason' => ini_get('display_errors'),
         'display_exceptions'       => ini_get('display_errors'),
         'doctype'                  => 'HTML5',
         'not_found_template'       => 'error/404',
         'exception_template'       => 'error/index',
-        'template_map' => array(
+        'template_map' => [
             'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
             'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
             'error/404'               => __DIR__ . '/../view/error/404.phtml',
             'error/index'             => __DIR__ . '/../view/error/index.phtml',
-        ),
-        'template_path_stack' => array(
+        ],
+        'template_path_stack' => [
             __DIR__ . '/../view',
-        ),
-        'strategies' => array(
+        ],
+        'strategies' => [
             'ViewJsonStrategy',
-        ),        
-    ),
+        ],        
+    ],
     // Placeholder for console routes
-    'console' => array(
-        'router' => array(
-            'routes' => array(
-            ),
-        ),
-    ),
-    'navigation' => array(
-        'default' => array(
-            array(
+    'console' => [
+        'router' => [
+            'routes' => [
+            ],
+        ],
+    ],
+    'navigation' => [
+        'default' => [
+            [
                 'label' => 'Wiki',
                 'type' => 'Uri',
                 'uri' => '#'
-            ),
-            array(
+            ],
+            [
                 'label' => 'Users',
                 'route' => 'users',
-            ),
-            array(
+            ],
+            [
                 'label' => 'Pages',
                 'route' => 'pages',
-            ),
-            array(
+                'pages' => [
+                    [
+                        'label' => 'Existing',
+                        'route' => 'pages',                                                
+                    ],
+                    [
+                        'label' => 'Deleted',
+                        'route' => 'pages/deleted',                        
+                    ]
+                ],                
+            ],
+            [
                 'label' => 'Revisions',
                 'route' => 'revisions',
-            ),            
-            array(
+            ],            
+            [
                 'label' => 'Votes',
                 'route' => 'votes',
-            ),            
-            array(
+            ],            
+            [
                 'label' => 'Tags',
                 'route' => 'tags',
-            ),
-            array(
+            ],
+            [
                 'label' => 'Activity',
                 'route' => 'activity',
-            ),
-            array(
+            ],
+            [
                 'label' => 'About',
                 'route' => 'about',
-            ),            
-        )
-    )
-);
+            ],            
+        ]
+    ]
+];

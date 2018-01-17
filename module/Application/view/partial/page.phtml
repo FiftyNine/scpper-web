@@ -1,8 +1,15 @@
-<?php $page = $this->page; ?>
+<?php 
+    $page = $this->page; 
+    $title = $page->getTitle();
+    if (is_null($title) || ($title == '')) {
+        $title = $page->getName();
+    }
+?>
+<?php if ($page->getDeleted() /*&& $this->crossDeleted*/): ?><del><?php endif; ?>
 <a href="<?php echo $page->getUrl() ?>">
-    <?php echo $this->escapeHtml($page->getTitle()); ?>
+    <?php echo $this->escapeHtml($title); ?>
     <?php if ($page->getAltTitle()): ?>
     <em> <?php echo $this->escapeHtml(' - '.$page->getAltTitle()); ?> </em>
-    <?php endif; ?>
-    
+    <?php endif; ?>    
 </a>
+<?php if ($page->getDeleted()): ?></del><?php endif; ?>       

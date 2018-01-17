@@ -8,7 +8,7 @@ switch($this->column->getName()) {
         echo $this->index;
         break;
     case 'User':
-        echo $this->partial('partial/user.phtml', array('user' =>  $row->getUser()));
+        echo $this->partial('partial/user.phtml', ['user' =>  $row->getUser()]);
         break;
     case 'Vote':
         if ($row->getValue() > 0) {echo '+';} else {echo '-';}

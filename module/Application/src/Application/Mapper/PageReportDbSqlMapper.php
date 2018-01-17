@@ -36,7 +36,7 @@ class PageReportDbSqlMapper extends ZendDbSqlMapper implements PageReportMapperI
             // ID present, it's an Update
             $action = new Update($this->table);
             $action->set($data);
-            $action->where(array($this->idFieldName.' = ?' => $report->getId()));
+            $action->where([$this->idFieldName.' = ?' => $report->getId()]);
         } else {
             // ID NOT present, it's an Insert
             $action = new Insert($this->table);

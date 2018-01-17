@@ -95,6 +95,11 @@ class Page implements PageInterface
     protected $creationDate;
     
     /**
+     * @var string
+     */
+    protected $source;
+    
+    /**
      *
      * @var int
      */    
@@ -191,6 +196,16 @@ class Page implements PageInterface
      * @var array[string]
      */
     protected $tags;
+    
+    /**
+     * @var bool
+     */
+    protected $deleted;
+    
+    /**
+     * @var \DateTime
+     */
+    protected $lastUpdate;
     
     /**
      * Constructor
@@ -305,6 +320,19 @@ class Page implements PageInterface
     public function setCategoryId()
     {
         return $this->categoryId;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getSource()
+    {
+        return $this->source;
+    }
+
+    public function setSource($value)
+    {
+        $this->source = $value;
     }
     
     /**
@@ -550,6 +578,32 @@ class Page implements PageInterface
     {
         return sprintf('/page/%d', $this->getId());
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+ 
+    public function setDeleted($value)
+    {
+        $this->deleted = $value;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getLastUpdate()
+    {
+        return $this->lastUpdate;
+    }
+    
+    public function setLastUpdate($value)
+    {
+        $this->lastUpdate = $value;
+    }
     
     /**
      * {@inheritdoc}
@@ -578,7 +632,8 @@ class Page implements PageInterface
             'adjustedRating' => $this->getAdjustedRating(),
             'wilsonScore' => $this->getWilsonScore(),
             'rank' => $this->getRank(),
-            'authors' => $authors
+            'authors' => $authors,
+            'deleted' => $this->getDeleted()
             ];        
         return $result;
     }

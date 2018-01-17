@@ -63,21 +63,21 @@ class RevisionService implements RevisionServiceInterface
             $result->setCurrentPageNumber($page);
             $result->setItemCountPerPage($perPage);
         } else {
-            $revs = array();
+            $revs = [];
             foreach ($result as $rev) {
                 $revs[] = $rev;
             }
             $result = $revs;
         }
         if ($result) {
-            $userIds = array();
+            $userIds = [];
             foreach ($result as $rev) {
                 $userIds[] = $rev->getUserId();
             }
-            $users = $this->userMapper->findAll(array(
+            $users = $this->userMapper->findAll([
                 sprintf('%s IN (%s)', DbViewUsers::USERID, implode(',', $userIds))
-            ));
-            $userByIds = array();
+            ]);
+            $userByIds = [];
             foreach ($users as $user) {
                 $userByIds[$user->getId()] = $user;
             }

@@ -2,9 +2,9 @@
 
 namespace Application\Utils\DbConsts;
 
-class DbViewRevisions
+class DbViewRevisionsDeleted
 {
-    const TABLE = 'view_revisions';
+    const TABLE = 'view_revisions_deleted';
     const __ID = '__Id';
     const REVISIONID = 'RevisionId';
     const PAGEID = 'PageId';

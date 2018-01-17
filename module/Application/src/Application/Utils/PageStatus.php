@@ -9,12 +9,12 @@ class PageStatus
     const TRANSLATION = 2;
     const REWRITE = 3;
     
-    const DESCRIPTIONS = array(
+    const DESCRIPTIONS = [
         self::ANY => 'Unknown (any)',
         self::ORIGINAL => 'Original',
         self::TRANSLATION => 'Translation',
         self::REWRITE => 'Rewrite'
-    );
+    ];
     
     /**
      * Get description for page status

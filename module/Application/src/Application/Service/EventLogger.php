@@ -49,7 +49,7 @@ class EventLogger implements EventManagerAwareInterface, PostInitializationInter
     public function postInitialize()
     {        
         if (defined('\SCPPER_DEBUG')) {
-            $this->getEventManager()->getSharedManager()->attach('*', \Application\Utils\Events::LOG_SQL_QUERY, array($this, 'logQuery'));
+            $this->getEventManager()->getSharedManager()->attach('*', \Application\Utils\Events::LOG_SQL_QUERY, [$this, 'logQuery']);
         }
     }
 }

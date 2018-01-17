@@ -12,6 +12,7 @@ class DbViewVotes
     const PAGEID = 'PageId';
     const PAGENAME = 'PageName';
     const PAGETITLE = 'PageTitle';
+    const DELETED = 'Deleted';
     const USERID = 'UserId';
     const USERNAME = 'UserName';
     const USERDISPLAYNAME = 'UserDisplayName';

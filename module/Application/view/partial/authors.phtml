@@ -25,7 +25,7 @@
         <span class="glyphicon <?php echo $glyph; ?>" aria-label="<?php echo $hint; ?>" title="<?php echo $hint; ?>"></span>
     <?php endif; ?>        
     <?php
-        echo $this->partial('partial/user.phtml', array('user' => $author->getUser()));
+        echo $this->partial('partial/user.phtml', ['user' => $author->getUser()]);
     ?>
     </div>
 <?php endforeach; ?>

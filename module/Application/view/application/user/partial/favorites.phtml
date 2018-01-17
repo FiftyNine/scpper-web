@@ -14,16 +14,16 @@
         <div class="col-md-4 favorites-column">
             <h4 class="favorites-column-header">Authors</h4>
             <ol class="favorites-list">
+                <?php $hiding = false; ?>
                 <?php foreach ($this->authors as $fav): ?>
                 <?php
                     $positive = (int)$fav['positive'];
                     $negative = (int)$fav['negative'];
-                    $rating = $positive-$negative;  
-                    $hiding = false;
+                    $rating = $positive-$negative;                      
                 ?>
                 <?php if ($rating > 0): ?>
                     <li>
-                        <?php echo $this->partial('partial/user.phtml', array('user' => $fav['user'])); ?>
+                        <?php echo $this->partial('partial/user.phtml', ['user' => $fav['user']]); ?>
                         with 
                         <strong>
                         <?php 
@@ -38,6 +38,7 @@
                 <?php 
                     else: 
                         $hiding = true;
+                        break;
                     endif; 
                 ?>                
                 <?php endforeach; ?>
@@ -49,12 +50,12 @@
         <div class="col-md-4 favorites-column">
             <h4 class="favorites-column-header">Tags</h4>
             <ol class="favorites-list">
+                <?php $hiding = false; ?>
                 <?php foreach ($this->tags as $tag): ?>
                 <?php
                     $positive = (int)$tag['positive'];
                     $negative = (int)$tag['negative'];
                     $rating = $positive-$negative;  
-                    $hiding = false;
                 ?>
                 <?php if ($rating > 0 || !$this->hideVotes): ?>
                     <li>
@@ -73,6 +74,7 @@
                 <?php 
                     else: 
                         $hiding = true;
+                        break;
                     endif; 
                 ?>                
                 <?php endforeach; ?>                
@@ -86,16 +88,16 @@
         <div class="col-md-4 favorites-column">
             <h4 class="favorites-column-header">Fans</h4>
             <ol class="favorites-list">
+                <?php $hiding = false; ?>
                 <?php foreach ($this->fans as $fan): ?>
                 <?php
                     $positive = (int)$fan['positive'];
                     $negative = (int)$fan['negative'];
                     $rating = $positive-$negative;  
-                    $hiding = false;
                 ?>
                 <?php if ($rating > 0): ?>
                 <li>
-                    <?php echo $this->partial('partial/user.phtml', array('user' => $fan['user'])); ?>
+                    <?php echo $this->partial('partial/user.phtml', ['user' => $fan['user']]); ?>
                     with 
                     <strong>
                     <?php 
@@ -110,6 +112,7 @@
                 <?php 
                     else: 
                         $hiding = true;
+                        break;
                     endif; 
                 ?>                
                 <?php endforeach; ?>

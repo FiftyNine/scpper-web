@@ -2,25 +2,28 @@
 
 namespace Application\Utils\DbConsts;
 
-class DbViewRevisions
+class DbViewVotesAll
 {
-    const TABLE = 'view_revisions';
+    const TABLE = 'view_votes_all';
     const __ID = '__Id';
-    const REVISIONID = 'RevisionId';
-    const PAGEID = 'PageId';
-    const REVISIONINDEX = 'RevisionIndex';
-    const PAGENAME = 'PageName';
-    const PAGETITLE = 'PageTitle';
-    const DELETED = 'Deleted';
     const SITEID = 'SiteId';
     const SITENAME = 'SiteName';
     const SITE = 'Site';
+    const PAGEID = 'PageId';
+    const PAGENAME = 'PageName';
+    const PAGETITLE = 'PageTitle';
+    const DELETED = 'Deleted';
     const USERID = 'UserId';
-    const USERWIKIDOTNAME = 'UserWikidotName';
+    const USERNAME = 'UserName';
     const USERDISPLAYNAME = 'UserDisplayName';
     const USERDELETED = 'UserDeleted';
+    const VALUE = 'Value';
     const DATETIME = 'DateTime';
-    const COMMENTS = 'Comments';
+    const FROMMEMBER = 'FromMember';
+    const FROMCONTRIBUTOR = 'FromContributor';
+    const FROMACTIVE = 'FromActive';
+    const ISPOSITIVE = 'IsPositive';
+    const ISNEGATIVE = 'IsNegative';
 
 
     static public function hasField($field) 

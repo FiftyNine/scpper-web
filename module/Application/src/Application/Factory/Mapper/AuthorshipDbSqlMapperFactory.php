@@ -24,9 +24,9 @@ class AuthorshipDbSqlMapperFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator) {        
         $dbAdapter = $serviceLocator->get('Zend\Db\Adapter\Adapter');
         $hydrator = new ClassMethods();
-        $names = new \Zend\Stdlib\Hydrator\NamingStrategy\MapNamingStrategy(array(
+        $names = new \Zend\Stdlib\Hydrator\NamingStrategy\MapNamingStrategy([
             DbViewAuthors::ROLEID => 'role'
-        ));
+        ]);
         $hydrator->setNamingStrategy($names);
         $prototype = $serviceLocator->get('AuthorshipPrototype');
         return new AuthorshipDbSqlMapper($dbAdapter, $hydrator, $prototype, DbViewAuthors::TABLE, '');

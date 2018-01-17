@@ -32,7 +32,7 @@ class VotesController extends AbstractActionController
     
     /**
      * 
-     * @param int $siteId
+     * @param int $site
      * @param string $orderBy
      * @param int $order
      * @param int $page
@@ -41,15 +41,15 @@ class VotesController extends AbstractActionController
      */
     protected function getVotersTable($site, $orderBy, $order, $page, $perPage)
     {
-        $aggregates = array(
+        $aggregates = [
             new Aggregate(DbViewVotes::USERID, Aggregate::NONE, null, true),
             new Aggregate(DbViewVotes::USERNAME, Aggregate::NONE, null, true),
             new Aggregate(DbViewVotes::USERDISPLAYNAME, Aggregate::NONE, null, true),
             new Aggregate(DbViewVotes::USERDELETED, Aggregate::NONE, null, true),
             new Aggregate('*', Aggregate::COUNT, 'Votes'),
             new Aggregate(DbViewVotes::VALUE, Aggregate::SUM, 'Sum'),
-        );
-        $voters = $this->services->getVoteService()->getAggregatedForSite($site->getId(), $aggregates, null, null, array($orderBy => $order), true);
+        ];
+        $voters = $this->services->getVoteService()->getAggregatedForSite($site->getId(), $aggregates, null, null, [$orderBy => $order], true);
         $voters->setCurrentPageNumber($page);
         $voters->setItemCountPerPage($perPage);
         $table = PaginatedTableFactory::createVotersTable($voters, $site->getHideVotes());
@@ -68,7 +68,7 @@ class VotesController extends AbstractActionController
      */
     protected function getVotesTable($siteId, $orderBy, $order, $page, $perPage)
     {
-        $votes = $this->services->getVoteService()->findSiteVotes($siteId, array($orderBy => $order), true, $page, $perPage);
+        $votes = $this->services->getVoteService()->findSiteVotes($siteId, [$orderBy => $order], true, $page, $perPage);
         $table = PaginatedTableFactory::createVotesTable($votes);
         $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);        
         return $table;
@@ -85,17 +85,17 @@ class VotesController extends AbstractActionController
         $site = $this->services->getSiteService()->find($siteId);
         $voters = $this->getVotersTable($site, 'Votes', Order::DESCENDING, 1, 10);
         $votes = $this->getVotesTable($siteId, DbViewVotes::DATETIME, Order::DESCENDING, 1, 10);
-        $result = array(
+        $result = [
             'site' => $site,
             'votersTable' => $voters,
             'votesTable' => $votes
-        );
+        ];
         return new ViewModel($result);
     }  
        
     public function voterListAction()
     {
-        $result = array('success' => false);
+        $result = ['success' => false];
         $siteId = (int)$this->params()->fromQuery('siteId', $this->services->getUtilityService()->getSiteId());
         $site = $this->services->getSiteService()->find($siteId);
         $page = (int)$this->params()->fromQuery('page', 1);
@@ -113,11 +113,10 @@ class VotesController extends AbstractActionController
             $result['success'] = true;                
             $result['content'] = $renderer(
                 'partial/tables/default/table.phtml', 
-                array(
+                [
                     'table' => $table,
-                    'data' => array(
-                    )
-                )
+                    'data' => []
+                ]
             );
         }
         return new JsonModel($result);        
@@ -125,7 +124,7 @@ class VotesController extends AbstractActionController
     
     public function voteListAction()
     {
-        $result = array('success' => false);
+        $result = ['success' => false];
         $siteId = (int)$this->params()->fromQuery('siteId', $this->services->getUtilityService()->getSiteId());
         $page = (int)$this->params()->fromQuery('page', 1);
         $perPage = (int)$this->params()->fromQuery('perPage', 10);
@@ -142,11 +141,10 @@ class VotesController extends AbstractActionController
             $result['success'] = true;                
             $result['content'] = $renderer(
                 'partial/tables/default/table.phtml', 
-                array(
+                [
                     'table' => $table,
-                    'data' => array(
-                    )
-                )
+                    'data' => []
+                ]
             );
         }
         return new JsonModel($result);        

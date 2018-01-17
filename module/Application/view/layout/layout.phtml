@@ -11,7 +11,7 @@
         ?>
 
         <!-- Le styles -->
-        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.gif'))
+        <?php echo $this->headLink(['rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.gif'])
                         ->prependStylesheet($this->basePath('css/style.css'))
                         ->prependStylesheet($this->basePath('css/spinner.css'))
                         //->prependStylesheet($this->basePath('css/bootstrap-theme.min.css'))
@@ -33,8 +33,8 @@
             ->prependFile($this->basePath('/js/jquery-ui/jquery-ui.min.js'), 'text/javascript') 
             ->prependFile($this->basePath('js/bootstrap.min.js'), 'text/javascript')
             ->prependFile($this->basePath('js/jquery.min.js'), 'text/javascript')
-            ->prependFile($this->basePath('js/respond.min.js'), 'text/javascript', array('conditional' => 'lt IE 9',))
-            ->prependFile($this->basePath('js/html5shiv.min.js'),   'text/javascript', array('conditional' => 'lt IE 9',))
+            ->prependFile($this->basePath('js/respond.min.js'), 'text/javascript', ['conditional' => 'lt IE 9',])
+            ->prependFile($this->basePath('js/html5shiv.min.js'),   'text/javascript', ['conditional' => 'lt IE 9',])
             ->prependFile($this->basePath('js/date.format.js'), 'text/javascript')            
             
         ; ?>       

@@ -6,25 +6,29 @@ use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Expression;
 use Application\Utils\VoteType;
 use Application\Utils\DbConsts\DbViewVotes;
+use Application\Utils\DbConsts\DbViewVotesAll;
 use Application\Utils\DbConsts\DbViewAuthors;
 use Application\Utils\DbConsts\DbViewTags;
 
 class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
 {
-    protected function buildVoteSelect(Sql $sql, $conditions, $type = VoteType::ANY, \DateTime $castAfter = null, \DateTime $castBefore = null)
+    protected function buildVoteSelect(Sql $sql, $conditions, $type = VoteType::ANY, \DateTime $castAfter = null, \DateTime $castBefore = null, $deleted = null)
     {
-        $select = $sql->select(DbViewVotes::TABLE);
+        $select = $sql->select(DbViewVotesAll::TABLE);
         if ($conditions) {
             $select->where($conditions);
         }
         if ($type !== VoteType::ANY) {
-            $select->where(array(DbViewVotes::VALUE.' = ?' => $type));
-        }
+            $select->where([DbViewVotesAll::VALUE.' = ?' => $type]);
+        }        
         if ($castAfter) {
-            $select->where(array(DbViewVotes::DATETIME.' >= ?' => $castAfter->format(self::DATETIME_FORMAT)));
+            $select->where([DbViewVotesAll::DATETIME.' >= ?' => $castAfter->format(self::DATETIME_FORMAT)]);
         }
         if ($castBefore) {
-            $select->where(array(DbViewVotes::DATETIME.' <= ?' => $castBefore->format(self::DATETIME_FORMAT)));
+            $select->where([DbViewVotesAll::DATETIME.' <= ?' => $castBefore->format(self::DATETIME_FORMAT)]);
+        }
+        if (!is_null($deleted)) {
+            $select->where([DbViewVotesAll::DELETED.' = ?' => (int)$deleted]);
         }
         return $select;
     }
@@ -33,10 +37,10 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
      * 
      * {@inheritDoc}
      */
-    public function countSiteVotes($siteId, $type = VoteType::ANY, \DateTime $castAfter = null, \DateTime $castBefore = null) 
+    public function countSiteVotes($siteId, $type = VoteType::ANY, \DateTime $castAfter = null, \DateTime $castBefore = null)
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $this->buildVoteSelect($sql, array(DbViewVotes::SITEID.' = ?' => $siteId), $type, $castAfter, $castBefore);
+        $select = $this->buildVoteSelect($sql, [DbViewVotesAll::SITEID.' = ?' => $siteId], $type, $castAfter, $castBefore, false);
         return $this->fetchCount($sql, $select);
     }
 
@@ -46,7 +50,7 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
     public function findSiteVotes($siteId, $order = null, $paginated = false)
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $this->buildVoteSelect($sql, array(DbViewVotes::SITEID.' = ?' => $siteId));
+        $select = $this->buildVoteSelect($sql, [DbViewVotesAll::SITEID.' = ?' => $siteId], VoteType::ANY, null, null, false);
         if (is_array($order)) {
             $this->orderSelect($select, $order);
         }        
@@ -62,8 +66,8 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
     public function findVotesOnPage($pageId, $order = null, $paginated = false)
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $sql->select(DbViewVotes::TABLE)
-                ->where(array(DbViewVotes::PAGEID.' = ?' => $pageId));
+        $select = $sql->select(DbViewVotesAll::TABLE)
+                ->where([DbViewVotesAll::PAGEID.' = ?' => $pageId]);
         if (is_array($order)) {
             $this->orderSelect($select, $order);
         }
@@ -80,10 +84,10 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
     {
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select(DbViewVotes::TABLE)
-                ->where(array(
+                ->where([
                     DbViewVotes::USERID.' = ?' => $userId,
                     DbViewVotes::SITEID.' = ?' => $siteId
-                ));
+                ]);
         if (is_array($order)) {
             $this->orderSelect($select, $order);
         }
@@ -99,13 +103,13 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
     public function getAggregatedVotesOnUser($userId, $siteId, $aggregates, $order = null, $paginated = false)
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $sql->select(array('v' => DbViewVotes::TABLE))
-                ->join(array('a' => DbViewAuthors::TABLE), 'a.'.DbViewAuthors::PAGEID.' = v.'.DbViewVotes::PAGEID, array())
-                ->where(array(
+        $select = $sql->select(['v' => DbViewVotes::TABLE])
+                ->join(['a' => DbViewAuthors::TABLE], 'a.'.DbViewAuthors::PAGEID.' = v.'.DbViewVotes::PAGEID, [])
+                ->where([
                     'a.'.DbViewAuthors::USERID.' = ?' => $userId,
                     'a.'.DbViewAuthors::SITEID.' = ?' => $siteId,
-                    'v.'.DbViewVotes::FROMMEMBER.' = 1'
-                ));
+                    'v.'.DbViewVotes::FROMMEMBER.' = 1',                    
+                ]);
         $this->aggregateSelect($select, $aggregates, 'v');
         if (is_array($order)) {
             $this->orderSelect($select, $order);
@@ -122,31 +126,31 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
     public function getUserFavoriteAuthors($userId, $siteId, $orderByRatio, $paginated = false)
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $sql->select(array('v' => DbViewVotes::TABLE))
-                ->columns(array(
+        $select = $sql->select(['v' => DbViewVotes::TABLE])
+                ->columns([
                     DbViewAuthors::USERID => 'a.'.DbViewAuthors::USERID,
                     DbViewAuthors::USERDISPLAYNAME => 'a.'.DbViewAuthors::USERDISPLAYNAME,
                     'Positive' => new Expression('SUM(v.IsPositive)'),
                     'Negative' => new Expression('SUM(v.IsNegative)'),
-                ), false)
-                ->join(array('a' => DbViewAuthors::TABLE), 'a.'.DbViewAuthors::PAGEID.' = v.'.DbViewVotes::PAGEID, array())
-                ->where(array(
+                ], false)
+                ->join(['a' => DbViewAuthors::TABLE], 'a.'.DbViewAuthors::PAGEID.' = v.'.DbViewVotes::PAGEID, [])
+                ->where([
                     'v.'.DbViewVotes::USERID.' = ?' => $userId,
                     'a.'.DbViewAuthors::SITEID.' = ?' => $siteId
-                ))                
-                ->group(array('a.'.DbViewAuthors::USERID, 'a.'.DbViewAuthors::USERDISPLAYNAME));
-        $select = $sql->select(array('a' => $select));
+                ])                
+                ->group(['a.'.DbViewAuthors::USERID, 'a.'.DbViewAuthors::USERDISPLAYNAME]);
+        $select = $sql->select(['a' => $select]);
         if ($orderByRatio) {
-            $select->columns(array(
+            $select->columns([
                 '*',
                 'Confidence' => new Expression('CI_LOWER_BOUND(Positive, Negative)')
-            ))
+            ])
             ->order('Confidence DESC');
         } else {
-            $select->columns(array(
+            $select->columns([
                 '*',
                 'Total' => new Expression('Positive - Negative')
-            ))
+            ])
             ->order('Total DESC');
         }
         if ($paginated) {
@@ -161,30 +165,30 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
     public function getUserFavoriteTags($userId, $siteId, $orderByRatio, $paginated = false)
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $sql->select(array('v' => DbViewVotes::TABLE))
-                ->columns(array(
+        $select = $sql->select(['v' => DbViewVotes::TABLE])
+                ->columns([
                     DbViewTags::TAG => 't.'.DbViewTags::TAG,
                     'Positive' => new Expression('SUM(v.IsPositive)'),
                     'Negative' => new Expression('SUM(v.IsNegative)'),
-                ), false)
-                ->join(array('t' => DbViewTags::TABLE), 't.'.DbViewTags::PAGEID.' = v.'.DbViewVotes::PAGEID, array())
-                ->where(array(
+                ], false)
+                ->join(['t' => DbViewTags::TABLE], 't.'.DbViewTags::PAGEID.' = v.'.DbViewVotes::PAGEID, [])
+                ->where([
                     'v.'.DbViewVotes::USERID.' = ?' => $userId,
                     'v.'.DbViewVotes::SITEID.' = ?' => $siteId
-                ))                
-                ->group(array('t.'.DbViewTags::TAG));
-        $select = $sql->select(array('a' => $select));
+                ])                
+                ->group(['t.'.DbViewTags::TAG]);
+        $select = $sql->select(['a' => $select]);
         if ($orderByRatio) {
-            $select->columns(array(
+            $select->columns([
                 '*',
                 'Confidence' => new Expression('CI_LOWER_BOUND(Positive, Negative)')
-            ))
+            ])
             ->order('Confidence DESC');
         } else {
-            $select->columns(array(
+            $select->columns([
                 '*',
                 'Total' => new Expression('Positive - Negative')
-            ))
+            ])
             ->order('Total DESC');
         }        
         if ($paginated) {
@@ -199,35 +203,35 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
     public function getUserBiggestFans($userId, $siteId, $orderByRatio, $paginated = false)
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $sql->select(array('v' => DbViewVotes::TABLE))
-            ->columns(array(
+        $select = $sql->select(['v' => DbViewVotes::TABLE])
+            ->columns([
                 DbViewVotes::USERID => 'v.'.DbViewVotes::USERID,
                 DbViewVotes::USERDISPLAYNAME => 'v.'.DbViewVotes::USERDISPLAYNAME,
                 'Positive' => new Expression('SUM(v.IsPositive)'),
                 'Negative' => new Expression('SUM(v.IsNegative)'),                    
-            ), false)
-            ->join(array('a' => DbViewAuthors::TABLE), 'a.'.DbViewAuthors::PAGEID.' = v.'.DbViewVotes::PAGEID, array())
-            ->where(array(
+            ], false)
+            ->join(['a' => DbViewAuthors::TABLE], 'a.'.DbViewAuthors::PAGEID.' = v.'.DbViewVotes::PAGEID, [])
+            ->where([
                 'a.'.DbViewAuthors::USERID.' = ?' => $userId,
                 'a.'.DbViewAuthors::SITEID.' = ?' => $siteId,
                 'v.'.DbViewVotes::FROMMEMBER.' = 1'
-            ))
-            ->group(array(
+            ])
+            ->group([
                 'v.'.DbViewVotes::USERID,
                 'v.'.DbViewVotes::USERDISPLAYNAME,
-            ));
-        $select = $sql->select(array('a' => $select));
+            ]);
+        $select = $sql->select(['a' => $select]);
         if ($orderByRatio) {
-            $select->columns(array(
+            $select->columns([
                 '*',
                 'Confidence' => new Expression('CI_LOWER_BOUND(Positive, Negative)')
-            ))
+            ])
             ->order('Confidence DESC');
         } else {
-            $select->columns(array(
+            $select->columns([
                 '*',
                 'Total' => new Expression('Positive - Negative')
-            ))
+            ])
             ->order('Total DESC');
         }                
         if ($paginated) {
@@ -239,10 +243,10 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
     /**
      * {@inheritDoc}
      */
-    public function getAggregatedValues($conditions, $aggregates, \DateTime $castAfter = null, \DateTime $castBefore = null, $order = null, $paginated = false)
+    public function getAggregatedValues($conditions, $aggregates, \DateTime $castAfter = null, \DateTime $castBefore = null, $deleted = null, $order = null, $paginated = false)
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $this->buildVoteSelect($sql, $conditions, VoteType::ANY, $castAfter, $castBefore);
+        $select = $this->buildVoteSelect($sql, $conditions, VoteType::ANY, $castAfter, $castBefore, $deleted);
         $this->aggregateSelect($select, $aggregates);
         if (is_array($order)) {
             $this->orderSelect($select, $order);

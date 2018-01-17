@@ -28,17 +28,18 @@ class TagDbSqlMapper extends ZendDbSqlMapper implements TagMapperInterface
      * @param int $conditions
      * @return Zend\Db\Sql\Select
      */
-    protected function buildTagSelect(Sql $sql, $siteId, $conditions = [])
+    protected function buildTagSelect(Sql $sql, $siteId, $deleted = false, $conditions = [])
     {
         if (is_array($conditions)) {
             $conditions = [];
         }
         $conditions[DbViewTags::SITEID.' = ?'] = $siteId;
-        $select = $sql->select(array('t' => DbViewTags::TABLE))
-                ->columns(array(
+        $conditions[DbViewTags::DELETED.' = ?'] = (int)$deleted;
+        $select = $sql->select(['t' => DbViewTags::TABLE])
+                ->columns([
                     DbViewTags::TAG,
                     'PageCount' => new Expression('COUNT(*)')
-                ))
+                ])
                 ->where($conditions)
                 ->group(DbViewTags::TAG);                
         return $select;        
@@ -51,10 +52,13 @@ class TagDbSqlMapper extends ZendDbSqlMapper implements TagMapperInterface
     {
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select(DbViewTags::TABLE)
-                ->columns(array(                    
+                ->columns([                    
                     'Number' => new Expression('COUNT(DISTINCT Tag)')
-                ))
-                ->where(array(DbViewTags::SITEID.' = ?' => $siteId));
+                ])
+                ->where([
+                    DbViewTags::SITEID.' = ?' => $siteId,
+                    DbViewTags::DELETED.' <> 1'
+                ]);
         $array = $this->fetchArray($sql, $select);
         if (count($array) > 0) {
             return $array[0]['Number'];
@@ -68,7 +72,7 @@ class TagDbSqlMapper extends ZendDbSqlMapper implements TagMapperInterface
     public function findSiteTags($siteId, $paginated)
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $this->buildTagSelect($sql, $siteId);
+        $select = $this->buildTagSelect($sql, $siteId, false);
         if ($paginated) {
             return $this->getPaginator($select);
         }        
@@ -81,12 +85,12 @@ class TagDbSqlMapper extends ZendDbSqlMapper implements TagMapperInterface
     public function findPageTags($pageId)
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $sql->select(array('t' => DbViewTags::TABLE))
-                ->columns(array(
+        $select = $sql->select(['t' => DbViewTags::TABLE])
+                ->columns([
                     DbViewTags::TAG,
                     'PageCount' => new Expression('0')
-                ))
-                ->where(array(DbViewTags::PAGEID.' = ?' => $pageId))
+                ])
+                ->where([DbViewTags::PAGEID.' = ?' => $pageId])
                 ->group(DbViewTags::TAG);                
         return $this->fetchResultSet($sql, $select);
     }    
@@ -97,7 +101,7 @@ class TagDbSqlMapper extends ZendDbSqlMapper implements TagMapperInterface
     public function findTag($siteId, $tag)
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $this->buildTagSelect($sql, $siteId, array(DbViewTags::TAG.' = ?' => $tag));        
+        $select = $this->buildTagSelect($sql, $siteId, false, [DbViewTags::TAG.' = ?' => $tag]);
         return $this->fetchObject($sql, $select);                
     }
 }

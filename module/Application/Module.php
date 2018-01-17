@@ -24,8 +24,8 @@ class Module
         $serviceManager->addInitializer(new \Application\Utils\PostInitializer());
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);        
-        $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'attachLayoutForms'), 100);        
-        $eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'setLayoutTitle'));
+        $eventManager->attach(MvcEvent::EVENT_RENDER, [$this, 'attachLayoutForms'], 100);        
+        $eventManager->attach(MvcEvent::EVENT_RENDER, [$this, 'setLayoutTitle']);
         $this->bootstrapSession($e);
         // Initialize logger
         $serviceManager->get('EventLogger');
@@ -38,13 +38,13 @@ class Module
 
     public function getAutoloaderConfig()
     {
-        return array(
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
+        return [
+            'Zend\Loader\StandardAutoloader' => [
+                'namespaces' => [
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
     
     public function attachLayoutForms($event)
@@ -118,7 +118,7 @@ class Module
                     $validator = new $validator();
             }
 
-            $chain->attach('session.validate', array($validator, 'isValid'));
+            $chain->attach('session.validate', [$validator, 'isValid']);
         }
     }    
 }

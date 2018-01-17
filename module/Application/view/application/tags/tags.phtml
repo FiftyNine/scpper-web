@@ -85,13 +85,12 @@ $table = $this->table;
 if ($table) {
     echo $this->partial(
         'partial/tables/default/table.phtml', 
-        array(
+        [
             'table' => $table,
-            'data' => array(
-                'siteId' => $this->siteId,
-                
-            ),
-        )
+            'data' => [
+                'siteId' => $this->siteId,                
+            ],
+        ]
     );    
 }
 ?>

@@ -127,10 +127,10 @@ function printInfoLabel($data)
                 $usersTable = $this->users['table'];
                 echo $this->partial(
                     'partial/tables/default/table.phtml', 
-                    array(
+                    [
                         'table' => $usersTable,
-                        'data' => array('siteId' => $site->getId()),
-                    )
+                        'data' => ['siteId' => $site->getId()],
+                    ]
                 );
             ?>
             <div class="text-center">
@@ -159,10 +159,10 @@ function printInfoLabel($data)
                 $pagesTable = $this->pages['table'];
                 echo $this->partial(
                     'partial/tables/default/table.phtml', 
-                    array(
+                    [
                         'table' => $pagesTable,
-                        'data' => array(),
-                    )
+                        'data' => [],
+                    ]
                 );
             ?>
             <div class="text-center">
@@ -191,12 +191,12 @@ function printInfoLabel($data)
                 $revisionsTable = $this->revisions['table'];
                 echo $this->partial(
                     'partial/tables/default/table.phtml', 
-                    array(
+                    [
                         'table' => $revisionsTable,
-                        'data' => array(
+                        'data' => [
                             'total' => $this->revisions['header']['revisions']
-                        ),
-                    )
+                        ],
+                    ]
                 );
             ?>
             <div class="text-center">
@@ -225,11 +225,10 @@ function printInfoLabel($data)
                 $votersTable = $this->votes['table'];
                 echo $this->partial(
                     'partial/tables/default/table.phtml', 
-                    array(
+                    [
                         'table' => $votersTable,
-                        'data' => array(
-                        ),
-                    )
+                        'data' => [],
+                    ]
                 );
             ?>
             <div class="text-center">

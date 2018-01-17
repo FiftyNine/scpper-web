@@ -33,7 +33,7 @@ class TagsController extends AbstractActionController
 
     protected function getPagesTable($siteId, $includeTags, $excludeTags, $all, $orderBy, $order, $page, $perPage)
     {
-        $pages = $this->services->getPageService()->findPagesByTags($siteId, $includeTags, $excludeTags, $all, array($orderBy => $order), true);
+        $pages = $this->services->getPageService()->findPagesByTags($siteId, $includeTags, $excludeTags, $all, false, [$orderBy => $order], true);
         $pages->setCurrentPageNumber($page);
         $pages->setItemCountPerPage($perPage);
         $table = PaginatedTableFactory::createPagesTable($pages);
@@ -77,13 +77,13 @@ class TagsController extends AbstractActionController
         $tagsResultSet = $this->services->getTagService()->findSiteTags($siteId);
         $this->extractTagParameters($method, $searchTags, $includeTags, $excludeTags);
         $pages = $this->getPagesTable($siteId, $includeTags, $excludeTags, $method==='and', DbViewPages::CLEANRATING, Order::DESCENDING, 1, 10);
-        return new ViewModel(array(
+        return new ViewModel([
             'siteId' => $siteId,
             'tags' => $tagsResultSet,
             'table' => $pages,
             'method' => $method,
             'searchTags' => $searchTags
-        ));
+        ]);
     }
 
     public function apiSearchAction()
@@ -105,9 +105,9 @@ class TagsController extends AbstractActionController
         if ($randomize) {
             $orderBy = 'random';
         } else {
-            $orderBy = array(DbViewPages::CLEANRATING => Order::DESCENDING);
+            $orderBy = [DbViewPages::CLEANRATING => Order::DESCENDING];
         }
-        $pages = $this->services->getPageService()->findPagesByTags($site->getId(), $includeTags, $excludeTags, $method==='and', $orderBy, true);
+        $pages = $this->services->getPageService()->findPagesByTags($site->getId(), $includeTags, $excludeTags, $method==='and', false, $orderBy, true);
         $pages->setItemCountPerPage($limit);
         foreach ($pages as $page) {
             $result['pages'][] = $page->toArray();
@@ -118,7 +118,7 @@ class TagsController extends AbstractActionController
     
     public function pageListAction()
     {
-        $result = array('success' => false);
+        $result = ['success' => false];
         $siteId = (int)$this->params()->fromQuery('siteId', $this->services->getUtilityService()->getSiteId());
         $page = (int)$this->params()->fromQuery('page', 1);
         $perPage = (int)$this->params()->fromQuery('perPage', 10);
@@ -136,10 +136,10 @@ class TagsController extends AbstractActionController
             $result['success'] = true;                
             $result['content'] = $renderer(
                 'partial/tables/default/table.phtml', 
-                array(
+                [
                     'table' => $table, 
-                    'data' => array('siteId' => $siteId)
-                )
+                    'data' => ['siteId' => $siteId]
+                ]
             );
         }
         return new JsonModel($result);        

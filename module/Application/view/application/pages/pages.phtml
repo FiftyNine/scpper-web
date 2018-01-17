@@ -6,7 +6,10 @@
 
     function init()
     {
-        scpper.tables.assignPaginatorEvents('#page-list', '/pages/pageList', {siteId: <?php echo $this->site->getId();?>});
+        scpper.tables.assignPaginatorEvents('#page-list', '/pages/pageList', {
+            siteId: <?php echo $this->site->getId();?>,
+            deleted: 0
+        });
     }
 
     $(document).ready(init);
@@ -15,7 +18,7 @@
 
 <?php $this->headScript()->captureEnd(); ?>
 <span class="h1">
-    <?php echo $this->partial('partial/site.phtml', array('site' => $this->site, 'link' => true));?>
+    <?php echo $this->partial('partial/site.phtml', ['site' => $this->site, 'link' => true]);?>
 </span>
 <p class="small-text">Updated <?php echo $this->site->getLastUpdate()->format('Y-m-d H:i'); ?></p>
 <h3>Pages (<?php echo $this->table->getPaginator()->getTotalItemCount();?> total)</h3>
@@ -25,10 +28,10 @@ $table = $this->table;
 
 echo $this->partial(
     'partial/tables/default/table.phtml', 
-    array(
+    [
         'table' => $table,
-        'data' => array('siteId' => $this->site->getId()),
-    )
+        'data' => ['siteId' => $this->site->getId()],
+    ]
 );    
 ?>
 </div>

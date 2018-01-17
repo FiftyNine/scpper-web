@@ -11,6 +11,7 @@ interface VoteMapperInterface extends SimpleMapperInterface
      * @param int $siteId
      * @param int $type
      * @param \DateTime $castAfter Count only votes cast after date
+     * @param \DateTime $castBefore Count only votes cast before date
      * @return int
      */
     public function countSiteVotes($siteId, $type = VoteType::ANY, \DateTime $castAfter = null, \DateTime $castBefore = null);
@@ -49,11 +50,12 @@ interface VoteMapperInterface extends SimpleMapperInterface
      * @param \Application\Utils\QueryAggregateInterface[] $aggregates
      * @param \DateTime $castAfter
      * @param \DateTime $castBefore
+     * @param bool $deleted
      * @param array(string => int) $order Associative array of field names and sorting orders (constants from \Application\Utils\Order)
      * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
      * @return array(array(string => mixed))
      */
-    public function getAggregatedValues($conditions, $aggregates, \DateTime $castAfter = null, \DateTime $castBefore = null, $order = null, $paginated = false);
+    public function getAggregatedValues($conditions, $aggregates, \DateTime $castAfter = null, \DateTime $castBefore = null, $deleted = null, $order = null, $paginated = false);
     
     /**
      * Get an aggregated results from votes on specific author

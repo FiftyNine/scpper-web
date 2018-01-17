@@ -23,11 +23,11 @@ class UserActivityDbHydrator extends PrefixDbHydrator
     public function __construct($prefix = '')
     {        
         parent::__construct();
-        $map = array(
+        $map = [
             DbViewUserActivity::VOTES => 'voteCount',
             DbViewUserActivity::REVISIONS => 'revisionCount',
             DbViewUserActivity::PAGES => 'authorshipCount',
-        );
+        ];
         $lastActivityName = DbViewUserActivity::LASTACTIVITY;
         if ($prefix && is_string($prefix)) {
             $map = $this->getPrefixedMap($prefix, DbSelectColumns::USER_ACTIVITY, $map);

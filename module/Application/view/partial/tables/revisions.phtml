@@ -8,7 +8,7 @@ switch($this->column->getName()) {
         echo $row->getIndex()+1;
         break;
     case 'User':
-        echo $this->partial('partial/user.phtml', array('user' => $row->getUser()));
+        echo $this->partial('partial/user.phtml', ['user' => $row->getUser()]);
         break;
     case 'Comment':
         if ($this->collapsed): ?>

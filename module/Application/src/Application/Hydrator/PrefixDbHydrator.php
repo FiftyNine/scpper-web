@@ -24,9 +24,9 @@ class PrefixDbHydrator extends ClassMethods
      * @param array[string]string $oldMap
      * @return array[string]string
      */
-    protected function getPrefixedMap($prefix, $columns, $oldMap = array())
+    protected function getPrefixedMap($prefix, $columns, $oldMap = [])
     {
-        $newmap = array();
+        $newmap = [];
         foreach ($oldMap as $key => $value) {
             $newmap[$prefix.'_'.$key] = $value;
         }

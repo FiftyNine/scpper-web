@@ -16,7 +16,7 @@
 
 <?php $this->headScript()->captureEnd(); ?>
 <span class="h1">
-    <?php echo $this->partial('partial/site.phtml', array('site' => $this->site, 'link' => true));?>   
+    <?php echo $this->partial('partial/site.phtml', ['site' => $this->site, 'link' => true]);?>   
 </span>
 <p class="small-text">Updated <?php echo $this->site->getLastUpdate()->format('Y-m-d H:i'); ?></p>
 <h3>Voters (<?php echo $this->votersTable->getPaginator()->getTotalItemCount();?> total)</h3>
@@ -25,11 +25,10 @@
 
 echo $this->partial(
     'partial/tables/default/table.phtml', 
-    array(
+    [
         'table' => $this->votersTable,
-        'data' => array(
-        )
-    )
+        'data' => []
+    ]
 );
 ?>
 </div>
@@ -41,11 +40,10 @@ echo $this->partial(
 
 echo $this->partial(
     'partial/tables/default/table.phtml', 
-    array(
+    [
         'table' => $this->votesTable,
-        'data' => array(
-        )
-    )
+        'data' => []
+    ]
 );
 
 ?>

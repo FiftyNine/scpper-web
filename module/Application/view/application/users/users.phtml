@@ -17,7 +17,7 @@
 <?php $this->headScript()->captureEnd(); ?>
 
 <span class="h1">
-    <?php echo $this->partial('partial/site.phtml', array('site' => $this->site, 'link' => true));?>
+    <?php echo $this->partial('partial/site.phtml', ['site' => $this->site, 'link' => true]);?>
 </span>
 <h3>Users (<?php echo $this->usersTable->getPaginator()->getTotalItemCount();?> total)</h3>
 <div class="table-container" id="user-list">
@@ -27,10 +27,10 @@ $usersTable = $this->usersTable;
 
 echo $this->partial(
     'partial/tables/default/table.phtml', 
-    array(
+    [
         'table' => $usersTable,
-        'data' => array('siteId' => $this->site->getId()),
-    )
+        'data' => ['siteId' => $this->site->getId()],
+    ]
 );    
 ?>
 </div>
@@ -43,9 +43,9 @@ $authorsTable = $this->authorsTable;
 
 echo $this->partial(
     'partial/tables/default/table.phtml', 
-    array(
+    [
         'table' => $authorsTable,
-    )
+    ]
 );
 ?>
 </div>

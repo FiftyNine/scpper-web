@@ -13,6 +13,8 @@ class DbPages
     const CATEGORYID = 'CategoryId';
     const SOURCE = 'Source';
     const ALTTITLE = 'AltTitle';
+    const DELETED = 'Deleted';
+    const LASTUPDATE = 'LastUpdate';
 
 
     static public function hasField($field) 

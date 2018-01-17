@@ -41,14 +41,14 @@ class RevisionsController extends AbstractActionController
      */
     protected function getEditorsTable($siteId, $orderBy, $order, $page, $perPage)
     {
-        $aggregates = array(
+        $aggregates = [
             new Aggregate(DbViewRevisions::USERID, Aggregate::NONE, null, true),
             new Aggregate(DbViewRevisions::USERWIKIDOTNAME, Aggregate::NONE, null, true),
             new Aggregate(DbViewRevisions::USERDISPLAYNAME, Aggregate::NONE, null, true),
             new Aggregate(DbViewRevisions::USERDELETED, Aggregate::NONE, null, true),
             new Aggregate('*', Aggregate::COUNT, 'Revisions'),
-        );
-        $editors = $this->services->getRevisionService()->getAggregatedValues($siteId, $aggregates, null, null, array($orderBy => $order), true);
+        ];
+        $editors = $this->services->getRevisionService()->getAggregatedValues($siteId, $aggregates, null, null, [$orderBy => $order], true);
         $editors->setCurrentPageNumber($page);
         $editors->setItemCountPerPage($perPage); 
         $table = PaginatedTableFactory::createEditorsTable($editors);
@@ -66,17 +66,17 @@ class RevisionsController extends AbstractActionController
         $siteId = $this->services->getUtilityService()->getSiteId();
         $site = $this->services->getSiteService()->find($siteId);
         $editors = $this->getEditorsTable($siteId, 'Revisions', Order::DESCENDING, 1, 10);
-        $result = array(
+        $result = [
             'site' => $site,
             'table' => $editors,
             'total' => $this->services->getRevisionService()->countSiteRevisions($siteId)
-        );
+        ];
         return new ViewModel($result);
     }  
        
     public function editorListAction()
     {
-        $result = array('success' => false);
+        $result = ['success' => false];
         $siteId = (int)$this->params()->fromQuery('siteId', $this->services->getUtilityService()->getSiteId());
         $page = (int)$this->params()->fromQuery('page', 1);
         $perPage = (int)$this->params()->fromQuery('perPage', 10);
@@ -93,12 +93,12 @@ class RevisionsController extends AbstractActionController
             $result['success'] = true;                
             $result['content'] = $renderer(
                 'partial/tables/default/table.phtml', 
-                array(
+                [
                     'table' => $table,
-                    'data' => array(
+                    'data' => [
                         'total' => $this->services->getRevisionService()->countSiteRevisions($siteId)
-                    )
-                )
+                    ]
+                ]
             );
         }
         return new JsonModel($result);        

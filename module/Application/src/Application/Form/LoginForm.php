@@ -22,7 +22,7 @@ class LoginForm extends Form
     const REDIRECT_FIELD_NAME = 'redirect-url';
     const BUTTON_NAME = 'login-button';
     
-    public function __construct($name = null, $options = array())
+    public function __construct($name = null, $options = [])
     {
         parent::__construct($name, $options);
         $this->setAttribute("class", $this->getAttribute("class")." form-horizontal top-buffer");

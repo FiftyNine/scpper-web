@@ -40,14 +40,14 @@ class SearchController extends AbstractActionController
      * @param int $perPage
      * @return Application\Component\TableInterface
      */
-    protected function getPagesTable($mask, $siteIds, $orderBy = null, $order = null, $page = 1, $perPage = 10)
+    protected function getPagesTable($mask, $siteIds, $deleted = false, $orderBy = null, $order = null, $page = 1, $perPage = 10)
     {
         if ($order === null) {
             $sortOrder = null;
         } else {
             $sortOrder = [$orderBy => $order];
         }
-        $pages = $this->services->getPageService()->findByName($mask, $siteIds, $sortOrder, true);
+        $pages = $this->services->getPageService()->findByName($mask, $siteIds, $deleted, $sortOrder, true);
         $pages->setItemCountPerPage($perPage);        
         $pages->setCurrentPageNumber($page);        
         if ($siteIds === null) {
@@ -102,10 +102,9 @@ class SearchController extends AbstractActionController
         $request = $this->getRequest();
         $form = $this->services->getUtilityService()->getSearchForm();
         $currentSiteId = $this->services->getUtilityService()->getSiteId();
-        $siteId = $request->getPost('search-site-id', $currentSiteId);
-        if ($siteId !== 'all' && (int)$siteId != $siteId ) {
-            $siteId = $currentSiteId;
-        }
+        $siteId = $request->getPost(SearchForm::SITE_FIELD_NAME, $currentSiteId);
+        $allBranches = (bool) $request->getPost(SearchForm::ALL_BRANCHES_NAME);
+        $withDeleted = (bool) $request->getPost(SearchForm::WITH_DELETED_NAME);
         $currentSite = $this->services->getSiteService()->find($currentSiteId);        
         $result = [
             'form' => $form,
@@ -118,12 +117,8 @@ class SearchController extends AbstractActionController
                 $text = $form->get(SearchForm::TEXT_FIELD_NAME)->getValue();
                 $text = trim($text);
                 if (mb_strlen($text) >= 3) {
-                    if ($siteId === 'all') {
-                        $siteIds = null;
-                    } else {
-                        $siteIds = [(int)$siteId];
-                    }                    
-                    $result['pages'] = $this->getPagesTable($text, $siteIds, null, null, 1, 10);
+                    $siteIds = $allBranches ? null : [(int)$siteId];
+                    $result['pages'] = $this->getPagesTable($text, $siteIds, $withDeleted ? null : false, null, null, 1, 10);
                     $result['users'] = $this->getUsersTable($text, $siteIds, null, null, 1, 10);                    
                     $pageCount = $result['pages']->getPaginator()->getTotalItemCount();
                     $userCount = $result['users']->getPaginator()->getTotalItemCount();
@@ -197,9 +192,9 @@ class SearchController extends AbstractActionController
         if ($randomize) {
             $orderBy = 'random';
         } else {
-            $orderBy = null; // array(DbViewPages::CLEANRATING => Order::DESCENDING);
+            $orderBy = null; // [DbViewPages::CLEANRATING => Order::DESCENDING);
         }
-        $pages = $this->services->getPageService()->findByName($title, [$site->getId()], $orderBy, true);
+        $pages = $this->services->getPageService()->findByName($title, [$site->getId()], false, $orderBy, true);
         $pages->setItemCountPerPage($limit);
         foreach ($pages as $page) {
             $result['pages'][] = $page->toArray();
@@ -209,18 +204,15 @@ class SearchController extends AbstractActionController
 
     public function pageListAction()
     {
-        $result = array('success' => false);
+        $result = ['success' => false];
         $siteId = $this->params()->fromQuery('siteId', $this->services->getUtilityService()->getSiteId());
-        if ($siteId === 'all') {
-            $siteIds = null;
-        } else {
-            $siteIds = [(int)$siteId];
-        }
         $page = (int)$this->params()->fromQuery('page', 1);
         $perPage = (int)$this->params()->fromQuery('perPage', 10);
         $orderBy = $this->params()->fromQuery('orderBy', null);
         $order = $this->params()->fromQuery('ascending', null);
         $query = $this->params()->fromQuery('query', '');
+        $allBranches = (bool) $this->params()->fromQuery('allBranches', false);
+        $withDeleted = (bool) $this->params()->fromQuery('withDeleted', false);        
         if ($order !== null) {
             if ($order) {
                 $order = Order::ASCENDING;
@@ -228,16 +220,17 @@ class SearchController extends AbstractActionController
                 $order = Order::DESCENDING;
             }
         }
-        $table = $this->getPagesTable($query, $siteIds, $orderBy, $order, $page, $perPage);
+        $siteIds = $allBranches ? null : [(int)$siteId];
+        $table = $this->getPagesTable($query, $siteIds, $withDeleted ? null : false, $orderBy, $order, $page, $perPage);
         $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
         if ($renderer) {
             $result['success'] = true;                
             $result['content'] = $renderer(
                 'partial/tables/default/table.phtml', 
-                array(
+                [
                     'table' => $table, 
-                    'data' => array('siteIds' => $siteIds)
-                )
+                    'data' => ['siteIds' => $siteIds]
+                ]
             );
         }
         return new JsonModel($result);        
@@ -245,13 +238,8 @@ class SearchController extends AbstractActionController
     
     public function userListAction()
     {
-        $result = array('success' => false);
-        $siteId = (int)$this->params()->fromQuery('siteId', $this->services->getUtilityService()->getSiteId());
-        if ($siteId === 'all') {
-            $siteId = null;
-        } else {
-            $siteId = (int)$siteId;
-        }        
+        $result = ['success' => false];
+        $siteId = (int)$this->params()->fromQuery('siteId', $this->services->getUtilityService()->getSiteId());        
         $page = (int)$this->params()->fromQuery('page', 1);
         $perPage = (int)$this->params()->fromQuery('perPage', 10);
         $orderBy = $this->params()->fromQuery('orderBy', null);
@@ -264,16 +252,17 @@ class SearchController extends AbstractActionController
                 $order = Order::DESCENDING;
             }
         }
-        $table = $this->getUsersTable($query, $siteId, $orderBy, $order, $page, $perPage);
+        $allBranches = (bool) $this->params()->fromQuery('allBranches', false);        
+        $table = $this->getUsersTable($query, $allBranches ? null : $siteId, $orderBy, $order, $page, $perPage);
         $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
         if ($renderer) {
             $result['success'] = true;                
             $result['content'] = $renderer(
                 'partial/tables/default/table.phtml', 
-                array(
+                [
                     'table' => $table, 
-                    'data' => array('siteId' => $siteId)
-                )
+                    'data' => ['siteId' => $siteId]
+                ]
             );
         }
         return new JsonModel($result);        
@@ -285,7 +274,7 @@ class SearchController extends AbstractActionController
         $result = ['success' => true];
         $siteId = (int)$this->params()->fromQuery('siteId', $this->services->getUtilityService()->getSiteId());
         $query = $this->params()->fromQuery('query', '');
-        $pages = $this->services->getPageService()->findByName($query, [$siteId], [DbViewPages::CLEANRATING => Order::DESCENDING], true);
+        $pages = $this->services->getPageService()->findByName($query, [$siteId], false, [DbViewPages::CLEANRATING => Order::DESCENDING], true);
         $users = $this->services->getUserService()->findUsersOfSiteByName($siteId, $query, null, true);
         $result['pages'] = [];
         $i = 1;        

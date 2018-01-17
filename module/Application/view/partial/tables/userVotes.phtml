@@ -11,7 +11,7 @@ switch($this->column->getName()) {
         if ($this->collapsed): ?>
             <span class="glyphicon glyphicon-file"></span>
         <?php endif;                
-        echo $this->partial('partial/page.phtml', array('page' => $row->getPage(), 'link' => true));
+        echo $this->partial('partial/page.phtml', ['page' => $row->getPage(), 'link' => true]);
         break;
     case 'Authors':
         echo $this->partial('partial/authors.phtml', ['authors' => $row->getPage()->getAuthors(), 'collapsed' => $this->collapsed]);

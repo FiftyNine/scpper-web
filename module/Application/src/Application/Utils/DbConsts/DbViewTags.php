@@ -11,6 +11,7 @@ class DbViewTags
     const PAGEID = 'PageId';
     const PAGENAME = 'PageName';
     const TAG = 'Tag';
+    const DELETED = 'Deleted';
 
 
     static public function hasField($field) 

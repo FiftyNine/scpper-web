@@ -40,6 +40,11 @@ interface PageInterface
     public function getCategoryId();
 
     /**
+     * @return string
+     */
+    public function getSource();
+    
+    /**
      * @return int
      */
     public function getRating();
@@ -129,6 +134,16 @@ interface PageInterface
      * @return string
      */
     public function getUrl();
+    
+    /**
+     * @return bool
+     */
+    public function getDeleted();
+
+    /**
+     * @return \DateTime
+     */
+    public function getLastUpdate();
     
     /**
      * Returns an associative array of an object fields, 

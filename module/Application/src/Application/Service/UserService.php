@@ -98,10 +98,10 @@ class UserService implements UserServiceInterface
     public function findByName($mask, $order = null, $paginated = false)
     {
         $needle = sprintf('%%%s%%', mb_strtolower($mask));            
-        $conditions = array(
+        $conditions = [
             sprintf("LOWER(%s) LIKE ?", DbViewUsers::DISPLAYNAME) => $needle,
             // sprintf("%s in (?)", DbViewPages::SITEID) => implode($sites, ',')
-        );
+        ];
         if ($order === null) {
             $len = strlen($mask);
             $order = [sprintf("ABS(LENGTH(%s) - $len)", DbViewUsers::DISPLAYNAME) => Order::ASCENDING];
@@ -193,9 +193,9 @@ class UserService implements UserServiceInterface
     /**
      * {@inheritDoc}
      */
-    public function findAuthorshipsOfUser($userId, $siteId, $order = null, $paginated = false, $page = 1, $perPage = 10)
+    public function findAuthorshipsOfUser($userId, $siteId, $deleted = false, $order = null, $paginated = false, $page = 1, $perPage = 10)
     {
-        $result = $this->authorshipMapper->findAuthorshipsOfUser($userId, $siteId, $order, $paginated);
+        $result = $this->authorshipMapper->findAuthorshipsOfUser($userId, $siteId, $deleted, $order, $paginated);
         if ($paginated) {
             $result->setCurrentPageNumber($page);
             $result->setItemCountPerPage($perPage);
@@ -203,14 +203,14 @@ class UserService implements UserServiceInterface
             $result = iterator_to_array($result);
         }
         if ($result) {
-            $pageIds = array();
+            $pageIds = [];
             foreach ($result as $auth) {
                 $pageIds[] = $auth->getPageId();
             }
-            $pages = $this->pageMapper->findAll(array(
+            $pages = $this->pageMapper->findAll([
                 sprintf('%s IN (%s)', DbViewPages::PAGEID, implode(',', $pageIds))
-            ));
-            $pageByIds = array();
+            ]);
+            $pageByIds = [];
             foreach ($pages as $page) {
                 $pageByIds[$page->getId()] = $page;
             }
@@ -219,5 +219,13 @@ class UserService implements UserServiceInterface
             }
         }
         return $result;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function countAuthorshipsOfUser($userId, $siteId, $deleted = false)
+    {
+        return $this->authorshipMapper->countAuthorshipsOfUser($userId, $siteId, $deleted);
     }
 }

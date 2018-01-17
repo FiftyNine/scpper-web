@@ -40,16 +40,30 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 
 <p>
     <span class="h2">
+        <?php 
+            $title = $page->getTitle();
+            if (is_null($title) || ($title == '')) {
+                $title = $page->getName();
+            }
+        ?>
+        <?php if ($page->getDeleted()): ?>
+        <del><?php echo $this->escapeHtml($title); ?></del>
+        <?php else: ?>
         <a href="<?php printf("%s/%s", $page->getSite()->getUrl(), $page->getName())?>">
-            <?php echo $this->escapeHtml($page->getTitle()); ?>
+            <?php echo $this->escapeHtml($title); ?>
         </a>
+        <?php endif; ?>
     </span>
     <br>
     on
-    <?php echo $this->partial('partial/site.phtml', array('site' => $page->getSite(), 'link' => true));?>
+    <?php echo $this->partial('partial/site.phtml', ['site' => $page->getSite(), 'link' => true]);?>
     <br>
     <span class="small-text">
-        Updated <?php echo $page->getSite()->getLastUpdate()->format('Y-m-d H:i') ?>
+        <?php if ($page->getDeleted()): ?>
+            Last update <?php echo $page->getLastUpdate()->format('Y-m-d H:i') ?>
+        <?php else : ?>
+            Updated <?php echo $page->getSite()->getLastUpdate()->format('Y-m-d H:i') ?>
+        <?php endif; ?>
     </span>
 </p>
 <hr>
@@ -72,7 +86,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
                     $i = 0;
                 ?>
                 <?php foreach ($authors as $author): ?>
-                    <?php echo $this->partial('partial/user.phtml', array('user' => $author->getUser())); ?>
+                    <?php echo $this->partial('partial/user.phtml', ['user' => $author->getUser()]); ?>
                     <?php
                         if (!$one || $author->getRole() !== \Application\Utils\AuthorRole::AUTHOR) {
                             printf("(%s)", \Application\Utils\AuthorRole::getDescription($author->getRole()));
@@ -121,7 +135,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
         <br>
         Adjusted rating: <strong><?php echo $page->getAdjustedRating(); ?> (<?php printf('%+d / %d', $adjPos, $adjNeg) ?>)</strong>
         <br>
-        Rank: <strong>#<?php echo $page->getRank()+1 ?></strong>
+        Rank: <strong><?php echo $page->getDeleted() ? '&mdash;' : '#'.($page->getRank()+1) ?></strong>
         <br>
         Status: <strong><?php echo \Application\Utils\PageStatus::getDescription($page->getStatus()); ?></strong>
         <br>
@@ -140,16 +154,16 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
     <ul>
         <?php foreach ($page->getTranslations() as $trans): ?>
         <li>
-            <?php echo $this->partial('partial/page.phtml', array('page' => $trans)); ?>
+            <?php echo $this->partial('partial/page.phtml', ['page' => $trans]); ?>
             on
             <em>
-                <?php echo $this->partial('partial/site.phtml', array('site' => $trans->getSite(), 'link' => false));?>
+                <?php echo $this->partial('partial/site.phtml', ['site' => $trans->getSite(), 'link' => false]);?>
             </em>
             by
             <em>
                 <?php $i=0; foreach ($trans->getAuthors() as $auth): ?>
                     <?php if ($i>0): ?>, <?php endif; ?>
-                    <?php echo $this->partial('partial/user.phtml', array('user' => $auth->getUser())); ?>
+                    <?php echo $this->partial('partial/user.phtml', ['user' => $auth->getUser()]); ?>
                 <?php $i++; endforeach; ?>
             </em>
             at
@@ -166,16 +180,16 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
     <?php $orig = $page->getOriginal(); ?>
     <?php if ($orig !== null): ?>
         <strong>Original page:</strong>
-        <?php echo $this->partial('partial/page.phtml', array('page' => $orig)); ?>
+        <?php echo $this->partial('partial/page.phtml', ['page' => $orig]); ?>
         on
         <em>
-            <?php echo $this->partial('partial/site.phtml', array('site' => $orig->getSite(), 'link' => false));?>
+            <?php echo $this->partial('partial/site.phtml', ['site' => $orig->getSite(), 'link' => false]);?>
         </em>
         by
         <em>
             <?php $i=0; $one=count($orig->getAuthors())===1; foreach ($orig->getAuthors() as $auth): ?>
                 <?php if ($i>0): ?>, <?php endif; ?>
-                <?php echo $this->partial('partial/user.phtml', array('user' => $auth->getUser())); ?>                        
+                <?php echo $this->partial('partial/user.phtml', ['user' => $auth->getUser()]); ?>                        
                 <?php if (!$one || $auth->getRole() !== \Application\Utils\AuthorRole::AUTHOR) {
                   printf('(%s)', \Application\Utils\AuthorRole::getDescription($auth->getRole())); }
                 ?>
@@ -208,10 +222,10 @@ $revTable = $this->revisions;
 
 echo $this->partial(
     'partial/tables/default/table.phtml',
-    array(
+    [
         'table' => $revTable,
-        'data' => array(),
-    )
+        'data' => [],
+    ]
 );
 ?>
 </div>
@@ -224,15 +238,21 @@ $voteTable = $this->votes;
 
 echo $this->partial(
     'partial/tables/default/table.phtml',
-    array(
+    [
         'table' => $voteTable,
-        'data' => array(),
-    )
+        'data' => [],
+    ]
 );
 ?>    
 </div>
 <?php endif; ?>
-
+<?php if ($page->getDeleted()): ?>
+<hr>
+<h4>Source</h4>
+<textarea class="page-source" disabled="true" readonly="true" rows="20">
+<?php echo $this->escapeHtml(trim($page->getSource())); ?>
+</textarea>
+<?php endif; ?>
 
 <div id="report-dialog" title="Enter correct information">
 <?php $this->reportForm->setAttribute('action', '/page/report'); ?>

@@ -94,6 +94,7 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
         } else {
             $result = $stmt->execute();
         }
+        //return $result;
         if ($result instanceof ResultInterface && $result->isQueryResult()) {
             return $result;
         }        
@@ -156,7 +157,7 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
     protected function fetchArray(Sql $sql, Select $select)
     {
         $dataset = $this->fetch($sql, $select);
-        $result = array();
+        $result = [];
         while ($dataset && $dataset->current()) {
             $result[] = $dataset->current();
             $dataset->next();
@@ -186,7 +187,7 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
     protected function fetchCount(Sql $sql, Select $select)
     {
         $aggregate = new \Application\Utils\Aggregate('*', \Application\Utils\Aggregate::COUNT, 'Number');
-        $this->aggregateSelect($select, array($aggregate));
+        $this->aggregateSelect($select, [$aggregate]);
         $array = $this->fetchArray($sql, $select);
         if (count($array) > 0) {
             return $array[0]['Number'];
@@ -203,7 +204,7 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
      */
     protected function aggregateSelect(Select $select, $aggregates, $prefix = '')
     {
-        $columns = array();
+        $columns = [];
         foreach ($aggregates as $aggregate) {
             $aggName = $aggregate->getAggregateName();
             if ($aggregate->getGroup()) {                
@@ -231,7 +232,7 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
      */
     protected function orderSelect(Select $select, $order)
     {
-        $newOrder = array(); // We run this place now
+        $newOrder = []; // We run this place now
         if ($order === 'random') {
             $columns = $select->getRawState(Select::COLUMNS);
             $columns['RANDOM_ORDER'] = new Expression('rand()');
@@ -272,7 +273,7 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
             $countSelect->reset(Select::OFFSET);
             $countSelect->reset(Select::ORDER);                    
             $aggregate = new \Application\Utils\Aggregate('*', \Application\Utils\Aggregate::COUNT, \Zend\Paginator\Adapter\DbSelect::ROW_COUNT_COLUMN_NAME);
-            $this->aggregateSelect($countSelect, array($aggregate));               
+            $this->aggregateSelect($countSelect, [$aggregate]);               
         }
         $adapter = new \Zend\Paginator\Adapter\DbSelect($select, $this->dbAdapter, $resultSet, $countSelect);
         $paginator = new \Zend\Paginator\Paginator($adapter);
@@ -309,9 +310,9 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
     {
         $sql = new Sql($this->dbAdapter);        
         $select = $sql->select($this->table);
-        $select->where(array(
+        $select->where([
             "{$this->idFieldName} = ?" => $id
-        ));
+        ]);
         
         $result = $this->fetch($sql, $select);
         if ($result && $result->getAffectedRows()) {
@@ -344,7 +345,7 @@ class ZendDbSqlMapper implements SimpleMapperInterface, EventManagerAwareInterfa
             $result = $this->fetchResultSet($sql, $select);
         }
         if (!$result) {
-            $result = array();
+            $result = [];
         }                    
         return $result;
     }

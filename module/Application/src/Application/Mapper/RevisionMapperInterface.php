@@ -8,9 +8,10 @@ interface RevisionMapperInterface extends SimpleMapperInterface
      * Returns number of site revisions
      * @param int $siteId
      * @param \DateTime $createdAfter Count only revisions created after date
+     * @param \DateTime $createdBefore Count only revisions created before date
      * @return int
      */
-    public function countSiteRevisions($siteId, \DateTime $createdAfter = null, \DateTime $createdBefore = null);        
+    public function countSiteRevisions($siteId, \DateTime $createdAfter = null, \DateTime $createdBefore = null);
     
     /**
      * Returns revisions of a page

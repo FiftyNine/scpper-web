@@ -4,8 +4,6 @@ namespace Application\Service;
 
 use Application\Mapper\PageMapperInterface;
 use Application\Utils\PageStatus;
-use Application\Utils\DbConsts\DbViewPages;
-use Application\Utils\Order;
 
 class PageService implements PageServiceInterface 
 {
@@ -39,48 +37,48 @@ class PageService implements PageServiceInterface
     /**
      * {@inheritDoc}
      */
-    public function findByName($mask, $sites, $order = null, $paginated = false)
+    public function findByName($mask, $sites, $deleted = false, $order = null, $paginated = false)
     {
-        return $this->mapper->findPagesByName($sites, $mask, $order, $paginated);
+        return $this->mapper->findPagesByName($sites, $mask, $deleted, $order, $paginated);
     }
     
     /**
      * {@inheritDoc}
      */
-    public function countSitePages($siteId, $type = PageStatus::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null)
+    public function countSitePages($siteId, $type = PageStatus::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null, $deleted = false)
     {
-        return $this->mapper->countSitePages($siteId, $type, $createdAfter, $createdBefore);
+        return $this->mapper->countSitePages($siteId, $type, $createdAfter, $createdBefore, $deleted);
     }
     
     /**
      * {@inheritDoc}
      */
-    public function findSitePages($siteId, $type = PageStatus::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null, $order = null, $paginated = false)
+    public function findSitePages($siteId, $type = PageStatus::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null, $deleted = false, $order = null, $paginated = false)
     {
-        return $this->mapper->findSitePages($siteId, $type, $createdAfter, $createdBefore, $order, $paginated);
+        return $this->mapper->findSitePages($siteId, $type, $createdAfter, $createdBefore, $deleted, $order, $paginated);
     }
         
     /**
      * {@inheritDoc}
      */
-    public function findPagesByUser($userId, $siteId, $order = null, $paginated = false)
+    public function findPagesByUser($userId, $siteId, $deleted = false, $order = null, $paginated = false)
     {
-        return $this->mapper->findPagesByUser($userId, $siteId, $order, $paginated);
+        return $this->mapper->findPagesByUser($userId, $siteId, $deleted, $order, $paginated);
     }
     
     /**
      * {@inheritDoc}
      */
-    public function findPagesByTags($siteId, $includeTags, $excludeTags = [], $all = true, $order = null, $paginated = false)
+    public function findPagesByTags($siteId, $includeTags, $excludeTags = [], $all = true, $deleted = false, $order = null, $paginated = false)
     {
-        return $this->mapper->findPagesByTags($siteId, $includeTags, $excludeTags, $all, $order, $paginated);
+        return $this->mapper->findPagesByTags($siteId, $includeTags, $excludeTags, $all, $deleted, $order, $paginated);
     }
     
     /**
      * {@inheritDoc}
      */
-    public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore)
+    public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore, $deleted = false)
     {
-        return $this->mapper->getAggregatedValues($siteId, $aggregates, $createdAfter, $createdBefore);
+        return $this->mapper->getAggregatedValues($siteId, $aggregates, $createdAfter, $createdBefore, $deleted);
     }            
 }

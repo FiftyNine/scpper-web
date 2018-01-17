@@ -44,18 +44,23 @@ scpper.charts = {
 
 scpper.charts.activity = {
 
-    drawColumnChart: function (rawData, label, title, id, color) {
+    drawColumnChart: function (rawData, labels, title, id, colors) {
+        if (rawData.length === 0)
+            return;
         var data = new google.visualization.DataTable();
         data.addColumn({type: 'date', label: 'Time'});
-        data.addColumn({type: 'number', label: label});
-        data.addColumn({type: 'string', role: 'tooltip', p: {html: true}});
+        for (var i=0; i<Math.floor(rawData[0].length/2); i++) {
+            data.addColumn({type: 'number', label: labels[i]});
+            data.addColumn({type: 'string', role: 'tooltip', p: {html: true}});
+        }        
         data.addRows(rawData);
         var options = {
             title: title,
             legend: 'none',
             chartArea: {width: '80%', height: '80%'},
-            colors: [color],
-            tooltip: { isHtml: true }
+            colors: colors,
+            tooltip: { isHtml: true },
+            isStacked: true
         };    
         var div = document.getElementById(id);
         $(div).removeClass('chart-container').addClass('chart-loaded');        
@@ -80,33 +85,42 @@ scpper.charts.activity = {
         chart.draw(data, options);    
     },
 
-    drawTimeLineCharts: function (result, barLabel, barTitle, barId, lineLabel, lineTitle, lineId, color) {
+    drawTimeLineCharts: function (result, barLabels, barTitle, barId, lineLabel, lineTitle, lineId, colors) {
         // Define the chart to be drawn
         if (!result.success || result.data.length < 2) {
             scpper.charts.setFailedBackground(barId);
             scpper.charts.removeChartContainer(lineId);        
             return;
-        }
+        }          
+        // Number of columns for the stacked chart
+        var colCount = result.data[0].length-1;
+        
         // Convert returned values from string to date
         for (var i=0; i<result.data.length; i++) {
             result.data[i][0] = scpper.convertDate(result.data[i][0]);
         }
         // Prepare data for bar chart
-        var barData = $.extend(true, [], result.data);
-        for (var i=0; i<barData.length; i++) {
+        var barData = [] ;// $.extend(true, [], result.data);
+        for (var i=0; i<result.data.length; i++) {
             var group = result.group;            
-            barData[i][2] = scpper.charts.getDateTooltipContent(barData[i][0], group, barLabel, barData[i][1]);
+            var rowData = [result.data[i][0]];
+            for (var j=0; j<colCount; j++) {
+                rowData.push(result.data[i][j+1]);
+                rowData.push(scpper.charts.getDateTooltipContent(result.data[i][0], group, barLabels[j], result.data[i][j+1]));
+            }
+            barData.push(rowData);
         }
         // Draw bar chart
-        scpper.charts.activity.drawColumnChart(barData, barLabel, barTitle, barId, color);
+        scpper.charts.activity.drawColumnChart(barData, barLabels, barTitle, barId, colors);
         // Prepare data for line chart
-        var lineData = $.extend(true, [], result.data);
-        lineData[0][1] = lineData[0][1]+result.starting;
-        for (var i=1; i<lineData.length; i++) {
-            lineData[i][1] = lineData[i-1][1]+lineData[i][1];
+        var lineData = [
+            [result.data[0][0], result.data[0][1] + result.starting]
+        ]; // $.extend(true, [], result.data);        
+        for (var i=1; i<result.data.length; i++) {
+            lineData.push([result.data[i][0], lineData[i-1][1]+result.data[i][1]]);
         }
         // Draw line chart
-        scpper.charts.activity.drawLineChart(lineData, lineLabel, lineTitle, lineId, color);
+        scpper.charts.activity.drawLineChart(lineData, lineLabel, lineTitle, lineId, colors[0]);
     },
 
     drawUserCharts: function (chartsData) {
@@ -118,7 +132,7 @@ scpper.charts.activity = {
                 type: "get",
                 data: chartsData
             }).done(function (result) {
-                scpper.charts.activity.drawTimeLineCharts(result, 'Joined', 'New users', 'users-joined', 'Users', 'Total users', 'users-total', '#94C282');
+                scpper.charts.activity.drawTimeLineCharts(result, ['Joined'], 'New users', 'users-joined', 'Users', 'Total users', 'users-total', ['#94C282']);
             }).fail(function () {
                 scpper.charts.setFailedBackground('users-joined');
                 scpper.charts.removeChartContainer('users-total');
@@ -138,7 +152,7 @@ scpper.charts.activity = {
                 type: "get",
                 data: chartsData
             }).done(function (result) {
-                scpper.charts.activity.drawTimeLineCharts(result, 'Created', 'New pages', 'pages-created', 'Pages', 'Total pages', 'pages-total', '#6DAECF');
+                scpper.charts.activity.drawTimeLineCharts(result, ['Remains', 'Didn\'t make it'], 'New pages', 'pages-created', 'Pages', 'Total pages', 'pages-total', ['#6DAECF', '#DB9191']);
             }).fail(function () {
                 scpper.charts.setFailedBackground('pages-created');
                 scpper.charts.removeChartContainer('pages-total');
@@ -158,7 +172,7 @@ scpper.charts.activity = {
                 type: "get",
                 data: chartsData
             }).done(function (result) {
-                scpper.charts.activity.drawTimeLineCharts(result, 'Created', 'New revisions', 'revisions-created', 'Revisions', 'Total revisions', 'revisions-total', '#DB9191');
+                scpper.charts.activity.drawTimeLineCharts(result, ['Created'], 'New revisions', 'revisions-created', 'Revisions', 'Total revisions', 'revisions-total', ['#DB9191']);
             }).fail(function () {
                 scpper.charts.setFailedBackground('revisions-created');
                 scpper.charts.removeChartContainer('revisions-total');
@@ -178,7 +192,7 @@ scpper.charts.activity = {
                 type: "get",
                 data: chartsData
             }).done(function (result) {
-                scpper.charts.activity.drawTimeLineCharts(result, 'Votes', 'New votes', 'votes-cast', 'Votes', 'Total votes', 'votes-total', '#E0A96E');
+                scpper.charts.activity.drawTimeLineCharts(result, ['Votes'], 'New votes', 'votes-cast', 'Votes', 'Total votes', 'votes-total', ['#E0A96E']);
             }).fail(function () {
                 scpper.charts.setFailedBackground('votes-cast');
                 scpper.charts.removeChartContainer('votes-total');

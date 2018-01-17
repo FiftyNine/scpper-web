@@ -774,6 +774,10 @@ div.google-visualization-tooltip {
     padding-top: 3px;
 }
 
+.page-source {
+    width: 100%;
+}
+
 /** User **/
 
 #user-top {
@@ -958,7 +962,11 @@ ul.search-autocomplete {
         display: none;
     }
 }
-    
+ 
+div.search-options {
+    margin-top: 7px;
+}
+
 /** Reports **/
 
 select.contributor-role {

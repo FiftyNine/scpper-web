@@ -6,9 +6,10 @@ use Application\Mapper\VoteMapperInterface;
 use Application\Mapper\UserMapperInterface;
 use Application\Mapper\PageMapperInterface;
 use Application\Utils\VoteType;
+use Application\Utils\DbConsts\DbViewPagesAll;
 use Application\Utils\DbConsts\DbViewVotes;
+use Application\Utils\DbConsts\DbViewVotesAll;
 use Application\Utils\DbConsts\DbViewUsers;
-use Application\Utils\DbConsts\DbViewPages;
 
 class VoteService implements VoteServiceInterface 
 {
@@ -36,15 +37,15 @@ class VoteService implements VoteServiceInterface
      */
     private function fillVotesPages($votes)
     {
-        $pageIds = array();
+        $pageIds = [];
         foreach ($votes as $vote) {
             $pageIds[] = $vote->getPageId();
         }
         if (count($pageIds) > 0) {
-            $pages = $this->pageMapper->findAll(array(
-                sprintf('%s IN (%s)', DbViewPages::PAGEID, implode(',', $pageIds))
-            ));
-            $pageByIds = array();
+            $pages = $this->pageMapper->findAll([
+                sprintf('%s IN (%s)', DbViewPagesAll::PAGEID, implode(',', $pageIds))
+            ]);
+            $pageByIds = [];
             foreach ($pages as $page) {
                 $pageByIds[$page->getId()] = $page;
             }
@@ -60,15 +61,15 @@ class VoteService implements VoteServiceInterface
      */
     private function fillVotesUsers($votes)
     {
-        $userIds = array();
+        $userIds = [];
         foreach ($votes as $vote) {
             $userIds[] = $vote->getUserId();
         }
         if (count($userIds) > 0) {
-            $users = $this->userMapper->findAll(array(
+            $users = $this->userMapper->findAll([
                 sprintf('%s IN (%s)', DbViewUsers::USERID, implode(',', $userIds))
-            ));
-            $userByIds = array();
+            ]);
+            $userByIds = [];
             foreach ($users as $user) {
                 $userByIds[$user->getId()] = $user;
             }
@@ -166,7 +167,7 @@ class VoteService implements VoteServiceInterface
      */
     public function getAggregatedForSite($siteId, $aggregates, \DateTime $castAfter = null, \DateTime $castBefore = null, $order = null, $paginated = false)
     {
-        return $this->mapper->getAggregatedValues(array(DbViewVotes::SITEID.' = ?' => $siteId), $aggregates, $castAfter, $castBefore, $order, $paginated);
+        return $this->mapper->getAggregatedValues([DbViewVotes::SITEID.' = ?' => $siteId], $aggregates, $castAfter, $castBefore, false, $order, $paginated);
     }
     
     /**
@@ -174,9 +175,9 @@ class VoteService implements VoteServiceInterface
      */
     public function getAggregatedForPage($pageId, $aggregates, $onlyClean = false)
     {
-        $conditions = array(DbViewVotes::PAGEID.' = ?' => $pageId);
+        $conditions = [DbViewVotesAll::PAGEID.' = ?' => $pageId];
         if ($onlyClean) {
-            $conditions[] = DbViewVotes::FROMMEMBER.' = 1';
+            $conditions[] = DbViewVotesAll::FROMMEMBER.' = 1';
         }
         return $this->mapper->getAggregatedValues($conditions, $aggregates);
     }        

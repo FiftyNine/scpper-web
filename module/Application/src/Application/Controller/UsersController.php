@@ -41,7 +41,7 @@ class UsersController extends AbstractActionController
      */
     protected function getUsersTable($siteId, $orderBy, $order, $page, $perPage)
     {
-        $users = $this->services->getUserService()->findUsersOfSite($siteId, array($orderBy => $order), true);
+        $users = $this->services->getUserService()->findUsersOfSite($siteId, [$orderBy => $order], true);
         $users->setItemCountPerPage($perPage);
         $users->setCurrentPageNumber($page);
         $table = \Application\Factory\Component\PaginatedTableFactory::createSiteUsersTable($users);
@@ -60,17 +60,17 @@ class UsersController extends AbstractActionController
      */
     protected function getAuthorsTable($siteId, $orderBy, $order, $page, $perPage)
     {
-        $authors = $this->services->getUserService()->findAuthorSummaries($siteId, array($orderBy => $order), true);
+        $authors = $this->services->getUserService()->findAuthorSummaries($siteId, [$orderBy => $order], true);
         $authors->setItemCountPerPage($perPage);
         $authors->setCurrentPageNumber($page);
-        $userIds = array();
-        $authorById = array();
+        $userIds = [];
+        $authorById = [];
         foreach ($authors as $author) {            
             $userIds[] = $author->getUserId();
             $authorById[$author->getUserId()] = $author;
         }
         $users = $this->services->getUserService()->findAll(
-            array(sprintf('%s IN (%s)',  DbViewUsers::USERID, implode(',', $userIds))));
+            [sprintf('%s IN (%s)',  DbViewUsers::USERID, implode(',', $userIds))]);
         foreach ($users as $user) {
             $authorById[$user->getId()]->setUser($user);
         }
@@ -90,17 +90,17 @@ class UsersController extends AbstractActionController
         $site = $this->services->getSiteService()->find($siteId);
         $users = $this->getUsersTable($siteId, DbViewMembership::TABLE.'_'.DbViewMembership::JOINDATE, Order::DESCENDING, 1, 10);
         $authors = $this->getAuthorsTable($siteId, AuthorSummaryConsts::PAGES, Order::DESCENDING, 1, 10);
-        $result = array(
+        $result = [
             'site' => $site,
             'usersTable' => $users,
             'authorsTable' => $authors
-        );
+        ];
         return new ViewModel($result);
     }
     
     public function userListAction()
     {
-        $result = array('success' => false);
+        $result = ['success' => false];
         $siteId = (int)$this->params()->fromQuery('siteId', $this->services->getUtilityService()->getSiteId());
         $page = (int)$this->params()->fromQuery('page', 1);
         $perPage = (int)$this->params()->fromQuery('perPage', 10);
@@ -117,10 +117,10 @@ class UsersController extends AbstractActionController
             $result['success'] = true;                
             $result['content'] = $renderer(
                 'partial/tables/default/table.phtml', 
-                array(
+                [
                     'table' => $table, 
-                    'data' => array('siteId' => $siteId)
-                )
+                    'data' => ['siteId' => $siteId]
+                ]
             );
         }
         return new JsonModel($result);        
@@ -128,7 +128,7 @@ class UsersController extends AbstractActionController
     
     public function authorListAction()
     {
-        $result = array('success' => false);
+        $result = ['success' => false];
         $siteId = (int)$this->params()->fromQuery('siteId', $this->services->getUtilityService()->getSiteId());
         $page = (int)$this->params()->fromQuery('page', 1);
         $perPage = (int)$this->params()->fromQuery('perPage', 10);
@@ -145,9 +145,9 @@ class UsersController extends AbstractActionController
             $result['success'] = true;                
             $result['content'] = $renderer(
                 'partial/tables/default/table.phtml', 
-                array(
+                [
                     'table' => $table, 
-                )
+                ]
             );
         }
         return new JsonModel($result);        

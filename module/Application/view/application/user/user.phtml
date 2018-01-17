@@ -90,7 +90,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
     </span>
     <br>
     on
-    <?php echo $this->partial('partial/site.phtml', array('site' => $site, 'link' => true));?>
+    <?php echo $this->partial('partial/site.phtml', ['site' => $site, 'link' => true]);?>
     <br>
     <span class="small-text">
         Updated <?php echo $site->getLastUpdate()->format('Y-m-d H:i') ?>
@@ -146,25 +146,25 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
             <?php endif; ?>        
         <?php endif; ?>
         <?php 
-            $other = array();
+            $other = [];
             foreach ($user->getActivities() as $activity) {
                 if ($activity->getSiteId() !== $site->getId()
                         && ($activity->getVoteCount() > 0 
                         || $activity->getRevisionCount() > 0 
                         || $activity->getAuthorshipCount() > 0)
                 ) {
-                    $other[$activity->getSiteId()] = array(
+                    $other[$activity->getSiteId()] = [
                         'activity' => $activity,
                         'membership' => $user->getMembershipOfSite($activity->getSiteId())
-                    );
+                    ];
                 }
             }
             foreach ($user->getMemberships() as $membership) {
                 if ($membership->getSiteId() !== $site->getId() && !array_key_exists($membership->getSiteId(), $other)) {
-                    $other[$membership->getSiteId()] = array(
+                    $other[$membership->getSiteId()] = [
                         'activity' => $user->getActivityOnSite($membership->getSiteId()),
                         'membership' => $membership
-                    );
+                    ];
                 }
             }   
         ?>
@@ -173,7 +173,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
             <ul>
             <?php foreach ($other as $i): ?>
                 <li>
-                    <?php echo $this->partial('partial/site.phtml', array('site' => $i['activity']->getSite(), 'link' => true));?>
+                    <?php echo $this->partial('partial/site.phtml', ['site' => $i['activity']->getSite(), 'link' => true]);?>
                     <?php printf(' %d votes, %d revisions, %d pages, ', $i['activity']->getVoteCount(), $i['activity']->getRevisionCount(), $i['activity']->getAuthorshipCount()); ?>
                     <?php if ($i['membership']): ?>
                         joined <?php echo $i['membership']->getJoinDate()->format('Y-m-d'); ?>
@@ -194,7 +194,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
     <?php 
         echo $this->partial(
             'application/user/partial/favorites.phtml', 
-            array(
+            [
                 'byRatio' => true,
                 'hasVotes' => $user->getActivityOnSite($site->getId())->getVoteCount() > 0,
                 'isAuthor' => $isAuthor,
@@ -203,14 +203,15 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
                 'tags' => $this->tags,
                 'fans' => $this->fans,
                 'all' => $this->allFavorites
-            )
+            ]
         ); 
     ?>
 </div>
-<?php if ($this->pages->getPaginator()->getTotalItemCount() && $isAuthor): ?>
+<?php if ($this->pages->getPaginator()->getTotalItemCount()): ?>
     <hr>
     <h3>
-        <?php echo $this->pages->getPaginator()->getTotalItemCount();?> pages
+        <?php printf("%d pages", $this->pages->getPaginator()->getTotalItemCount());?>  
+        <?php if ($this->deleted > 0) { printf(" (%d deleted)", $this->deleted); } ?> 
     </h3>    
     <div class="table-container" id="page-list">
     <?php
@@ -218,10 +219,10 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 
     echo $this->partial(
         'partial/tables/default/table.phtml',
-        array(
+        [
             'table' => $table,
-            'data' => array(),
-        )
+            'data' => [],
+        ]
     );
     ?>
     </div>
@@ -235,10 +236,10 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
 
     echo $this->partial(
         'partial/tables/default/table.phtml',
-        array(
+        [
             'table' => $table,
-            'data' => array(),
-        )
+            'data' => [],
+        ]
     );
     ?>
     </div>

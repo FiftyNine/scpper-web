@@ -10,30 +10,37 @@ use Application\Utils\Order;
 use Application\Utils\PageStatus;
 use Application\Utils\PageKind;
 use Application\Utils\DbConsts\DbViewPages;
+use Application\Utils\DbConsts\DbViewPagesAll;
 use Application\Utils\DbConsts\DbViewTags;
 use Application\Utils\DbConsts\DbViewAuthors;
 
 class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
-{
+{    
+    /**
+     * {@inheritDoc}
+     */
     protected function buildPageSelect(
         Sql $sql,
         $siteId, 
         $type = PageStatus::ANY, 
         \DateTime $createdAfter = null, 
-        \DateTime $createdBefore = null
-    )
+        \DateTime $createdBefore = null,
+        $deleted = false)
     {
         $select = $sql->select()
-                      ->from(array('p' => DbViewPages::TABLE))
-                      ->where(array('p.'.DbViewPages::SITEID.' = ?' => $siteId));
-        if ($type !== PageStatus::ANY) {            
-                   $select->where(array('p.'.DbViewPages::STATUSID.' = ?' => $type));
+                      ->from(['p' => DbViewPagesAll::TABLE])
+                      ->where(['p.'.DbViewPagesAll::SITEID.' = ?' => $siteId]);
+        if ($type !== PageStatus::ANY) {
+            $select->where(['p.'.DbViewPagesAll::STATUSID.' = ?' => $type]);
         }
         if ($createdAfter) {
-            $select->where(array('p.'.DbViewPages::CREATIONDATE.' >= ?' => $createdAfter->format(self::DATETIME_FORMAT)));
+            $select->where(['p.'.DbViewPagesAll::CREATIONDATE.' >= ?' => $createdAfter->format(self::DATETIME_FORMAT)]);
         }
         if ($createdBefore) {
-            $select->where(array('p.'.DbViewPages::CREATIONDATE.' <= ?' => $createdBefore->format(self::DATETIME_FORMAT)));
+            $select->where(['p.'.DbViewPagesAll::CREATIONDATE.' <= ?' => $createdBefore->format(self::DATETIME_FORMAT)]);
+        }
+        if (!is_null($deleted)) {
+            $select->where(['p.'.DbViewPagesAll::DELETED.' = ?' => (int)$deleted]);
         }
         return $select;
     }
@@ -41,10 +48,10 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
     /**
      * {@inheritDoc}
      */
-    public function countSitePages($siteId, $type = PageStatus::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null) 
+    public function countSitePages($siteId, $type = PageStatus::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null, $deleted = false) 
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $this->buildPageSelect($sql, $siteId, $type, $createdAfter, $createdBefore);
+        $select = $this->buildPageSelect($sql, $siteId, $type, $createdAfter, $createdBefore, $deleted);
         return $this->fetchCount($sql, $select);
     }
     
@@ -56,12 +63,12 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
             $type = PageStatus::ANY, 
             \DateTime $createdAfter = null, 
             \DateTime $createdBefore = null, 
+            $deleted = false,
             $order = null, 
-            $paginated = false
-    )
+            $paginated = false)
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $this->buildPageSelect($sql, $siteId, $type, $createdAfter, $createdBefore);
+        $select = $this->buildPageSelect($sql, $siteId, $type, $createdAfter, $createdBefore, $deleted);
         if (is_array($order)) {
             $this->orderSelect($select, $order);
         }
@@ -74,16 +81,19 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
     /**
      * {@inheritDoc}
      */
-    public function findPagesByUser($userId, $siteId, $order = null, $paginated = false)
+    public function findPagesByUser($userId, $siteId, $deleted = false, $order = null, $paginated = false)
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $sql->select(array('p' => DbViewPages::TABLE))
-                ->join(array('a' => DbViewAuthors::TABLE), 'p.'.DbViewPages::PAGEID.' = a.'.DbViewAuthors::PAGEID, array())
-                ->where(array(
+        $select = $sql->select(['p' => DbViewPagesAll::TABLE])
+                ->join(['a' => DbViewAuthors::TABLE], 'p.'.DbViewPagesAll::PAGEID.' = a.'.DbViewAuthors::PAGEID, [])
+                ->where([
                     'a.'.DbViewAuthors::USERID.' = ?' => $userId,
-                    'p.'.DbViewPages::SITEID.' = ?' => $siteId,
-                    '(p.'.DbViewPages::KINDID.' IS NULL OR p.'.DbViewPages::KINDID.' <> '.PageKind::SERVICE.')'
-                ));
+                    'p.'.DbViewPagesAll::SITEID.' = ?' => $siteId,
+                    '(p.'.DbViewPagesAll::KINDID.' IS NULL OR p.'.DbViewPagesAll::KINDID.' <> '.PageKind::SERVICE.')'
+                ]);
+        if (!is_null($deleted)) {
+            $select->where(['p.'.DbViewPagesAll::DELETED.' = ?' => (int)$deleted]);
+        }
         if (is_array($order)) {
             $this->orderSelect($select, $order);
         }
@@ -96,29 +106,32 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
     /**
      * {@inheritDoc}
      */
-    public function findPagesByName($sites, $mask, $order = null, $paginated = false)
+    public function findPagesByName($sites, $mask, $deleted = false, $order = null, $paginated = false)
     {
         $lower = mb_strtolower($mask);
         $regexp = sprintf('(^|[^[:alnum:]])%s($|[^[:alnum:]])', $lower);
         $sql = new Sql($this->dbAdapter);
-        $select = $sql->select(['p' => DbViewPages::TABLE])
+        $select = $sql->select(['p' => DbViewPagesAll::TABLE])
                 ->columns([
                     '' => Select::SQL_STAR, 
-                    'InTitle' => new Expression(sprintf('CASE WHEN %s RLIKE ? THEN 1 ELSE 0 END', DbViewPages::TITLE), [$regexp]),
-                    'InAltTitle' => new Expression(sprintf('CASE WHEN %s RLIKE ? THEN 1 ELSE 0 END', DbViewPages::ALTTITLE), [$regexp]),
-                    'Relevance' => new Expression(sprintf('MATCH (%s, %s) AGAINST (? IN NATURAL LANGUAGE MODE)', DbViewPages::TITLE, DbViewPages::ALTTITLE), [$lower])
+                    'InTitle' => new Expression(sprintf('CASE WHEN %s RLIKE ? THEN 1 ELSE 0 END', DbViewPagesAll::TITLE), [$regexp]),
+                    'InAltTitle' => new Expression(sprintf('CASE WHEN %s RLIKE ? THEN 1 ELSE 0 END', DbViewPagesAll::ALTTITLE), [$regexp]),
+                    'Relevance' => new Expression(sprintf('MATCH (%s, %s) AGAINST (? IN NATURAL LANGUAGE MODE)', DbViewPagesAll::TITLE, DbViewPagesAll::ALTTITLE), [$lower])
                 ])
-                ->where(new Predicate\Expression(sprintf('MATCH (%s, %s) AGAINST (? IN NATURAL LANGUAGE MODE)', DbViewPages::TITLE, DbViewPages::ALTTITLE), [$lower]));
+                ->where(new Predicate\Expression(sprintf('MATCH (%s, %s) AGAINST (? IN NATURAL LANGUAGE MODE)', DbViewPagesAll::TITLE, DbViewPagesAll::ALTTITLE), [$lower]));
         if (is_array($sites)) {
-            $select = $select->where(new Predicate\In(DbViewPages::SITEID, $sites));
+            $select = $select->where(new Predicate\In(DbViewPagesAll::SITEID, $sites));
         }
+        if (!is_null($deleted)) {
+            $select->where(['p.'.DbViewPagesAll::DELETED.' = ?' => (int)$deleted]);
+        }        
         if (!is_array($order)) {
             $order = [
                 'InTitle' => Order::DESCENDING,
                 'InAltTitle' => Order::DESCENDING,
                 'Relevance' => Order::DESCENDING,
-                DbViewPages::CLEANRATING => Order::DESCENDING, 
-                DbViewPages::CREATIONDATE => Order::ASCENDING
+                DbViewPagesAll::CLEANRATING => Order::DESCENDING, 
+                DbViewPagesAll::CREATIONDATE => Order::ASCENDING
             ];
         }
         $this->orderSelect($select, $order);
@@ -131,22 +144,25 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
     /**
      * {@inheritDoc}
      */
-    public function findPagesByTags($siteId, $includeTags, $excludeTags = [], $all = true, $order = null, $paginated = false)
+    public function findPagesByTags($siteId, $includeTags, $excludeTags = [], $all = true, $deleted = false, $order = null, $paginated = false)
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $sql->select(array('p' => DbViewPages::TABLE))
-                ->where(array(
-                    'p.'.DbViewPages::SITEID.' = ?' => $siteId,
-                    //'(p.'.DbViewPages::KINDID.' IS NULL OR p.'.DbViewPages::KINDID.' <> '.PageKind::SERVICE.')'
-                ));
+        $select = $sql->select(['p' => DbViewPagesAll::TABLE])
+                ->where([
+                    'p.'.DbViewPagesAll::SITEID.' = ?' => $siteId,
+                    //'(p.'.DbViewPagesAll::KINDID.' IS NULL OR p.'.DbViewPagesAll::KINDID.' <> '.PageKind::SERVICE.')'
+                ]);
+        if (!is_null($deleted)) {
+            $select->where(['p.'.DbViewPagesAll::DELETED.' = ?' => (int)$deleted]);
+        }          
         if (count($includeTags) > 0) {        
             $includeString = vsprintf("'%s'", [implode("','", $includeTags)]);
-            $includeSubSelect = $sql->select(array('t' => DbViewTags::TABLE))
-                    ->columns(array(new Expression('COUNT(*)')))
-                    ->where(array(
-                        't.'.DbViewTags::PAGEID.' = p.'.DbViewPages::PAGEID,
+            $includeSubSelect = $sql->select(['t' => DbViewTags::TABLE])
+                    ->columns([new Expression('COUNT(*)')])
+                    ->where([
+                        't.'.DbViewTags::PAGEID.' = p.'.DbViewPagesAll::PAGEID,
                         't.'.DbViewTags::TAG.' IN ('.$includeString.')',
-                    ));
+                    ]);
             $platform = $this->dbAdapter->getPlatform();
             $query = $includeSubSelect->getSqlString($platform);                        
             if ($all) {
@@ -154,19 +170,19 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
             } else {
                 $condition = vsprintf('(%s) >= 1', [$query]);
             }
-            $select->where(array($condition));                        
+            $select->where([$condition]);
         }
         if (count($excludeTags) > 0) {
             $excludeString = vsprintf("'%s'", [implode("','", $excludeTags)]);
-            $excludeSubSelect = $sql->select(array('t' => DbViewTags::TABLE))                    
-                    ->columns(array(new Expression('NULL')))
-                    ->where(array(
-                        't.'.DbViewTags::PAGEID.' = p.'.DbViewPages::PAGEID,
+            $excludeSubSelect = $sql->select(['t' => DbViewTags::TABLE])
+                    ->columns([new Expression('NULL')])
+                    ->where([
+                        't.'.DbViewTags::PAGEID.' = p.'.DbViewPagesAll::PAGEID,
                         't.'.DbViewTags::TAG.' IN ('.$excludeString.')',
-                    ));
+                    ]);
             $platform = $this->dbAdapter->getPlatform();
             $query = $excludeSubSelect->getSqlString($platform);                        
-            $select->where(array(vsprintf('NOT EXISTS(%s)', [$query])));                        
+            $select->where([vsprintf('NOT EXISTS(%s)', [$query])]);
         }       
         $this->orderSelect($select, $order);
         if ($paginated) {
@@ -181,8 +197,9 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
     public function findTranslations($pageId)
     {
         $sql = new Sql($this->dbAdapter);
+        // Only undeleted pages
         $select = $sql->select(DbViewPages::TABLE)
-                ->where(array(DbViewPages::ORIGINALID.' = ?' => $pageId));
+                ->where([DbViewPages::ORIGINALID.' = ?' => $pageId]);
         return $this->fetchResultSet($sql, $select);
     }
 
@@ -191,17 +208,18 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
      */
     public function findPageRank($pageId)
     {
-        $sql = new Sql($this->dbAdapter);        
+        $sql = new Sql($this->dbAdapter);    
+        // Only undeleted pages
         $subSelect = $sql->select(DbViewPages::TABLE)
-                ->columns(array(new Expression('COUNT(*)')))
-                ->where(array(
+                ->columns([new Expression('COUNT(*)')])
+                ->where([
                     DbViewPages::CLEANRATING.' > p.'.DbViewPages::CLEANRATING,
                     DbViewPages::SITEID.' = p.'.DbViewPages::SITEID,
                     '('.DbViewPages::KINDID.' IS NULL OR '.DbViewPages::KINDID.' <> '.PageKind::SERVICE.')'
-                ));
-        $select = $sql->select(array('p' => DbViewPages::TABLE))
-                ->columns(array('Rank' => $subSelect), false)
-                ->where(array(DbViewPages::PAGEID.' = ?' => $pageId));
+                ]);
+        $select = $sql->select(['p' => DbViewPagesAll::TABLE])
+                ->columns(['Rank' => $subSelect], false)
+                ->where([DbViewPagesAll::PAGEID.' = ?' => $pageId]);
         $res = $this->fetchArray($sql, $select);
         if (count($res) === 1) {
             return $res[0]['Rank'];
@@ -212,10 +230,10 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
     /**
      * {@inheritDoc}
      */
-    public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore)   
+    public function getAggregatedValues($siteId, $aggregates, \DateTime $createdAfter, \DateTime $createdBefore, $deleted = false)
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $this->buildPageSelect($sql, $siteId, PageStatus::ANY, $createdAfter, $createdBefore);
+        $select = $this->buildPageSelect($sql, $siteId, PageStatus::ANY, $createdAfter, $createdBefore, $deleted);
         $this->aggregateSelect($select, $aggregates);
         return $this->fetchArray($sql, $select);
     }

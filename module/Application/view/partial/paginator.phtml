@@ -72,7 +72,7 @@
     <div class="per-page-block form-inline">
         <label for="perPage" class="control-label">Show</label>
         <select class="form-control per-page-control" name="perPage">
-            <?php $pageSizes = array(10, 25, 50, 100); ?>
+            <?php $pageSizes = [10, 25, 50, 100]; ?>
             <?php foreach ($pageSizes as $size): ?>
             <option <?php if ($size === $this->itemCountPerPage) {echo "selected";} ?> >
                 <?php echo $size ?>

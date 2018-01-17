@@ -80,11 +80,20 @@ interface UserServiceInterface
      * Get a list of authorships by user on site
      * @param int $userId
      * @param int $siteId
+     * @param bool $deleted
      * @param array[string]int $order
      * @param bool $paginated
      * @return Zend\Paginator\Paginator|AuthorshipInterface[]
      */
-    public function findAuthorshipsOfUser($userId, $siteId, $order = null, $paginated = false, $page = 1, $perPage = 10);
+    public function findAuthorshipsOfUser($userId, $siteId, $deleted = false, $order = null, $paginated = false, $page = 1, $perPage = 10);
+    
+    /**
+     * 
+     * @param type $userId
+     * @param type $siteId
+     * @param type $deleted
+     */
+    public function countAuthorshipsOfUser($userId, $siteId, $deleted = false);
     
     /**
      * Get an aggregated results from membership

@@ -15,9 +15,9 @@ class SiteDbSqlMapperFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator) {        
         $dbAdapter = $serviceLocator->get('Zend\Db\Adapter\Adapter');
         $hydrator = new ClassMethods();
-        $names = array(
+        $names = [
             DbViewSites::SITEID => 'id',
-        );
+        ];
         $hydrator->setNamingStrategy(new MapNamingStrategy($names));
         $prototype = $serviceLocator->get('SitePrototype');
         return new SiteDbSqlMapper($dbAdapter, $hydrator, $prototype, DbViewSites::TABLE, DbViewSites::SITEID);

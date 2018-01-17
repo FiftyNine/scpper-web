@@ -157,16 +157,16 @@ class Revision implements RevisionInterface, \JsonSerializable
      */
     public function jsonSerialize()
     {
-        return array(
+        return [
             'index' => $this->getIndex(),
             //'date' => $this->getDateTime()->format(\DateTime::ISO8601),
             'comments' => $this->getComments(),
-            'user' => array(
+            'user' => [
                 'id' => $this->getUserId(),
                 'name' => $this->getUser()->getName(),
                 'displayName' => $this->getUser()->getDisplayName()
-            )
-        );
+            ]
+        ];
     }
 
 }

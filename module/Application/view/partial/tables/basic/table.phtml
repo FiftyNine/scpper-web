@@ -24,8 +24,8 @@
         <th 
             <?php 
             $thisOrder = $col->canOrder() && ($cols->getOrderBy() === $col);
-            $classes = array();
-            $attributes = array();
+            $classes = [];
+            $attributes = [];
             if ($col->canOrder()) {
                 $classes[] = 'can-order';
                 $attributes[] = 'data-name="'.$col->getOrderName().'"';
@@ -103,12 +103,12 @@
                 <?php
                     echo $this->partial(
                         $table->getBodyView(), 
-                        array(
+                        [
                             'index' => $table->getPaginator()->getAbsoluteItemNumber($i),
                             'column' => $col,
                             'row' => $row,                            
                             'data' => $this->data
-                        )
+                        ]
                     );                 
                 ?>
             </td>

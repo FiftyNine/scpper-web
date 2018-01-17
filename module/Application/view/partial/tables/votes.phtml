@@ -11,13 +11,13 @@ switch($this->column->getName()) {
         if ($this->collapsed): ?>
             <span class="glyphicon glyphicon-user"></span>
         <?php endif;
-        echo $this->partial('partial/user.phtml', array('user' => $row->getUser()));
+        echo $this->partial('partial/user.phtml', ['user' => $row->getUser()]);
         break;
     case 'Page':
         if ($this->collapsed): ?>
             <span class="glyphicon glyphicon-file"></span>
         <?php endif;        
-        echo $this->partial('partial/page.phtml', array('page' => $row->getPage()));
+        echo $this->partial('partial/page.phtml', ['page' => $row->getPage()]);
         break;
     case 'Vote':        
         if ($row->getValue() > 0) {echo '+';} else {echo '-';}

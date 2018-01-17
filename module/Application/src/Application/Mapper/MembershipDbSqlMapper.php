@@ -41,26 +41,26 @@ class MembershipDbSqlMapper extends ZendDbSqlMapper implements MembershipMapperI
     )
     {
         $select = $sql->select();
-        $select->from(array('m' => DbViewMembership::TABLE))               
-               ->where(array('m.'.DbViewMembership::SITEID.' = ?' => $siteId));
+        $select->from(['m' => DbViewMembership::TABLE])               
+               ->where(['m.'.DbViewMembership::SITEID.' = ?' => $siteId]);
         if ($types & UserType::VOTER) {
-            $select->where(array('m.'.DbViewMembership::VOTES.' > 0'));
+            $select->where(['m.'.DbViewMembership::VOTES.' > 0']);
         }        
         if ($types & UserType::CONTRIBUTOR) {
-            $select->where(array('m.'.DbViewMembership::REVISIONS.' > 0'));
+            $select->where(['m.'.DbViewMembership::REVISIONS.' > 0']);
         }
         if ($types & UserType::POSTER) {
-            $select->where(array('m.'.DbViewMembership::PAGES.' > 0'));
+            $select->where(['m.'.DbViewMembership::PAGES.' > 0']);
         }        
         if ($lastActive && $lastActive->getTimestamp() < time()) {
             $select->where->isNotNull('m.'.DbViewMembership::LASTACTIVITY);
-            $select->where(array('m.'.DbViewMembership::LASTACTIVITY.' >= ?' => $lastActive->format(self::DATETIME_FORMAT)));
+            $select->where(['m.'.DbViewMembership::LASTACTIVITY.' >= ?' => $lastActive->format(self::DATETIME_FORMAT)]);
         }                
         if ($joinedAfter) {            
-            $select->where(array('m.'.DbViewMembership::JOINDATE.' >= ?' => $joinedAfter->format(self::DATETIME_FORMAT)));                   
+            $select->where(['m.'.DbViewMembership::JOINDATE.' >= ?' => $joinedAfter->format(self::DATETIME_FORMAT)]);                   
         }                
         if ($joinedBefore) {            
-            $select->where(array('m.'.DbViewMembership::JOINDATE.' <= ?' => $joinedBefore->format(self::DATETIME_FORMAT)));                   
+            $select->where(['m.'.DbViewMembership::JOINDATE.' <= ?' => $joinedBefore->format(self::DATETIME_FORMAT)]);                   
         }
         return $select;
     }
@@ -135,7 +135,7 @@ class MembershipDbSqlMapper extends ZendDbSqlMapper implements MembershipMapperI
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select(DbViewMembership::TABLE)
                 ->columns(DbSelectColumns::MEMBERSHIP)
-                ->where(array(DbViewMembership::USERID.' = ?' => $userId));
+                ->where([DbViewMembership::USERID.' = ?' => $userId]);
         return $this->fetchResultSet($sql, $select);        
     }
 }

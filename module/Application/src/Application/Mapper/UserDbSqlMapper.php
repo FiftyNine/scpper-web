@@ -61,23 +61,23 @@ class UserDbSqlMapper extends ZendDbSqlMapper implements UserMapperInterface
     protected function findUsersOfSiteInternal($conditions = null, $order = null, $paginated = false) 
     {
         $sql = new Sql($this->dbAdapter);
-        $membershipCols = array();
+        $membershipCols = [];
         foreach (DbSelectColumns::MEMBERSHIP as $col) {
             $membershipCols[DbViewMembership::TABLE.'_'.$col] = $col;
         }
-        $activityCols = array();
+        $activityCols = [];
         foreach(DbSelectColumns::USER_ACTIVITY as $col) {
             $activityCols[DbViewUserActivity::TABLE.'_'.$col] = $col;
         }
-        $userCols = array();
+        $userCols = [];
         foreach(DbSelectColumns::USER as $col) {
             $userCols[DbViewUsers::TABLE.'_'.$col] = $col;
         }        
         $select = $sql->select()
-                ->from(array('u' => DbViewUsers::TABLE))
+                ->from(['u' => DbViewUsers::TABLE])
                 ->columns($userCols)
-                ->join(array('a' => DbViewUserActivity::TABLE), 'u.'.DbViewUsers::USERID.' = a.'.DbViewUserActivity::USERID, $activityCols)
-                ->join(array('m' => DbViewMembership::TABLE), 'm.'.DbViewMembership::USERID.' = u.'.DbViewUsers::USERID.' AND m.'.DbViewMembership::SITEID.' = a.'.DbViewUserActivity::SITEID, $membershipCols, Select::JOIN_LEFT)
+                ->join(['a' => DbViewUserActivity::TABLE], 'u.'.DbViewUsers::USERID.' = a.'.DbViewUserActivity::USERID, $activityCols)
+                ->join(['m' => DbViewMembership::TABLE], 'm.'.DbViewMembership::USERID.' = u.'.DbViewUsers::USERID.' AND m.'.DbViewMembership::SITEID.' = a.'.DbViewUserActivity::SITEID, $membershipCols, Select::JOIN_LEFT)
                 ->where($conditions);
         if (is_array($order)) {
             $this->orderSelect($select, $order);            

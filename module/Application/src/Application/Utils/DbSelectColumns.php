@@ -19,25 +19,25 @@ use Application\Utils\DbConsts\DbViewUserActivity;
  */
 class DbSelectColumns 
 {
-    const USER = array(
+    const USER = [
         DbViewUsers::USERID,
         DbViewUsers::WIKIDOTNAME,
         DbViewUsers::DISPLAYNAME,
         DbViewUsers::DELETED
-    );
+    ];
     
-    const MEMBERSHIP = array(
+    const MEMBERSHIP = [
         DbViewMembership::USERID,
         DbViewMembership::SITEID,
         DbViewMembership::JOINDATE
-    );
+    ];
     
-    const USER_ACTIVITY = array(
+    const USER_ACTIVITY = [
         DbViewUserActivity::USERID,
         DbViewUserActivity::SITEID,
         DbViewUserActivity::VOTES,
         DbViewUserActivity::REVISIONS,
         DbViewUserActivity::PAGES,
         DbViewUserActivity::LASTACTIVITY,
-    );
+    ];
 }

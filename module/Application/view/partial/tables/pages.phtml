@@ -11,7 +11,7 @@ switch($this->column->getName()) {
         echo strtoupper($row->getSite()->getShortName());
         break;
     case 'Page':
-        echo $this->partial('partial/page.phtml', array('page' => $row));
+        echo $this->partial('partial/page.phtml', ['page' => $row]);
         break;
     case 'Total':
         if ($this->collapsed) {

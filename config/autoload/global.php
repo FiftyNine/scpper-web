@@ -11,19 +11,19 @@
  * file.
  */
 
- return array(
-     'db' => array(
+ return [
+     'db' => [
          'driver'         => 'Pdo',
          'dsn'            => 'mysql:dbname=fiddynun_scpper;host=localhost',
-         'driver_options' => array(
+         'driver_options' => [
              PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\'',
              PDO::ATTR_EMULATE_PREPARES => false         
-         ),
-     ),
-     'service_manager' => array(
-         'factories' => array(
+         ],
+     ],
+     'service_manager' => [
+         'factories' => [
              'Zend\Db\Adapter\Adapter'
                      => 'Application\Factory\Service\DbAdapterFactory',
-         ),
-     ),
- );
+         ],
+     ],
+ ];

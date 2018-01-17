@@ -27,14 +27,14 @@ class IndexController extends AbstractActionController
     private function fillExtensionAuthorsInfo($authors, &$info)
     {
         foreach ($authors as $author) {
-            $info['authors'][] = array(
+            $info['authors'][] = [
                 'userId' => $author->getUser()->getId(),
                 'userName' => $author->getUser()->getName(),
                 'user' => $author->getUser()->getDisplayName(),
                 'roleId' => $author->getRole(),
                 'role' => AuthorRole::getDescription($author->getRole()),
                 'deleted' => $author->getUser()->getDeleted()
-            );
+            ];
         }        
     }
     
@@ -47,7 +47,7 @@ class IndexController extends AbstractActionController
         $info['statusId'] = $page->getStatus();
         $info['status'] = PageStatus::getDescription($page->getStatus());
         $info['date'] = $page->getCreationDate()->getTimestamp();        
-        $info['authors'] = array();
+        $info['authors'] = [];
         $this->fillExtensionAuthorsInfo($page->getAuthors(), $info);
         if ($page->getStatus() === PageStatus::TRANSLATION) {
             $original = $page->getOriginal();
@@ -68,9 +68,9 @@ class IndexController extends AbstractActionController
     {        
         $siteId = $this->services->getUtilityService()->getSiteId();
         $site = $this->services->getSiteService()->find($siteId);
-        $result = array(
+        $result = [
             'site' => $site
-        );
+        ];
         return new ViewModel($result);
     }
             
@@ -96,11 +96,11 @@ class IndexController extends AbstractActionController
     public function extensionPageInfoAction()
     {
         // log request to db
-        $result = array(
+        $result = [
             'status' => 'not_ok',
             'message' => '',
-            'data' => array()
-        );
+            'data' => []
+        ];
         $pageId = $this->params()->fromQuery('pageId', 0);
         if ((int)$pageId > 0 && $this->fillExtensionPageInfo($pageId, $result['data'])) {            
             $result['status'] = 'ok';

@@ -22,10 +22,10 @@ class UserDbHydrator extends PrefixDbHydrator
     public function __construct($prefix = '')
     {        
         parent::__construct();
-        $map = array(
+        $map = [
             DbViewUsers::USERID => 'id',
             DbViewUsers::WIKIDOTNAME => 'name'
-        );
+        ];
         if ($prefix && is_string($prefix)) {
             $map = $this->getPrefixedMap($prefix, DbSelectColumns::USER, $map);
         }

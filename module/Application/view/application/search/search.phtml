@@ -18,36 +18,30 @@
     
     var siteId = <?php echo $currentSiteId; ?>;
     var paginatorData = {
-        siteId: <?php echo $searchForCurrent?$currentSiteId:'"all"'; ?>,
-        query: "<?php echo $queryField->getValue(); ?>",
+        siteId: <?php echo $currentSiteId; ?>,
+        query: "<?php echo $queryField->getValue(); ?>",        
         page: 1, 
         perPage: 10
     };
     
-    function switchSites(event)
-    {
-        <?php if ($searchForCurrent): ?>            
-            scpper.post('/search', {"search-site-id": "all", "search-text": paginatorData.query});
-        <?php else: ?>
-            scpper.post('/search', {"search-site-id": siteId, "search-text": paginatorData.query});
-        <?php endif; ?>
-    }
-
     function init()
     {
-
         scpper.tables.assignPaginatorEvents('#page-list', 
             '/search/pageList', 
             {
                 siteId: paginatorData.siteId,
-                query: paginatorData.query
+                query: paginatorData.query,
+                withDeleted: <?php echo (int)$form->get(\Application\Form\SearchForm::ALL_BRANCHES_NAME)->isChecked(); ?>,
+                allBranches: <?php echo (int)$form->get(\Application\Form\SearchForm::WITH_DELETED_NAME)->isChecked(); ?>
             }
         );
         scpper.tables.assignPaginatorEvents('#user-list', 
             '/search/userList', 
             {
                 siteId: paginatorData.siteId,
-                query: paginatorData.query
+                query: paginatorData.query,
+                withDeleted: <?php echo (int)$form->get(\Application\Form\SearchForm::ALL_BRANCHES_NAME)->isChecked(); ?>,
+                allBranches: <?php echo (int)$form->get(\Application\Form\SearchForm::WITH_DELETED_NAME)->isChecked(); ?>                
             }
         );        
         $('#switch-query-sites').on('click', switchSites);
@@ -68,14 +62,16 @@
                 <?php echo $this->formElement($form->get(\Application\Form\SearchForm::BUTTON_NAME)); ?>
             </span>            
         </div>
-        <a class="btn btn-default" id="switch-query-sites" href="javascript:;" role="button">
-            <?php if ($searchForCurrent): ?>
-            <span class="glyphicon glyphicon-globe"></span><span class="switch-search-sites-caption" aria-label="All branches"> All branches</span>
-            <?php else: ?>
-            <span class="glyphicon glyphicon-home"></span><span class="switch-search-sites-caption" aria-label="Current branche"> Current branch</span>
-            <?php endif; ?>
-        </a>        
         <?php echo $this->formElement($form->get(\Application\Form\SearchForm::SITE_FIELD_NAME)); ?>
+        <br>
+        <div class="search-options">
+            <label class="checkbox-inline">            
+            <?php echo $this->formElement($form->get(\Application\Form\SearchForm::ALL_BRANCHES_NAME)); ?>All branches
+            </label>
+            <label class="checkbox-inline">
+            <?php echo $this->formElement($form->get(\Application\Form\SearchForm::WITH_DELETED_NAME)); ?>With deleted
+            </label>
+        </div>
         <?php echo $this->form()->closeTag(); ?>
     </div>
 </div>
@@ -88,10 +84,10 @@
 
         echo $this->partial(
             'partial/tables/default/table.phtml', 
-            array(
+            [
                 'table' => $this->pages,
-                'data' => array('siteId' => $this->site->getId()),
-            )
+                'data' => ['siteId' => $this->site->getId()],
+            ]
         );    
         ?>
         </div>       
@@ -103,10 +99,10 @@
 
         echo $this->partial(
             'partial/tables/default/table.phtml', 
-            array(
+            [
                 'table' => $this->users,
-                'data' => array('siteId' => $this->site->getId()),
-            )
+                'data' => ['siteId' => $this->site->getId()],
+            ]
         );    
         ?>
         </div>  

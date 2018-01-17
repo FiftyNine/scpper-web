@@ -18,7 +18,7 @@ use Application\Utils\DateAggregate;
 use Application\Utils\Order;
 use Application\Utils\DbConsts\DbViewVotes;
 use Application\Utils\DbConsts\DbViewAuthors;
-use Application\Utils\DbConsts\DbViewPages;
+use Application\Utils\DbConsts\DbViewPagesAll;
 
 
 /**
@@ -39,13 +39,13 @@ class UserController extends AbstractActionController
         $fans = $this->services->getVoteService()->getUserBiggestFans($userId, $siteId, $byRatio, true);
         $fans->setCurrentPageNumber(1);
         $fans->setItemCountPerPage($limit);
-        $result = array();
+        $result = [];
         foreach ($fans as $fan) {
-            $result[] = array(
+            $result[] = [
                 'user' => $this->services->getUserService()->find($fan[DbViewVotes::USERID]),
                 'positive' => $fan['Positive'],
                 'negative' => $fan['Negative']
-            );
+            ];
         }
         return $result;
     }
@@ -55,13 +55,13 @@ class UserController extends AbstractActionController
         $favs = $this->services->getVoteService()->getUserFavoriteAuthors($userId, $siteId, $byRatio, true);
         $favs->setCurrentPageNumber(1);
         $favs->setItemCountPerPage($limit);
-        $result = array();
+        $result = [];
         foreach ($favs as $fav) {
-            $result[] = array(
+            $result[] = [
                 'user' => $this->services->getUserService()->find($fav[DbViewAuthors::USERID]),
                 'positive' => $fav['Positive'],
                 'negative' => $fav['Negative']
-            );
+            ];
         }
         return $result;
     }
@@ -71,20 +71,20 @@ class UserController extends AbstractActionController
         $tags = $this->services->getVoteService()->getUserFavoriteTags($userId, $siteId, $byRatio, true);
         $tags->setCurrentPageNumber(1);
         $tags->setItemCountPerPage($limit);
-        $result = array();
+        $result = [];
         foreach ($tags as $tag) {
-            $result[] = array(
+            $result[] = [
                 'tag' => $tag['Tag'],
                 'positive' => $tag['Positive'],
                 'negative' => $tag['Negative']
-            );
+            ];
         }
         return $result;
     }
     
-    protected function getPagesTable($userId, $siteId, $orderBy, $order, $page, $perPage)
+    protected function getPagesTable($userId, $siteId, $deleted, $orderBy, $order, $page, $perPage)
     {
-        $pages = $this->services->getPageService()->findPagesByUser($userId, $siteId, array($orderBy => $order), true);
+        $pages = $this->services->getPageService()->findPagesByUser($userId, $siteId, $deleted, [$orderBy => $order], true);
         $pages->setCurrentPageNumber($page);
         $pages->setItemCountPerPage($perPage);
         $table = PaginatedTableFactory::createPagesTable($pages);
@@ -94,7 +94,7 @@ class UserController extends AbstractActionController
 
     protected function getVotesTable($userId, $siteId, $orderBy, $order, $page, $perPage)
     {
-        $votes = $this->services->getVoteService()->findVotesOfUser($userId, $siteId, array($orderBy => $order), true, $page, $perPage);
+        $votes = $this->services->getVoteService()->findVotesOfUser($userId, $siteId, [$orderBy => $order], true, $page, $perPage);
         $votes->setCurrentPageNumber($page);
         $votes->setItemCountPerPage($perPage);
         $table = PaginatedTableFactory::createUserVotesTable($votes);
@@ -120,16 +120,17 @@ class UserController extends AbstractActionController
         if (!$user) {
             return $this->notFoundAction();
         }
-        return new ViewModel(array(
+        return new ViewModel([
             'user' => $user,
             'site' => $site,
-            'pages' => $this->getPagesTable($userId, $siteId, DbViewPages::CREATIONDATE, ORDER::DESCENDING, 1, 10),
+            'pages' => $this->getPagesTable($userId, $siteId, null, DbViewPagesAll::CREATIONDATE, ORDER::DESCENDING, 1, 10),
+            'deleted' => $this->services->getUserService()->countAuthorshipsOfUser($userId, $siteId, true),
             'fans' => $this->getFans($userId, $siteId, true),
             'tags' => $this->getFavoriteTags($userId, $siteId, true),
             'authors' => $this->getFavoriteAuthors($userId, $siteId, true),
             'allFavorites' => false,
             'votes' => $this->getVotesTable($userId, $siteId, DbViewVotes::DATETIME, ORDER::DESCENDING, 1, 10)
-        ));
+        ]);
     }
 
     public function apiUserAction()
@@ -145,38 +146,38 @@ class UserController extends AbstractActionController
     
     public function ratingChartAction()
     {
-        $result = array('success' => false);
+        $result = ['success' => false];
         $userId = (int)$this->params()->fromQuery('userId');
         $siteId = (int)$this->params()->fromQuery('siteId');
         $user = $this->services->getUserService()->find($userId);
         if ($user) {
             $byDate = new DateAggregate(DbViewVotes::DATETIME, 'Date');
             $count = new Aggregate(DbViewVotes::VALUE, Aggregate::SUM, 'Votes');
-            $votes = $this->services->getVoteService()->getAggregatedVotesOnUser($userId, $siteId, array($byDate, $count));
-            $resVotes = array();
+            $votes = $this->services->getVoteService()->getAggregatedVotesOnUser($userId, $siteId, [$byDate, $count]);
+            $resVotes = [];
             foreach ($votes as $vote) {
-                $resVotes[] = array($vote['Date']->format(\DateTime::ISO8601), (int)$vote['Votes']);
+                $resVotes[] = [$vote['Date']->format(\DateTime::ISO8601), (int)$vote['Votes']];
             }        
-            $authorships = $this->services->getUserService()->findAuthorshipsOfUser($userId, $siteId);
-            $milestones = array();
+            $authorships = $this->services->getUserService()->findAuthorshipsOfUser($userId, $siteId, false);
+            $milestones = [];
             foreach ($authorships as $auth) {
                 $name = $auth->getPage()->getTitle();
                 if (mb_strlen($name) > 11) {
                     $name = mb_substr($name, 0, 8).'...';
                 }
-                $milestones[] = array(
+                $milestones[] = [
                     $auth->getPage()->getCreationDate()->format(\DateTime::ISO8601), 
-                    array(
+                    [
                         'name' => $name,
                         'text' => $auth->getPage()->getTitle()
-                    )
-                );
+                    ]
+                ];
             }
-            $result = array(
+            $result = [
                 'success' => true,
                 'votes' => $resVotes,
                 'milestones' => $milestones,
-            );
+            ];
         }
         return new JsonModel($result);
     }    
@@ -187,23 +188,23 @@ class UserController extends AbstractActionController
         $siteId = (int)$this->params()->fromQuery('siteId');
         $page = (int)$this->params()->fromQuery('page', 1);
         $perPage = (int)$this->params()->fromQuery('perPage', 10);
-        $orderBy = $this->params()->fromQuery('orderBy', DbViewPages::CREATIONDATE);
+        $orderBy = $this->params()->fromQuery('orderBy', DbViewPagesAll::CREATIONDATE);
         $order = $this->params()->fromQuery('ascending', false);
         if ($order) {
             $order = Order::ASCENDING;
         } else {
             $order = Order::DESCENDING;
         }    
-        $table = $this->getPagesTable($userId, $siteId, $orderBy, $order, $page, $perPage);
+        $table = $this->getPagesTable($userId, $siteId, null, $orderBy, $order, $page, $perPage);
         $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
         if ($renderer) {
             $result['success'] = true;                
             $result['content'] = $renderer(
                 'partial/tables/default/table.phtml', 
-                array(
+                [
                     'table' => $table, 
-                    'data' => array()
-                )
+                    'data' => []
+                ]
             );
         }
         return new JsonModel($result);                        
@@ -228,10 +229,10 @@ class UserController extends AbstractActionController
             $result['success'] = true;                
             $result['content'] = $renderer(
                 'partial/tables/default/table.phtml', 
-                array(
+                [
                     'table' => $table, 
-                    'data' => array()
-                )
+                    'data' => []
+                ]
             );
         }
         return new JsonModel($result);                        
@@ -257,7 +258,7 @@ class UserController extends AbstractActionController
             $tags = $this->getFavoriteTags($userId, $siteId, $orderByRatio, $limit);
             $result['content'] = $renderer(
                 'application/user/partial/favorites.phtml', 
-                array(
+                [
                     'byRatio' => $orderByRatio,
                     'hasVotes' => count($favorites),
                     'hideVotes' => $site->getHideVotes(),
@@ -266,7 +267,7 @@ class UserController extends AbstractActionController
                     'tags' => $tags,
                     'fans' => $fans,
                     'all' => $all
-                )
+                ]
             );
         }
         return new JsonModel($result);                                

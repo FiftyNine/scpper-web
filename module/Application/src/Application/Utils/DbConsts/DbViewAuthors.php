@@ -11,6 +11,7 @@ class DbViewAuthors
     const PAGEID = 'PageId';
     const PAGENAME = 'PageName';
     const PAGETITLE = 'PageTitle';
+    const PAGEDELETED = 'PageDeleted';
     const STATUSID = 'StatusId';
     const KINDID = 'KindId';
     const STATUS = 'Status';

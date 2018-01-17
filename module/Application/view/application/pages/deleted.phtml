@@ -1,4 +1,4 @@
-<?php $this->headTitle('Revisions'); ?>
+<?php $this->headTitle('Deleted pages'); ?>
 <?php $this->headScript()->captureStart(); ?>
 
 // Anonymous self-executing function not to clutter global scope with temporary stuff
@@ -6,7 +6,10 @@
 
     function init()
     {
-        scpper.tables.assignPaginatorEvents('#editor-list', '/revisions/editorList', {siteId: <?php echo $this->site->getId();?>});
+        scpper.tables.assignPaginatorEvents('#page-list', '/pages/pageList', {
+            siteId: <?php echo $this->site->getId();?>,
+            deleted: 1
+        });
     }
 
     $(document).ready(init);
@@ -18,8 +21,8 @@
     <?php echo $this->partial('partial/site.phtml', ['site' => $this->site, 'link' => true]);?>
 </span>
 <p class="small-text">Updated <?php echo $this->site->getLastUpdate()->format('Y-m-d H:i'); ?></p>
-<h3>Editors (<?php echo $this->table->getPaginator()->getTotalItemCount();?> total)</h3>
-<div class="table-container" id="editor-list">
+<h3>Deleted pages (<?php echo $this->table->getPaginator()->getTotalItemCount();?> total)</h3>
+<div class="table-container" id="page-list">
 <?php
 $table = $this->table;
 
@@ -27,9 +30,7 @@ echo $this->partial(
     'partial/tables/default/table.phtml', 
     [
         'table' => $table,
-        'data' => [
-            'total' => $this->total
-        ]
+        'data' => ['siteId' => $this->site->getId()],
     ]
 );    
 ?>

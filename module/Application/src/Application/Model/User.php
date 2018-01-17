@@ -44,7 +44,7 @@ class User implements UserInterface
      * An associative array of [SiteId => UserActivityInterface]
      * @var array[int]\Application\Model\UserActivityInterface
      */
-    protected $activitiesBySite = array();
+    protected $activitiesBySite = [];
     
     /**
      * @var UserActivityInterface[] 
@@ -55,7 +55,7 @@ class User implements UserInterface
      * An associative array of [SiteId => MembershipInterface]
      * @var array[int]\Application\Model\MembershipInterface
      */
-    protected $membershipsBySite = array();
+    protected $membershipsBySite = [];
     
     /**
      * @var MembershipInterface[] 

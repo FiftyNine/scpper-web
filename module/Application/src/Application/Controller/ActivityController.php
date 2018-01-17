@@ -47,14 +47,14 @@ class ActivityController extends AbstractActionController
 
     protected function getEditorsPaginator($siteId, $from, $to, $orderBy, $order, $page, $perPage)
     {
-        $aggregates = array(
+        $aggregates = [
             new Aggregate(DbViewRevisions::USERID, Aggregate::NONE, null, true),
             new Aggregate(DbViewRevisions::USERWIKIDOTNAME, Aggregate::NONE, null, true),
             new Aggregate(DbViewRevisions::USERDISPLAYNAME, Aggregate::NONE, null, true),
             new Aggregate(DbViewRevisions::USERDELETED, Aggregate::NONE, null, true),            
             new Aggregate('*', Aggregate::COUNT, 'Revisions'),
-        );
-        $editors = $this->services->getRevisionService()->getAggregatedValues($siteId, $aggregates, $from, $to, array($orderBy => $order), true);
+        ];
+        $editors = $this->services->getRevisionService()->getAggregatedValues($siteId, $aggregates, $from, $to, [$orderBy => $order], true);
         $editors->setCurrentPageNumber($page);
         $editors->setItemCountPerPage($perPage); 
         return $editors;
@@ -62,15 +62,15 @@ class ActivityController extends AbstractActionController
 
     protected function getVotersPaginator($siteId, $from, $to, $orderBy, $order, $page, $perPage)
     {
-        $aggregates = array(
+        $aggregates = [
             new Aggregate(DbViewVotes::USERID, Aggregate::NONE, null, true),           
             new Aggregate(DbViewVotes::USERNAME, Aggregate::NONE, null, true),
             new Aggregate(DbViewVotes::USERDISPLAYNAME, Aggregate::NONE, null, true),
             new Aggregate(DbViewVotes::USERDELETED, Aggregate::NONE, null, true),            
             new Aggregate('*', Aggregate::COUNT, 'Votes'),
             new Aggregate(DbViewVotes::VALUE, Aggregate::SUM, 'Sum'),
-        );
-        $voters = $this->services->getVoteService()->getAggregatedForSite($siteId, $aggregates, $from, $to, array($orderBy => $order), true);
+        ];
+        $voters = $this->services->getVoteService()->getAggregatedForSite($siteId, $aggregates, $from, $to, [$orderBy => $order], true);
         $voters->setCurrentPageNumber($page);
         $voters->setItemCountPerPage($perPage);
         return $voters;
@@ -82,29 +82,35 @@ class ActivityController extends AbstractActionController
         $from = $this->params()->fromQuery('fromDate', '2000-01-01');
         $to = $this->params()->fromQuery('toDate', '2020-01-01');
         $fromDate = \DateTime::createFromFormat('Y-m-d', $from);
-        $toDate = \DateTime::createFromFormat('Y-m-d', $to);        
+        $toDate = \DateTime::createFromFormat('Y-m-d', $to);
+        if ($fromDate) {
+            $fromDate->setTime(0, 0, 0);
+        }
+        if ($toDate) {       
+            $toDate->setTime(23, 59, 59);        
+        }
         return $from && $to && $siteId > 0;
     }
     
     protected function getUsersData($siteId, $from, $to)
     {
-        $users = $this->services->getUserService()->findSiteMembers($siteId, UserType::ANY, false, $from, $to, array(DbViewMembership::JOINDATE => Order::ASCENDING), true);
+        $users = $this->services->getUserService()->findSiteMembers($siteId, UserType::ANY, false, $from, $to, [DbViewMembership::JOINDATE => Order::ASCENDING], true);
         $users->setCurrentPageNumber(1);
         $users->setItemCountPerPage(3);
         $table = PaginatedTableFactory::createMembersTable($users, true);
         $table->getColumns()->setOrder(DbViewMembership::JOINDATE);
-        $result = array(
-            'header' => array(
+        $result = [
+            'header' => [
                 'users' => $this->services->getUserService()->countSiteMembers($siteId, UserType::ANY, false, $from, $to)
-            ),
-            'list' => array(
+            ],
+            'list' => [
                 'voters' => $this->services->getUserService()->countSiteMembers($siteId, UserType::VOTER, false, $from, $to),
                 'contributors' => $this->services->getUserService()->countSiteMembers($siteId, UserType::CONTRIBUTOR, false, $from, $to),
                 'posters' => $this->services->getUserService()->countSiteMembers($siteId, UserType::POSTER, false, $from, $to),
                 'still active' => $this->services->getUserService()->countSiteMembers($siteId, UserType::ANY, true, $from, $to),
-            ),
+            ],
             'table' => $table,
-        );
+        ];
         return $result;
     }
     
@@ -112,43 +118,44 @@ class ActivityController extends AbstractActionController
     {
         $maxRating = new Aggregate(DbViewPages::CLEANRATING, Aggregate::MAX, 'MaxRating');
         $avgRating = new Aggregate(DbViewPages::CLEANRATING, Aggregate::AVERAGE, 'AvgRating');
-        $ratings = $this->services->getPageService()->getAggregatedValues($siteId, array($maxRating, $avgRating), $from, $to);
-        $pages = $this->services->getPageService()->findSitePages($siteId, PageStatus::ANY, $from, $to, array(DbViewPages::CREATIONDATE => Order::ASCENDING), true);
+        $ratings = $this->services->getPageService()->getAggregatedValues($siteId, [$maxRating, $avgRating], $from, $to);
+        $pages = $this->services->getPageService()->findSitePages($siteId, PageStatus::ANY, $from, $to, false, [DbViewPages::CREATIONDATE => Order::ASCENDING], true);
         $pages->setCurrentPageNumber(1);
         $pages->setItemCountPerPage(3);
         $table = PaginatedTableFactory::createPagesTable($pages, true);
         $table->getColumns()->setOrder(DbViewPages::CREATIONDATE);        
-        $result = array(
-            'header' => array(
-                'pages' => $this->services->getPageService()->countSitePages($siteId, PageStatus::ANY, $from, $to),
-            ),
-            'list' => array(
-                'originals' => $this->services->getPageService()->countSitePages($siteId, PageStatus::ORIGINAL, $from, $to),
-                'translations' => $this->services->getPageService()->countSitePages($siteId, PageStatus::TRANSLATION, $from, $to),
+        $result = [
+            'header' => [
+                'pages' => $this->services->getPageService()->countSitePages($siteId, PageStatus::ANY, $from, $to, null),
+            ],
+            'list' => [
+                'remains' => $this->services->getPageService()->countSitePages($siteId, PageStatus::ANY, $from, $to, false),
+                'originals' => $this->services->getPageService()->countSitePages($siteId, PageStatus::ORIGINAL, $from, $to, false),
+                'translations' => $this->services->getPageService()->countSitePages($siteId, PageStatus::TRANSLATION, $from, $to, false),
                 'highest rating' => $ratings[0]['MaxRating'],
-                'average rating' => number_format($ratings[0]['AvgRating'], 1)
-            ),
+                //'average rating' => number_format($ratings[0]['AvgRating'], 1)
+            ],
             'table' => $table
-        );
+        ];
         return $result;
     }    
     
     protected function getRevisionsData($siteId, $from, $to)
     {
         $pageIdGroup = new Aggregate(DbViewRevisions::PAGEID, Aggregate::NONE, 'Tmp', true);
-        $edited = $this->services->getRevisionService()->getAggregatedValues($siteId, array($pageIdGroup), $from, $to);
+        $edited = $this->services->getRevisionService()->getAggregatedValues($siteId, [$pageIdGroup], $from, $to);
         $editors = $this->getEditorsPaginator($siteId, $from, $to, 'Revisions', Order::DESCENDING, 1, 3);
         $table = PaginatedTableFactory::createEditorsTable($editors, true);
-        $result = array(
-            'header' => array(
+        $result = [
+            'header' => [
                 'revisions' => $this->services->getRevisionService()->countSiteRevisions($siteId, $from, $to)
-            ),
-            'list' => array(
+            ],
+            'list' => [
                 'edited pages' => count($edited),
                 'editors' => $editors->getTotalItemCount()
-            ),
+            ],
             'table' => $table
-        );                    
+        ];                    
         return $result;
     }        
 
@@ -156,16 +163,16 @@ class ActivityController extends AbstractActionController
     {
         $voters = $this->getVotersPaginator($site->getId(), $from, $to, 'Votes', Order::DESCENDING, 1, 3);
         $table = PaginatedTableFactory::createVotersTable($voters, $site->getHideVotes(), true);
-        $result = array(
-            'header' => array(
+        $result = [
+            'header' => [
                 'votes' => $this->services->getVoteService()->countSiteVotes($site->getId(), VoteType::ANY, $from, $to),
-            ),
-            'list' => array(
+            ],
+            'list' => [
                 'positive' => $this->services->getVoteService()->countSiteVotes($site->getId(), VoteType::POSITIVE, $from, $to),
                 'negative' => $this->services->getVoteService()->countSiteVotes($site->getId(), VoteType::NEGATIVE, $from, $to),
-            ),
+            ],
             'table' => $table
-        );
+        ];
         return $result;
     }
     
@@ -200,20 +207,20 @@ class ActivityController extends AbstractActionController
         }
         $from->setTime(0, 0, 0);
         $to->setTime(23, 59, 59);
-        $result = array(            
+        $result = [            
             'intervalForm' => $this->dateIntervalForm,
             'site' => $site,
             'users' => $this->getUsersData($siteId, $from, $to),
             'pages' => $this->getPagesData($siteId, $from, $to),
             'revisions' => $this->getRevisionsData($siteId, $from, $to),
             'votes' => $this->getVotesData($site, $from, $to),
-        );
+        ];
         return new ViewModel($result);
     }
     
     public function getUserChartDataAction()
     {
-        $result = array('success' => false);
+        $result = ['success' => false];
         $siteId = -1;
         $fromDate = null;
         $toDate = null;                
@@ -221,12 +228,13 @@ class ActivityController extends AbstractActionController
             $count = new Aggregate('*', Aggregate::COUNT, 'Number');
             $dateAgg = new DateAggregate(DbViewMembership::JOINDATE, 'Period');
             $dateAgg->setBestAggregateType($fromDate, $toDate);
-            $joins = $this->services->getUserService()->getMembershipAggregated($siteId, array($count, $dateAgg), UserType::ANY, false, $fromDate, $toDate);
+            $result['data'] = [];
+            $joins = $this->services->getUserService()->getMembershipAggregated($siteId, [$count, $dateAgg], UserType::ANY, false, $fromDate, $toDate);            
             foreach($joins as $join) {
-                $result['data'][] = array($join['Period']->format(\DateTime::ISO8601), $join['Number']);
+                $result['data'][] = [$join['Period']->format(\DateTime::ISO8601), $join['Number']];
             }
             $result['group'] = $dateAgg->getAggregateDescription();
-            $result['starting'] = $this->services->getUserService()->countSiteMembers($siteId, UserType::ANY, false, null, $fromDate);            
+            $result['starting'] = $this->services->getUserService()->countSiteMembers($siteId, UserType::ANY, false, null, $fromDate);
             $result['success'] = true;
         }        
         return new JsonModel($result);
@@ -234,20 +242,34 @@ class ActivityController extends AbstractActionController
     
     public function getPageChartDataAction()
     {
-        $result = array('success' => false);
+        $result = ['success' => false];
         $siteId = -1;
         $fromDate = null;
         $toDate = null;
         if ($this->getCommonParams($siteId, $fromDate, $toDate)) {
-            $count = new Aggregate('*', Aggregate::COUNT, 'Number');            
+            $count = new Aggregate('*', Aggregate::COUNT, 'Number');
             $dateAgg = new DateAggregate(DbViewPages::CREATIONDATE, 'Period');
             $dateAgg->setBestAggregateType($fromDate, $toDate);            
-            $pages = $this->services->getPageService()->getAggregatedValues($siteId, array($count, $dateAgg), $fromDate, $toDate);            
+            $combined = [];                        
+            $pages = $this->services->getPageService()->getAggregatedValues($siteId, [$count, $dateAgg], $fromDate, $toDate, false);            
             foreach ($pages as $page) {
-                $result['data'][] = array($page['Period']->format(\DateTime::ISO8601), $page['Number']);
+                $combined[$page['Period']->format(\DateTime::ISO8601)] = [$page['Number'], 0];
+            }
+            $deleted = $this->services->getPageService()->getAggregatedValues($siteId, [$count, $dateAgg], $fromDate, $toDate, true);
+            foreach ($deleted as $page) {
+                $period = $page['Period']->format(\DateTime::ISO8601);
+                if (array_key_exists($period, $combined)) {
+                    $combined[$period][1] = $page['Number'];
+                } else {
+                    $combined[$period] = [0, $page['Number']];
+                }
+            }            
+            $result['data'] = [];
+            foreach ($combined as $period => $data) {
+                $result['data'][] = [$period, $data[0], $data[1]];
             }
             $result['group'] = $dateAgg->getAggregateDescription();
-            $result['starting'] = $this->services->getPageService()->countSitePages($siteId, PageStatus::ANY, null, $fromDate);
+            $result['starting'] = $this->services->getPageService()->countSitePages($siteId, PageStatus::ANY, null, $fromDate, false);
             $result['success'] = true;
         }
         return new JsonModel($result);
@@ -255,7 +277,7 @@ class ActivityController extends AbstractActionController
     
     public function getRevisionChartDataAction()
     {
-        $result = array('success' => false);
+        $result = ['success' => false];
         $siteId = -1;
         $fromDate = null;
         $toDate = null;
@@ -263,9 +285,10 @@ class ActivityController extends AbstractActionController
             $count = new Aggregate('*', Aggregate::COUNT, 'Number');
             $dateAgg = new DateAggregate(DbViewRevisions::DATETIME, 'Period');
             $dateAgg->setBestAggregateType($fromDate, $toDate);            
-            $revs = $this->services->getRevisionService()->getAggregatedValues($siteId, array($count, $dateAgg), $fromDate, $toDate);
+            $result['data'] = [];
+            $revs = $this->services->getRevisionService()->getAggregatedValues($siteId, [$count, $dateAgg], $fromDate, $toDate);
             foreach($revs as $rev) {
-                $result['data'][] = array($rev['Period']->format(\DateTime::ISO8601), $rev['Number']);
+                $result['data'][] = [$rev['Period']->format(\DateTime::ISO8601), $rev['Number']];
             }
             $result['group'] = $dateAgg->getAggregateDescription();
             $result['starting'] = $this->services->getRevisionService()->countSiteRevisions($siteId, null, $fromDate);
@@ -276,7 +299,7 @@ class ActivityController extends AbstractActionController
 
     public function getVoteChartDataAction()
     {
-        $result = array('success' => false);
+        $result = ['success' => false];
         $siteId = -1;
         $fromDate = null;
         $toDate = null;
@@ -284,9 +307,10 @@ class ActivityController extends AbstractActionController
             $count = new Aggregate('*', Aggregate::COUNT, 'Number');
             $dateAgg = new DateAggregate(DbViewVotes::DATETIME, 'Period');
             $dateAgg->setBestAggregateType($fromDate, $toDate);            
-            $votes = $this->services->getVoteService()->getAggregatedForSite($siteId, array($count, $dateAgg), $fromDate, $toDate);            
+            $votes = $this->services->getVoteService()->getAggregatedForSite($siteId, [$count, $dateAgg], $fromDate, $toDate);
+            $result['data'] = [];
             foreach($votes as $vote) {
-                $result['data'][] = array($vote['Period']->format(\DateTime::ISO8601), $vote['Number']);
+                $result['data'][] = [$vote['Period']->format(\DateTime::ISO8601), $vote['Number']];
             }
             $result['group'] = $dateAgg->getAggregateDescription();
             $result['starting'] = $this->services->getVoteService()->countSiteVotes($siteId, VoteType::ANY, null, $fromDate);
@@ -297,7 +321,7 @@ class ActivityController extends AbstractActionController
     
     public function usersAction()
     {
-        $result = array('success' => false);
+        $result = ['success' => false];
         $siteId = -1;
         $from = null;
         $to = null;
@@ -314,7 +338,7 @@ class ActivityController extends AbstractActionController
             } else {
                 $order = Order::DESCENDING;
             }
-            $users = $this->services->getUserService()->findSiteMembers($siteId, UserType::ANY, false, $from, $to, array($orderBy => $order), true);
+            $users = $this->services->getUserService()->findSiteMembers($siteId, UserType::ANY, false, $from, $to, [$orderBy => $order], true);
             $users->setCurrentPageNumber($page);
             $users->setItemCountPerPage($perPage);
             $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
@@ -324,10 +348,10 @@ class ActivityController extends AbstractActionController
                 $result['success'] = true;                
                 $result['content'] = $renderer(
                     'partial/tables/default/table.phtml', 
-                    array(
+                    [
                         'table' => $table, 
-                        'data' => array('siteId' => $siteId)
-                    )
+                        'data' => ['siteId' => $siteId]
+                    ]
                 );
             }
         }        
@@ -336,13 +360,13 @@ class ActivityController extends AbstractActionController
     
     public function pagesAction()
     {
-        $result = array('success' => false);
+        $result = ['success' => false];
         $siteId = -1;
         $from = null;
         $to = null;
         if ($this->getCommonParams($siteId, $from, $to)) {
-            $page = (int)$this->params()->fromQuery("page", 1);
-            $perPage = (int)$this->params()->fromQuery("perPage", 10);
+            $page = (int)$this->params()->fromQuery('page', 1);
+            $perPage = (int)$this->params()->fromQuery('perPage', 10);
             $orderBy = $this->params()->fromQuery('orderBy', DbViewPages::CREATIONDATE);
             if (!DbViewPages::hasField($orderBy)) {
                 $orderBy = DbViewPages::CREATIONDATE;                
@@ -353,7 +377,7 @@ class ActivityController extends AbstractActionController
             } else {
                 $order = Order::DESCENDING;
             }
-            $pages = $this->services->getPageService()->findSitePages($siteId, PageStatus::ANY, $from, $to, array($orderBy => $order), true);
+            $pages = $this->services->getPageService()->findSitePages($siteId, PageStatus::ANY, $from, $to, false, [$orderBy => $order], true);
             $pages->setCurrentPageNumber($page);
             $pages->setItemCountPerPage($perPage);
             $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
@@ -363,10 +387,10 @@ class ActivityController extends AbstractActionController
                 $result['success'] = true;                
                 $result['content'] = $renderer(
                     'partial/tables/default/table.phtml', 
-                    array(
+                    [
                         'table' => $table, 
-                        'data' => array()
-                    )
+                        'data' => []
+                    ]
                 );
             }
         }        
@@ -375,7 +399,7 @@ class ActivityController extends AbstractActionController
 
     public function editorsAction()
     {
-        $result = array('success' => false);
+        $result = ['success' => false];
         $siteId = -1;
         $from = null;
         $to = null;
@@ -400,12 +424,12 @@ class ActivityController extends AbstractActionController
                 $result['success'] = true;                
                 $result['content'] = $renderer(
                     'partial/tables/default/table.phtml', 
-                    array(
+                    [
                         'table' => $table, 
-                        'data' => array(
+                        'data' => [
                             'total' => $this->services->getRevisionService()->countSiteRevisions($siteId, $from, $to)
-                        )
-                    )
+                        ]
+                    ]
                 );
             }
         }        
@@ -414,7 +438,7 @@ class ActivityController extends AbstractActionController
 
     public function votersAction()
     {
-        $result = array('success' => false);
+        $result = ['success' => false];
         $siteId = -1;
         $from = null;
         $to = null;
@@ -440,11 +464,10 @@ class ActivityController extends AbstractActionController
                 $result['success'] = true;                
                 $result['content'] = $renderer(
                     'partial/tables/default/table.phtml', 
-                    array(
+                    [
                         'table' => $table, 
-                        'data' => array(
-                        )
-                    )
+                        'data' => []
+                    ]
                 );
             }
         }        

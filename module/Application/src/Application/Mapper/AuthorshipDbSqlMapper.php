@@ -26,11 +26,11 @@ use Application\Utils\PageKind;
  */
 class AuthorshipDbSqlMapper extends ZendDbSqlMapper implements AuthorshipMapperInterface
 {
-    const COLUMNS = array(
+    const COLUMNS = [
         DbViewAuthors::PAGEID, 
         DbViewAuthors::USERID,
         DbViewAuthors::ROLEID        
-    );
+    ];
     
     /**
      *
@@ -46,7 +46,7 @@ class AuthorshipDbSqlMapper extends ZendDbSqlMapper implements AuthorshipMapperI
     protected function buildAuthorSummarySelect(Sql $sql)
     {
         $select = $sql->select(DbViewAuthors::TABLE)
-                ->columns(array(
+                ->columns([
                         DbViewAuthors::USERID => DbViewAuthors::USERID,
                         DbViewAuthors::SITEID => DbViewAuthors::SITEID,
                         AuthorSummaryConsts::PAGES => new Expression('COUNT(*)'),
@@ -59,16 +59,30 @@ class AuthorshipDbSqlMapper extends ZendDbSqlMapper implements AuthorshipMapperI
                         AuthorSummaryConsts::TOTAL_RATING => new Expression(sprintf('SUM(%s)', DbViewAuthors::RATING)),
                         AuthorSummaryConsts::AVERAGE_RATING => new Expression(sprintf('SUM(%s)/COUNT(*)', DbViewAuthors::RATING)),
                         AuthorSummaryConsts::HIGHEST_RATING => new Expression(sprintf('MAX(%s)', DbViewAuthors::RATING))
-                ))
-                ->group(array(
+                ])
+                ->group([
                         DbViewAuthors::USERID, 
                         DbViewAuthors::SITEID
-                ))
-                ->where(
-                    array(
-                        '('.DbViewAuthors::KINDID.' IS NULL OR '.DbViewAuthors::KINDID.' <> '.PageKind::SERVICE.')'
-                    )
-                );
+                ])
+                ->where([
+                        '('.DbViewAuthors::KINDID.' IS NULL OR '.DbViewAuthors::KINDID.' <> '.PageKind::SERVICE.')',
+                        DbViewAuthors::PAGEDELETED.' = 0'
+                ]);
+        return $select;
+    }
+    
+    protected function buildAuthorshipsOfUserSelect(Sql $sql, $userId, $siteId, $deleted)
+    {
+        $select = $sql->select(DbViewAuthors::TABLE)
+                ->columns(self::COLUMNS)
+                ->where([
+                    DbViewAuthors::USERID.' = ?' => $userId,
+                    DbViewAuthors::SITEID.' = ?' => $siteId,
+                    '('.DbViewAuthors::KINDID.' IS NULL OR '.DbViewAuthors::KINDID.' <> '.PageKind::SERVICE.')',                    
+                ]);
+        if (!is_null($deleted)) {
+            $select->where([DbViewAuthors::PAGEDELETED.' = ?' => (int)$deleted]);
+        }
         return $select;
     }
     
@@ -91,23 +105,17 @@ class AuthorshipDbSqlMapper extends ZendDbSqlMapper implements AuthorshipMapperI
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select(DbViewAuthors::TABLE)
                 ->columns(self::COLUMNS)
-                ->where(array(DbViewAuthors::PAGEID.' = ?' => $pageId));
+                ->where([DbViewAuthors::PAGEID.' = ?' => $pageId]);
         return $this->fetchResultSet($sql, $select);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function findAuthorshipsOfUser($userId, $siteId, $order = null, $paginated = false) 
+    public function findAuthorshipsOfUser($userId, $siteId, $deleted = false, $order = null, $paginated = false) 
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $sql->select(DbViewAuthors::TABLE)
-                ->columns(self::COLUMNS)
-                ->where(array(
-                    DbViewAuthors::USERID.' = ?' => $userId,
-                    DbViewAuthors::SITEID.' = ?' => $siteId,
-                    '('.DbViewAuthors::KINDID.' IS NULL OR '.DbViewAuthors::KINDID.' <> '.PageKind::SERVICE.')'
-                ));
+        $select = $this->buildAuthorshipsOfUserSelect($sql, $userId, $siteId, $deleted);
         if (is_array($order)) {
             $this->orderSelect($select, $order);
         }
@@ -120,14 +128,24 @@ class AuthorshipDbSqlMapper extends ZendDbSqlMapper implements AuthorshipMapperI
     /**
      * {@inheritDoc}
      */
+    public function countAuthorshipsOfUser($userId, $siteId, $deleted = false)
+    {
+        $sql = new Sql($this->dbAdapter);
+        $select = $this->buildAuthorshipsOfUserSelect($sql, $userId, $siteId, $deleted);
+        return $this->fetchCount($sql, $select);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public function getAuthorSummary($userId, $siteId)
     {
         $sql = new Sql($this->dbAdapter);
         $select = $this->buildAuthorSummarySelect($sql);
-        $select->where(array(
+        $select->where([
             DbViewAuthors::USERID.' = ?' => $userId,
             DbViewAuthors::SITEID.' = ?' => $siteId,
-        ));
+        ]);
         return $this->fetchObject($sql, $select, $this->getSummaryHydrator(), new AuthorSummary());
     }    
 
@@ -138,17 +156,17 @@ class AuthorshipDbSqlMapper extends ZendDbSqlMapper implements AuthorshipMapperI
     {
         $sql = new Sql($this->dbAdapter);
         $subSelect = $sql->select(DbViewUserRank::TABLE)
-                ->columns(array(new Expression('COUNT(*)')))
-                ->where(array(
+                ->columns([new Expression('COUNT(*)')])
+                ->where([
                     DbViewUserRank::TOTAL.' > r.'.DbViewUserRank::TOTAL,
                     DbViewUserRank::SITEID.' = r.'.DbViewUserRank::SITEID,
-                ));        
-        $select = $sql->select(array('r' => DbViewUserRank::TABLE))
-                ->columns(array('Rank' => $subSelect), false)
-                ->where(array(
+                ]);        
+        $select = $sql->select(['r' => DbViewUserRank::TABLE])
+                ->columns(['Rank' => $subSelect], false)
+                ->where([
                     DbViewUserRank::USERID.' = ?' => $userId,
                     DbViewUserRank::SITEID.' = ?' => $siteId
-                ));
+                ]);
         $res = $this->fetchArray($sql, $select);
         if (count($res) === 1) {
             return $res[0]['Rank'];
@@ -163,9 +181,9 @@ class AuthorshipDbSqlMapper extends ZendDbSqlMapper implements AuthorshipMapperI
     {
         $sql = new Sql($this->dbAdapter);
         $select = $this->buildAuthorSummarySelect($sql);
-        $select->where(array(
+        $select->where([
             DbViewAuthors::SITEID.' = ?' => $siteId,
-        ));
+        ]);
         if (is_array($order)) {
             $this->orderSelect($select, $order);
         }

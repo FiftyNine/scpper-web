@@ -48,7 +48,7 @@ class PageController extends AbstractActionController
      */
     protected function getRevisionsTable($pageId, $orderBy, $order, $page, $perPage)
     {
-        $revisions = $this->services->getRevisionService()->findRevisionsOfPage($pageId, array($orderBy => $order), true, $page, $perPage);
+        $revisions = $this->services->getRevisionService()->findRevisionsOfPage($pageId, [$orderBy => $order], true, $page, $perPage);
         $table = PaginatedTableFactory::createRevisionsTable($revisions);
         $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);        
         return $table;        
@@ -65,7 +65,7 @@ class PageController extends AbstractActionController
      */
     protected function getVotesTable($pageId, $orderBy, $order, $page, $perPage)
     {
-        $votes = $this->services->getVoteService()->findVotesOnPage($pageId, array($orderBy => $order), true, $page, $perPage);
+        $votes = $this->services->getVoteService()->findVotesOnPage($pageId, [$orderBy => $order], true, $page, $perPage);
         $table = PaginatedTableFactory::createPageVotesTable($votes);
         $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);
         return $table;
@@ -109,12 +109,12 @@ class PageController extends AbstractActionController
             ];
         }
         $fieldset->get(PageReportFieldset::CONTRIBUTORS)->populateValues($contributors);
-        return new ViewModel(array(
+        return new ViewModel([
             'page' => $page,
             'revisions' => $this->getRevisionsTable($pageId, DbViewRevisions::REVISIONINDEX, Order::DESCENDING, 1, 10),
             'votes' => $this->getVotesTable($pageId, DbViewVotes::DATETIME, Order::DESCENDING, 1, 10),
             'reportForm' => $reportForm
-        ));
+        ]);
     }
     
     public function apiPageAction()
@@ -133,27 +133,27 @@ class PageController extends AbstractActionController
         $pageId = (int)$this->params()->fromQuery('pageId');
         $byDate = new DateAggregate(DbViewVotes::DATETIME, 'Date');
         $count = new Aggregate(DbViewVotes::VALUE, Aggregate::SUM, 'Votes');
-        $votes = $this->services->getVoteService()->getAggregatedForPage($pageId, array($byDate, $count), true);
-        $resVotes = array();
+        $votes = $this->services->getVoteService()->getAggregatedForPage($pageId, [$byDate, $count], true);
+        $resVotes = [];
         foreach ($votes as $vote) {
-            $resVotes[] = array($vote['Date']->format(\DateTime::ISO8601), (int)$vote['Votes']);
+            $resVotes[] = [$vote['Date']->format(\DateTime::ISO8601), (int)$vote['Votes']];
         }
         $revisions = $this->services->getRevisionService()->findRevisionsOfPage($pageId);
-        $resRevisions = array();
+        $resRevisions = [];
         foreach ($revisions as $rev) {
-            $resRevisions[] = array(
+            $resRevisions[] = [
                 $rev->getDateTime()->format(\DateTime::ISO8601), 
-                array(
+                [
                     'name' => (string)($rev->getIndex()+1),
                     'text' => $rev->getComments()==='' ? $rev->getUser()->getDisplayName() : sprintf('%s: "%s"', $rev->getUser()->getDisplayName(), $rev->getComments())
-                )
-            );
+                ]
+            ];
         }
-        return new JsonModel(array(
+        return new JsonModel([
             'success' => true,
             'votes' => $resVotes,
             'milestones' => $resRevisions,
-        ));
+        ]);
     }
     
     public function revisionListAction()
@@ -174,10 +174,10 @@ class PageController extends AbstractActionController
             $result['success'] = true;                
             $result['content'] = $renderer(
                 'partial/tables/default/table.phtml', 
-                array(
+                [
                     'table' => $table, 
-                    'data' => array()
-                )
+                    'data' => []
+                ]
             );
         }
         return new JsonModel($result);                
@@ -201,10 +201,10 @@ class PageController extends AbstractActionController
             $result['success'] = true;                
             $result['content'] = $renderer(
                 'partial/tables/default/table.phtml', 
-                array(
+                [
                     'table' => $table, 
-                    'data' => array()
-                )
+                    'data' => []
+                ]
             );
         }
         return new JsonModel($result);                
@@ -239,7 +239,7 @@ class PageController extends AbstractActionController
         $result = ['success' => true];
         $siteId = (int)$this->params()->fromQuery('siteId', $this->services->getUtilityService()->getSiteId());
         $query = $this->params()->fromQuery('query', '');
-        $pages = $this->services->getPageService()->findByName($query, [$siteId], [DbViewPages::CLEANRATING => Order::DESCENDING], true);
+        $pages = $this->services->getPageService()->findByName($query, [$siteId], false, [DbViewPages::CLEANRATING => Order::DESCENDING], true);
         $pages->setItemCountPerPage($maxItems);
         $result['pages'] = [];
         foreach ($pages as $page) {

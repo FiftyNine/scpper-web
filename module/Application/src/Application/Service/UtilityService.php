@@ -7,7 +7,6 @@ use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\PhpEnvironment\Response;
 use Zend\Http\Header\SetCookie;
 use Zend\View\Model\ViewModel;
-use Application\Model\SiteInterface;
 use Application\Form\SearchForm;
 
 class UtilityService implements UtilityServiceInterface
@@ -93,10 +92,10 @@ class UtilityService implements UtilityServiceInterface
      */
     public function attachSearchForm(ViewModel $viewModel)
     {
-        $viewModel->setVariables(array(
+        $viewModel->setVariables([
             'searchForm' => $this->searchForm,
             'site' => $this->siteService->find($this->getSiteId())
-        ));
+        ]);
     }
     
     /**
@@ -138,7 +137,7 @@ class UtilityService implements UtilityServiceInterface
             $logger->info("    const TABLE = '{$table}';");
             $columns = $metadata->getColumnNames($table, $schema);
             foreach ($columns as $column) {
-                $logger->info(vsprintf("    const %s = '%s';", array(strtoupper($column), $column)));
+                $logger->info(vsprintf("    const %s = '%s';", [strtoupper($column), $column]));
             }
             $logger->info('');
             $hasConst = '

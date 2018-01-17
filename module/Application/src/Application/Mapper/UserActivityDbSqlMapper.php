@@ -28,10 +28,10 @@ class UserActivityDbSqlMapper extends ZendDbSqlMapper implements UserActivityMap
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select(DbViewUserActivity::TABLE)
                 ->columns(DbSelectColumns::USER_ACTIVITY)
-                ->where(array(
+                ->where([
                     DbViewUserActivity::USERID.' = ?' => $userId,
                     DbViewUserActivity::SITEID.' = ?' => $siteId,
-                ));
+                ]);
         return $this->fetchObject($sql, $select);
     }
 
@@ -43,9 +43,9 @@ class UserActivityDbSqlMapper extends ZendDbSqlMapper implements UserActivityMap
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select(DbViewUserActivity::TABLE)
                 ->columns(DbSelectColumns::USER_ACTIVITY)
-                ->where(array(
+                ->where([
                     DbViewUserActivity::USERID.' = ?' => $userId
-                ));
+                ]);
         return $this->fetchResultSet($sql, $select);        
     }
     
@@ -76,7 +76,7 @@ class UserActivityDbSqlMapper extends ZendDbSqlMapper implements UserActivityMap
     {
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select(DbViewUserActivity::TABLE)
-                ->columns(array('a' => $aggregate->getAggregateExpression()))
+                ->columns(['a' => $aggregate->getAggregateExpression()])
                 ->where($conditions);
         $res = $this->fetchArray($sql, $select);
         if ($res) {

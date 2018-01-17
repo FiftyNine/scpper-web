@@ -44,20 +44,20 @@ class NavigationFactory extends AbstractNavigationFactory
         $result = parent::getPagesFromConfig($config);
         $activeSite = $this->utilityService->getSiteId();
         $sites = $this->siteService->findAll();
-        $sitePages = array();
+        $sitePages = [];
         foreach ($sites as $site) {
             $isActive = $site->getId() === $activeSite;
             if ($isActive) {
                 $result[0]['label'] = $site->getEnglishName();
             }
-            $sitePages[] = array(
+            $sitePages[] = [
                 'label' => $site->getEnglishName(),
                 'route' => 'select-site',
                 'active' => $isActive,
-                'query' => array(
+                'query' => [
                     'siteId' => $site->getId()                        
-                )
-            );
+                ]
+            ];
         }
         $result[0]['pages'] = $sitePages;
         return $result;

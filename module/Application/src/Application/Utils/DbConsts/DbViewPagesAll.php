@@ -2,9 +2,9 @@
 
 namespace Application\Utils\DbConsts;
 
-class DbViewPages
+class DbViewPagesAll
 {
-    const TABLE = 'view_pages';
+    const TABLE = 'view_pages_all';
     const __ID = '__Id';
     const SITEID = 'SiteId';
     const PAGEID = 'PageId';

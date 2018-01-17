@@ -27,7 +27,7 @@ class PageKind
     const AUDIO = 9;
     const AUTHOR_PAGE = 10;
     
-    const DESCRIPTIONS = array(
+    const DESCRIPTIONS = [
         self::UNKNOWN => 'Unknown',
         self::SCP => 'SCP',
         self::TALE => 'Tale',
@@ -38,7 +38,7 @@ class PageKind
         self::SERVICE => 'Service',
         self::ESSAY => 'Essay',
         self::AUDIO => 'Audio',
-        self::AUTHOR_PAGE => "Authors page");
+        self::AUTHOR_PAGE => "Authors page"];
     
     /**
      * Get description for page kind
