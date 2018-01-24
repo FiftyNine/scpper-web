@@ -119,7 +119,7 @@ class ActivityController extends AbstractActionController
         $maxRating = new Aggregate(DbViewPages::CLEANRATING, Aggregate::MAX, 'MaxRating');
         $avgRating = new Aggregate(DbViewPages::CLEANRATING, Aggregate::AVERAGE, 'AvgRating');
         $ratings = $this->services->getPageService()->getAggregatedValues($siteId, [$maxRating, $avgRating], $from, $to);
-        $pages = $this->services->getPageService()->findSitePages($siteId, PageStatus::ANY, $from, $to, false, [DbViewPages::CREATIONDATE => Order::ASCENDING], true);
+        $pages = $this->services->getPageService()->findSitePages($siteId, PageStatus::ANY, $from, $to, false, [DbViewPages::CREATIONDATE => Order::DESCENDING], true);
         $pages->setCurrentPageNumber(1);
         $pages->setItemCountPerPage(3);
         $table = PaginatedTableFactory::createPagesTable($pages, true);
@@ -371,7 +371,7 @@ class ActivityController extends AbstractActionController
             if (!DbViewPages::hasField($orderBy)) {
                 $orderBy = DbViewPages::CREATIONDATE;                
             }
-            $order = $this->params()->fromQuery('ascending', true);
+            $order = $this->params()->fromQuery('ascending', false);
             if ($order) {
                 $order = Order::ASCENDING;
             } else {
