@@ -263,7 +263,8 @@ class ActivityController extends AbstractActionController
                 } else {
                     $combined[$period] = [0, $page['Number']];
                 }
-            }            
+            }
+            ksort($combined);
             $result['data'] = [];
             foreach ($combined as $period => $data) {
                 $result['data'][] = [$period, $data[0], $data[1]];
