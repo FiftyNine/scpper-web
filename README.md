@@ -56,7 +56,8 @@ Selects a page with WikidotId = 13327521 (SCP-1981 - "RONALD REAGAN CUT UP WHILE
          "user":"Digiwizzard",
          "role":"Author"
       }
-   ]
+   ],
+  "deleted":false
 }
 ```
 </p>
@@ -147,7 +148,7 @@ Selects a user with WikidotId = 224440 (TheDuckman)
 ---
 
 **Method**: find-pages  
-**Description**: retrieves up to *limit* pages from the specified wiki with part of the name matching *title* 
+**Description**: retrieves up to *limit* pages from the specified wiki with part of the name matching *title*  
 **Type**: GET  
 **Arguments**:  
 + "**site**": Short name from the list of available sites (see below)  
@@ -235,7 +236,7 @@ Randomly selects from the english wiki up to 2 pages which have "king" in their 
 ---
 
 **Method**: find-users  
-**Description**: retrieves up to *limit* users from the with part of the name matching *name* 
+**Description**: retrieves up to *limit* users from the with part of the name matching *name*  
 **Type**: GET  
 **Arguments**:  
 + "**site**": Optional. Short name from the list of available sites (see below). If specified, only searches amongst members of the site. Otherwise - amongst all users.

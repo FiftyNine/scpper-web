@@ -589,7 +589,7 @@ class Page implements PageInterface
  
     public function setDeleted($value)
     {
-        $this->deleted = $value;
+        $this->deleted = (bool) $value;
     }
     
     /**
