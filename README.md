@@ -412,3 +412,4 @@ Randomly selects from the english wiki up to 2 pages that have both tags "scp" a
 + German branch (scp-wiki-de.wikidot.com):        "de"  
 + Chinese branch (scp-wiki-cn.wikidot.com):       "cn"  
 + Italian branch (fondazionescp.wikidot.com):     "it"  
++ SCP International (scp-int.wikidot.com):        "int"  
