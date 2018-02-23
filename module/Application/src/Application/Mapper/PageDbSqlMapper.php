@@ -111,25 +111,36 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
         $lower = mb_strtolower($mask);
         $regexp = sprintf('(^|[^[:alnum:]])%s($|[^[:alnum:]])', $lower);
         $sql = new Sql($this->dbAdapter);
-        $select = $sql->select(['p' => DbViewPagesAll::TABLE])
+        $inTitle = 'InTitle';
+        $inAltTitle = 'InAltTitle';
+        $inName = 'InName';
+        $subSelect = $sql->select(['p' => DbViewPagesAll::TABLE])
                 ->columns([
                     '' => Select::SQL_STAR, 
-                    'InTitle' => new Expression(sprintf('CASE WHEN %s RLIKE ? THEN 1 ELSE 0 END', DbViewPagesAll::TITLE), [$regexp]),
-                    'InAltTitle' => new Expression(sprintf('CASE WHEN %s RLIKE ? THEN 1 ELSE 0 END', DbViewPagesAll::ALTTITLE), [$regexp]),
-                    'Relevance' => new Expression(sprintf('MATCH (%s, %s) AGAINST (? IN NATURAL LANGUAGE MODE)', DbViewPagesAll::TITLE, DbViewPagesAll::ALTTITLE), [$lower])
+                    $inTitle => new Expression(sprintf('CASE WHEN %s RLIKE ? THEN 1 ELSE 0 END', DbViewPagesAll::TITLE), [$regexp]),
+                    $inAltTitle => new Expression(sprintf('CASE WHEN %s RLIKE ? THEN 1 ELSE 0 END', DbViewPagesAll::ALTTITLE), [$regexp]),
+                    $inName => new Expression(sprintf('CASE WHEN %s RLIKE ? THEN 1 ELSE 0 END', DbViewPagesAll::PAGENAME), [$regexp]),                    
                 ])
-                ->where(new Predicate\Expression(sprintf('MATCH (%s, %s) AGAINST (? IN NATURAL LANGUAGE MODE)', DbViewPagesAll::TITLE, DbViewPagesAll::ALTTITLE), [$lower]));
+                ->where(new Predicate\Expression(sprintf('MATCH (%s, %s, %s) AGAINST (? IN NATURAL LANGUAGE MODE)', DbViewPagesAll::TITLE, DbViewPagesAll::ALTTITLE, DbViewPagesAll::PAGENAME), [$lower]));
         if (is_array($sites)) {
-            $select = $select->where(new Predicate\In(DbViewPagesAll::SITEID, $sites));
+            $subSelect = $subSelect->where(new Predicate\In(DbViewPagesAll::SITEID, $sites));
         }
         if (!is_null($deleted)) {
-            $select->where(['p.'.DbViewPagesAll::DELETED.' = ?' => (int)$deleted]);
+            $subSelect->where(['p.'.DbViewPagesAll::DELETED.' = ?' => (int)$deleted]);
         }        
+        $select = $sql->select(['p' => $subSelect])
+                       ->where([
+                           sprintf('%s = 1 OR %s = 1 OR %s = 1', $inTitle, $inAltTitle, $inName),
+                       ]);       
         if (!is_array($order)) {
+            $len = strlen($lower);
             $order = [
                 'InTitle' => Order::DESCENDING,
+                sprintf('LENGTH(%s) - %d', DbViewPagesAll::TITLE, $len) => Order::ASCENDING,
                 'InAltTitle' => Order::DESCENDING,
-                'Relevance' => Order::DESCENDING,
+                sprintf('LENGTH(%s) - %d', DbViewPagesAll::ALTTITLE, $len) => Order::ASCENDING,                
+                'InName' => Order::DESCENDING,
+                sprintf('LENGTH(%s) - %d', DbViewPagesAll::PAGENAME, $len) => Order::ASCENDING,
                 DbViewPagesAll::CLEANRATING => Order::DESCENDING, 
                 DbViewPagesAll::CREATIONDATE => Order::ASCENDING
             ];
