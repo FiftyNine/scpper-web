@@ -94,11 +94,11 @@ class ActivityController extends AbstractActionController
     
     protected function getUsersData($siteId, $from, $to)
     {
-        $users = $this->services->getUserService()->findSiteMembers($siteId, UserType::ANY, false, $from, $to, [DbViewMembership::JOINDATE => Order::ASCENDING], true);
+        $users = $this->services->getUserService()->findSiteMembers($siteId, UserType::ANY, false, $from, $to, [DbViewMembership::JOINDATE => Order::DESCENDING], true);
         $users->setCurrentPageNumber(1);
         $users->setItemCountPerPage(3);
         $table = PaginatedTableFactory::createMembersTable($users, true);
-        $table->getColumns()->setOrder(DbViewMembership::JOINDATE);
+        $table->getColumns()->setOrder(DbViewMembership::JOINDATE, false);
         $result = [
             'header' => [
                 'users' => $this->services->getUserService()->countSiteMembers($siteId, UserType::ANY, false, $from, $to)
@@ -333,7 +333,7 @@ class ActivityController extends AbstractActionController
             if (!DbViewMembership::hasField($orderBy)) {
                 $orderBy = DbViewMembership::JOINDATE;                
             }
-            $order = $this->params()->fromQuery('ascending', true);
+            $order = $this->params()->fromQuery('ascending', false);
             if ($order) {
                 $order = Order::ASCENDING;
             } else {
