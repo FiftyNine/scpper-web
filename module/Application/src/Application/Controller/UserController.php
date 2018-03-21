@@ -272,4 +272,20 @@ class UserController extends AbstractActionController
         }
         return new JsonModel($result);                                
     }   
+    
+    public function searchAction()
+    {
+        $maxItems = 50;
+        $result = ['success' => true];
+        $query = $this->params()->fromQuery('query', '');
+        $users = $this->services->getUserService()->findByName($query, null, true);
+        $users->setItemCountPerPage($maxItems);
+        $result['users'] = [];
+        foreach ($users as $user) {
+            $result['users'][] = [
+                'id' => $user->getId(),
+                'label' => $user->getDisplayName()];
+        }
+        return new JsonModel($result);
+    }      
 }
