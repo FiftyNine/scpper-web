@@ -33,7 +33,7 @@ class TagsController extends AbstractActionController
 
     protected function getPagesTable($siteId, $includeTags, $excludeTags, $all, $orderBy, $order, $page, $perPage)
     {
-        $pages = $this->services->getPageService()->findPagesByTags($siteId, $includeTags, $excludeTags, $all, false, [$orderBy => $order], true);
+        $pages = $this->services->getPageService()->findPagesByTags($siteId, $includeTags, $excludeTags, $all, false, [$orderBy => $order], true, $page, $perPage);
         $pages->setCurrentPageNumber($page);
         $pages->setItemCountPerPage($perPage);
         $table = PaginatedTableFactory::createPagesTable($pages);
@@ -107,8 +107,8 @@ class TagsController extends AbstractActionController
         } else {
             $orderBy = [DbViewPages::CLEANRATING => Order::DESCENDING];
         }
-        $pages = $this->services->getPageService()->findPagesByTags($site->getId(), $includeTags, $excludeTags, $method==='and', false, $orderBy, true);
-        $pages->setItemCountPerPage($limit);
+        $pages = $this->services->getPageService()->findPagesByTags($site->getId(), $includeTags, $excludeTags, $method==='and', false, $orderBy, true, 1, $limit);
+        // $pages->setItemCountPerPage($limit);
         foreach ($pages as $page) {
             $result['pages'][] = $page->toArray();
         }

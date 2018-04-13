@@ -41,15 +41,7 @@ class VotesController extends AbstractActionController
      */
     protected function getVotersTable($site, $orderBy, $order, $page, $perPage)
     {
-        $aggregates = [
-            new Aggregate(DbViewVotes::USERID, Aggregate::NONE, null, true),
-            new Aggregate(DbViewVotes::USERNAME, Aggregate::NONE, null, true),
-            new Aggregate(DbViewVotes::USERDISPLAYNAME, Aggregate::NONE, null, true),
-            new Aggregate(DbViewVotes::USERDELETED, Aggregate::NONE, null, true),
-            new Aggregate('*', Aggregate::COUNT, 'Votes'),
-            new Aggregate(DbViewVotes::VALUE, Aggregate::SUM, 'Sum'),
-        ];
-        $voters = $this->services->getVoteService()->getAggregatedForSite($site->getId(), $aggregates, null, null, [$orderBy => $order], true);
+        $voters = $this->getServiceLocator()->get('UserActivityMapper')->findSiteActivities($site->getId(), [$orderBy => $order], true, true);
         $voters->setCurrentPageNumber($page);
         $voters->setItemCountPerPage($perPage);
         $table = PaginatedTableFactory::createVotersTable($voters, $site->getHideVotes());
@@ -89,7 +81,7 @@ class VotesController extends AbstractActionController
             'site' => $site,
             'votersTable' => $voters,
             'votesTable' => $votes
-        ];
+        ];        
         return new ViewModel($result);
     }  
        

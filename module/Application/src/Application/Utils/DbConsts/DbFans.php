@@ -2,15 +2,15 @@
 
 namespace Application\Utils\DbConsts;
 
-class DbVotes
+class DbFans
 {
-    const TABLE = 'votes';
+    const TABLE = 'fans';
     const __ID = '__Id';
-    const PAGEID = 'PageId';
+    const SITEID = 'SiteId';
     const USERID = 'UserId';
-    const VALUE = 'Value';
-    const DATETIME = 'DateTime';
-    const UNIXTIME = 'UNIXTIME';
+    const AUTHORID = 'AuthorId';
+    const POSITIVE = 'Positive';
+    const NEGATIVE = 'Negative';
 
 
     static public function hasField($field) 

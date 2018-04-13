@@ -38,6 +38,30 @@ class UserActivityDbSqlMapper extends ZendDbSqlMapper implements UserActivityMap
     /**
      * {@inheritDoc}
      */
+    public function findSiteActivities($siteId, $order = null, $paginated = false, $asArray = false)
+    {
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select(DbViewUserActivity::TABLE)
+                // ->columns('*')
+                ->where([
+                    DbViewUserActivity::SITEID.' = ?' => $siteId
+                ]);
+        if (is_array($order)) {
+            $this->orderSelect($select, $order);
+        }
+        if ($paginated) {
+            return $this->getPaginator($select, $asArray);
+        }
+        if ($asArray) {
+            return $this->fetchArray($sql, $select);
+        } else {
+            return $this->fetchResultSet($sql, $select);
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public function findUserActivities($userId) 
     {
         $sql = new Sql($this->dbAdapter);
@@ -65,7 +89,7 @@ class UserActivityDbSqlMapper extends ZendDbSqlMapper implements UserActivityMap
         }
         if ($paginated) {
             return $this->getPaginator($select, true);
-        }        
+        }
         return $this->fetchArray($sql, $select);
     }
     

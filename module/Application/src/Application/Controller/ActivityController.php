@@ -22,6 +22,7 @@ use Application\Utils\DbConsts\DbViewMembership;
 use Application\Utils\DbConsts\DbViewPages;
 use Application\Utils\DbConsts\DbViewRevisions;
 use Application\Utils\DbConsts\DbViewVotes;
+use Application\Utils\DbConsts\DbViewUserActivity;
 use Application\Utils\Aggregate;
 use Application\Utils\DateAggregate;
 use Application\Utils\Order;
@@ -63,12 +64,12 @@ class ActivityController extends AbstractActionController
     protected function getVotersPaginator($siteId, $from, $to, $orderBy, $order, $page, $perPage)
     {
         $aggregates = [
-            new Aggregate(DbViewVotes::USERID, Aggregate::NONE, null, true),           
-            new Aggregate(DbViewVotes::USERNAME, Aggregate::NONE, null, true),
-            new Aggregate(DbViewVotes::USERDISPLAYNAME, Aggregate::NONE, null, true),
-            new Aggregate(DbViewVotes::USERDELETED, Aggregate::NONE, null, true),            
-            new Aggregate('*', Aggregate::COUNT, 'Votes'),
-            new Aggregate(DbViewVotes::VALUE, Aggregate::SUM, 'Sum'),
+            new Aggregate(DbViewVotes::USERID, Aggregate::NONE, DbViewUserActivity::USERID, true),           
+            new Aggregate(DbViewVotes::USERNAME, Aggregate::NONE, DbViewUserActivity::USERNAME, true),
+            new Aggregate(DbViewVotes::USERDISPLAYNAME, Aggregate::NONE, DbViewUserActivity::USERDISPLAYNAME, true),
+            new Aggregate(DbViewVotes::USERDELETED, Aggregate::NONE, DbViewUserActivity::USERDELETED, true),            
+            new Aggregate('*', Aggregate::COUNT, DbViewUserActivity::VOTES),
+            new Aggregate(DbViewVotes::VALUE, Aggregate::SUM, DbViewUserActivity::VOTESSUMM),
         ];
         $voters = $this->services->getVoteService()->getAggregatedForSite($siteId, $aggregates, $from, $to, [$orderBy => $order], true);
         $voters->setCurrentPageNumber($page);
@@ -93,7 +94,7 @@ class ActivityController extends AbstractActionController
     }
     
     protected function getUsersData($siteId, $from, $to)
-    {
+    {        
         $users = $this->services->getUserService()->findSiteMembers($siteId, UserType::ANY, false, $from, $to, [DbViewMembership::JOINDATE => Order::DESCENDING], true);
         $users->setCurrentPageNumber(1);
         $users->setItemCountPerPage(3);
@@ -119,9 +120,7 @@ class ActivityController extends AbstractActionController
         $maxRating = new Aggregate(DbViewPages::CLEANRATING, Aggregate::MAX, 'MaxRating');
         $avgRating = new Aggregate(DbViewPages::CLEANRATING, Aggregate::AVERAGE, 'AvgRating');
         $ratings = $this->services->getPageService()->getAggregatedValues($siteId, [$maxRating, $avgRating], $from, $to);
-        $pages = $this->services->getPageService()->findSitePages($siteId, PageStatus::ANY, $from, $to, false, [DbViewPages::CREATIONDATE => Order::DESCENDING], true);
-        $pages->setCurrentPageNumber(1);
-        $pages->setItemCountPerPage(3);
+        $pages = $this->services->getPageService()->findSitePages($siteId, PageStatus::ANY, $from, $to, false, [DbViewPages::CREATIONDATE => Order::DESCENDING], true, 1, 3);
         $table = PaginatedTableFactory::createPagesTable($pages, true);
         $table->getColumns()->setOrder(DbViewPages::CREATIONDATE);        
         $result = [
@@ -155,7 +154,7 @@ class ActivityController extends AbstractActionController
                 'editors' => $editors->getTotalItemCount()
             ],
             'table' => $table
-        ];                    
+        ];
         return $result;
     }        
 
@@ -183,7 +182,7 @@ class ActivityController extends AbstractActionController
     }
 
     public function activityAction()
-    {        
+    {   
         $siteId = $this->services->getUtilityService()->getSiteId();
         $site = $this->services->getSiteService()->find($siteId);        
         $fromControl = $this->dateIntervalForm->get(DateIntervalForm::FROM_DATE_NAME);
@@ -378,9 +377,7 @@ class ActivityController extends AbstractActionController
             } else {
                 $order = Order::DESCENDING;
             }
-            $pages = $this->services->getPageService()->findSitePages($siteId, PageStatus::ANY, $from, $to, false, [$orderBy => $order], true);
-            $pages->setCurrentPageNumber($page);
-            $pages->setItemCountPerPage($perPage);
+            $pages = $this->services->getPageService()->findSitePages($siteId, PageStatus::ANY, $from, $to, false, [$orderBy => $order], true, $page, $perPage);
             $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
             $table = PaginatedTableFactory::createPagesTable($pages, false);
             $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);

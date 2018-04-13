@@ -20,7 +20,7 @@ interface UserActivityMapperInterface extends SimpleMapperInterface
      * Returns user activity information for a specified user and site
      * @param int $userId
      * @param int $siteId
-     * @return \Application\Model\UserActivtyInterface
+     * @return \Application\Model\UserActivityInterface
      * @throws \InvalidArgumentException
      */
     public function findUserActivity($userId, $siteId);
@@ -28,9 +28,18 @@ interface UserActivityMapperInterface extends SimpleMapperInterface
     /**
      * Returns activities information for a specified user on all sites
      * @param int $userId
-     * @return \Application\Model\UserActivtyInterface[]
+     * @return \Application\Model\UserActivityInterface[]
      */
     public function findUserActivities($userId);
+
+    /**
+     * Returns activities for a specified site
+     * @param int $siteId
+     * @param array(string => int) $order Associative array of field names and sorting orders (constants from \Application\Utils\Order)
+     * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects* 
+     * @return Zend\Paginator\Paginator|\Application\Model\UserActivityInterface[]
+     */
+    public function findSiteActivities($siteId, $order = null, $paginated = false, $asArray = false);
     
     /**
      * Get aggregated results from activities

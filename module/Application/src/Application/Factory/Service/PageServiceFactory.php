@@ -10,6 +10,8 @@ class PageServiceFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator) {
         $mapper = $serviceLocator->get('PageMapper');
-        return new PageService($mapper);
+        $userMapper = $serviceLocator->get('UserMapper');
+        $authorshipMapper = $serviceLocator->get('AuthorshipMapper');
+        return new PageService($mapper, $userMapper, $authorshipMapper);
     }
 }

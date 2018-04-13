@@ -47,8 +47,7 @@ class SearchController extends AbstractActionController
         } else {
             $sortOrder = [$orderBy => $order];
         }
-        $pages = $this->services->getPageService()->findByName($mask, $siteIds, $deleted, $sortOrder, true);
-        $pages->setItemCountPerPage($perPage);        
+        $pages = $this->services->getPageService()->findByName($mask, $siteIds, $deleted, $sortOrder, true, $page, $perPage);
         $pages->setCurrentPageNumber($page);        
         if ($siteIds === null) {
             $table = PaginatedTableFactory::createSitesPagesTable($pages);            
@@ -194,8 +193,7 @@ class SearchController extends AbstractActionController
         } else {
             $orderBy = null; // [DbViewPages::CLEANRATING => Order::DESCENDING);
         }
-        $pages = $this->services->getPageService()->findByName($title, [$site->getId()], false, $orderBy, true);
-        $pages->setItemCountPerPage($limit);
+        $pages = $this->services->getPageService()->findByName($title, [$site->getId()], false, $orderBy, true, 1, $limit);
         foreach ($pages as $page) {
             $result['pages'][] = $page->toArray();
         }
@@ -274,7 +272,7 @@ class SearchController extends AbstractActionController
         $result = ['success' => true];
         $siteId = (int)$this->params()->fromQuery('siteId', $this->services->getUtilityService()->getSiteId());
         $query = $this->params()->fromQuery('query', '');
-        $pages = $this->services->getPageService()->findByName($query, [$siteId], false, null, true);
+        $pages = $this->services->getPageService()->findByName($query, [$siteId], false, null, true, 1, $maxItems);
         $users = $this->services->getUserService()->findUsersOfSiteByName($siteId, $query, null, true);
         $result['pages'] = [];
         $i = 1;        

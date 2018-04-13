@@ -8,12 +8,12 @@ switch($this->column->getName()) {
         echo $this->index;
         break;
     case 'User':
-        $deleted = $row[\Application\Utils\DbConsts\DbViewVotes::USERDELETED]; 
+        $deleted = $row[\Application\Utils\DbConsts\DbViewUserActivity::USERDELETED]; 
         if ($deleted) { echo "<del>"; }
         echo '<a href="';
-        printf('/user/%d', $row[\Application\Utils\DbConsts\DbViewVotes::USERID]);
+        printf('/user/%d', $row[\Application\Utils\DbConsts\DbViewUserActivity::USERID]);
         echo '">';
-        echo $this->escapeHtml($row[\Application\Utils\DbConsts\DbViewVotes::USERDISPLAYNAME]);
+        echo $this->escapeHtml($row[\Application\Utils\DbConsts\DbViewUserActivity::USERDISPLAYNAME]);
         echo "</a>";
         if ($deleted) { echo "</del>";}
         break;
@@ -27,13 +27,13 @@ switch($this->column->getName()) {
         if ($this->collapsed): ?>
             <span class="glyphicon glyphicon-plus"></span>
         <?php endif;        
-        echo ($row['Votes']+$row['Sum'])/2;
+        echo ($row[\Application\Utils\DbConsts\DbViewUserActivity::VOTES]+$row[\Application\Utils\DbConsts\DbViewUserActivity::VOTESSUMM])/2;
         break;
     case 'Negative':
         if ($this->collapsed): ?>
             <span class="glyphicon glyphicon-minus"></span>
         <?php endif;        
-        echo ($row['Votes']-$row['Sum'])/2;
+        echo ($row[\Application\Utils\DbConsts\DbViewUserActivity::VOTES]-$row[\Application\Utils\DbConsts\DbViewUserActivity::VOTESSUMM])/2;
         break;
     default:;    
 }

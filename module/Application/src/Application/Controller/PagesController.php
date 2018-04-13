@@ -41,9 +41,7 @@ class PagesController extends AbstractActionController
      */
     protected function getPagesTable($siteId, $deleted, $orderBy, $order, $page, $perPage)
     {
-        $pages = $this->services->getPageService()->findSitePages($siteId, PageStatus::ANY, null, null, $deleted, [$orderBy => $order], true);
-        $pages->setCurrentPageNumber($page);
-        $pages->setItemCountPerPage($perPage);
+        $pages = $this->services->getPageService()->findSitePages($siteId, PageStatus::ANY, null, null, $deleted, [$orderBy => $order], true, $page, $perPage);
         $table = PaginatedTableFactory::createPagesTable($pages);
         $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);        
         return $table;

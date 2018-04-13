@@ -11,6 +11,7 @@ namespace Application\Model;
 use Application\Mapper\UserMapperInterface;
 use Application\Mapper\PageMapperInterface;
 use Application\Model\PageInterface;
+use Application\Model\UserInterface;
 
 /**
  * Description of Authorship
@@ -98,6 +99,14 @@ class Authorship implements AuthorshipInterface
             $this->user = $this->userMapper->find($this->userId);
         }
         return $this->user;
+    }
+    
+    /**
+     * @param UserInterface $user
+     */
+    public function setUser(UserInterface $user)
+    {
+        $this->user = $user;
     }
     
     /**

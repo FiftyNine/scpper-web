@@ -8,11 +8,13 @@ class DbViewUserActivity
     const USERID = 'UserId';
     const USERDISPLAYNAME = 'UserDisplayName';
     const USERNAME = 'UserName';
-    const DELETED = 'Deleted';
+    const USERDELETED = 'UserDeleted';
     const SITEID = 'SiteId';
     const VOTES = 'Votes';
+    const VOTESSUMM = 'VotesSumm';
     const REVISIONS = 'Revisions';
     const PAGES = 'Pages';
+    const TOTALRATING = 'TotalRating';
     const LASTACTIVITY = 'LastActivity';
     const SITEENGLISHNAME = 'SiteEnglishName';
     const SITENAME = 'SiteName';

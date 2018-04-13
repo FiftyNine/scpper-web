@@ -85,7 +85,7 @@ class UsersController extends AbstractActionController
     }
 
     public function usersAction()
-    {
+    {        
         $siteId = $this->services->getUtilityService()->getSiteId();
         $site = $this->services->getSiteService()->find($siteId);
         $users = $this->getUsersTable($siteId, DbViewMembership::TABLE.'_'.DbViewMembership::JOINDATE, Order::DESCENDING, 1, 10);

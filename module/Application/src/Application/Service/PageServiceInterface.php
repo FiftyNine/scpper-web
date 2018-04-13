@@ -30,9 +30,11 @@ interface PageServiceInterface
      * @param bool $deleted Whether to select existing or deleted pages
      * @param array(string => int) $order Associative array of field names and sorting orders (constants from \Application\Utils\Order)
      * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
+     * @param int $page Number of page of paginator
+     * @param int $perPage Items per page of paginator
      * @return \Zend\Paginator\Paginator|PageInterface[]
      */
-    public function findByName($mask, $sites, $deleted = false, $order = null, $paginated = false);
+    public function findByName($mask, $sites, $deleted = false, $order = null, $paginated = false, $page = 1, $perPage = 10);
     
     /**
      * Returns number of site pages
@@ -54,9 +56,11 @@ interface PageServiceInterface
      * @param bool $deleted Whether to select existing or deleted pages
      * @param array(string => int) $order Associative array of field names and sorting orders (constants from \Application\Utils\Order)
      * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
+     * @param int $page Number of page of paginator
+     * @param int $perPage Items per page of paginator
      * @return \Zend\Paginator\Paginator|PageInterface[]
      */
-    public function findSitePages($siteId, $type = PageStatus::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null, $deleted = false, $order = null, $paginated = false);
+    public function findSitePages($siteId, $type = PageStatus::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null, $deleted = false, $order = null, $paginated = false, $page = 1, $perPage = 10);
     
     /**
      * Find all pages on the site authored by user
@@ -65,9 +69,11 @@ interface PageServiceInterface
      * @param bool $deleted Whether to select existing or deleted pages
      * @param array(string => int) $order Associative array of field names and sorting orders (constants from \Application\Utils\Order)
      * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
+     * @param int $page Number of page of paginator
+     * @param int $perPage Items per page of paginator
      * @return PageInterface[]
      */
-    public function findPagesByUser($userId, $siteId, $deleted = false, $order = null, $paginated = false);
+    public function findPagesByUser($userId, $siteId, $deleted = false, $order = null, $paginated = false, $page = 1, $perPage = 10);
     
     /**
      * Find all pages on the site by the list of tags
@@ -78,9 +84,11 @@ interface PageServiceInterface
      * @param bool $deleted Whether to select existing or deleted pages
      * @param array(string => int) $order Associative array of field names and sorting orders (constants from \Application\Utils\Order)
      * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
+     * @param int $page Number of page of paginator
+     * @param int $perPage Items per page of paginator
      * @return PageInterface[]
      */
-    public function findPagesByTags($siteId, $includeTags, $excludeTags = [], $all = true, $deleted = false, $order = null, $paginated = false);
+    public function findPagesByTags($siteId, $includeTags, $excludeTags = [], $all = true, $deleted = false, $order = null, $paginated = false, $page = 1, $perPage = 10);
     
     /**
      * Get an aggregated results from pages, grouped by period when created

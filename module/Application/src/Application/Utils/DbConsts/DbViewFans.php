@@ -2,13 +2,20 @@
 
 namespace Application\Utils\DbConsts;
 
-class DbViewUserRank
+class DbViewFans
 {
-    const TABLE = 'view_user_rank';
-    const USERID = 'UserId';
-    const DISPLAYNAME = 'DisplayName';
+    const TABLE = 'view_fans';
     const SITEID = 'SiteId';
-    const TOTAL = 'Total';
+    const USERID = 'UserId';
+    const USERNAME = 'UserName';
+    const USERDISPLAYNAME = 'UserDisplayName';
+    const USERDELETED = 'UserDeleted';
+    const AUTHORID = 'AuthorId';
+    const AUTHORNAME = 'AuthorName';
+    const AUTHORDISPLAYNAME = 'AuthorDisplayName';
+    const AUTHORDELETED = 'AuthorDeleted';
+    const POSITIVE = 'Positive';
+    const NEGATIVE = 'Negative';
 
 
     static public function hasField($field) 

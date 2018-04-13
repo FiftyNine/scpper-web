@@ -17,7 +17,7 @@ use Application\Utils\Aggregate;
 use Application\Utils\DateAggregate;
 use Application\Utils\Order;
 use Application\Utils\DbConsts\DbViewVotes;
-use Application\Utils\DbConsts\DbViewAuthors;
+use Application\Utils\DbConsts\DbViewFans;
 use Application\Utils\DbConsts\DbViewPagesAll;
 
 
@@ -40,11 +40,16 @@ class UserController extends AbstractActionController
         $fans->setCurrentPageNumber(1);
         $fans->setItemCountPerPage($limit);
         $result = [];
+        $userPrototype = new \Application\Model\User($this->getServiceLocator()->get('UserActivityMapper'), $this->getServiceLocator()->get('MembershipMapper'));
         foreach ($fans as $fan) {
-            $result[] = [
-                'user' => $this->services->getUserService()->find($fan[DbViewVotes::USERID]),
-                'positive' => $fan['Positive'],
-                'negative' => $fan['Negative']
+            $user = clone $userPrototype;
+            $user->setId($fan[DbViewFans::USERID]);
+            $user->setDisplayName($fan[DbViewFans::USERDISPLAYNAME]);
+            $user->setDeleted($fan[DbViewFans::USERDELETED]);
+            $result[] = [                
+                'user' => $user,
+                'positive' => $fan[DbViewFans::POSITIVE],
+                'negative' => $fan[DbViewFans::NEGATIVE]
             ];
         }
         return $result;
@@ -56,11 +61,16 @@ class UserController extends AbstractActionController
         $favs->setCurrentPageNumber(1);
         $favs->setItemCountPerPage($limit);
         $result = [];
+        $userPrototype = new \Application\Model\User($this->getServiceLocator()->get('UserActivityMapper'), $this->getServiceLocator()->get('MembershipMapper'));
         foreach ($favs as $fav) {
+            $user = clone $userPrototype;
+            $user->setId($fav[DbViewFans::AUTHORID]);
+            $user->setDisplayName($fav[DbViewFans::AUTHORDISPLAYNAME]);
+            $user->setDeleted($fav[DbViewFans::AUTHORDELETED]);
             $result[] = [
-                'user' => $this->services->getUserService()->find($fav[DbViewAuthors::USERID]),
-                'positive' => $fav['Positive'],
-                'negative' => $fav['Negative']
+                'user' => $user,
+                'positive' => $fav[DbViewFans::POSITIVE],
+                'negative' => $fav[DbViewFans::NEGATIVE]
             ];
         }
         return $result;
@@ -84,7 +94,7 @@ class UserController extends AbstractActionController
     
     protected function getPagesTable($userId, $siteId, $deleted, $orderBy, $order, $page, $perPage)
     {
-        $pages = $this->services->getPageService()->findPagesByUser($userId, $siteId, $deleted, [$orderBy => $order], true);
+        $pages = $this->services->getPageService()->findPagesByUser($userId, $siteId, $deleted, [$orderBy => $order], true, $page, $perPage);
         $pages->setCurrentPageNumber($page);
         $pages->setItemCountPerPage($perPage);
         $table = PaginatedTableFactory::createPagesTable($pages);

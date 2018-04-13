@@ -22,7 +22,6 @@ use Application\Utils\DateAggregate;
 use Application\Utils\Order;
 use Application\Utils\DbConsts\DbViewVotes;
 use Application\Utils\DbConsts\DbViewRevisions;
-use Application\Utils\DbConsts\DbViewPages;
 
 /**
  * Description of PageController

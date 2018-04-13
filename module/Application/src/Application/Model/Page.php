@@ -454,6 +454,15 @@ class Page implements PageInterface
     }
 
     /**
+     * 
+     * @param \Application\Model\Authorship[] $authors
+     */
+    public function setAuthors($authors)
+    {
+        $this->authors = $authors;
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public function getVoteCount() 
