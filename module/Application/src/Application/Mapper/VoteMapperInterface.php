@@ -98,4 +98,28 @@ interface VoteMapperInterface extends SimpleMapperInterface
      * @return array[array[string]mixed]
      */
     public function getUserBiggestFans($userId, $siteId, $orderByRatio, $paginated = false);
+    
+    
+    /**
+     * Returns aggregated votes for a rating chart grouped by day
+     * @param int $pageId
+     * @return array(array(string => mixed)) Array of votes grouped by date
+     */
+    public function getPageChartData($pageId);
+
+    /**
+     * Returns aggregated votes for a rating chart grouped by day
+     * @param int $userId
+     * @param int $siteId
+     * @return array(array(string => mixed)) Array of votes grouped by date
+     */
+    public function getUserChartData($userId, $siteId);    
+    
+    /**
+     * Return history of votes (excluding current vote by the user on the page
+     * @param int $pageId
+     * @param int $userId
+     * @return VoteInterface[]
+     */
+    public function findHistory($pageId, $userId);
 }

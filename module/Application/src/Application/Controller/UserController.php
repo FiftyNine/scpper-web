@@ -161,9 +161,7 @@ class UserController extends AbstractActionController
         $siteId = (int)$this->params()->fromQuery('siteId');
         $user = $this->services->getUserService()->find($userId);
         if ($user) {
-            $byDate = new DateAggregate(DbViewVotes::DATETIME, 'Date');
-            $count = new Aggregate(DbViewVotes::VALUE, Aggregate::SUM, 'Votes');
-            $votes = $this->services->getVoteService()->getAggregatedVotesOnUser($userId, $siteId, [$byDate, $count]);
+            $votes = $this->services->getVoteService()->getChartDataForUser($userId, $siteId);
             $resVotes = [];
             foreach ($votes as $vote) {
                 $resVotes[] = [$vote['Date']->format(\DateTime::ISO8601), (int)$vote['Votes']];

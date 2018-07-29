@@ -32,7 +32,7 @@ interface VoteInterface
     /**
      * @return \DateTime
      */    
-    public function getDateTime();
+    public function getDateTime();       
     
     /**
      * Vote from a member of the site
@@ -51,4 +51,22 @@ interface VoteInterface
      * @return bool
      */
     public function getFromActive();
+    
+    /**
+     * Returns human-readable representation of the value
+     * @return string
+     */
+    public function getValueString();
+    
+    /**
+     * There are previous votes from the same user on the same page
+     * @return bool
+     */
+    public function hasHistory();
+    
+    /**
+     * Return history of votes by the same user on the same page
+     * @return VoteInterface[]
+     */
+    public function getHistory();
 }

@@ -2,9 +2,9 @@
 
 namespace Application\Utils\DbConsts;
 
-class DbViewVotesDeleted
+class DbViewVoteHistoryAll
 {
-    const TABLE = 'view_votes_deleted';
+    const TABLE = 'view_vote_history_all';
     const __ID = '__Id';
     const SITEID = 'SiteId';
     const SITENAME = 'SiteName';

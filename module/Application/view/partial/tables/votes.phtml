@@ -19,12 +19,37 @@ switch($this->column->getName()) {
         <?php endif;        
         echo $this->partial('partial/page.phtml', ['page' => $row->getPage()]);
         break;
-    case 'Vote':        
-        if ($row->getValue() > 0) {echo '+';} else {echo '-';}
+    case 'Authors':
+        echo $this->partial('partial/authors.phtml', ['authors' => $row->getPage()->getAuthors(), 'collapsed' => $this->collapsed]);
+        break;        
+    case 'Vote':
+        echo $row->getValueString();
+        if ($this->collapsed) {
+            echo '<br>';
+            echo $row->getDateTime()->format('Y-m-d');
+        }
+        if ($row->hasHistory()) {
+            foreach ($row->getHistory() as $v) {
+                echo '<hr class="table-cell-inner">';
+                echo $v->getValueString();
+                if ($this->collapsed) {
+                    echo '<br>';
+                    echo $row->getDateTime()->format('Y-m-d');
+                }                
+            }
+        }
         break;
     case 'Date':
-        echo $row->getDateTime()->format('Y-m-d');
-        break;        
+        if (!$this->collapsed) {
+            echo $row->getDateTime()->format('Y-m-d');
+            if ($row->hasHistory()) {
+                foreach ($row->getHistory() as $v) {
+                    echo '<hr class="table-cell-inner">';
+                    echo $v->getDateTime()->format('Y-m-d');
+                }
+            }        
+        }        
+        break;         
     case 'Member':
         if ($row->getFromMember()) {
             if ($this->collapsed) {

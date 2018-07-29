@@ -5,6 +5,7 @@ namespace Application\Model;
 use Application\Model\UserInterface;
 use Application\Mapper\UserMapperInterface;
 use Application\Mapper\PageMapperInterface;
+use Application\Mapper\VoteMapperInterface;
 
 class Vote implements VoteInterface
 {
@@ -19,6 +20,12 @@ class Vote implements VoteInterface
      * @var Application\Mapper\PageMapperInterface;
      */
     protected $pageMapper;
+
+    /**
+     *
+     * @var Application\Mapper\VoteMapperInterface;
+     */
+    protected $voteMapper;
     
     /**
      *
@@ -63,6 +70,12 @@ class Vote implements VoteInterface
     protected $fromActive;
 
     /**
+     * 
+     * @var bool
+     */
+    protected $hasHistory;
+    
+    /**
      *
      * @var Application\Model\PageInterface
      */
@@ -73,7 +86,14 @@ class Vote implements VoteInterface
      * @var Application\Model\UserInterface
      */
     protected $user;
-        
+       
+    
+    /**
+     * 
+     * @var Application\Model\VoteInterface[]
+     */
+    protected $history;
+    
     /**
      * Constructor
      * @param UserMapperInterface $userMapper
@@ -81,10 +101,12 @@ class Vote implements VoteInterface
      */    
     public function __construct(
             UserMapperInterface $userMapper,
-            PageMapperInterface $pageMapper)
+            PageMapperInterface $pageMapper,
+            VoteMapperInterface $voteMapper)
     {
         $this->userMapper = $userMapper;
         $this->pageMapper = $pageMapper;
+        $this->voteMapper = $voteMapper;
     }
     
     /**
@@ -164,6 +186,39 @@ class Vote implements VoteInterface
     {
         return $this->fromActive;
     }
+
+    /**
+     * {@inheritdoc}
+     */    
+    public function getValueString()
+    {
+        if ($this->value > 0) {
+            return '+';
+        } else if ($this->value < 0) {
+            return '-';
+        } else {
+            return '&Oslash;';
+        }
+    }
+    
+    /**
+     * {@inheritdoc}
+     */    
+    public function hasHistory()
+    {
+        return $this->hasHistory;
+    }
+
+    /**
+     * {@inheritdoc}
+     */    
+    public function getHistory()
+    {
+        if (!isset($this->history)) {
+            $this->history = $this->voteMapper->findHistory($this->getPageId(), $this->getUserId());
+        }
+        return $this->history;
+    }
     
     public function setDateTime(\DateTime $dateTime)
     {
@@ -209,6 +264,10 @@ class Vote implements VoteInterface
     {
         $this->fromActive = $fromActive;
     }
-    
+
+    public function setHasHistory($hasHistory)
+    {
+        $this->hasHistory = $hasHistory;
+    }    
     
 }

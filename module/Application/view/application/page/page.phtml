@@ -109,21 +109,21 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
                 if ($vote->getFromMember()) {
                     if ($vote->getValue() > 0) {
                         $cleanPos++;
-                    } else {
+                    } else if ($vote->getValue() < 0) {
                         $cleanNeg--;
                     }
                 }
                 if ($vote->getFromContributor()) {
                     if ($vote->getValue() > 0) {
                         $contribPos++;
-                    } else {
+                    } else if ($vote->getValue() < 0) {
                         $contribNeg--;
                     }
                 }
                 if ($vote->getFromActive()) {
                     if ($vote->getValue() > 0) {
                         $adjPos++;
-                    } else {
+                    } else if ($vote->getValue() < 0) {
                         $adjNeg--;
                     }
                 }

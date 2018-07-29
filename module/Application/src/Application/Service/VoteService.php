@@ -214,4 +214,19 @@ class VoteService implements VoteServiceInterface
         return $this->mapper->getAggregatedVotesOnUser($userId, $siteId, $aggregates, $order, $paginated);
     }
     
+    /**
+     * {@inheritDoc}
+     */
+    public function getChartDataForPage($pageId)
+    {
+        return $this->mapper->getPageChartData($pageId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getChartDataForUser($userId, $siteId)
+    {
+        return $this->mapper->getUserChartData($userId, $siteId);
+    }    
 }

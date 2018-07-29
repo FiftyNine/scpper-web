@@ -303,7 +303,7 @@ class PaginatedTableFactory
                 ], 35, 768)
             ],
             $paginator,
-            'partial/tables/pageVotes.phtml', 
+            'partial/tables/votes.phtml', 
             false
         );
         return $table;        
@@ -325,7 +325,7 @@ class PaginatedTableFactory
                 ], 30, 768)
             ],
             $paginator,
-            'partial/tables/userVotes.phtml', 
+            'partial/tables/votes.phtml', 
             false
         );
         return $table;        

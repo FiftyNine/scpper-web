@@ -148,6 +148,7 @@ div.container a.brand {
     color: #333;
 }
 
+
 @media (max-width: 767px) {
     .pagination-hidden-sm {
         display: none !important;
@@ -252,6 +253,13 @@ div.container a.brand {
 
 .responsive-table-value .glyphicon {
     color: gray;
+}
+
+hr.table-cell-inner {
+    margin-bottom: 5px;
+    margin-top: 5px;
+    margin-left: -10px;
+    margin-right: -10px;
 }
 
 .collapsed-text-hint {

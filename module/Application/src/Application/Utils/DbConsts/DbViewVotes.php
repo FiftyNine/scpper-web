@@ -19,6 +19,7 @@ class DbViewVotes
     const USERDELETED = 'UserDeleted';
     const VALUE = 'Value';
     const DATETIME = 'DateTime';
+    const DELTAFROMPREV = 'DeltaFromPrev';
     const FROMMEMBER = 'FromMember';
     const FROMCONTRIBUTOR = 'FromContributor';
     const FROMACTIVE = 'FromActive';

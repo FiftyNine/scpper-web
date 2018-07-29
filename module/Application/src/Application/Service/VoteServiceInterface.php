@@ -117,5 +117,21 @@ interface VoteServiceInterface
      * @param bool $paginated
      * @return array[array[string]mixed]
      */
-    public function getAggregatedVotesOnUser($userId, $siteId, $aggregates, $order = null, $paginated = false);
+    public function getAggregatedVotesOnUser($userId, $siteId, $aggregates, $order = null, $paginated = false);    
+    
+    
+    /**
+     * Get an aggregated results from votes for a rating chart
+     * @param int $pageId
+     * @return array[array[string]mixed]
+     */
+    public function getChartDataForPage($pageId);
+
+    /**
+     * Get an aggregated results from votes for a rating chart
+     * @param int $userId
+     * @param int $siteId
+     * @return array[array[string]mixed]
+     */
+    public function getChartDataForUser($userId, $siteId);
 }

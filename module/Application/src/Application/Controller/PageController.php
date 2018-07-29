@@ -130,9 +130,7 @@ class PageController extends AbstractActionController
     public function ratingChartAction()
     {
         $pageId = (int)$this->params()->fromQuery('pageId');
-        $byDate = new DateAggregate(DbViewVotes::DATETIME, 'Date');
-        $count = new Aggregate(DbViewVotes::VALUE, Aggregate::SUM, 'Votes');
-        $votes = $this->services->getVoteService()->getAggregatedForPage($pageId, [$byDate, $count], true);
+        $votes = $this->services->getVoteService()->getChartDataForPage($pageId);
         $resVotes = [];
         foreach ($votes as $vote) {
             $resVotes[] = [$vote['Date']->format(\DateTime::ISO8601), (int)$vote['Votes']];

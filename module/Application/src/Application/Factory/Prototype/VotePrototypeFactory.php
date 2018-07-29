@@ -23,6 +23,7 @@ class VotePrototypeFactory implements FactoryInterface
     {
         $userMapper = $serviceLocator->get('UserMapper');
         $pageMapper = $serviceLocator->get('PageMapper');
-        return new Vote($userMapper, $pageMapper);
+        $voteMapper = $serviceLocator->get('VoteMapper');
+        return new Vote($userMapper, $pageMapper, $voteMapper);
     }
 }

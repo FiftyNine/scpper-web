@@ -10,7 +10,7 @@ class DbVotes
     const USERID = 'UserId';
     const VALUE = 'Value';
     const DATETIME = 'DateTime';
-    const UNIXTIME = 'UNIXTIME';
+    const DELTAFROMPREV = 'DeltaFromPrev';
 
 
     static public function hasField($field) 

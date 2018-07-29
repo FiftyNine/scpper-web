@@ -3,19 +3,42 @@
 namespace Application\Mapper;
 
 use Zend\Db\Sql\Sql;
+use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Expression;
 use Application\Utils\VoteType;
+use Application\Utils\Aggregate;
+use Application\Utils\DateAggregate;
 use Application\Utils\DbConsts\DbViewVotes;
 use Application\Utils\DbConsts\DbViewVotesAll;
+use Application\Utils\DbConsts\DbVoteHistory;
+use Application\Utils\DbConsts\DbViewVoteHistoryAll;
 use Application\Utils\DbConsts\DbViewAuthors;
 use Application\Utils\DbConsts\DbViewTags;
 use Application\Utils\DbConsts\DbViewFans;
 
 class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
 {
-    protected function buildVoteSelect(Sql $sql, $conditions, $type = VoteType::ANY, \DateTime $castAfter = null, \DateTime $castBefore = null, $deleted = null)
+    const CHART_VOTES = 'Votes';
+    const CHART_DATE = 'Date';
+    
+    protected function buildVoteSelect(Sql $sql, $table, $conditions, $type = VoteType::ANY, 
+            $withHistory = true, \DateTime $castAfter = null, \DateTime $castBefore = null, $deleted = null)
     {
-        $select = $sql->select(DbViewVotesAll::TABLE);
+        $select = $sql->select(['v' => $table]);
+        if ($withHistory) {
+            $select->columns([
+                '' => Select::SQL_STAR, 
+                'HasHistory' => new Expression(
+                    sprintf('(SELECT COUNT(*) FROM %s WHERE %s = v.%s AND %s = v.%s)', 
+                            DbVoteHistory::TABLE, 
+                            DbVoteHistory::PAGEID, 
+                            DbViewVotesAll::PAGEID, 
+                            DbVoteHistory::USERID, 
+                            DbViewVotesAll::USERID
+                            )
+                        ),
+            ]);
+        }
         if ($conditions) {
             $select->where($conditions);
         }
@@ -41,7 +64,7 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
     public function countSiteVotes($siteId, $type = VoteType::ANY, \DateTime $castAfter = null, \DateTime $castBefore = null)
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $this->buildVoteSelect($sql, [DbViewVotesAll::SITEID.' = ?' => $siteId], $type, $castAfter, $castBefore, false);
+        $select = $this->buildVoteSelect($sql, DbViewVotesAll::TABLE, [DbViewVotesAll::SITEID.' = ?' => $siteId], $type, false, $castAfter, $castBefore, false);
         return $this->fetchCount($sql, $select);
     }
 
@@ -51,7 +74,7 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
     public function findSiteVotes($siteId, $order = null, $paginated = false)
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $this->buildVoteSelect($sql, [DbViewVotesAll::SITEID.' = ?' => $siteId], VoteType::ANY, null, null, false);
+        $select = $this->buildVoteSelect($sql, DbViewVotesAll::TABLE, [DbViewVotesAll::SITEID.' = ?' => $siteId], VoteType::ANY, true, null, null, false);
         if (is_array($order)) {
             $this->orderSelect($select, $order);
         }        
@@ -67,8 +90,9 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
     public function findVotesOnPage($pageId, $order = null, $paginated = false)
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $sql->select(DbViewVotesAll::TABLE)
-                ->where([DbViewVotesAll::PAGEID.' = ?' => $pageId]);
+//        $select = $sql->select(DbViewVotesAll::TABLE)
+//                ->where([DbViewVotesAll::PAGEID.' = ?' => $pageId]);
+        $select = $this->buildVoteSelect($sql, DbViewVotesAll::TABLE, [DbViewVotesAll::PAGEID.' = ?' => $pageId]);
         if (is_array($order)) {
             $this->orderSelect($select, $order);
         }
@@ -84,8 +108,16 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
     public function findVotesOfUser($userId, $siteId, $order = null, $paginated = false)
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $sql->select(DbViewVotes::TABLE)
+        /*$select = $sql->select(DbViewVotes::TABLE)
                 ->where([
+                    DbViewVotes::USERID.' = ?' => $userId,
+                    DbViewVotes::SITEID.' = ?' => $siteId
+                ]);
+         */
+        $select = $this->buildVoteSelect(
+                $sql, 
+                DbViewVotes::TABLE, 
+                [
                     DbViewVotes::USERID.' = ?' => $userId,
                     DbViewVotes::SITEID.' = ?' => $siteId
                 ]);
@@ -221,7 +253,7 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
     public function getAggregatedValues($conditions, $aggregates, \DateTime $castAfter = null, \DateTime $castBefore = null, $deleted = null, $order = null, $paginated = false)
     {
         $sql = new Sql($this->dbAdapter);
-        $select = $this->buildVoteSelect($sql, $conditions, VoteType::ANY, $castAfter, $castBefore, $deleted);
+        $select = $this->buildVoteSelect($sql, DbViewVotesAll::TABLE, $conditions, VoteType::ANY, false, $castAfter, $castBefore, $deleted);
         $this->aggregateSelect($select, $aggregates);
         if (is_array($order)) {
             $this->orderSelect($select, $order);
@@ -230,5 +262,74 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
             return $this->getPaginator($select, true);
         }        
         return $this->fetchArray($sql, $select);
+    }
+
+    protected function buildChartAggregates()
+    {
+        return [
+            new Aggregate(DbViewVotesAll::DELTAFROMPREV, Aggregate::SUM, self::CHART_VOTES),
+            new DateAggregate(DbViewVotesAll::DATETIME, self::CHART_DATE),
+        ];    
+    }
+
+    protected function getChartData($sql, $select)
+    {
+        $select->from(['v' => DbViewVotesAll::TABLE]);
+        $aggregates = $this->buildChartAggregates();
+        $this->aggregateSelect($select, $aggregates);
+        
+        $select2 = clone $select;
+        $select2->from(['v' => DbViewVoteHistoryAll::TABLE]);
+        
+        $select->combine($select2);
+        $total = $sql->select(['a' => $select])
+                ->columns([
+                    self::CHART_DATE => self::CHART_DATE,
+                    self::CHART_VOTES => new Expression('SUM('.self::CHART_VOTES.')')
+                ])                
+                ->group(self::CHART_DATE)
+                ->order(self::CHART_DATE.' ASC');
+        return $this->fetchArray($sql, $total);        
+    }
+    
+    public function getPageChartData($pageId)
+    {
+        $sql = new Sql($this->dbAdapter);
+        $conditions = [
+            DbViewVotesAll::PAGEID.' = ?' => $pageId,
+            DbViewVotesAll::FROMMEMBER.' = ?' => 1
+            ];
+        $select = $sql->select()
+            ->where($conditions);
+        return $this->getChartData($sql, $select);
+    }
+
+    public function getUserChartData($userId, $siteId)
+    {
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select()
+                ->join(['a' => DbViewAuthors::TABLE], 'a.'.DbViewAuthors::PAGEID.' = v.'.DbViewVotesAll::PAGEID, [])
+                ->where([
+                    'a.'.DbViewAuthors::USERID.' = ?' => $userId,
+                    'a.'.DbViewAuthors::SITEID.' = ?' => $siteId,
+                    'v.'.DbViewVotesAll::FROMMEMBER.' = 1',
+                    'v.'.DbViewVotesAll::DELETED.' <> 1'
+                ]);
+        return $this->getChartData($sql, $select);       
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function findHistory($pageId, $userId)
+    {
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select(DbVoteHistory::TABLE)
+                ->where([
+                    DbVoteHistory::PAGEID.' = ?' => $pageId,
+                    DbVoteHistory::USERID.' = ?' => $userId
+                ])
+                ->order(DbVoteHistory::DATETIME.' DESC');
+        return iterator_to_array($this->fetchResultSet($sql, $select), false);
     }
 }
