@@ -17,10 +17,9 @@ use Application\Form\PageReport\NewPageReportForm;
 use Application\Form\PageReport\PageReportFieldset;
 use Application\Form\PageReport\PageReportContributorFieldset;
 use Application\Model\PageReport;
-use Application\Utils\Aggregate;
-use Application\Utils\DateAggregate;
 use Application\Utils\Order;
 use Application\Utils\DbConsts\DbViewVotes;
+use Application\Utils\DbConsts\DbViewPages;
 use Application\Utils\DbConsts\DbViewRevisions;
 
 /**
@@ -152,6 +151,26 @@ class PageController extends AbstractActionController
             'milestones' => $resRevisions,
         ]);
     }
+
+    // Used for a lookup in the report form
+    public function searchAction()
+    {
+        $maxItems = 50;
+        $result = ['success' => true];
+        $siteId = (int)$this->params()->fromQuery('siteId', $this->services->getUtilityService()->getSiteId());
+        $query = $this->params()->fromQuery('query', '');
+        $pages = $this->services->getPageService()->findByName($query, [$siteId], false, [DbViewPages::CLEANRATING => Order::DESCENDING], true);
+        $pages->setItemCountPerPage($maxItems);
+        $result['pages'] = [];
+        foreach ($pages as $page) {
+            $result['pages'][] = [
+                'id' => $page->getId(),
+                'label' => $page->getTitle(),
+                'altTitle' => $page->getAltTitle()            
+            ];
+        }
+        return new JsonModel($result);
+    }     
     
     public function revisionListAction()
     {
