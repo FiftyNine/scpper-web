@@ -34,6 +34,7 @@ Selects a page with WikidotId = 13327521 (SCP-1981 - "RONALD REAGAN CUT UP WHILE
 ```json
 {  
    "id":13327521,
+   "site":"http:\/\/scp-wiki.wikidot.com",
    "name":"scp-1981",
    "title":"SCP-1981",
    "altTitle":"\u0022RONALD REAGAN CUT UP WHILE TALKING\u0022",
@@ -177,6 +178,7 @@ Randomly selects from the english wiki up to 2 pages which have "king" in their 
    "pages":[  
       {  
          "id":13327521,
+         "site":"http:\/\/scp-wiki.wikidot.com",
          "name":"scp-1981",
          "title":"SCP-1981",
          "altTitle":"\u0022RONALD REAGAN CUT UP WHILE TALKING\u0022",
@@ -203,6 +205,7 @@ Randomly selects from the english wiki up to 2 pages which have "king" in their 
       },
       {  
          "id":3222822,
+         "site":"http:\/\/scp-wiki.wikidot.com",
          "name":"scp-701",
          "title":"SCP-701",
          "altTitle":"The Hanged King\u0027s Tragedy",
@@ -345,6 +348,8 @@ Randomly selects from the english wiki up to 2 pages that have both tags "scp" a
 {  
    "pages":[  
       {  
+         "id":3222822,
+         "site":"http:\/\/scp-wiki.wikidot.com",
          "name":"scp-701",
          "title":"SCP-701",
          "altTitle":"The Hanged King\u0027s Tragedy",
@@ -369,6 +374,8 @@ Randomly selects from the english wiki up to 2 pages that have both tags "scp" a
          ]
       },
       {  
+         "id":12947495,
+         "site":"http:\/\/scp-wiki.wikidot.com",
          "name":"scp-1893",
          "title":"SCP-1893",
          "altTitle":"The Minotaur\u0027s Tale",

@@ -629,7 +629,8 @@ class Page implements PageInterface
         }        
         $result = [
             'id' => $this->getId(),
-            'name' => $this->getName(),
+            'site' => $this->getSite()->getUrl(),            
+            'name' => $this->getName(),            
             'title' => $this->getTitle(),
             'altTitle' => $this->getAltTitle(),
             'status' => \Application\Utils\PageStatus::getDescription($this->getStatus()),
