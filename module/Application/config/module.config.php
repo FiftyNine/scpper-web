@@ -418,7 +418,17 @@ return [
                         ],
                     ],                    
                 ],                     
-            ],            
+            ],
+            '2018' => [
+                'type' => 'Literal',
+                'options' => [
+                    'route' => '/2018',
+                    'defaults' => [
+                        'controller' => 'Application\Controller\Roundup2018',
+                        'action' => 'roundup2018'
+                    ],                    
+                ],
+            ]
         ],
     ],
     'session' => [
@@ -527,6 +537,7 @@ return [
             'Application\Controller\Tags' => 'Application\Factory\Controller\TagsControllerFactory',
             'Application\Controller\AdminPanel' => 'Application\Factory\Controller\AdminPanelControllerFactory',
             'Application\Controller\Login' => 'Application\Factory\Controller\LoginControllerFactory',
+            'Application\Controller\Roundup2018' => 'Application\Factory\Controller\Roundup2018ControllerFactory',
         ],
     ],
     'view_manager' => [
