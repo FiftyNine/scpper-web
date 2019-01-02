@@ -15,19 +15,7 @@ use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Select;
 use Zend\Db\Adapter\Adapter;
 use Application\Service\HubServiceInterface;
-use Application\Form\DateIntervalForm;
-use Application\Factory\Component\PaginatedTableFactory;
-use Application\Utils\UserType;
-use Application\Utils\PageStatus;
-use Application\Utils\VoteType;
-use Application\Utils\DbConsts\DbViewMembership;
-use Application\Utils\DbConsts\DbViewPages;
-use Application\Utils\DbConsts\DbViewRevisions;
-use Application\Utils\DbConsts\DbViewVotes;
-use Application\Utils\DbConsts\DbViewUserActivity;
-use Application\Utils\Aggregate;
-use Application\Utils\DateAggregate;
-use Application\Utils\Order;
+
 
 /**
  * Description of Roundup2018Controller
@@ -49,10 +37,10 @@ class Roundup2018Controller extends AbstractActionController
     
     public function roundup2018Action()
     {   
-        $siteId = 66711; // $this->services->getUtilityService()->getSiteId();
-        $site = $this->services->getSiteService()->find($siteId);        
-        $reader = new \Zend\Config\Reader\Json();
-        $data = $reader->fromFile('./public/data/2018.json');       
-        return new ViewModel($data);
+//        $siteId = 66711; // $this->services->getUtilityService()->getSiteId();
+//        $site = $this->services->getSiteService()->find($siteId);        
+//        $reader = new \Zend\Config\Reader\Json();
+//        $data = $reader->fromFile('./public/data/2018.json');       
+        return new ViewModel([]);
     }
 }

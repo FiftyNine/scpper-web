@@ -1028,3 +1028,19 @@ a.report-page {
     -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;    
 }
+
+/** Roundup **/
+
+div#mainlist-timelapse-cover {
+    position: relative;    
+}
+
+img#timelapse-state {
+    max-width: 100%; 
+    height: auto; 
+    vertical-align: middle; 
+    position: absolute; 
+    left: 48%; 
+    top: 50%; 
+    cursor: pointer;
+}

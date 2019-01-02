@@ -1,80 +1,21 @@
 <?php $this->headTitle('2018'); ?>
+<?php $this->headScript()->appendFile('/js/scpper_roundup.js'); ?>
 <?php $this->headScript()->captureStart(); ?>
 
 // Anonymous self-executing function not to clutter global scope with temporary stuff
 (function () {
         
-    var timelapse = null;
-    var framelen = 3*60*60*1000; // ms
-    var lastpage = 0;
-    var curtime = 0;
-    var canvas = null; // document.getElementById("mainlist-timelapse");
-    var context = null; //canvas.getContext('2d', { alpha: false });        
-    var fillfull = 'green';
-    var fillempty = 'black';
-    var filldeleted = 'red';
-    var perrow = 50;
-    var cellsize = 10;
-    
-    function draw() 
-    {   
-        curtime.setMilliseconds(curtime.getMilliseconds()+framelen);    
-        context.save()
-        context.fillStyle = 'white';
-        context.fillRect(0, 0, 549, 50);
-        context.font = '24px Helvetica';
-        context.fillStyle = 'black';
-        context.textAlign = 'center';
-        context.fillText(curtime.format('mmmm yyyy'), 275, 42);
-        context.translate(0, 50)
-        while (lastpage<timelapse.length && timelapse[lastpage].t <= curtime) {
-            r = Math.floor(timelapse[lastpage].n/perrow);
-            c = timelapse[lastpage].n%perrow;
-            if (timelapse[lastpage].d)
-                context.fillStyle = filldeleted
-            else
-                context.fillStyle = fillfull;
-            context.fillRect(c*(cellsize+1), r*(cellsize+1), cellsize, cellsize);
-            lastpage++;
-        }
-        context.restore();
-        if (lastpage < timelapse.length)
-            window.requestAnimationFrame(draw);
-    }
-    
     function init()
     {
-        canvas = document.getElementById("mainlist-timelapse");
-        context = canvas.getContext('2d', { alpha: false });                    
-        context.save()
-        context.fillStyle = 'white';
-        context.fillRect(0, 0, 549, 50);
-        context.translate(0, 50)                
-        context.fillRect(0, 220, 549, 20);
-        context.font = '12px serif';
-        context.fillStyle = fillempty;
-        context.fillRect(10, 225, cellsize, cellsize);
-        context.fillText(" - empty", 23, 234);
-        context.fillStyle = fillfull;
-        context.fillRect(100, 225, cellsize, cellsize);
-        context.fillText(" - full", 113, 234);
-        context.fillStyle = filldeleted;
-        context.fillRect(175, 225, cellsize, cellsize);
-        context.fillText(" - deleted", 188, 234);        
-        context.restore()
-        $.getJSON( "/data/2018.json", function( data ) {
-            timelapse = [];
-            for (var d in data) {
-                var a = {
-                    n: Number(data[d].n)-3000,
-                    t: scpper.convertDate(data[d].t),
-                    d: data[d].d
-                }
-                timelapse.push(a);
-            }           
-            curtime = timelapse[1].t;
-            window.requestAnimationFrame(draw);
-        });        
+        hideShowTimelapseButton = function (visible) {
+            if (scpper.roundup.seriesTimelapse.isPlaying()) 
+                document.getElementById("timelapse-state").hidden = !visible;
+        };
+    
+        scpper.roundup.seriesTimelapse.init("mainlist-timelapse", "timelapse-state", "/data/series-4-timelapse.json");
+        $("#mainlist-timelapse-cover").on('mouseenter', function () { hideShowTimelapseButton(true); });
+        $("#mainlist-timelapse-cover").on('mouseleave', function () { hideShowTimelapseButton(false); });
+        $("#timelapse-state").on('click', function () { scpper.roundup.seriesTimelapse.switch(); });
     }        
 
     $(document).ready(init);
@@ -83,9 +24,12 @@
 <?php $this->headScript()->captureEnd(); ?>
 <div class="row">
     <div class="col-md-offset-2 col-md-8 text-center">
-        <h1>Series 4</h1>
-        <canvas id="mainlist-timelapse" width="549" height="289">
-
-        </canvas>
+        <h1>Series 4 timelapse</h1>
+        <div id="mainlist-timelapse-cover">
+            <canvas id="mainlist-timelapse" width="549" height="289">
+                lol fuck old browsers
+            </canvas>
+            <img id="timelapse-state" src="img/play-btn.png">
+        </div>
     </div>
 </div>
