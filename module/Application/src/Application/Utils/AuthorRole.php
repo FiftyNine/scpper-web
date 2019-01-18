@@ -40,4 +40,19 @@ class AuthorRole
             throw new \InvalidArgumentException("Unknown author role - $role");
         }        
     }
+
+    /**
+     * Get roleId by description
+     * @param string $role
+     * @throws \InvalidArgumentException
+     */
+    static public function getIdByDescription($role)
+    {
+        foreach (self::ROLE_DESCRIPTIONS as $id => $desc) {
+            if ($desc === $role) {
+                return $id;
+            }            
+        }
+        throw new \InvalidArgumentException("Unknown author role - $role");
+    }    
 }

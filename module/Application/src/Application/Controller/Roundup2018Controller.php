@@ -10,10 +10,6 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
-use Zend\Db\Sql\Sql;
-use Zend\Db\Sql\Select;
-use Zend\Db\Adapter\Adapter;
 use Application\Service\HubServiceInterface;
 
 
@@ -34,13 +30,11 @@ class Roundup2018Controller extends AbstractActionController
     {
         $this->services = $hubService;
     }    
-    
+
     public function roundup2018Action()
     {   
-//        $siteId = 66711; // $this->services->getUtilityService()->getSiteId();
-//        $site = $this->services->getSiteService()->find($siteId);        
-//        $reader = new \Zend\Config\Reader\Json();
-//        $data = $reader->fromFile('./public/data/2018.json');       
-        return new ViewModel([]);
+        $reader = new \Zend\Config\Reader\Json();
+        $data = $reader->fromFile(getcwd().'/public/data/roundup/2018/pages.json');
+        return new ViewModel($data);
     }
 }

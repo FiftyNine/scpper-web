@@ -38,7 +38,7 @@ class PageKind
         self::SERVICE => 'Service',
         self::ESSAY => 'Essay',
         self::AUDIO => 'Audio',
-        self::AUTHOR_PAGE => "Authors page"];
+        self::AUTHOR_PAGE => "Author's page"];
     
     /**
      * Get description for page kind
@@ -55,4 +55,19 @@ class PageKind
         }                
     }    
 
+    /**
+     * Get kindId by description
+     * @param string $kind
+     * @throws \InvalidArgumentException
+     */
+    static public function getIdByDescription($kind)
+    {
+        foreach (self::DESCRIPTIONS as $id => $desc) {
+            if ($desc === $kind) {
+                return $id;
+            }            
+        }
+        throw new \InvalidArgumentException("Unknown page kind - $kind");
+    }
+    
 }

@@ -29,4 +29,19 @@ class PageStatus
             throw new \InvalidArgumentException("Unknown page status - $status");
         }                
     }
+
+    /**
+     * Get statusId by description
+     * @param string $status
+     * @throws \InvalidArgumentException
+     */
+    static public function getIdByDescription($status)
+    {
+        foreach (self::DESCRIPTIONS as $id => $desc) {
+            if ($desc === $status) {
+                return $id;
+            }            
+        }
+        throw new \InvalidArgumentException("Unknown page status - $status");
+    }    
 }

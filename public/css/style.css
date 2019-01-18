@@ -844,23 +844,23 @@ div#favorites-button {
     margin-top: 20px;
 }
 
-#authorship-summary-toggle:hover {
+.collapse-menu-toggle:hover {
     cursor: pointer;
 }
 
-#authorship-summary-toggle>span.collapse {
+.collapse-menu-toggle>span.collapse {
     display: inherit;
 }
 
-#authorship-summary-toggle>span.in{
+.collapse-menu-toggle>span.in{
     display: none;
 }
 
-#authorship-summary-toggle.expanded>span.collapse {
+.collapse-menu-toggle.expanded>span.collapse {
     display: none;
 }
 
-#authorship-summary-toggle.expanded>span.in {
+.collapse-menu-toggle.expanded>span.in {
     display: inherit;
 }
 
@@ -1043,4 +1043,99 @@ img#timelapse-state {
     left: 48%; 
     top: 50%; 
     cursor: pointer;
+}
+
+.roundup-section-title {
+    margin-left: 60px; 
+    margin-bottom: 0px;       
+}
+
+div.roundup-collapsible-table-title {
+    border: 1px #ddd solid; 
+    background-color: #eee; 
+    text-align: center; 
+    vertical-align: middle; 
+    font-size: larger;
+    margin-top: 10px;
+}
+
+.roundup-chart {
+    position: relative;    
+}
+
+.roundup-legend-controls {
+    right: 0%;
+    display: flex; 
+    flex-direction: column; 
+    align-items: flex-start;
+    position: absolute; 
+    top: 17px;
+}
+.roundup-legend-checkbox-wrapper {
+    padding-left: 5px; 
+    margin-right: 20px;
+}
+
+.roundup-legend-checkbox-wrapper>label {
+    margin-bottom: 4px; 
+    vertical-align: middle; 
+    margin-left: 18px;
+    font-weight: normal;
+}
+
+.roundup-pages-box-bounds {
+    margin-left: 60px; 
+    width: 85%;
+}
+
+.roundup-pages-title {
+    margin-left: 60px; 
+    margin-bottom: 10px;
+}
+
+.roundup-comment {
+    font-style: italic;
+    margin-bottom: 30px;
+}
+
+.roundup-comment>p{
+    margin-bottom: 5px;
+}
+
+.roundup-chart-top-radio-group {
+    position: absolute; 
+    top: 0px;     
+}
+
+.roundup-chart-top-radio-group>label {   
+    vertical-align: middle;
+} 
+
+#roundup-pages-exp-x-rating-filter{
+    left: 185px;
+}
+
+#roundup-pages-weeks-x-rating-filter {
+    left: 210px;
+}
+
+#roundup-pages-votes-x-rating-filter {
+    left: 110px;
+}
+
+#roundup-pages-rating-dynamic-filter {
+    left: 60px;
+}
+
+.roundup-tag-columns {
+    display: flex; 
+    flex-direction: row; 
+    justify-content: space-between;
+}
+.roundup-tag-column {
+    margin-right: 50px;
+}
+
+.roundup-tag-list td {
+    padding: 0 10px 0 10px;
 }

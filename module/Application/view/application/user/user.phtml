@@ -64,9 +64,9 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
         scpper.tables.assignPaginatorEvents('#page-list', '/user/pageList', {siteId: siteId, userId: userId});
         scpper.tables.assignPaginatorEvents('#vote-list', '/user/voteList', {siteId: siteId, userId: userId});
         assignFavoriteEvents();
-        $("#authorship-summary-toggle").click(function(){
+        $(".collapse-menu-toggle").click(function(){
           $(this).toggleClass('expanded');
-        })        
+        })
     }
 
     $(document).ready(init);    
@@ -121,7 +121,7 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
             Revisions: <strong><?php echo $activity->getRevisionCount(); ?></strong>
             <br>
             Pages: <strong><?php echo $activity->getAuthorshipCount(); ?></strong>
-            <span id="authorship-summary-toggle" href="javascript:;" data-toggle="collapse" data-target=".user-authorship-summary">
+            <span class="collapse-menu-toggle" href="javascript:;" data-toggle="collapse" data-target=".user-authorship-summary">
                 <span class="glyphicon glyphicon-menu-down collapse"></span>
                 <span class="glyphicon glyphicon-menu-up in"></span>                                
             </span>

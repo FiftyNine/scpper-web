@@ -1,5 +1,6 @@
 <?php $this->headTitle('2018'); ?>
 <?php $this->headScript()->appendFile('/js/scpper_roundup.js'); ?>
+<?php $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js'); ?>
 <?php $this->headScript()->captureStart(); ?>
 
 // Anonymous self-executing function not to clutter global scope with temporary stuff
@@ -12,24 +13,793 @@
                 document.getElementById("timelapse-state").hidden = !visible;
         };
     
-        scpper.roundup.seriesTimelapse.init("mainlist-timelapse", "timelapse-state", "/data/series-4-timelapse.json");
+        scpper.roundup.seriesTimelapse.init("mainlist-timelapse", "timelapse-state", "/data/roundup/2018/series-4-timelapse.json");
         $("#mainlist-timelapse-cover").on('mouseenter', function () { hideShowTimelapseButton(true); });
         $("#mainlist-timelapse-cover").on('mouseleave', function () { hideShowTimelapseButton(false); });
         $("#timelapse-state").on('click', function () { scpper.roundup.seriesTimelapse.switch(); });
+        
+        google.charts.load('current', {packages: ['corechart']});
+        <?php
+        $pages = $this->get('pages');
+        $users = $this->get('users');
+        echo "var pages = ".json_encode($pages, JSON_FORCE_OBJECT).";";
+        echo "var users = ".json_encode($users).";";
+        $data1_1 = $this->get('1.1')[0];
+        $data1_2 = $this->get('1.2');
+        $d1_3 = $this->get('1.3'); 
+        $d1_4 = $this->get('1.4'); 
+        $d1_5 = $this->get('1.5'); 
+        $d1_19 = $this->get('1.19'); 
+        ?>
+        var data1_8_x = scpper.roundup.charts.prepare_1_8_x_data(pages);
+        var points_1_8_1 = [0, 1, 2, 3, 4, 8, 12, 16, 20, 26, 38, 52, 78, 104, 130, 156, 208, 260, data1_8_x.maxExp+1];
+        var points_1_8_2 = [0, 1, 10, 20, 50, 100, 200, 300, 500, 800, 1000, data1_8_x.maxVotes+1];
+        var points_1_8_3 = [0, 1, 2, 3, 4, 5, 7, 9, 15, data1_8_x.maxAttempts+1];
+        var points_1_8_4 = [0, 1, 2, 3, 5, 10, 20, 30, 50, 80, 100, data1_8_x.maxPages+1];
+        var data1_19 = <?php echo json_encode($d1_19, JSON_NUMERIC_CHECK); ?>;
+        google.charts.setOnLoadCallback(function () {
+            scpper.roundup.charts.c1_3.go(<?php echo json_encode($d1_3, JSON_NUMERIC_CHECK); ?>, 'roundup-pages-by-date-chart');        
+            scpper.roundup.charts.c1_4.go(<?php echo json_encode($d1_4, JSON_NUMERIC_CHECK); ?>, 'roundup-pages-by-day-chart');        
+            scpper.roundup.charts.c1_5.go(<?php echo json_encode($d1_5, JSON_NUMERIC_CHECK); ?>, 'roundup-pages-by-hour-chart');
+            scpper.roundup.charts.c1_20.go(pages, 'roundup-pages-by-rating-chart');
+            scpper.roundup.charts.c1_6_1.go(pages, [], 'roundup-pages-length-x-rating-chart');
+            scpper.roundup.charts.c1_6_2.go(pages, 'roundup-pages-length-distribution-chart');
+            scpper.roundup.charts.c1_7.go(pages, 'roundup-pages-image-chart');
+            scpper.roundup.charts.c1_8.go(pages, users, [], false, 'roundup-pages-exp-x-rating-chart');
+            scpper.roundup.charts.c1_8_x.go(data1_8_x.filtered, false, false, points_1_8_1, data1_8_x.maxExp, 'ew', 'Weeks since joining', 'roundup-pages-weeks-x-rating-distribution-chart');
+            scpper.roundup.charts.c1_8_x.go(data1_8_x.filtered, false, false, points_1_8_2, data1_8_x.maxVotes, 'ev', 'Votes', 'roundup-pages-votes-x-rating-distribution-chart');
+            scpper.roundup.charts.c1_8_x.go(data1_8_x.filtered, false, false, points_1_8_3, data1_8_x.maxAttempts, 'ea', 'Previous fails', 'roundup-pages-attempts-x-rating-distribution-chart');
+            scpper.roundup.charts.c1_8_x.go(data1_8_x.filtered, false, false, points_1_8_4, data1_8_x.maxPages, 'es', 'Previous successes', 'roundup-pages-pages-x-rating-distribution-chart');
+            scpper.roundup.charts.c1_19.go(data1_19['All'], 'roundup-pages-page-rating-dynamic-chart');
+        });
+        
+        $('#roundup-pages-length-x-rating-controls :checkbox').change(function() {
+            var hidden = [];
+            $('#roundup-pages-length-x-rating-controls :checkbox').each(function(ind, el) {
+                if (!el.checked)
+                    hidden.push(Number($(el).attr("data-col")));
+            });
+            scpper.roundup.charts.c1_6_1.go(pages, hidden, 'roundup-pages-length-x-rating-chart');
+        });
+        
+        rebuild_1_8 = function() {
+            var hidden = [];
+            $('#roundup-pages-exp-x-rating-controls :checkbox').each(function(ind, el) {
+                if (!el.checked)
+                    hidden.push(Number($(el).attr("data-col")));
+            });
+            var radio = $('#roundup-pages-exp-x-rating-newcomers');
+            scpper.roundup.charts.c1_8.go(pages, users, hidden, radio.prop("checked"), 'roundup-pages-exp-x-rating-chart');
+        };        
+        $('#roundup-pages-exp-x-rating-controls :checkbox').change(rebuild_1_8);
+        $('#roundup-pages-exp-x-rating-filter :radio').change(rebuild_1_8);
+        
+        $('#roundup-pages-weeks-x-rating-filter :radio').change(function(){
+            var radio = $('#roundup-pages-weeks-x-rating-newcomers');        
+            scpper.roundup.charts.c1_8_x.go(data1_8_x.filtered, false, radio.prop("checked"), points_1_8_1, data1_8_x.maxExp, 'ew', 'Weeks since joining', 'roundup-pages-weeks-x-rating-distribution-chart');
+        });
+        
+        $('#roundup-pages-votes-x-rating-filter :radio').change(function(){
+            var radio = $('#roundup-pages-votes-x-rating-newcomers');        
+            scpper.roundup.charts.c1_8_x.go(data1_8_x.filtered, false, radio.prop("checked"), points_1_8_2, data1_8_x.maxVotes, 'ev', 'Votes', 'roundup-pages-votes-x-rating-distribution-chart');
+        });        
+        
+        $('#roundup-pages-rating-dynamic-filter :radio').change(function(){
+            var radio = $('#roundup-pages-rating-dynamic-scps');
+            if (radio.prop("checked"))
+                scpper.roundup.charts.c1_19.go(data1_19['SCP'], 'roundup-pages-page-rating-dynamic-chart');
+            else 
+                scpper.roundup.charts.c1_19.go(data1_19['All'], 'roundup-pages-page-rating-dynamic-chart');
+        });
+
+        $(".collapse-menu-toggle").click(function(){
+          $(this).toggleClass('expanded');
+        })        
+
     }        
 
     $(document).ready(init);
 }());
 
 <?php $this->headScript()->captureEnd(); ?>
-<div class="row">
-    <div class="col-md-offset-2 col-md-8 text-center">
-        <h1>Series 4 timelapse</h1>
-        <div id="mainlist-timelapse-cover">
-            <canvas id="mainlist-timelapse" width="549" height="289">
-                lol fuck old browsers
-            </canvas>
-            <img id="timelapse-state" src="img/play-btn.png">
+
+<h2 class="roundup-pages-title">Pages in 2018</h2>
+<div class="roundup-pages-box-bounds">
+    <p>Content of this page is focused on the changes that happened to the articles of the wiki in 2018. I examine posted and deleted pages and attempt to present data in a way that reveals trends relevant to posting as well as connections between various properties of an article. Much of this post deals with success and rating of pages posted in 2018. For the purpose of this post any page that wasn't deleted I will call <em>"good"</em> or a <em>"success"</em>.</p>
+    <p>Most of the data will be presented in the form of tables and charts. Charts are interactive: hover mouse cursor over the elements of a chart to see detailed hints and left click to select those elements. Many charts support zoom: press left mouse button and drag cursor over a chart to select an area for zoom-in. Click right mouse button to reset chart to its default scale.</p>
+    <p>Finally, I would like to note that it is not the purpose of this work to perform conclusive analysis of presented data and establish aforementioned trends and dependencies beyond a shadow of a doubt. Rather I aim to present data in an easily digestible way, add some thoughts of my own and leave conclusions to a reader.</p>
+</div>        
+<!-- 1.2 -->
+<h4 class="roundup-section-title">General information</h4>
+<div class="roundup-pages-box-bounds roundup-comment top-buffer-small">
+    <p>
+        2018 was a busy year for the wiki. At least <?php echo $data1_1['Total']; ?> pages were posted during the year by <?php echo $this->get('1.20')['all']; ?> different users. <?php echo $data1_1['Good']; ?> articles written by <?php echo $this->get('1.20')['good']; ?> authors survived voting and remain on the wiki still.
+    </p>
+</div>
+<table class="table table-striped roundup-pages-box-bounds top-buffer-small">
+    <tbody>
+        <tr>                                        
+            <th></th>
+            <?php foreach (\Application\Utils\PageKind::DESCRIPTIONS as $desc): ?>
+            <th><?php echo $this->escapeHtml($desc); ?></th>
+            <?php endforeach; ?>
+            <th>All</th>
+        </tr>
+        <tr>
+            <th>Remaining</th>
+            <?php foreach ($data1_2 as $row): ?>
+            <td><?php printf("%d<br>(%.1f%%)", $row['Good'], $row['Good']/$row['Total']*100); ?></td>
+            <?php endforeach; ?>
+            <td><?php printf("%d<br>(%.1f%%)", $data1_1['Good'], $data1_1['Good']/$data1_1['Total']*100); ?></td>
+        </tr>
+        <tr>
+            <th>Deleted</th>
+            <?php foreach ($data1_2 as $row): ?>
+            <td><?php printf("%d<br>(%.1f%%)", $row['Bad'], $row['Bad']/$row['Total']*100); ?></td>
+            <?php endforeach; ?>
+            <td><?php printf("%d<br>(%.1f%%)", $data1_1['Bad'], $data1_1['Bad']/$data1_1['Total']*100); ?></td>
+        </tr>
+        <tr>
+            <th>Total</th>
+            <?php foreach ($data1_2 as $row): ?>
+            <td><?php printf("%d<br>(%.1f%%)", $row['Total'], $row['Total']/$data1_1['Total']*100); ?></td>
+            <?php endforeach; ?>
+            <td><?php echo $data1_1['Total']; ?></td>
+        </tr>                
+    </tbody>
+</table>
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+    Percentages in the first two rows ("Remaining" and "Deleted") show portion of pages of certain type (SCP, tale, etc) that are "good" or "bad" respectively. Percentages in the last row reflect portion that pages of this type make to all pages posted in 2018.
+    </p>
+    <p>
+    ScpperDB defines type of a page by its tags, so all pages that don't have distinct tags or had been deleted before they got tagged are considered to be of "Unknown" type</em>
+    </p>
+    <p>
+    Interesting, if not surprising fact is that mainlist articles and jokes fail much more often than submissions of any other type.            
+    </p>
+</div>
+<!-- 1.3 -->
+<h4 class="roundup-section-title">Distribution of pages by date and time of posting</h4>
+<div class="roundup-pages-box-bounds roundup-comment top-buffer-small">
+    <p>
+        Normally ScpperDB shows dates and times at GMT+0, but in this section they are converted to US Central Standard Time (GMT-6), although this conversion does not account for daylight saving time because fuck that.
+    </p>
+</div>
+<div class="roundup-chart top-buffer-small">
+    <div class="chart-container" id="roundup-pages-by-date-chart">
+
+    </div>
+</div>   
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        An astute reader may notice that there aren't any deleted articles during the first two weeks of the year. The explanation for this is simple: ScpperDB only started archiving deleted pages on 2018-01-15, so I don't have data from before that.
+    </p>
+    <p>
+        The spike in submissions that happened during mid-February was caused by the 72-hour contest. Likewise the splash at the end of July coincides with the deadline for the 4000 contest. Increased activity at the start of July was likely a result of Series 5 being opened for posting. I don't have an immediate explanation for the rest of the spikes or pits in the chart.
+    </p>
+</div>        
+<!-- 1.4 -->
+<div class="roundup-chart">
+    <div class="chart-container" id="roundup-pages-by-day-chart">
+
+    </div>
+</div>
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        Submission rate remains relatively stable throughout the week, fluctuating between 619 (100%) on Friday and 703 (114%) on Monday.
+    </p>
+    <p>
+        Success rate also doesn't change much, falling to its lowest 38.1% on Wednesday, then rising to 43.3% on Saturday, then falling back again.
+    </p>
+</div>
+<!-- 1.5 -->
+<div class="roundup-chart">
+    <div class="chart-container" id="roundup-pages-by-hour-chart">
+
+    </div>
+</div>
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        Activity on the hourly chart follows a pattern typical for a website with primarily north-american audience. Submission rate peaks at 17:00 to 17:59 (that is 5 to 6 pm) although it remains at comparable levels throughout the entire afternoon and evening, abruptly dropping after 23 o'clock (11 pm). There's a curious small drop in activity around 6 pm, immediately following the preceding spike. Perhaps around this time users hurry to post their draft and then leave work for home?</p>
+    <p>
+        Success rate does not present a clear pattern although it has two noticeable peaks, one around 14 o'clock (2 pm), the other one around 22 o'clock to 1 o'clock (10 pm to 1 am).
+    </p>
+</div>
+<!-- 1.20 -->
+<h4 class="roundup-section-title">Distribution of pages by rating</h4>
+<div class="roundup-chart">
+    <div class="chart-container" id="roundup-pages-by-rating-chart">
+
+    </div>
+</div>       
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        There is no way to know when exactly a page was deleted or what state it was in at the time, because once that happened all information about a page is gone from Wikidot. So for deleted articles ScpperDB uses data collected during the last update when an article was still up. Which means that a page may have rating of -7 on ScpperDB but in reality it was already at -20 at the time of deletion. So for the negative deleted pages we may say with confidence that a page was at least at -X but chances are it eventually fell even lower.
+    </p>
+    <p>
+        On the positive side of the horizontal axis pages form a fairly standard pattern. Perhaps the only interesting thing here is that there are fewer pages on 0 to 9 interval than on 10 to 19 interval. There is a few pages at the right end of the chart, placed so sparsely that they are invisible without zoom.
+    </p>
+</div>        
+<!-- 1.6 -->
+<h4 class="roundup-section-title">Correlation between the length of a page and its rating</h4>
+<div class="roundup-pages-box-bounds roundup-comment top-buffer-small">
+    <p>This section examines if and how length of an article is connected to its rating. Out of convenience length is counted as the number of characters in page's source code. Unfortunately this leads to incorrect measurements for some articles that consist of several pages or incorporate other pages via iframes and inclusion blocks.</p>
+</div>
+<div class="roundup-chart">
+    <div class="chart-container" id="roundup-pages-length-x-rating-chart">
+
+    </div>
+    <div id="roundup-pages-length-x-rating-controls" class="roundup-legend-controls">
+        <div>
+            <div class="roundup-legend-checkbox-wrapper"><input type="checkbox" data-col="0" checked><label>SCPs</label></div>
+            <div class="roundup-legend-checkbox-wrapper"><input type="checkbox" data-col="1" checked><label>Tales</label></div>
+            <div class="roundup-legend-checkbox-wrapper"><input type="checkbox" data-col="2" checked><label>Jokes</label></div>
+            <div class="roundup-legend-checkbox-wrapper"><input type="checkbox" data-col="3" checked><label>GOIs</label></div>
+            <div class="roundup-legend-checkbox-wrapper"><input type="checkbox" data-col="4" checked><label>Others</label></div>
         </div>
     </div>
 </div>
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        This chart is supposed to give a reader a general idea as to how pages of a certain type or types are distributed by length and rating. You can turn show and hide different types by clicking on their respective checkboxes in legend. You can also zoom in on specific areas. I leave conclusions to the reader but note that pages are situated most densely between 3,000 and 15,000 characters.
+    </p>
+</div>
+<div class="roundup-chart">
+    <div class="chart-container" id="roundup-pages-length-distribution-chart">
+
+    </div>
+</div>        
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        Vast majority of deleted pages have fewer than 10,000 characters to them. The curious part here is that distributions for all other rating groups look fairly similar to each other, suggesting that length of a page does not affect it's rating much, if it does at all.
+    </p>
+</div>
+<!-- 1.7 -->
+<h4 class="roundup-section-title">Correlation between presence of an image and page's rating</h4>
+<div class="roundup-chart">
+    <div class="chart-container" id="roundup-pages-image-chart">
+
+    </div>
+</div>
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        This chart shows for different rating groups a percentage of pages that include images. A line is not the best way to present this data but for technical reasons it was the best I could do. Regardless, we can see that articles rated over 50 include images significantly more often than any group under 50 points. This doesn't necessarily mean that an image brings more positive votes. One other plausible explanation is that higher rated pages have more work and care go into them, which includes finding an appropriate image.
+    </p>
+</div>
+<!-- 1.8 -->
+<h4 class="roundup-section-title">Correlation between author's experience and page's rating</h4>
+<div class="roundup-pages-box-bounds roundup-comment top-buffer-small">
+    <p>
+        This section attempts to show how quality of a submission is related to experience of a poster. Data here excludes pages attributed to multiple users (collaborations, rewrites, etc). For the purpose of brevity I will use term "newcomer" for the users who didn't have a successful page on the wiki at the time of submission. Quality of submissions is measured in two ways: 
+        <ul>
+            <li>Percent of successful pages to all posts (blue line);</li>
+            <li>Average rating, for successful pages (red line).</li>
+        </ul>.
+        For posters' experience I use four different metrics:
+        <ul>
+            <li>Number of weeks since joining the wiki;</li>
+            <li>Number of votes they cast prior to submission;</li> 
+            <li>Number of previous failed posts (newcomers only);</li>
+            <li>Number of previous successes.</li>
+        </ul>
+        First three charts in this section allow reader to switch between showing submissions from all users or only from newcomers.
+        Line charts group pages into several intervals based on the relevant metric. Choice of intervals is important for this type of chart as different grouping may affect final picture (same principle as gerrymandering). Which is why I've chosen them using gut feeling. Eh.
+    </p>
+</div>        
+<div class="roundup-chart">            
+    <div class="chart-container" id="roundup-pages-exp-x-rating-chart">
+
+    </div>
+    <div id="roundup-pages-exp-x-rating-filter" class="roundup-chart-top-radio-group">
+        <input type="radio" name="roundup-pages-exp-x-rating-filter" id="roundup-pages-exp-x-rating-all" value="false" checked="true"><label>All</label>
+        <input type="radio" name="roundup-pages-exp-x-rating-filter" id="roundup-pages-exp-x-rating-newcomers" value="true"><label>Newcomers</label>
+    </div>
+    <div id="roundup-pages-exp-x-rating-controls" class="roundup-legend-controls">
+        <div class="roundup-legend-checkbox-wrapper"><input type="checkbox" data-col="0" checked><label>SCPs</label></div>
+        <div class="roundup-legend-checkbox-wrapper"><input type="checkbox" data-col="1" checked><label>Tales</label></div>
+        <div class="roundup-legend-checkbox-wrapper"><input type="checkbox" data-col="2" checked><label>Jokes</label></div>
+        <div class="roundup-legend-checkbox-wrapper"><input type="checkbox" data-col="3" checked><label>GOIs</label></div>
+        <div class="roundup-legend-checkbox-wrapper"><input type="checkbox" data-col="4" checked><label>Others</label></div>
+    </div>            
+</div>
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        There's a lot of data in this chart and a bunch of switches to customize it, so naturally there's quite a few observations one may make by looking at it. For example, by comparing tales and jokes posted by newcomers we can see that tales fare much better on average. Two statistical oddities that immediately jump to the eye is a particularly productive couple of weeks by Tanhony and Ihp and sudden lull in 370-400 weeks range.
+    </p>
+</div>
+<div class="roundup-chart">
+    <div class="chart-container" id="roundup-pages-weeks-x-rating-distribution-chart">
+
+    </div>
+    <div id="roundup-pages-weeks-x-rating-filter" class="roundup-chart-top-radio-group">
+        <input type="radio" name="roundup-pages-weeks-x-rating-filter" id="roundup-pages-weeks-x-rating-all" value="false" checked="true"><label>All</label>
+        <input type="radio" name="roundup-pages-weeks-x-rating-filter" id="roundup-pages-weeks-x-rating-newcomers" value="true"><label>Newcomers</label>
+    </div>
+</div>        
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        In this chart posts are grouped into a few preselected intervals based on poster's age of membership.
+    </p>
+    <p>
+        Success rate for all members doesn't hold any surprises - for the most part rising along with the experience. Average rating line looks somewhat similar if more erratic. Interesting difference between the two happens at 0 weeks: success rate is at it's lowest, while average rating starts at respectable 46 points, after which it drops to its global minimum at 2-3 weeks. Possible explanations for this include people who were banned or left (which resets their membership) coming back to post something, sockpuppets or people who don't bother signing up until they polished their draft.
+    </p>
+    <p>
+        Switching to "newcomers only" introduces a lot of chaos to the chart. Line plotting success rate against membership age still shows gradual growth although it jumps up and down much more. One thing is undeniable: posters with just one week of experience on the wiki are three times as likely to post a successful article than those just rolled into shop. Rating line here is all over the place and doesn't show any obvious trends. However, average rating at 0 weeks is at its local maximum which supports our previous hypothesis about some people joining with a proper draft or at least a very good idea of one. Or sockpuppets.
+    </p>
+</div>        
+<div class="roundup-chart">
+    <div class="chart-container" id="roundup-pages-votes-x-rating-distribution-chart">
+
+    </div>
+    <div id="roundup-pages-votes-x-rating-filter" class="roundup-chart-top-radio-group">
+        <input type="radio" name="roundup-pages-votes-x-rating-filter" id="roundup-pages-votes-x-rating-all" value="false" checked="true"><label>All</label>
+        <input type="radio" name="roundup-pages-votes-x-rating-filter" id="roundup-pages-votes-x-rating-newcomers" value="true"><label>Newcomers</label>
+    </div>
+</div>
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        In this chart posts are grouped into a few preselected intervals based on the number of poster's votes they cast before the post. Arguably this can be a metric of how many articles a user had actually read before submitting a post.
+    </p>
+    <p>
+        Both lines for all users look similar to the previous chart and don't warrant additional commentary.
+        Newcomers plot for the success rate still grows very fast with the number of votes, doubling from 4.5% at 0 votes to 9% at not-zero votes. Next step to mere 10-19 votes triples success rate again, and it keeps growing still. It must be pointed out that there's not enough submissions made after 200 mark to form any reliable statistic. One conclusion that we can draw from it is that very few people try their hand at being writers after passively lurking for a good while.
+        Rating chart, again, is too chaotic to gleam any correlation from it. However, if we trust that the data we have is enough to draw some conclusions from it, we can try the following: although more experience definitely helps with writing a first passable page, it doesn't take you much beyond that. Perhaps, people are just happy enough to post <em>something</em> for their first work as long as it stays on the wiki.
+    </p>
+</div>                
+<div class="roundup-chart">
+    <div class="chart-container" id="roundup-pages-attempts-x-rating-distribution-chart">
+
+    </div>
+</div>
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        In this chart posts are grouped into a few preselected intervals based on the number of previously failed pages by the same user. Failed pages have to precede the post by three days or more to count to exclude serial coldposts and trolling. Naturally data in this chart include only newcomers.
+    </p>
+    <p>
+        I'm not sure if data is reliable enough here or if I'm presenting this data in a correct manner because it looks like success rate starts at solid 12% for the first post ever and then drops to abysmal 2.5% for the fourth attempt after which it rises again. It looks like newcomers either succeed on the first 2-3 tries, drop writing altogether or persist and manage to nail it after 5 or more attempts. Although every interval after 3 fails only has 1 or 2 successes to it, so slightly different choice of intervals or a lucky occasion could change the plot dramatically. There's definitely not enough data for the rating plot to be meaningful.
+    </p>
+</div>
+<div class="roundup-chart">
+    <div class="chart-container" id="roundup-pages-pages-x-rating-distribution-chart">
+
+    </div>
+</div>                
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        In this chart posts are grouped into a few preselected intervals based on the number of previously successful pages by the same user.
+    </p>
+    <p>
+        Nothing unexpected here, but having hard numbers to back up a preconceived notion as always good. Success rate going from 0 pages to 1 skyrockets from 11.2% to 67.8% and generally keeps growing, reaching 100% at 80 (or so) pages. Average rating grows until 10 pages mark, but then jumps around without really going one way or another.
+    </p>
+</div>
+
+<div class="roundup-pages-box-bounds">
+    <h4>Highest rated pages by type</h4>
+    <!-- 1.10 -->        
+    <?php $data1_10 = $this->get('1.10'); ?>
+    <?php foreach ($data1_10 as $kindId => $top): ?>
+    <?php if ($kindId == \Application\Utils\PageKind::SERVICE) { continue; } ?>        
+    <div class="collapse-menu-toggle roundup-collapsible-table-title" data-toggle="collapse" data-target="#roundup-top-pages-<?php echo $kindId; ?>" href="javascript:;" title="Click to show or hide">
+        <strong><?php echo \Application\Utils\PageKind::getDescription($kindId); ?></strong>
+        <span class="glyphicon glyphicon-menu-down collapse"></span>
+        <span class="glyphicon glyphicon-menu-up in"></span>                                
+    </div>
+    <div id="roundup-top-pages-<?php echo $kindId; ?>" class="collapse">
+        <table class="table table-striped">
+            <tbody>
+                <tr>                                        
+                    <th class="column-index">#</th>
+                    <th class="column-page">Page</th>
+                    <th>Rating</th>
+                    <th class="column-date">Posted</th>
+                    <th class="column-users">Authors</th>
+                </tr>
+                <?php foreach ($top as $index => $pid): ?>
+                <tr>                    
+                    <?php $page = $pages[$pid]; ?>
+                    <?php $pageView = new \Application\Utils\Roundup\PageView($pid, $page); ?>
+                    <?php 
+                        $authorViews = [];
+                        foreach ($page['a'] as $uid => $author) {
+                            $user = $users[$uid];
+                            $authorViews[] = new \Application\Utils\Roundup\AuthorView($uid, $user, $author['r']);
+                        } 
+                    ?>
+                    <td><?php echo $index+1; ?></td>
+                    <td><?php echo $this->partial('partial/page.phtml', ['page' => $pageView]); ?></td>
+                    <td><?php echo $page['r']; ?></td>
+                    <td><?php echo substr($page['c'], 0, 10); ?></td>
+                    <td><?php echo $this->partial('partial/authors.phtml', ['authors' => $authorViews, 'collapsed' => false]); ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>        
+    </div>
+    <?php endforeach; ?>        
+    <div class="roundup-comment top-buffer-small">
+        <p>
+            Not much to say about this one. I could include a table with 10 highest rated across all categories, but it would've been 8-9 SCPs and 1 or 2 jokes.
+        </p>
+    </div>
+    <!-- 1.12 -->
+    <h4>Underrated pages</h4>
+    <?php $data1_12 = $this->get('1.12'); ?>
+    <div class="collapse-menu-toggle roundup-collapsible-table-title" data-toggle="collapse" data-target="#roundup-underrated-pages" href="javascript:;" title="Click to show or hide">
+        <strong>Underrated</strong><br><span class="small-text">Rating under 50 and high Wilson score</span>
+        <span class="glyphicon glyphicon-menu-down collapse"></span>
+        <span class="glyphicon glyphicon-menu-up in"></span>                                
+    </div>        
+    <div id="roundup-underrated-pages" class="collapse">
+        <table class="table table-striped">
+            <tbody>
+                <tr>                                        
+                    <th class="column-index">#</th>
+                    <th class="column-page">Page</th>
+                    <th>Rating</th>
+                    <th>Kind</th>
+                    <th class="column-date">Posted</th>                        
+                    <th class="column-users">Authors</th>
+                </tr>
+                <?php foreach ($data1_12 as $index => $item): ?>
+                <tr>                    
+                    <?php $pid = $item['PageId']; ?>
+                    <?php $page = $pages[$pid]; ?>
+                    <?php $pageView = new \Application\Utils\Roundup\PageView($pid, $page); ?>
+                    <?php 
+                        $authorViews = [];
+                        foreach ($page['a'] as $uid => $author) {
+                            $user = $users[$uid];
+                            $authorViews[] = new \Application\Utils\Roundup\AuthorView($uid, $user, $author['r']);
+                        } 
+                    ?>
+                    <td><?php echo $index+1; ?></td>
+                    <td><?php echo $this->partial('partial/page.phtml', ['page' => $pageView]); ?></td>
+                    <td><?php echo $page['r']; ?></td>
+                    <td><?php echo \Application\Utils\PageKind::getDescription($page['k']); ?></td>
+                    <td><?php echo substr($page['c'], 0, 10); ?></td>
+                    <td><?php echo $this->partial('partial/authors.phtml', ['authors' => $authorViews, 'collapsed' => false]); ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <div class="roundup-comment top-buffer-small">
+        <p>
+            It's hard to define what "underrated" means so I went with two arbitrary parameters: rating under 50 and <a href="/about">Wilson score</a> over 0.87. With different parameters those could've been an entirely different set of pages so think about this category as some a bunch of reading suggestions rather than a definitive list.
+        </p>
+    </div>
+    <!-- 1.11 -->
+    <h4>The most controversial</h4>
+    <?php $data1_11 = $this->get('1.11'); ?>
+    <div class="collapse-menu-toggle roundup-collapsible-table-title" data-toggle="collapse" data-target="#roundup-controversial-pages" href="javascript:;" title="Click to show or hide">
+        <strong>Top 25 controversial</strong>
+        <span class="glyphicon glyphicon-menu-down collapse"></span>
+        <span class="glyphicon glyphicon-menu-up in"></span>                                
+    </div>        
+    <div id="roundup-controversial-pages" class="collapse">
+        <table class="table table-striped">
+            <tbody>
+                <tr>                                        
+                    <th class="column-index">#</th>
+                    <th class="column-page">Page</th>
+                    <th>Rating</th>
+                    <th>Votes</th>
+                    <th>Kind</th>
+                    <th class="column-date">Posted</th>                        
+                    <th class="column-users">Authors</th>
+                </tr>
+                <?php foreach ($data1_11 as $index => $cPage): ?>
+                <tr>                    
+                    <?php $pid = $cPage['PageId']; ?>
+                    <?php $page = $pages[$pid]; ?>
+                    <?php $pageView = new \Application\Utils\Roundup\PageView($pid, $page); ?>
+                    <?php 
+                        $authorViews = [];
+                        foreach ($page['a'] as $uid => $author) {
+                            $user = $users[$uid];
+                            $authorViews[] = new \Application\Utils\Roundup\AuthorView($uid, $user, $author['r']);
+                        } 
+                    ?>
+                    <td><?php echo $index+1; ?></td>
+                    <td><?php echo $this->partial('partial/page.phtml', ['page' => $pageView]); ?></td>
+                    <td><?php echo $page['r']; ?></td>
+                    <td><?php echo $cPage['Total']; ?></td>
+                    <td><?php echo \Application\Utils\PageKind::getDescription($page['k']); ?></td>
+                    <td><?php echo substr($page['c'], 0, 10); ?></td>
+                    <td><?php echo $this->partial('partial/authors.phtml', ['authors' => $authorViews, 'collapsed' => false]); ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>        
+    </div>
+    <div class="roundup-comment top-buffer-small">
+        <p>
+            I didn't start the fire . I simply did my best to define the fire with a formula and make a nice table out of it. This table contains pages that hover close to 0 rating while having as many total votes as possible. This is not necessarily a mark of controversy, it can signify mediocrity as well. But the fact that many people disagreed with each other on whether the page in question is good or bad makes it somewhat interesting.
+        </p>
+    </div>
+    <!-- 1.16 -->
+    <h4>Old pages deleted in 2018</h4>
+    <?php $data1_16 = $this->get('1.16'); ?>
+    <div class="collapse-menu-toggle roundup-collapsible-table-title" data-toggle="collapse" data-target="#roundup-old-pages" href="javascript:;" title="Click to show or hide">
+        <strong>Old deleted</strong>
+        <span class="glyphicon glyphicon-menu-down collapse"></span>
+        <span class="glyphicon glyphicon-menu-up in"></span>                                
+    </div>        
+    <div id="roundup-old-pages" class="collapse">
+        <table class="table table-striped">
+            <tbody>
+                <tr>                                        
+                    <th class="column-index">#</th>
+                    <th class="column-page">Page</th>
+                    <th>Rating</th>
+                    <th>Kind</th>
+                    <th class="column-date">Posted</th>                        
+                    <th class="column-users">Authors</th>
+                </tr>
+                <?php foreach ($data1_16 as $index => $item): ?>
+                <tr>                    
+                    <?php $pid = $item['PageId']; ?>
+                    <?php $page = $this->oldPages[$pid]; ?>
+                    <?php $pageView = new \Application\Utils\Roundup\PageView($pid, $page); ?>
+                    <?php 
+                        $authorViews = [];
+                        foreach ($page['a'] as $uid => $author) {
+                            $user = $users[$uid];
+                            $authorViews[] = new \Application\Utils\Roundup\AuthorView($uid, $user, $author['r']);
+                        } 
+                    ?>
+                    <td><?php echo $index+1; ?></td>
+                    <td><?php echo $this->partial('partial/page.phtml', ['page' => $pageView]); ?></td>
+                    <td><?php echo $page['r']; ?></td>
+                    <td><?php echo \Application\Utils\PageKind::getDescription($page['k']); ?></td>
+                    <td><?php echo substr($page['c'], 0, 10); ?></td>
+                    <td><?php echo $this->partial('partial/authors.phtml', ['authors' => $authorViews, 'collapsed' => false]); ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>        
+    </div>
+    <div class="roundup-comment top-buffer-small">
+        <p>
+            This one is pretty straightforward: a list of all pages, good or bad, created before 2018 and deleted during the year. Most of them belonged to people who left the wiki and took their stuff with them, but there's quite a few others. You can open ScpperDB page for any articles and read its source code, as it was at the moment of the last update before deletion.
+        </p>
+    </div>        
+    <!-- 1.15 -->
+    <?php $data1_15 = $this->get('1.15'); ?>
+    <h4>The most contested mainlist slots</h4>
+    <div class="roundup-comment">
+        <p>
+            <strong><?php echo $data1_15[0]['Num']; ?></strong> was the most sought for slot in 2018 with at least <em><?php echo $data1_15[0]['Count']; ?></em> attempts to secure it. 
+            <br>
+            The rest of the top 10 is as follows:         
+            <?php foreach ($data1_15 as $index => $slot): ?>
+            <?php if ($index === 0) { continue; } ?>
+            <strong><?php echo $slot['Num']; ?></strong><?php
+                if ($index == count($data1_15)-1 || $slot['Count'] != $data1_15[$index+1]['Count']) {
+                    printf(' with %d%s', $slot['Count'], ($index == count($data1_15)-1) ? '.' : ',');
+                } else {
+                    echo ',';
+                }
+            ?>            
+            <?php endforeach; ?>
+        </p>        
+    </div>
+    <!-- 1.17 -->
+    <h4>Translations</h4>
+    <div class="roundup-comment">
+        <p>At least <em>820</em> new pages from the english branch were translated into other languages in 2018, making it at least <em>1650 translations</em> in total. Fastest non-service translation was <a href="/page/93501440">korean page</a> of <a href="/page/93493917">how do i delete articles</a> which was posted mere 51 minutes after the original.
+    </div>
+</div>
+<!-- 1.14 -->
+<h4 class="roundup-section-title">Typical dynamic of page's rating over time</h4>
+<div class="roundup-chart top-buffer-small">
+    <div class="chart-container" id="roundup-pages-page-rating-dynamic-chart">
+
+    </div>
+    <div id="roundup-pages-rating-dynamic-filter" class="roundup-chart-top-radio-group">
+        <input type="radio" name="roundup-pages-rating-dynamic-filter" id="roundup-pages-rating-dynamic-all" value="false" checked="true"><label>All</label>
+        <input type="radio" name="roundup-pages-rating-dynamic-filter" id="roundup-pages-rating-dynamic-scps" value="true"><label>SCPs</label>
+    </div>
+</div>
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        This particular chart demonstrates how rating of a successful article changes over the page's first year. Rating value is expressed as percentage of rating in the end of the year, which is why line ends neatly at 100%. Line shows average value across all pages at certain points: 1 day, 2 days, a week, etc. 
+    </p>
+    <p>
+        Average by itself doesn't give any idea how actual values are distributed - are they tightly clustered around the average or placed sparsely? Percentile areas to the rescue! Translucent area around the mean line show bounds for 3 percentiles: 50%, 75% and 95%. In other words: if we were to take any given date (a day, a week, a month) and chart ratings for individual articles at this date as points, 50% of the points would fall into the most opaque area, 75% - into the the most and second-most opaque areas, and all three areas would cover 95% of the points. Knowing these values we can predict future rating of a page with some degree of certainty. Granted, in this particular case this degree of certainty won't be very high.
+    </p>
+    <p>
+        Another note: for obvious reasons this chart uses data from 2017.
+    </p>            
+</div>        
+<h4 class="roundup-section-title">Series 4 timelapse</h4>
+<div class="roundup-pages-box-bounds top-buffer-small text-center">
+    <div id="mainlist-timelapse-cover">
+        <canvas id="mainlist-timelapse" width="579" height="289">
+            lol fuck old browsers
+        </canvas>
+        <img id="timelapse-state" src="img/play-btn.png">
+    </div>
+</div>        
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        Click on the button in the middle to start animation, click again to pause it. Nothing particularly educational about this thing, but it was fun to make and it's interesting to see how people snatch free slots from the main list. There are some errors in there on account of people moving their articles from one slot to another and other shenanigans, but for the most part it's correct. Also, ScpperDB didn't start archiving pages until 2018-01-15, so the first half of the animation goes kind of slowly.
+    </p>
+</div>
+<h2 class="roundup-pages-title">Tags in 2018</h2>        
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        I didn't have any exciting ideas for this section, so here's some top 25 lists. I also did not sort through them, even if removing some generic tags like _image would've made these lists more informative. But anyway, perhaps someone will find this interesting. Data in this section only includes successful pages posted in 2018.
+    </p>        
+</div>
+<div class="roundup-pages-box-bounds top-buffer-small roundup-tag-columns">
+    <div>
+        <h4>Biggest tags</h4>
+        <div class="roundup-tag-columns">
+            <div class="roundup-tag-column">
+                <b>By number of pages</b>
+                <table class="roundup-tag-list">
+                    <tbody>
+                    <?php foreach ($this->tags['1.1'] as $t): ?>
+                    <tr>
+                        <td><?php echo $t['Tag']; ?></td>
+                        <td><?php echo $t['Count']; ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <b>By average rating</b>
+                <table class="roundup-tag-list">
+                    <tbody>
+                        <?php foreach ($this->tags['1.2'] as $t): ?>
+                        <tr>
+                            <td><?php echo $t['Tag']; ?></td>
+                            <td><?php printf("%.1f", $t['Rating']); ?></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>            
+        </div>
+    </div>
+    <div>
+        <h4>Biggest new tags</h4>
+        <div class="roundup-tag-columns">
+            <div class="roundup-tag-column">
+                <b>By number of pages</b>
+                <table class="roundup-tag-list">
+                    <tbody>
+                    <?php foreach ($this->tags['2.1'] as $t): ?>
+                    <tr>
+                        <td><?php echo $t['Tag']; ?></td>
+                        <td><?php echo $t['Count']; ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <b>By average rating</b>
+                <table class="roundup-tag-list">
+                    <tbody>
+                        <?php foreach ($this->tags['2.2'] as $t): ?>
+                        <tr>
+                            <td><?php echo $t['Tag']; ?></td>
+                            <td><?php printf("%.1f", $t['Rating']); ?></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>            
+        </div>
+    </div>            
+</div>
+<div class="roundup-pages-box-bounds roundup-comment top-buffer-small">
+    <p>
+        These categories should be fairly obvious. A tag is considered new only if it doesn't appear on any page posted before 2018-01-01.
+    </p>        
+</div>
+<div class="roundup-pages-box-bounds top-buffer-small">
+    <h4>Growth</h4>
+    <div class="roundup-tag-columns">                
+        <div class="roundup-tag-column">
+            <b>The most growth</b>
+            <table class="roundup-tag-list">
+                <tbody>
+                <?php foreach ($this->tags['3'] as $t): ?>
+                <tr>
+                    <td><?php echo $t['Tag']; ?></td>
+                    <td><?php printf("%.1f%%", $t['Growth']); ?></td>
+                </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <div class="roundup-tag-column">
+            <b>The most authors</b>
+            <table class="roundup-tag-list">
+                <tbody>
+                    <?php foreach ($this->tags['4'] as $t): ?>
+                    <tr>
+                        <td><?php echo $t['Tag']; ?></td>
+                        <td><?php echo $t['AuthorCount']; ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <div class="roundup-tag-column">
+            <b>Zero growth</b>
+            <table class="roundup-tag-list">
+                <tbody>
+                    <?php $t5 = $this->tags['5']; ?>
+                    <?php for ($i=0; $i<count($t5)/2; $i++): ?>
+                    <tr>
+                        <td><?php echo $t5[$i]['Tag']; ?></td>                                
+                        <td>
+                            <?php 
+                                $j = $i+floor(count($t5)/2)+1; 
+                                if ($j < count($t5)) {
+                                    echo $t5[$j]['Tag'];                                            
+                                }
+                            ?>
+                        </td>
+                    </tr>
+                    <?php endfor; ?>
+                </tbody>
+            </table>
+        </div>                    
+    </div>      
+</div>
+<div class="roundup-pages-box-bounds roundup-comment top-buffer-small">
+    <p>
+        In the first column growth is expressed as ratio of number of pages with this tag at the time of writing to the number of pages with this tag at the beginning of 2018. Only pages that had the tag before the first of January 2018 are actually counted in the denominator. So tags that have been added to the old pages during 2018 still are counted towards growth.
+    </p>        
+    <p>
+        The second list can be rephrased as "the most popular tags". I entertained the idea to revert this list and show the tags that the least number of people used, but I think all of them were characters tags. Another options was "number of pages divided by number of authors" but I'm not sure what that would've shown. But in case you're curious: "dread&circuses" won with 43 pages between authors. "s&c-plastics" and "51174" took second and third places respectively.
+    </p>            
+    <p>
+        The last list are tags that exist on pages from previous years, but aren't on any page posted in 2018. A lot of those are archival tags, for the past contests and such, but some were abandoned or simply became unpopular.
+    </p>            
+</div>        
+<div class="roundup-pages-box-bounds top-buffer-small">
+    <h4>Pages with the most tags</h4>
+    <table class="table table-striped">
+        <tbody>
+            <tr>                                        
+                <th class="column-index">#</th>
+                <th class="column-page">Page</th>
+                <th>Tags</th>
+                <th class="column-date">Posted</th>
+                <th class="column-users">Authors</th>
+            </tr>
+            <?php foreach ($this->tags['6'] as $index => $raw): ?>
+            <tr>                    
+                <?php $pid = $raw['PageId']; ?>
+                <?php $page = $pages[$pid]; ?>
+                <?php $pageView = new \Application\Utils\Roundup\PageView($pid, $page); ?>
+                <?php 
+                    $authorViews = [];
+                    foreach ($page['a'] as $uid => $author) {
+                        $user = $users[$uid];
+                        $authorViews[] = new \Application\Utils\Roundup\AuthorView($uid, $user, $author['r']);
+                    } 
+                ?>
+                <td><?php echo $index+1; ?></td>
+                <td><?php echo $this->partial('partial/page.phtml', ['page' => $pageView]); ?></td>
+                <td><?php echo $raw['Count']; ?></td>
+                <td><?php echo substr($page['c'], 0, 10); ?></td>
+                <td><?php echo $this->partial('partial/authors.phtml', ['authors' => $authorViews, 'collapsed' => false]); ?></td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>        
+</div>    
+<div class="roundup-pages-box-bounds roundup-comment top-buffer-small">
+    <p>
+        SCP-3615 is also the most tagged article among all articles ever, so congratulations on that.
+    </p>        
+</div>        

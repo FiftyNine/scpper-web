@@ -131,7 +131,7 @@ class PageService implements PageServiceInterface
     public function findByName($mask, $sites, $deleted = false, $order = null, $paginated = false, $page = 1, $perPage = 10)
     {
         $pages = $this->mapper->findPagesByName($sites, $mask, $deleted, $order, $paginated);
-        $this->preparePages($pages, $paginated, $page, $perPage);
+        $pages = $this->preparePages($pages, $paginated, $page, $perPage);
         return $pages;        
     }
     
@@ -149,7 +149,7 @@ class PageService implements PageServiceInterface
     public function findSitePages($siteId, $type = PageStatus::ANY, \DateTime $createdAfter = null, \DateTime $createdBefore = null, $deleted = false, $order = null, $paginated = false, $page = 1, $perPage = 10)
     {
         $pages = $this->mapper->findSitePages($siteId, $type, $createdAfter, $createdBefore, $deleted, $order, $paginated);
-        $this->preparePages($pages, $paginated, $page, $perPage);
+        $pages = $this->preparePages($pages, $paginated, $page, $perPage);
         return $pages;        
     }
         
@@ -159,7 +159,7 @@ class PageService implements PageServiceInterface
     public function findPagesByUser($userId, $siteId, $deleted = false, $order = null, $paginated = false, $page = 1, $perPage = 10)
     {
         $pages = $this->mapper->findPagesByUser($userId, $siteId, $deleted, $order, $paginated);
-        $this->preparePages($pages, $paginated, $page, $perPage);
+        $pages = $this->preparePages($pages, $paginated, $page, $perPage);
         return $pages;        
     }
     
@@ -169,7 +169,7 @@ class PageService implements PageServiceInterface
     public function findPagesByTags($siteId, $includeTags, $excludeTags = [], $all = true, $deleted = false, $order = null, $paginated = false, $page = 1, $perPage = 10)
     {
         $pages = $this->mapper->findPagesByTags($siteId, $includeTags, $excludeTags, $all, $deleted, $order, $paginated);
-        $this->preparePages($pages, $paginated, $page, $perPage);
+        $pages = $this->preparePages($pages, $paginated, $page, $perPage);
         return $pages;        
     }
     
