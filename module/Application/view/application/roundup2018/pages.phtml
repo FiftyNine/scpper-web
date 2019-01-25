@@ -1,4 +1,4 @@
-<?php $this->headTitle('2018'); ?>
+<?php $this->headTitle('Pages in 2018'); ?>
 <?php $this->headScript()->appendFile('/js/scpper_roundup.js'); ?>
 <?php $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js'); ?>
 <?php $this->headScript()->captureStart(); ?>
@@ -108,6 +108,7 @@
     <p>Content of this page is focused on the changes that happened to the articles of the wiki in 2018. I examine posted and deleted pages and attempt to present data in a way that reveals trends relevant to posting as well as connections between various properties of an article. Much of this post deals with success and rating of pages posted in 2018. For the purpose of this post any page that wasn't deleted I will call <em>"good"</em> or a <em>"success"</em>.</p>
     <p>Most of the data will be presented in the form of tables and charts. Charts are interactive: hover mouse cursor over the elements of a chart to see detailed hints and left click to select those elements. Many charts support zoom: press left mouse button and drag cursor over a chart to select an area for zoom-in. Click right mouse button to reset chart to its default scale.</p>
     <p>Finally, I would like to note that it is not the purpose of this work to perform conclusive analysis of presented data and establish aforementioned trends and dependencies beyond a shadow of a doubt. Rather I aim to present data in an easily digestible way, add some thoughts of my own and leave conclusions to a reader.</p>
+    <p>All information presented on this page was taken on <strong><?php echo $this->date; ?></strong> and is not up-to-date. </p>
 </div>        
 <!-- 1.2 -->
 <h4 class="roundup-section-title">General information</h4>
@@ -619,7 +620,7 @@
         <canvas id="mainlist-timelapse" width="579" height="289">
             lol fuck old browsers
         </canvas>
-        <img id="timelapse-state" src="img/play-btn.png">
+        <img id="timelapse-state" src="/img/play-btn.png">
     </div>
 </div>        
 <div class="roundup-pages-box-bounds roundup-comment">
@@ -633,10 +634,10 @@
         I didn't have any exciting ideas for this section, so here's some top 25 lists. I also did not sort through them, even if removing some generic tags like _image would've made these lists more informative. But anyway, perhaps someone will find this interesting. Data in this section only includes successful pages posted in 2018.
     </p>        
 </div>
-<div class="roundup-pages-box-bounds top-buffer-small roundup-tag-columns">
+<div class="roundup-pages-box-bounds top-buffer-small roundup-list-columns">
     <div>
         <h4>Biggest tags</h4>
-        <div class="roundup-tag-columns">
+        <div class="roundup-list-columns">
             <div class="roundup-tag-column">
                 <b>By number of pages</b>
                 <table class="roundup-tag-list">
@@ -667,7 +668,7 @@
     </div>
     <div>
         <h4>Biggest new tags</h4>
-        <div class="roundup-tag-columns">
+        <div class="roundup-list-columns">
             <div class="roundup-tag-column">
                 <b>By number of pages</b>
                 <table class="roundup-tag-list">
@@ -704,7 +705,7 @@
 </div>
 <div class="roundup-pages-box-bounds top-buffer-small">
     <h4>Growth</h4>
-    <div class="roundup-tag-columns">                
+    <div class="roundup-list-columns">                
         <div class="roundup-tag-column">
             <b>The most growth</b>
             <table class="roundup-tag-list">

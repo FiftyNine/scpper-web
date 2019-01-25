@@ -1127,7 +1127,7 @@ div.roundup-collapsible-table-title {
     left: 60px;
 }
 
-.roundup-tag-columns {
+.roundup-list-columns {
     display: flex; 
     flex-direction: row; 
     justify-content: space-between;
@@ -1138,4 +1138,17 @@ div.roundup-collapsible-table-title {
 
 .roundup-tag-list td {
     padding: 0 10px 0 10px;
+}
+
+#roundup-users-active-span-after-post-filter {
+    left: 300px;
+}
+
+.roundup-voter-list td {
+    padding: 5px 10px 5px 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+td.roundup-list-value {
+    text-align: end;    
 }

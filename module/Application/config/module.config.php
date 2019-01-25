@@ -423,12 +423,31 @@ return [
                 'type' => 'Literal',
                 'options' => [
                     'route' => '/2018',
-                    'defaults' => [
-                        'controller' => 'Application\Controller\Roundup2018',
-                        'action' => 'roundup2018'
-                    ],                    
                 ],
-            ]
+                'may_terminate' => false,
+                'child_routes' => [
+                    'pages' => [
+                        'type'    => 'Segment',
+                        'options' => [
+                            'route'    => '/pages',
+                            'defaults' => [
+                                'controller' => 'Application\Controller\Roundup2018',
+                                'action' => 'pages'
+                            ],
+                        ],
+                    ],
+                    'users' => [
+                        'type'    => 'Segment',
+                        'options' => [
+                            'route'    => '/users',
+                            'defaults' => [
+                                'controller' => 'Application\Controller\Roundup2018',
+                                'action' => 'users'
+                            ],
+                        ],
+                    ],                        
+                ],
+            ],
         ],
     ],
     'session' => [

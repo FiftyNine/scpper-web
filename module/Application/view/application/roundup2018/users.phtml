@@ -1,0 +1,302 @@
+<?php $this->headTitle('Users in 2018'); ?>
+<?php $this->headScript()->appendFile('/js/scpper_roundup.js'); ?>
+<?php $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js'); ?>
+<?php $this->headScript()->captureStart(); ?>
+
+// Anonymous self-executing function not to clutter global scope with temporary stuff
+(function () {
+        
+    function init()
+    {
+        google.charts.load('current', {packages: ['corechart']});
+        google.charts.setOnLoadCallback(function () {
+            scpper.roundup.users.joinsByDate.go(<?php echo json_encode($this->get("joinsByDate"), JSON_NUMERIC_CHECK); ?>, 'roundup-users-by-date-chart');
+            scpper.roundup.users.joinsByWeekday.go(<?php echo json_encode($this->get("joinsByWeekday"), JSON_NUMERIC_CHECK); ?>, 'roundup-users-by-day-chart');
+            scpper.roundup.users.joinsByHour.go(<?php echo json_encode($this->get("joinsByHour"), JSON_NUMERIC_CHECK); ?>, 'roundup-users-by-hour-chart');
+            scpper.roundup.users.daysToPost.go(<?php echo json_encode($this->get("daysToPost"), JSON_NUMERIC_CHECK); ?>, 'roundup-users-days-to-post-chart');
+            scpper.roundup.users.daysToSuccess.go(<?php echo json_encode($this->get("daysToSuccess"), JSON_NUMERIC_CHECK); ?>, 'roundup-users-days-to-success-chart');
+            scpper.roundup.users.postsToSuccess.go(<?php echo json_encode($this->get("postsToSuccess"), JSON_NUMERIC_CHECK); ?>, 'roundup-users-posts-to-success-chart');
+            
+            var dataActiveSpanAfterPostFirst = <?php echo json_encode($this->get("activeSpanAfterPost")["first"], JSON_NUMERIC_CHECK); ?>;
+            var dataActiveSpanAfterPostLast = <?php echo json_encode($this->get("activeSpanAfterPost")["last"], JSON_NUMERIC_CHECK); ?>;
+            $('#roundup-users-active-span-after-post-filter :radio').change(function(){
+                var radio = $('#roundup-users-active-span-after-post-first');
+                if (radio.prop("checked"))
+                    scpper.roundup.users.activeSpanAfterPost.go(dataActiveSpanAfterPostFirst, 'Active period after a failed post', 'roundup-users-active-span-after-post-chart');
+                else
+                    scpper.roundup.users.activeSpanAfterPost.go(dataActiveSpanAfterPostLast, 'Active period after a failed post', 'roundup-users-active-span-after-post-chart');
+            });
+            scpper.roundup.users.activeSpanAfterPost.go(dataActiveSpanAfterPostFirst, 'Active period after a failed post', 'roundup-users-active-span-after-post-chart');
+            
+            scpper.roundup.users.activeSpanAfterPost.go(<?php echo json_encode($this->get("activeSpanAfterSuccess"), JSON_NUMERIC_CHECK); ?>, 'Active period after the first success', 'roundup-users-active-span-after-success-chart');
+            scpper.roundup.users.activeSpan.go(<?php echo json_encode($this->get("activeSpan"), JSON_NUMERIC_CHECK); ?>, 'roundup-users-active-span-chart');
+            scpper.roundup.users.activeOverTime.go(<?php echo json_encode($this->get("activeOverTime"), JSON_NUMERIC_CHECK); ?>, 'roundup-users-active-over-time-chart');
+        });        
+    }        
+
+    $(document).ready(init);
+}());
+
+<?php $this->headScript()->captureEnd(); ?>
+
+<h2 class="roundup-pages-title">Users in 2018</h2>
+<div class="roundup-pages-box-bounds">
+    <p>Content of this page is focused on the changes that happened to the population of the wiki in 2018. We examine new members and the ways they participated in the life of the wiki. We attempt to present data in a way that reveals trends concerning rates of joining as well as user retention. Much of this post deals with timespans during which users were active on the wiki.</p>
+    <p>Most of the data will be presented in the form of tables and charts. Charts are interactive: hover mouse cursor over the elements of a chart to see detailed hints and left click to select those elements. Many charts support zoom: press left mouse button and drag cursor over a chart to select an area for zoom-in. Click right mouse button to reset chart to its default scale.</p>
+    <p>Finally, I would like to note that it is not the purpose of this work to perform conclusive analysis of presented data and establish aforementioned trends and dependencies beyond a shadow of a doubt. Rather I aim to present data in an easily digestible way, add some thoughts of my own and leave conclusions to a reader.</p>
+    <p>All information presented on this page was taken on <strong><?php echo $this->date; ?></strong> and is not up-to-date. </p>
+</div>        
+<!-- General -->
+<h4 class="roundup-section-title">General information</h4>
+<div class="roundup-pages-box-bounds roundup-comment top-buffer-small">
+    <p>
+        In 2018 at least <strong><?php echo number_format($this->total[0]['Count']); ?></strong> users joined the wiki. Please, note that for the technical reasons this number does not include users who have been since banned or left the wiki on their own volition, so the actual influx was even higher. To put this number into context, in 2017 the wiki grew by <strong><?php echo number_format(11160); ?></strong> users making this growth over <strong>142%</strong> year of year, at least nominally. The number for 2016 was <strong><?php echo number_format(6962); ?></strong>.
+    </p>
+    <p>
+        Raw numbers suggest that wiki is growing faster than ever, but these numbers may be misleading as not all users actually participate in the life of wiki. In the following material we will examine how rate of joining depends on a day or time of day. Unfortunately, approval process remains manual so it doesn't tell us much other than times when admins are active.
+    </p>
+</div>
+<h4 class="roundup-section-title">Distribution of new users by date and time of joining</h4>
+<!-- JoinsByDate -->
+<div class="roundup-pages-box-bounds roundup-comment top-buffer-small">
+    <p>
+        Normally ScpperDB shows dates and times at GMT+0:00, but for the roundup all times and dates they were converted to US Central Standard Time, or more precisely to GMT-6:00, as this conversion does not account for daylight saving time.
+    </p>
+</div>
+<div class="roundup-chart top-buffer-small">
+    <div class="chart-container" id="roundup-users-by-date-chart">
+
+    </div>
+</div>   
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        One interesting oddity in this chart is the sudden drop in June. Perhaps, an effect of summer break or year finals.
+    </p>
+</div>        
+<!-- JoinsByWeekday -->
+<div class="roundup-chart">
+    <div class="chart-container" id="roundup-users-by-day-chart">
+
+    </div>
+</div>
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        Not much to say here, rate of admission throughout the week fluctuates between ~1600 on Monday and ~2900 on Saturday. Like we noted before this speaks more to the availability of admins rather than the rate of applications.
+    </p>
+</div>
+<!-- JoinsByHour -->
+<div class="roundup-chart">
+    <div class="chart-container" id="roundup-users-by-hour-chart">
+        
+    </div>
+</div>
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        We're not sure who admitted two users at around 8 in the morning, but god bless.
+    </p>
+</div>
+<h4 class="roundup-section-title">Activity</h4>
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        In this section I will examine what new users did with their time on the wiki. Activity in ScpperDB's terms is one of the following: voting on pages, editing pages or posting new pages. Posting on forum, as helpful and productive as it can be does not count.
+    </p>
+    <p>
+        In 2018 out of <strong><?php echo number_format($this->total[0]['Count']); ?></strong> newcomers <strong><?php echo number_format($this->roles['inactive'][0]['Count']); ?></strong> never engaged in any sort of activity. <strong><?php echo number_format($this->roles['voters'][0]['Count']); ?></strong> voted on pages that weren't their own. <strong><?php echo number_format($this->roles['editors'][0]['Count']); ?></strong> edited at least one page that they did not author. <strong><?php echo number_format($this->roles['posters'][0]['Count']); ?></strong> tried their hand at writing an article and <strong><?php echo number_format($this->roles['authors'][0]['Count']); ?></strong> succeeded.
+    </p>    
+    <p>
+        Normally ScpperDB considers a user to be active if they engaged in at least one activity in the past 6 months. For the purpose of this page I will cut this period down to 3 months. So, for example, a user casted a vote on July, 6th and then haven't done shit for the next 3 months. On any given day during these 3 months they counts as active. On October, 7th, however, they stop being active and don't regain this status until they either post a page, edit one or vote.
+    </p>
+</div>
+<!-- DaysToPost -->
+<div class="roundup-chart">
+    <div class="chart-container" id="roundup-users-days-to-post-chart">
+
+    </div>
+</div>
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        To little surprise most of aspiring authors - <strong>60%</strong> to be precise, submit their first page in their first week, <strong>45%</strong> in the first three days, <strong>21%</strong> immediately after joining. We should note that the data in this chart is somewhat skewed towards the start as at the time of writing the number of users who had been members for several months was lower that the number of users who had been members for a week or less.
+    </p>
+</div>
+<!-- DaysToSuccess -->
+<div class="roundup-chart">
+    <div class="chart-container" id="roundup-users-days-to-success-chart">
+
+    </div>
+</div>
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        After looking at the preceding chart and remembering all the coldposts one could surmise that most successful pages are posted after a significant period of critiquing, editing and rewriting. As we see from this chart, most successful pages are posted in the first week or two. Intuitively, this would mean that success of the first article has little correlation with the age of an account.
+    </p>
+</div>
+<!-- PostsToSuccess -->
+<div class="roundup-chart">
+    <div class="chart-container" id="roundup-users-posts-to-success-chart">
+
+    </div>
+</div>
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        Normally, failing and learning from mistakes is an integral part of any self-improvement. However, in this case the vast majority, over <strong>83%</strong> of eventually successful authors achieve it on their first try. In other words, out of <strong><?php echo number_format($this->roles['posters'][0]['Count']); ?></strong> posters <strong><?php echo number_format($this->postsToSuccess[0]['Count']); ?></strong> get it right off the bat, making success rate of the first post <strong><?php printf("%.1f%%", $this->postsToSuccess[0]['Count']/$this->roles['posters'][0]['Count']*100); ?></strong>. Of the rest <strong><?php echo number_format($this->roles['posters'][0]['Count']-$this->postsToSuccess[0]['Count']); ?></strong> posters only <strong><?php echo number_format($this->roles['authors'][0]['Count']-$this->postsToSuccess[0]['Count']); ?></strong> (or <strong><?php printf("%.1f%%", ($this->roles['authors'][0]['Count']-$this->postsToSuccess[0]['Count'])/($this->roles['posters'][0]['Count']-$this->postsToSuccess[0]['Count'])*100); ?></strong>) ever manage to write a passable article. We conclude that it's a tough living out there.
+    </p>
+</div>
+<!-- ActiveSpanAfterPost-->
+<div class="roundup-chart">
+    <div class="chart-container" id="roundup-users-active-span-after-post-chart">
+
+    </div>
+    <div id="roundup-users-active-span-after-post-filter" class="roundup-chart-top-radio-group">
+        <input type="radio" name="roundup-users-active-span-after-post-filter" id="roundup-users-active-span-after-post-first" value="true" checked="true"><label>First</label>
+        <input type="radio" name="roundup-users-active-span-after-post-filter" id="roundup-users-active-span-after-post-last" value="false"><label>Last</label>
+    </div>        
+</div>
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        We demonstrate here how long does a user stay active after their first/last failed post. Data here excludes users who have at least one successful page.
+    </p>
+    <p>
+        <strong>Please, note that only users who have fallen inactive by the time of writing are included in this chart, as well as in the next two.</strong>
+    </p>
+</div>
+<!-- ActiveSpanAfterSuccess-->
+<div class="roundup-chart">
+    <div class="chart-container" id="roundup-users-active-span-after-success-chart">
+
+    </div>
+</div>
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        Similarly to the previous chart this one shows how long users stick around after their first successful article. Less than <strong>2%</strong> of new users become authors, but this chart is intended to show retention levels among these few. Right off the bat we can see that the curve here is much more gradual.
+    </p>
+    <p>
+        Speaking in terms of raw numbers <strong><?php echo number_format($this->roles['authors'][0]['Count']); ?></strong> new users succeeded in writing for the wiki and out of them <strong><?php echo number_format($this->stillActiveAfterSuccess[0]['Count']); ?></strong> are still active at the time of writing.
+    </p>
+</div>
+<!--ActiveSpan-->
+<div class="roundup-chart">
+    <div class="chart-container" id="roundup-users-active-span-chart">
+
+    </div>
+</div>
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        In this chart we can see how length of a period of activity is distributed among all users who had joined in 2018 and fallen inactive since. Users who never became active in the first place aren't included in the dataset. Period of activity is counted as a number of days between joining and user's last recorded activity. As the chart demonstrates the peak falls on mere <strong>1-2 days</strong>, then numbers keep falling until <strong>9-10 days</strong> after which rate of inactivity more or less stabilizes. Indeed, out of <strong><?php echo $this->stillActive[0]['WereActive']; ?></strong> active users who joined in the first 9 months of the year <strong>1581 (over 28%)</strong> never did anything after their first week.
+    </p>
+</div>
+<!--ActiveOverTime-->
+<div class="roundup-chart">
+    <div class="chart-container" id="roundup-users-active-over-time-chart">
+
+    </div>
+</div>
+<div class="roundup-pages-box-bounds roundup-comment">
+    <p>
+        In the first half of 2018 the wiki was enjoying steady growth in terms of active users. Active population plateaued around mid June, which more or less corresponds with decline in applications we've observed in the first chart. Despite the fact that nominal population of the wiki resumed its growth in July, the number of active users have stayed at the same level. Still, this is over <strong>60%</strong> growth over six months.
+    </p>
+</div>
+<div class="roundup-pages-box-bounds top-buffer-small">    
+    <h4>Breakthroughs of the year</h4>
+    <div class="roundup-comment">
+        <p>
+            This wouldn't be a proper yearly roundup without some top-X lists. In this section we will try to give appropriate recognition to at least some of the people who have made significant contributions to the wiki in 2018. Only users who have made their first successful post in 2018 were considered for this section, even if they joined in the previous years.
+        </p>
+        <p>
+            To cover the most proverbial ground the section is divided into three categories: total rating (combined rating of all authored pages), number of authored pages, and highest rated page. Again, for technical reasons users who have been banned or left the wiki did not qualify for this section.
+        </p>
+    </div>
+    <?php 
+        $breakthroughHeaders = [
+            'rating' => 'By total rating',
+            'pages' => 'By number of pages',
+            'max' => 'By the highest rated page'
+        ];
+    ?>
+    <?php foreach ($this->breakthrough as $name => $data): ?>
+    <div class="top-buffer">
+        <b><?php echo $breakthroughHeaders[$name];?></b>
+        <table class="table table-striped">
+            <tbody>
+                <tr>                                        
+                    <th class="column-index">#</th>
+                    <th class="column-user">User</th>
+                    <th>Pages</th>
+                    <th>Rating</th>
+                    <th>Highest</th>
+                    <th class="column-date">Joined</th>
+                    <th class="column-date">First page</th>
+                </tr>
+                <?php foreach ($data as $index => $row): ?>
+                <?php $userView = new \Application\Utils\Roundup\UserView($row['UserId'], ['d' => false, 'dn' => $row['DisplayName']]); ?>
+                <tr>                    
+                    <td><?php echo $index+1; ?></td>
+                    <td><?php echo $this->partial('partial/user.phtml', ['user' => $userView]); ?></td>
+                    <td><?php echo $row['Pages']; ?></td>
+                    <td><?php echo $row['TotalRating']; ?></td>
+                    <td><?php echo $row['MaxRating']; ?></td>
+                    <td><?php echo substr($row['JoinDate'], 0, 10); ?></td>
+                    <td><?php echo substr($row['FirstSuccess'], 0, 10); ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php endforeach; ?>
+    <h4>Voters</h4>
+    <div class="roundup-comment">
+        <p>
+            This section lists some of the users, not necessarily new, who have distinguished themselves from the rest of the flock by their voting habits.
+        </p>
+        <p>
+            Categories in this section require some explanation:
+            <ul>
+                <li><b>Gatekeepers</b> are people who have cast the most votes on the freshly posted articles (3 days since the time of posting).</li>
+                <li><b>An eye for quality</b> "badge" is given to users whose votes on the freshly posted articles aligned with the opinion of the majority. A user must have at least 250 votes to qualify.</li>
+                <li><b>High bar</b> "badge" goes to those whose opinion on most articles, not necessarily new, have diverged the most from that of the majority. A user must have at least 250 votes to qualify.</li>
+            </ul>
+        </p>
+    </div>    
+    <div class="roundup-list-columns">                
+        <div class="roundup-voter-column">
+            <b>Gatekeepers</b>
+            <table class="roundup-voter-list">
+                <tbody>
+                    <?php foreach ($this->gatekeepers as $row): ?>
+                    <?php $userView = new \Application\Utils\Roundup\UserView($row['UserId'], ['d' => false, 'dn' => $row['UserDisplayName']]); ?>
+                    <tr>
+                        <td><?php echo $this->partial('partial/user.phtml', ['user' => $userView]); ?></td>
+                        <td class="roundup-list-value"><?php printf("%d (+%d / -%d)", $row['Count'], $row['Positive'], $row['Negative']); ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <div class="roundup-list-column">
+            <b>An eye for quality</b>
+            <table class="roundup-voter-list">
+                <tbody>
+                    <?php foreach ($this->eyeForQuality as $row): ?>
+                    <?php $userView = new \Application\Utils\Roundup\UserView($row['UserId'], ['d' => false, 'dn' => $row['UserDisplayName']]); ?>
+                    <tr>
+                        <td><?php echo $this->partial('partial/user.phtml', ['user' => $userView]); ?></td>
+                        <td class="roundup-list-value"><?php printf("%.2f%% (+%d / -%d)", $row['Guessed']*100, $row['Positive'], $row['Negative']); ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <div class="roundup-list-column">
+            <b>High bar</b>
+            <table class="roundup-voter-list">
+                <tbody>
+                    <?php foreach ($this->contrarians as $row): ?>
+                    <?php $userView = new \Application\Utils\Roundup\UserView($row['UserId'], ['d' => false, 'dn' => $row['UserDisplayName']]); ?>
+                    <tr>
+                        <td><?php echo $this->partial('partial/user.phtml', ['user' => $userView]); ?></td>
+                        <td class="roundup-list-value"><?php printf("%.2f%% (+%d / -%d)", $row['Guessed']*100, $row['Positive'], $row['Negative']); ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>          
+</div>

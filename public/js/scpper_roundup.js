@@ -166,7 +166,7 @@ scpper.roundup = {
         play = function() {
             if (state === 'ok') {
                 playing = true;
-                playButton.src = "img/pause-btn.png";
+                playButton.src = "/img/pause-btn.png";
                 window.requestAnimationFrame(draw);
             }
         };
@@ -174,7 +174,7 @@ scpper.roundup = {
         pause = function() {
             if (state === 'ok') {
                 playing = false;
-                playButton.src = "img/play-btn.png";
+                playButton.src = "/img/play-btn.png";
                 playButton.hidden = false;
             }                
         };
@@ -239,7 +239,7 @@ scpper.roundup = {
                       axis: "horizontal",
                       keepInBounds: true,
                       maxZoomIn: 4.0
-                    },                    
+                    },
                 };    
                 var div = document.getElementById(id);
                 $(div).removeClass('chart-container').addClass('chart-loaded');        
@@ -912,5 +912,372 @@ scpper.roundup = {
                 chart.draw(data, options);                    
             }            
         },        
+    },
+    
+    users: {
+        joinsByDate: {
+            go: function (data, containerId) {
+                var table = new google.visualization.DataTable();
+                table.addColumn({type: 'date', label: 'Time'});
+                table.addColumn({type: 'number', label: 'Joined'});
+                table.addColumn({type: 'string', role: 'tooltip', p: {html: true}});
+                var formatted = [];
+                data.forEach(function(i) {
+                    var date = new Date(i.Date);
+                    formatted.push([
+                        date,
+                        i.Count,
+                        `<b>Month: </b>${date.format('mmmm')} <br><b>Joined: </b>${i.Count} <br>`
+                    ]);
+                });
+                
+                table.addRows(formatted);
+                var options = {
+                    title: 'Number of new users by date',
+                    legend: 'none',
+                    height: 400,
+                    chartArea: {left: 60, bottom: 40, top: 20, width: '85%'},
+                    hAxis: {title: 'Month', format: 'MMM'},
+                    vAxis: {
+                        title: 'Joins',
+                        minValue: 0
+                    },
+                    colors: ['#94C282'],
+                    tooltip: { isHtml: true },
+                    bar: {groupWidth: '90%'},
+                    explorer: { 
+                      actions: ['dragToZoom', 'rightClickToReset'],
+                      axis: "horizontal",
+                      keepInBounds: true,
+                      maxZoomIn: 4.0
+                    },                    
+                };    
+                var div = document.getElementById(containerId);
+                $(div).removeClass('chart-container').addClass('chart-loaded');        
+                var chart = new google.visualization.ColumnChart(div);
+                chart.draw(table, options);                   
+            }
+        },
+        
+        joinsByWeekday: {
+            go: function(data, containerId) {
+                var table = new google.visualization.DataTable();
+                table.addColumn({type: 'string', label: 'Day'});
+                table.addColumn({type: 'number', label: 'Joined'});
+                table.addColumn({type: 'string', role: 'tooltip', p: {html: true}});
+                var formatted = [];
+                data.forEach(function(i) {
+                    var day = dateFormat.i18n.dayNames[i.Day+6];
+                    formatted.push([
+                        day,
+                        i.Count,
+                        `<b>Day: </b>${day} <br><b>Joined: </b>${i.Count} <br>`
+                    ]);
+                });
+                table.addRows(formatted);
+                var options = {    
+                    title: 'Number of new users by weekday',
+                    legend: 'none',
+                    height: 400,
+                    chartArea: {left: 60, bottom: 40, top: 20, width: '85%'},
+                    hAxis: {title: 'Day'},
+                    vAxis: {
+                        title: 'Joins',
+                        minValue: 0
+                    },
+                    colors: ['#94C282'],
+                    tooltip: { isHtml: true },                    
+                };    
+                var div = document.getElementById(containerId);
+                $(div).removeClass('chart-container').addClass('chart-loaded');        
+                var chart = new google.visualization.ColumnChart(div);
+                chart.draw(table, options);                    
+            }            
+        },
+    
+        joinsByHour: {
+            go: function(data, containerId) {
+                var table = new google.visualization.DataTable();
+                table.addColumn({type: 'string', label: 'Hour'});
+                table.addColumn({type: 'number', label: 'Joins'});
+                table.addColumn({type: 'string', role: 'tooltip', p: {html: true}});
+                var formatted = [];
+                data.forEach(function(i) {
+                    var hstr = i.Hour.toString();
+                    if (hstr.length === 1)
+                        hstr="0"+hstr;
+                    var hintStr = `${hstr}:00&nbsp-&nbsp${hstr}:59`;
+                    formatted.push([
+                        hstr,
+                        i.Count,
+                        `<b>Time: </b>${hintStr} <br><b>Joined: </b>${i.Count} <br>`
+                    ]);
+                });                
+                table.addRows(formatted);
+                var options = {
+                    title: 'Number of new users by hour',
+                    legend: 'none',
+                    height: 400,
+                    chartArea: {left: 60, bottom: 40, top: 20, width: '85%'},
+                    hAxis: {title: 'Hour'},
+                    vAxis: {title: 'Joins'},
+                    colors: ['#94C282'],
+                    tooltip: { isHtml: true },
+                };    
+                var div = document.getElementById(containerId);
+                $(div).removeClass('chart-container').addClass('chart-loaded');        
+                var chart = new google.visualization.ColumnChart(div);
+                chart.draw(table, options);                    
+            }            
+        },
+
+        daysToPost: {
+            go: function(data, containerId) {
+                var table = new google.visualization.DataTable();
+                table.addColumn({type: 'number', label: 'Days since joining'});
+                table.addColumn({type: 'number', label: 'First posts'});
+                table.addColumn({type: 'string', role: 'tooltip', p: {html: true}});
+                var formatted = [];
+                makeHint = function(days, posts) {
+                    return `<b>Days since joining: </b>${days} <br><b>First posts: </b>${posts} <br>`;
+                };
+                data.forEach(function(item, index) {
+                    if (index > 0) 
+                        for (var j=data[index-1].Days+1; j<item.Days; j++) {
+                            formatted.push([j, 0, makeHint(j, 0)]);                            
+                        }
+                    formatted.push([item.Days, item.Count, makeHint(item.Days, item.Count)]);
+                });
+                table.addRows(formatted);
+                var options = {    
+                    title: 'Days between joining and first post',
+                    legend: 'none',
+                    height: 400,
+                    chartArea: {left: 60, bottom: 40, top: 20, width: '85%'},
+                    hAxis: {title: 'Days'},
+                    vAxis: {
+                        title: 'First posts',
+                        minValue: 0
+                    },
+                    tooltip: { isHtml: true },
+                    explorer: { 
+                      actions: ['dragToZoom', 'rightClickToReset'],
+                      axis: "horizontal",
+                      keepInBounds: true,
+                      maxZoomIn: 4.0
+                    },                    
+                };    
+                var div = document.getElementById(containerId);
+                $(div).removeClass('chart-container').addClass('chart-loaded');        
+                var chart = new google.visualization.LineChart(div);
+                chart.draw(table, options);                    
+            }            
+        },
+        
+        daysToSuccess: {
+            go: function(data, containerId) {
+                var table = new google.visualization.DataTable();
+                table.addColumn({type: 'number', label: 'Days since joining'});
+                table.addColumn({type: 'number', label: 'First successful posts'});
+                table.addColumn({type: 'string', role: 'tooltip', p: {html: true}});
+                var formatted = [];
+                data.forEach(function(i) {
+                    formatted.push([
+                        i.Days,
+                        i.Count,
+                        `<b>Days since joining: </b>${i.Days} <br><b>First successes: </b>${i.Count} <br>`
+                    ]);
+                });
+                table.addRows(formatted);
+                var options = {    
+                    title: 'Days between joining and first successful page',
+                    legend: 'none',
+                    height: 400,
+                    chartArea: {left: 60, bottom: 40, top: 20, width: '85%'},
+                    hAxis: {title: 'Days'},
+                    vAxis: {
+                        title: 'First successes',
+                        minValue: 0
+                    },
+                    bar: {groupWidth: '90%'},
+                    colors: ['#6DAECF'],
+                    tooltip: { isHtml: true },     
+                    explorer: { 
+                      actions: ['dragToZoom', 'rightClickToReset'],
+                      axis: "horizontal",
+                      keepInBounds: true,
+                      maxZoomIn: 4.0
+                    },                    
+                };    
+                var div = document.getElementById(containerId);
+                $(div).removeClass('chart-container').addClass('chart-loaded');        
+                var chart = new google.visualization.ColumnChart(div);
+                chart.draw(table, options);                    
+            }            
+        },        
+        
+        postsToSuccess: {
+            go: function(data, containerId) {
+                var table = new google.visualization.DataTable();
+                table.addColumn({type: 'number', label: 'Failed posts'});
+                table.addColumn({type: 'number', label: 'First successful posts'});
+                table.addColumn({type: 'string', role: 'tooltip', p: {html: true}});
+                var formatted = [];
+                data.forEach(function(i) {
+                    formatted.push([
+                        i.Fails,
+                        i.Count,
+                        `<b>Failed pages: </b>${i.Fails} <br><b>First successes: </b>${i.Count} <br>`
+                    ]);
+                });
+                table.addRows(formatted);
+                var options = {    
+                    title: 'Failed attempts until first successful page',
+                    legend: 'none',
+                    height: 400,
+                    chartArea: {left: 60, bottom: 40, top: 20, width: '85%'},
+                    hAxis: {title: 'Fails'},
+                    vAxis: {
+                        title: 'First successes',
+                        minValue: 0
+                    },
+                    colors: ['#DB9191'],
+                    tooltip: { isHtml: true },     
+                };    
+                var div = document.getElementById(containerId);
+                $(div).removeClass('chart-container').addClass('chart-loaded');        
+                var chart = new google.visualization.ColumnChart(div);
+                chart.draw(table, options);                    
+            }            
+        },
+        
+        activeSpanAfterPost: {
+            go: function(data, title, containerId) {
+                var table = new google.visualization.DataTable();
+                table.addColumn({type: 'number', label: 'Days'});
+                table.addColumn({type: 'number', label: 'Still active'});
+                table.addColumn({type: 'string', role: 'tooltip', p: {html: true}});
+                var formatted = [];
+                data.forEach(function(item) {
+                    if (item.Days < 0)
+                        return;
+                    for (var i=0; i<formatted.length; i++)
+                        formatted[i][1]+=item.Count
+                    formatted.push([
+                        item.Days,
+                        item.Count,
+                        null
+                    ]);
+                });
+                formatted.forEach(function(row) {
+                    row[2] = `<b>Days: </b>${row[0]} <br><b>Still active: </b>${row[1]} <br>`
+                });                
+                table.addRows(formatted);
+                var options = {
+                    title: title,
+                    legend: 'none',
+                    height: 400,
+                    chartArea: {left: 60, bottom: 40, top: 20, width: '85%'},
+                    hAxis: {title: 'Days'},
+                    vAxis: {
+                        title: 'Still active',
+                        minValue: 0
+                    },
+                    colors: ['#94C282'],
+                    tooltip: { isHtml: true },
+                };    
+                var div = document.getElementById(containerId);
+                $(div).removeClass('chart-container').addClass('chart-loaded');
+                var chart = new google.visualization.LineChart(div);
+                chart.draw(table, options);
+            }
+        },
+        
+        activeSpan: {
+            go: function(data, containerId) {
+                var table = new google.visualization.DataTable();
+                table.addColumn({type: 'number', label: 'Days active'});
+                table.addColumn({type: 'number', label: 'Users'});
+                table.addColumn({type: 'string', role: 'tooltip', p: {html: true}});
+                var formatted = [];
+                data.forEach(function(i) {
+                    formatted.push([
+                        i.Days,
+                        i.Count,
+                        `<b>Days active: </b>${i.Days} <br><b>Users: </b>${i.Count} <br>`
+                    ]);
+                });
+                table.addRows(formatted);
+                var options = {    
+                    title: 'Distribution of users by activity period',
+                    legend: 'none',
+                    height: 400,
+                    chartArea: {left: 60, bottom: 40, top: 20, width: '85%'},
+                    hAxis: {title: 'Days'},
+                    vAxis: {
+                        title: 'Users',
+                        minValue: 0
+                    },
+                    bar: {groupWidth: '90%'},
+                    colors: ['#94C282'],
+                    tooltip: { isHtml: true },     
+                    explorer: { 
+                      actions: ['dragToZoom', 'rightClickToReset'],
+                      axis: "horizontal",
+                      keepInBounds: true,
+                      maxZoomIn: 4.0
+                    },                    
+                };    
+                var div = document.getElementById(containerId);
+                $(div).removeClass('chart-container').addClass('chart-loaded');        
+                var chart = new google.visualization.ColumnChart(div);
+                chart.draw(table, options);                    
+            }            
+        },        
+        
+        activeOverTime: {
+            go: function(data, containerId) {
+                var table = new google.visualization.DataTable();
+                table.addColumn({type: 'date', label: 'Date'});
+                table.addColumn({type: 'number', label: 'Active users'});
+                table.addColumn({type: 'string', role: 'tooltip', p: {html: true}});
+                var formatted = [];
+                data.forEach(function(i) {
+                    date = new Date(i.Date);
+                    formatted.push([
+                        date,
+                        i.Count,
+                        `<b>Date: </b>${date.format(dateFormat.masks.isoDate)} <br><b>Active users: </b>${i.Count} <br>`
+                    ]);
+                });
+                table.addRows(formatted);
+                var options = {    
+                    title: 'Active users over time',
+                    legend: 'none',
+                    height: 400,
+                    chartArea: {left: 60, bottom: 40, top: 20, width: '85%'},
+                    hAxis: {
+                        title: 'Date', 
+                        format: 'MMM'
+                    },
+                    vAxis: {
+                        title: 'Active users',
+                        minValue: 0
+                    },
+                    colors: ['#94C282'],
+                    tooltip: { isHtml: true },     
+                    explorer: { 
+                      actions: ['dragToZoom', 'rightClickToReset'],
+                      axis: "horizontal",
+                      keepInBounds: true,
+                      maxZoomIn: 4.0
+                    },                    
+                };    
+                var div = document.getElementById(containerId);
+                $(div).removeClass('chart-container').addClass('chart-loaded');        
+                var chart = new google.visualization.LineChart(div);
+                chart.draw(table, options);                    
+            }            
+        },            
     }
 };
