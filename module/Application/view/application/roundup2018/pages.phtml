@@ -114,7 +114,7 @@
 <h4 class="roundup-section-title">General information</h4>
 <div class="roundup-pages-box-bounds roundup-comment top-buffer-small">
     <p>
-        2018 was a busy year for the wiki. At least <?php echo $data1_1['Total']; ?> pages were posted during the year by <?php echo $this->get('1.20')['all']; ?> different users. <?php echo $data1_1['Good']; ?> articles written by <?php echo $this->get('1.20')['good']; ?> authors survived voting and remain on the wiki still.
+        2018 was a busy year for the wiki. At least <?php echo number_format($data1_1['Total']); ?> pages were posted during the year by <strong><?php echo number_format($this->get('1.20')['all']); ?></strong> different users. <strong><?php echo number_format($data1_1['Good']); ?></strong> articles written by <strong><?php echo number_format($this->get('1.20')['good']); ?></strong> authors survived voting and remain on the wiki still.
     </p>
 </div>
 <table class="table table-striped roundup-pages-box-bounds top-buffer-small">
@@ -129,23 +129,23 @@
         <tr>
             <th>Remaining</th>
             <?php foreach ($data1_2 as $row): ?>
-            <td><?php printf("%d<br>(%.1f%%)", $row['Good'], $row['Good']/$row['Total']*100); ?></td>
+            <td><?php printf("%s<br>(%.1f%%)", number_format($row['Good']), $row['Good']/$row['Total']*100); ?></td>
             <?php endforeach; ?>
-            <td><?php printf("%d<br>(%.1f%%)", $data1_1['Good'], $data1_1['Good']/$data1_1['Total']*100); ?></td>
+            <td><?php printf("%s<br>(%.1f%%)", number_format($data1_1['Good']), $data1_1['Good']/$data1_1['Total']*100); ?></td>
         </tr>
         <tr>
             <th>Deleted</th>
             <?php foreach ($data1_2 as $row): ?>
-            <td><?php printf("%d<br>(%.1f%%)", $row['Bad'], $row['Bad']/$row['Total']*100); ?></td>
+            <td><?php printf("%s<br>(%.1f%%)", number_format($row['Bad']), $row['Bad']/$row['Total']*100); ?></td>
             <?php endforeach; ?>
-            <td><?php printf("%d<br>(%.1f%%)", $data1_1['Bad'], $data1_1['Bad']/$data1_1['Total']*100); ?></td>
+            <td><?php printf("%s<br>(%.1f%%)", number_format($data1_1['Bad']), $data1_1['Bad']/$data1_1['Total']*100); ?></td>
         </tr>
         <tr>
             <th>Total</th>
             <?php foreach ($data1_2 as $row): ?>
-            <td><?php printf("%d<br>(%.1f%%)", $row['Total'], $row['Total']/$data1_1['Total']*100); ?></td>
+            <td><?php printf("%d<br>(%.1f%%)", number_format($row['Total']), $row['Total']/$data1_1['Total']*100); ?></td>
             <?php endforeach; ?>
-            <td><?php echo $data1_1['Total']; ?></td>
+            <td><?php echo number_format($data1_1['Total']); ?></td>
         </tr>                
     </tbody>
 </table>
@@ -154,7 +154,7 @@
     Percentages in the first two rows ("Remaining" and "Deleted") show portion of pages of certain type (SCP, tale, etc) that are "good" or "bad" respectively. Percentages in the last row reflect portion that pages of this type make to all pages posted in 2018.
     </p>
     <p>
-    ScpperDB defines type of a page by its tags, so all pages that don't have distinct tags or had been deleted before they got tagged are considered to be of "Unknown" type</em>
+    ScpperDB defines type of a page by its tags, so all pages that don't have distinct tags or had been deleted before they got tagged are considered to be of "Unknown" type
     </p>
     <p>
     Interesting, if not surprising fact is that mainlist articles and jokes fail much more often than submissions of any other type.            
@@ -174,7 +174,7 @@
 </div>   
 <div class="roundup-pages-box-bounds roundup-comment">
     <p>
-        An astute reader may notice that there aren't any deleted articles during the first two weeks of the year. The explanation for this is simple: ScpperDB only started archiving deleted pages on 2018-01-15, so we don't have data from before that.
+        An astute reader may notice that there aren't any deleted articles during the first two weeks of the year. The explanation for this is simple: ScpperDB only started archiving deleted pages on <strong>2018-01-15</strong>, so we don't have data from before that.
     </p>
     <p>
         The spike in submissions that happened during mid-February was caused by the 72-hour contest. Likewise the splash at the end of July coincides with the deadline for the 4000 contest. Increased activity at the start of July was likely a result of Series 5 being opened for posting. We don't have an immediate explanation for the rest of the spikes or pits in the chart.
@@ -188,10 +188,10 @@
 </div>
 <div class="roundup-pages-box-bounds roundup-comment">
     <p>
-        Submission rate remains relatively stable throughout the week, fluctuating between 619 (100%) on Friday and 703 (114%) on Monday.
+        Submission rate remains relatively stable throughout the week, fluctuating between <strong>619 (100%)</strong> on Friday and <strong>703 (114%)</strong> on Monday.
     </p>
     <p>
-        Success rate also doesn't change much, falling to its lowest 38.1% on Wednesday, then rising to 43.3% on Saturday, then falling back again.
+        Success rate also doesn't change much, falling to its lowest <strong>38.1%</strong> on Wednesday, then rising to <strong>43.3%</strong> on Saturday, then falling back again.
     </p>
 </div>
 <!-- 1.5 -->
@@ -202,9 +202,9 @@
 </div>
 <div class="roundup-pages-box-bounds roundup-comment">
     <p>
-        Activity on the hourly chart follows a pattern typical for a website with primarily north-american audience. Submission rate peaks at 17:00 to 17:59 (that is 5 to 6 pm) although it remains at comparable levels throughout the entire afternoon and evening, abruptly dropping after 23 o'clock (11 pm). There's a curious small drop in activity around 6 pm, immediately following the preceding spike. Perhaps around this time users hurry to post their draft and then leave work for home?</p>
+        Activity on the hourly chart follows a pattern typical for a website with primarily north-american audience. Submission rate peaks at <strong>17:00</strong> to <strong>17:59</strong> (that is 5 to 6 pm) although it remains at comparable levels throughout the entire afternoon and evening, abruptly dropping after <strong>23 o'clock</strong> (11 pm). There's a curious small drop in activity around <strong>6 pm</strong>, immediately following the preceding spike. Perhaps around this time users hurry to post their draft and then leave work for home?</p>
     <p>
-        Success rate does not present a clear pattern although it has two noticeable peaks, one around 14 o'clock (2 pm), the other one around 22 o'clock to 1 o'clock (10 pm to 1 am).
+        Success rate does not present a clear pattern although it has two noticeable peaks, one around <strong>14 o'clock</strong> (2 pm), the other one around <strong>22 o'clock</strong> to <strong>1 o'clock</strong> (10 pm to 1 am).
     </p>
 </div>
 <!-- 1.20 -->
@@ -219,7 +219,7 @@
         There is no way to know when exactly a page was deleted or the state it was in at the time, because once that happened all information about a page is gone from Wikidot. So for deleted articles ScpperDB uses data collected during the last update when an article was still up. Which means that a page may have rating of -7 on ScpperDB but in reality it was already at -20 at the time of deletion. So for the negative deleted pages we may say with confidence that a page was at least at -X but chances are it eventually fell even lower.
     </p>
     <p>
-        On the positive side of the horizontal axis pages form a fairly standard pattern. Perhaps the only interesting thing here is that there are fewer pages on 0 to 9 interval than on 10 to 19 interval. There is a few pages at the right end of the chart, placed so sparsely that they are invisible without zoom.
+        On the positive side of the horizontal axis pages form a fairly standard pattern. Perhaps the only interesting thing here is that there are fewer pages on <strong>0 to 9</strong> interval than on <strong>10 to 19</strong> interval. There is a few pages at the right end of the chart, placed so sparsely that they are invisible without zoom.
     </p>
 </div>        
 <!-- 1.6 -->
@@ -243,7 +243,7 @@
 </div>
 <div class="roundup-pages-box-bounds roundup-comment">
     <p>
-        This chart is supposed to give a reader a general idea as to how pages of a certain type or types are distributed by length and rating. You can show and hide different types by clicking on their respective checkboxes in legend. You can also zoom in on specific areas. We leave conclusions to the reader but note that pages are situated most densely between 3,000 and 15,000 characters.
+        This chart is supposed to give a reader a general idea as to how pages of a certain type or types are distributed by length and rating. You can show and hide different types by clicking on their respective checkboxes in legend. You can also zoom in on specific areas. We leave conclusions to the reader but note that pages are situated most densely between <strong>3,000</strong> and <strong>15,000</strong> characters.
     </p>
 </div>
 <div class="roundup-chart">
@@ -253,7 +253,7 @@
 </div>        
 <div class="roundup-pages-box-bounds roundup-comment">
     <p>
-        Vast majority of deleted pages have fewer than 10,000 characters to them. The curious part here is that distributions for all other rating groups look fairly similar to each other, suggesting that length of a page does not affect it's rating much, if it does at all.
+        Vast majority of deleted pages have fewer than <strong>10,000</strong> characters to them. The curious part here is that distributions for all other rating groups look fairly similar to each other, suggesting that length of a page does not affect it's rating much, if it does at all.
     </p>
 </div>
 <!-- 1.7 -->
@@ -306,7 +306,7 @@
 </div>
 <div class="roundup-pages-box-bounds roundup-comment">
     <p>
-        There's a lot of data in this chart and a bunch of switches to customize it, so naturally there's quite a few observations one may make by looking at it. For example, by comparing tales and jokes posted by newcomers we can see that tales fare much better on average. Two statistical oddities that immediately jump to the eye is a particularly productive couple of weeks by Tanhony and Ihp and sudden lull in 370-400 weeks range.
+        There's a lot of data in this chart and a bunch of switches to customize it, so naturally there's quite a few observations one may make by looking at it. For example, by comparing tales and jokes posted by newcomers we can see that tales fare much better on average. Two statistical oddities that immediately jump to the eye is a particularly productive couple of weeks by <strong>Tanhony</strong> and <strong>Ihp</strong> and sudden lull in <strong>370-400</strong> weeks range.
     </p>
 </div>
 <div class="roundup-chart">
@@ -323,10 +323,10 @@
         In this chart posts are grouped into a few preselected intervals based on poster's age of membership.
     </p>
     <p>
-        Success rate for all members doesn't hold any surprises - for the most part rising along with the experience. Average rating line looks somewhat similar if more erratic. Interesting difference between the two happens at 0 weeks: success rate is at it's lowest, while average rating starts at respectable 46 points, after which it drops to its global minimum at 2-3 weeks. Possible explanations for this include people who were banned or left (which resets their membership) coming back to post something, sockpuppets or people who don't bother signing up until they polished their draft.
+        Success rate for all members doesn't hold any surprises - for the most part rising along with the experience. Average rating line looks somewhat similar if more erratic. Interesting difference between the two happens at <strong>0</strong> weeks: success rate is at it's lowest, while average rating starts at respectable <strong>46</strong> points, after which it drops to its global minimum at <strong>2-3</strong> weeks. Possible explanations for this include people who were banned or left (which resets their membership) coming back to post something, sockpuppets or people who don't bother signing up until they polished their draft.
     </p>
     <p>
-        Switching to "newcomers only" introduces a lot of chaos to the chart. Line plotting success rate against membership age still shows gradual growth although it jumps up and down much more. One conclusion a reader might draw from loong at the cahrt is that posters with just one week of experience on the wiki are three times as likely to post a successful article than those just rolled into shop. Rating line here is all over the place and doesn't show any obvious trends. However, average rating at 0 weeks is at its local maximum which supports our previous hypothesis about some people joining with a proper draft or at least a very good idea of one. Or sockpuppets.
+        Switching to "newcomers only" introduces a lot of chaos to the chart. Line plotting success rate against membership age still shows gradual growth although it jumps up and down much more. One conclusion a reader might draw from look at the chart is that posters with just one week of experience on the wiki are three times as likely to post a successful article than those just rolled into shop. Rating line here is all over the place and doesn't show any obvious trends. However, average rating at 0 weeks is at its local maximum which supports our previous hypothesis about some people joining with a proper draft or at least a very good idea of one. Or sockpuppets.
     </p>
 </div>        
 <div class="roundup-chart">
@@ -344,7 +344,7 @@
     </p>
     <p>
         Both lines for all users look similar to the previous chart and don't warrant additional commentary.
-        Newcomers plot for the success rate still grows very fast with the number of votes, doubling from 4.5% at 0 votes to 9% at not-zero votes. Next step to mere 10-19 votes triples success rate again, and it keeps growing still. It must be pointed out that there's not enough submissions made after 200 mark to form any reliable statistic. One conclusion that we can draw from it is that very few people try their hand at being writers after passively lurking for a good while.
+        Newcomers plot for the success rate still grows very fast with the number of votes, doubling from <strong>4.5% at 0 votes</strong> to <strong>9% at not-zero votes</strong>. Next step to mere <strong>10-19 votes</strong> triples success rate again, and it keeps growing still. It must be pointed out that there's not enough submissions made after <strong>200 mark</strong> to form any reliable statistic. One conclusion that we can draw from it is that very few people try their hand at being writers after passively lurking for a good while.
         Rating chart, again, is too chaotic to gleam any correlation from it. However, if we trust that the data we have is enough to draw some conclusions from it, we can try the following: although more experience definitely helps with writing a first passable page, it doesn't take you much beyond that. Perhaps, people are just happy enough to post <em>something</em> for their first work as long as it stays on the wiki.
     </p>
 </div>                
@@ -358,7 +358,7 @@
         In this chart posts are grouped into a few preselected intervals based on the number of previously failed pages by the same user. Failed pages have to precede the post by three or more days to exclude serial coldposts and trolling. Naturally data in this chart include only newcomers.
     </p>
     <p>
-        We are not sure if the data here is reliable enough here or if it's presented in the best possible manner because it looks like success rate starts at solid 12% for the first post ever and then drops to abysmal 2.5% for the fourth attempt after which it rises again. It looks like newcomers either succeed on the first 2-3 tries, drop writing altogether or persist and manage to nail it after 5 or more attempts. Although every interval after 3 fails only has 1 or 2 successes to it, so slightly different choice of intervals or a lucky occasion could change the plot dramatically. There's definitely not enough data for the rating plot to be meaningful.
+        We are not sure if the data here is reliable enough here or if it's presented in the best possible manner because it looks like success rate starts at solid <strong>12%</strong> for the first post ever and then drops to abysmal <strong>2.5%</strong> for the fourth attempt after which it rises again. It looks like newcomers either succeed on the first <strong>2-3</strong> tries, drop writing altogether or persist and manage to nail it after <strong>5</strong> or more attempts. Although every interval after <strong>3</strong> fails only has <strong>1 or 2</strong> successes to it, so slightly different choice of intervals or a lucky occasion could change the plot dramatically. There's definitely not enough data for the rating plot to be meaningful.
     </p>
 </div>
 <div class="roundup-chart">
@@ -371,7 +371,7 @@
         In this chart posts are grouped into a few preselected intervals based on the number of previously successful pages by the same user.
     </p>
     <p>
-        Nothing unexpected here, but having hard numbers to back up a preconceived notion is always good. Success rate going from 0 to 1 pages skyrockets from 11.2% to 67.8% and generally keeps growing, reaching 100% at 80 (or so) pages. Average rating grows until 10 pages mark, but then jumps around without really going one way or another.
+        Nothing unexpected here, but having hard numbers to back up a preconceived notion is always good. Success rate going from <strong>0</strong> pages to <strong>1</strong> page skyrockets from <strong>11.2%</strong> to <strong>67.8%</strong> and generally keeps growing, reaching <strong>100%</strong> at <strong>80 (or so)</strong> pages. Average rating grows until <strong>10</strong> pages mark, but then jumps around without really going one way or another.
     </p>
 </div>
 
@@ -467,7 +467,7 @@
     </div>
     <div class="roundup-comment top-buffer-small">
         <p>
-            It's hard to define what "underrated" means so we went with two arbitrary parameters: rating under 50 and <a href="/about">Wilson score</a> over 0.87. With different parameters those could've been an entirely different set of pages so think about this category as a bunch of reading suggestions rather than a definitive list.
+            It's hard to define what "underrated" means so we went with two arbitrary parameters: rating <strong>under 50</strong> and <a href="/about">Wilson score</a> <strong>over 0.87</strong>. With different parameters those could've been an entirely different set of pages so think about this category as a bunch of reading suggestions rather than a definitive list.
         </p>
     </div>
     <!-- 1.11 -->
@@ -516,7 +516,7 @@
     </div>
     <div class="roundup-comment top-buffer-small">
         <p>
-            We didn't start the fire. We simply did our best to define the fire with a formula and make a nice table out of it. This table contains pages that hover close to 0 rating while having as many total votes as possible. This is not necessarily a mark of controversy, it can signify mediocrity as well. But the fact that many people disagreed with each other on whether the page in question is good or bad makes it somewhat interesting.
+            We didn't start the fire. We simply did our best to define the fire with a formula and make a nice table out of it. This table contains pages that hover close to <strong>0</strong> rating while having as many total votes as possible. This is not necessarily a mark of controversy, it can signify mediocrity as well. But the fact that many people disagreed with each other on whether the page in question is good or bad makes it somewhat interesting.
         </p>
     </div>
     <!-- 1.16 -->
@@ -589,7 +589,7 @@
     <!-- 1.17 -->
     <h4>Translations</h4>
     <div class="roundup-comment">
-        <p>At least <em>820</em> new pages from the english branch were translated into other languages in 2018, making it at least <em>1650 translations</em> in total. Fastest non-service translation was <a href="/page/93501440">korean page</a> of <a href="/page/93493917">how do i delete articles</a> which was posted mere 51 minutes after the original.
+        <p>At least <strong>820</strong> new pages from the english branch were translated into other languages in 2018, making it at least <strong>1650 translations</strong> in total. Fastest non-service translation was <a href="/page/93501440">korean page</a> of <a href="/page/93493917">how do i delete articles</a> which was posted mere <strong>51 minutes</strong> after the original.
     </div>
 </div>
 <!-- 1.14 -->
@@ -605,10 +605,10 @@
 </div>
 <div class="roundup-pages-box-bounds roundup-comment">
     <p>
-        This particular chart demonstrates how rating of a successful article changes over the page's first year. Rating value is expressed as percentage of rating in the end of the year, which is why line ends neatly at 100%. Line shows average value across all pages at certain points: 1 day, 2 days, a week, etc. 
+        This particular chart demonstrates how rating of a successful article changes over the page's first year. Rating value is expressed as percentage of rating in the end of the year, which is why line ends neatly at <strong>100%</strong>. Line shows average value across all pages at certain points: 1 day, 2 days, a week, etc. 
     </p>
     <p>
-        Average by itself doesn't give any idea how actual values are distributed - are they tightly clustered around the average or placed sparsely? Percentile areas to the rescue! Translucent areas around the mean line show bounds for 3 percentiles: 50%, 75% and 95%. In other words: if we were to take any given date (a day, a week, a month) and chart ratings for individual articles at this date as points, 50% of the points would fall into the most opaque area, 75% - into the the most and second-most opaque areas, and all three areas would cover 95% of the points. Knowing these values we can predict future rating of a page with some degree of certainty. Granted, in this particular case this degree of certainty won't be very high.
+        Average by itself doesn't give any idea how actual values are distributed - are they tightly clustered around the average or placed sparsely? Percentile areas to the rescue! Translucent areas around the mean line show bounds for 3 percentiles: <strong>50%, 75% and 95%</strong>. In other words: if we were to take any given date (a day, a week, a month) and chart ratings for individual articles at this date as points, <strong>50%</strong> of the points would fall into the most opaque area, <strong>75%</strong> - into the the most and second-most opaque areas, and all three areas would cover <strong>95%</strong> of the points. Knowing these values we can predict future rating of a page with some degree of certainty. Granted, in this particular case this degree of certainty won't be very high.
     </p>
     <p>
         Another note: for obvious reasons this chart uses data from 2017.
@@ -625,13 +625,13 @@
 </div>        
 <div class="roundup-pages-box-bounds roundup-comment">
     <p>
-        Click on the button in the middle to start animation, click again to pause it. Nothing particularly educational about this thing, but it was fun to make and it's interesting to see how people snatch free slots from the main list. There are some errors in there on account of people moving their articles from one slot to another and other shenanigans, but for the most part it's correct. Also, ScpperDB didn't start archiving pages until 2018-01-15, so the first half of the animation goes kind of slowly.
+        Click on the button in the middle to start animation, click again to pause it. Nothing particularly educational about this thing, but it was fun to make and it's interesting to see how people snatch free slots from the main list. There are some errors in there on account of people moving their articles from one slot to another and other shenanigans, but for the most part it's correct. Also, ScpperDB didn't start archiving pages until <strong>2018-01-15</strong>, so the first half of the animation goes kind of slowly.
     </p>
 </div>
 <h2 class="roundup-pages-title">Tags in 2018</h2>        
 <div class="roundup-pages-box-bounds roundup-comment">
     <p>
-        We didn't have any exciting ideas for this section, so here's some top 25 lists. We also did not sort through them, even if removing some generic tags like _image would've made these lists more informative. But anyway, perhaps someone will find this interesting. Data in this section only includes successful pages posted in 2018.
+        We didn't have any exciting ideas for this section, so here's some <strong>top 25</strong> lists. We also did not sort through them, even if removing some generic tags like _image would've made these lists more informative. But anyway, perhaps someone will find this interesting. Data in this section only includes successful pages posted in 2018.
     </p>        
 </div>
 <div class="roundup-pages-box-bounds top-buffer-small roundup-list-columns">
@@ -700,7 +700,7 @@
 </div>
 <div class="roundup-pages-box-bounds roundup-comment top-buffer-small">
     <p>
-        These categories should be fairly obvious. A tag is considered new only if it doesn't appear on any page posted before 2018-01-01.
+        These categories should be fairly obvious. A tag is considered new only if it doesn't appear on any page posted before <strong>2018-01-01</strong>.
     </p>        
 </div>
 <div class="roundup-pages-box-bounds top-buffer-small">
@@ -760,7 +760,7 @@
         In the first column growth is expressed as ratio of number of pages with this tag at the time of writing to the number of pages with this tag at the beginning of 2018. Only pages that had the tag before the first of January 2018 are actually counted in the denominator. So tags that have been added to the old pages during 2018 are still counted towards growth.
     </p>        
     <p>
-        The second list can be rephrased as "the most popular tags". We entertained the idea to revert this list and show the tags that the least number of people used, but we think all of them were characters tags. Another options was "number of pages divided by number of authors" but we are not sure what that would've shown. But in case you're curious: "dread&circuses" would've won with 43 pages between 7 authors. "s&c-plastics" and "51174" took second and third places respectively.
+        The second list can be rephrased as "the most popular tags". We entertained the idea to revert this list and show the tags that the least number of people used, but we think all of them were characters tags. Another options was "number of pages divided by number of authors" but we are not sure what that would've shown. But in case you're curious: "<strong>dread&circuses</strong>" would've won with <strong>43</strong> pages between <strong>7</strong> authors. "<strong>s&c-plastics</strong>" and "<strong>51174</strong>" would be second and third places respectively.
     </p>            
     <p>
         The last list are tags that exist on pages from previous years, but aren't on any page posted in 2018. A lot of those are archival tags, for the past contests and such, but some were abandoned or simply became unpopular.
@@ -801,6 +801,6 @@
 </div>    
 <div class="roundup-pages-box-bounds roundup-comment top-buffer-small">
     <p>
-        SCP-3615 is also the most tagged article among all articles ever, so congratulations on that.
+        <strong>SCP-3615</strong> is also the most tagged article among all articles ever, so congratulations on that.
     </p>        
 </div>        
