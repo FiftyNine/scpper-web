@@ -43,8 +43,8 @@
 <div class="roundup-pages-box-bounds">
     <p>Content of this page is focused on the changes that happened to the population of the wiki in 2018. We examine new members and the ways they participated in the life of the wiki. We attempt to present data in a way that reveals trends concerning rates of joining as well as user retention. Much of this post deals with timespans during which users were active on the wiki.</p>
     <p>Most of the data will be presented in the form of tables and charts. Charts are interactive: hover mouse cursor over the elements of a chart to see detailed hints and left click to select those elements. Many charts support zoom: press left mouse button and drag cursor over a chart to select an area for zoom-in. Click right mouse button to reset chart to its default scale.</p>
-    <p>Finally, I would like to note that it is not the purpose of this work to perform conclusive analysis of presented data and establish aforementioned trends and dependencies beyond a shadow of a doubt. Rather I aim to present data in an easily digestible way, add some thoughts of my own and leave conclusions to a reader.</p>
-    <p>All information presented on this page was taken on <strong><?php echo $this->date; ?></strong> and is not up-to-date. </p>
+    <p>Finally, we would like to note that it is not the purpose of this work to perform conclusive analysis of presented data and establish aforementioned trends and dependencies beyond a shadow of a doubt. Rather we aim to present data in an easily digestible way, add some thoughts of our own and leave conclusions to the reader.</p>
+    <p>All information presented on this page was taken on <strong><?php echo $this->date; ?></strong> and is not kept up-to-date. </p>
 </div>        
 <!-- General -->
 <h4 class="roundup-section-title">General information</h4>
@@ -60,7 +60,7 @@
 <!-- JoinsByDate -->
 <div class="roundup-pages-box-bounds roundup-comment top-buffer-small">
     <p>
-        Normally ScpperDB shows dates and times at GMT+0:00, but for the roundup all times and dates they were converted to US Central Standard Time, or more precisely to GMT-6:00, as this conversion does not account for daylight saving time.
+        Normally ScpperDB shows dates and times at GMT+0:00, but for the roundup all times and dates were converted to US Central Standard Time, or more precisely to GMT-6:00, as this conversion does not account for daylight saving time.
     </p>
 </div>
 <div class="roundup-chart top-buffer-small">
@@ -98,13 +98,13 @@
 <h4 class="roundup-section-title">Activity</h4>
 <div class="roundup-pages-box-bounds roundup-comment">
     <p>
-        In this section I will examine what new users did with their time on the wiki. Activity in ScpperDB's terms is one of the following: voting on pages, editing pages or posting new pages. Posting on forum, as helpful and productive as it can be does not count.
+        In this section we will examine what new users did with their time on the wiki. Activity in ScpperDB's terms is one of the following: voting on pages, editing pages or posting new pages. Posting on forum, as helpful and productive as it can be does not count.
     </p>
     <p>
         In 2018 out of <strong><?php echo number_format($this->total[0]['Count']); ?></strong> newcomers <strong><?php echo number_format($this->roles['inactive'][0]['Count']); ?></strong> never engaged in any sort of activity. <strong><?php echo number_format($this->roles['voters'][0]['Count']); ?></strong> voted on pages that weren't their own. <strong><?php echo number_format($this->roles['editors'][0]['Count']); ?></strong> edited at least one page that they did not author. <strong><?php echo number_format($this->roles['posters'][0]['Count']); ?></strong> tried their hand at writing an article and <strong><?php echo number_format($this->roles['authors'][0]['Count']); ?></strong> succeeded.
     </p>    
     <p>
-        Normally ScpperDB considers a user to be active if they engaged in at least one activity in the past 6 months. For the purpose of this page I will cut this period down to 3 months. So, for example, a user casted a vote on July, 6th and then haven't done shit for the next 3 months. On any given day during these 3 months they counts as active. On October, 7th, however, they stop being active and don't regain this status until they either post a page, edit one or vote.
+        Normally ScpperDB considers a user to be active if they engaged in at least one activity in the past 6 months. For the purpose of this page we cut this period down to 3 months. So, for example, a user casted a vote on July, 6th and then haven't done shit for the next 3 months. On any given day during these 3 months they counts as active. On October, 7th, however, they stop being active and don't regain this status until they either post a page, edit one or vote.
     </p>
 </div>
 <!-- DaysToPost -->
