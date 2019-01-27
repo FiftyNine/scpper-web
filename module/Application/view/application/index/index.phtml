@@ -10,6 +10,8 @@
         $('#pages').on('click', function() {window.location.assign('/pages');});
         $('#revisions').on('click', function() {window.location.assign('/revisions');});
         $('#votes').on('click', function() {window.location.assign('/votes');});
+        $('#roundup-users').on('click', function() {window.location.assign('/2018/users');});
+        $('#roundup-pages').on('click', function() {window.location.assign('/2018/pages');});
     }
 
     $(document).ready(init);
@@ -33,55 +35,77 @@
             <div class="col-sm-6 col-xs-12 tile-1">
                 <div class="tile background-green" id="members">
                     <h2>
-                        <span><?php echo $site->getMembers(); ?></span>
+                        <span><?php echo number_format($site->getMembers(), 0, '.', ' '); ?></span>
                         <span class="tile-whitespace"></span>
-                        <span>members</span>
+                        <span>users</span>
                     </h2>
                     <ul class="list-unstyled tile-details">
-                        <li><?php echo $site->getActiveMembers(); ?> active</li>
-                        <li><?php echo $site->getContributors(); ?> contributors</li>
-                        <li><?php echo $site->getAuthors(); ?> authors</li>
+                        <li><?php echo number_format($site->getActiveMembers(), 0, '.', ' '); ?> active</li>
+                        <li><?php echo number_format($site->getContributors(), 0, '.', ' '); ?> contributors</li>
+                        <li><?php echo number_format($site->getAuthors(), 0, '.', ' '); ?> authors</li>
                     </ul>        
                 </div>
             </div>
             <div class = "col-sm-6 col-xs-12 tile-2">
                 <div class="tile background-blue" id="pages">
                     <h2>
-                        <span><?php echo $site->getPages(); ?></span>
+                        <span><?php echo number_format($site->getPages(), 0, '.', ' '); ?></span>
                         <span class="tile-whitespace"></span>
                         <span>pages</span>
                     </h2>
                     <ul class="list-unstyled tile-details">
-                        <li> <?php echo $site->getOriginals(); ?> originals </li>
-                        <li> <?php echo $site->getTranslations(); ?> translations </li>
+                        <li> <?php echo number_format($site->getOriginals(), 0, '.', ' '); ?> originals </li>
+                        <li> <?php echo number_format($site->getTranslations(), 0, '.', ' '); ?> translations </li>
                     </ul>        
                 </div>
-            </div>                        
+            </div>
         </div>
         <div class="row tile-row">
             <div class="col-sm-6 col-xs-12 tile-1">
                 <div class = "tile background-red" id="votes">
                     <h2>
-                        <span><?php echo $site->getVotes(); ?></span>
+                        <span><?php echo number_format($site->getVotes(), 0, '.', ' '); ?></span>
                         <span class="tile-whitespace"></span>
                         <span>votes</span>
                     </h2>
                     <ul class="list-unstyled tile-details">
-                        <li><?php echo $site->getPositive(); ?> positive</li>
-                        <li><?php echo $site->getNegative(); ?> negative</li>
+                        <li><?php echo number_format($site->getPositive(), 0, '.', ' '); ?> positive</li>
+                        <li><?php echo number_format($site->getNegative(), 0, '.', ' '); ?> negative</li>
                     </ul>        
                 </div>
             </div>
             <div class = "col-sm-6 col-xs-12 tile-2">
                 <div class = "tile background-orange" id="revisions">
                     <h2>
-                        <span><?php echo $site->getRevisions(); ?></span>
+                        <span><?php echo number_format($site->getRevisions(), 0, '.', ' '); ?></span>
                         <span class="tile-whitespace"></span>
                         <span>revisions</span>
                     </h2>
-                </div>                            
+                </div>
             </div>            
         </div>
+        <?php if ($site->getShortName() == "en"): ?>
+        <div class="row tile-row">                        
+            <div class="col-xs-12 tile-roundup-main">
+                <h1>2018 in statistics</h1>
+                <span class="small-text">We've compiled a whole bunch of stats for our yearly roundup.</span>
+            </div>            
+        </div>        
+        <div class="row tile-row">            
+            <div class="col-sm-6 col-xs-12 tile-1">
+                <div class="tile tile-roundup background-green" id="roundup-users">
+                    <h2>Users</h2>
+                    <span class="small-text">Rates of people joining and leaving the wiki, number of active users over the year, the biggest new authors and voters, the list goes on!</span>
+                </div>
+            </div>
+            <div class = "col-sm-6 col-xs-12 tile-2">
+                <div class="tile tile-roundup background-blue" id="roundup-pages">
+                    <h2>Pages</h2>
+                    <span class="small-text">Number of new pages, distribution by the type of page, time and date of posting, correlation between writer's experience and rating of page, top pages and tags of the year, etc, etc, etc.</span>
+                </div>
+            </div>
+        </div>        
+        <?php endif; ?>
         <div class="row text-center tile-patreon">
             <span> If you enjoy ScpperDB please consider supporting it on Patreon. </span>
             <div class="top-buffer-small">
@@ -92,6 +116,6 @@
                     </div>
                 </a>                
             </div>
-        </div>
+        </div>        
     </div>
 </div>

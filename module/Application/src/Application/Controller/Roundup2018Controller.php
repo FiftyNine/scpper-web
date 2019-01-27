@@ -30,14 +30,14 @@ class Roundup2018Controller extends AbstractActionController
     {
         $this->services = $hubService;
     }    
-
+    
     public function usersAction()
     {
         $reader = new \Zend\Config\Reader\Json();
         $data = $reader->fromFile(getcwd().'/public/data/roundup/2018/users.json');
         return new ViewModel($data);
     }
-    
+        
     public function pagesAction()
     {                   
         $reader = new \Zend\Config\Reader\Json();

@@ -1073,7 +1073,7 @@ div.roundup-collapsible-table-title {
 }
 .roundup-legend-checkbox-wrapper {
     padding-left: 5px; 
-    margin-right: 20px;
+    margin-right: 25px;
 }
 
 .roundup-legend-checkbox-wrapper>label {
@@ -1151,4 +1151,23 @@ div.roundup-collapsible-table-title {
 
 td.roundup-list-value {
     text-align: end;    
+}
+
+.tile-roundup {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.tile-roundup-main {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    height: auto;    
+    border: 1px solid #ddd;
+    border-radius:4px;
+    /*padding: 0px;*/
+    -moz-border-radius: 4px;
+}
+
+.tile-roundup-main > h1 {
+    margin: 0px;
 }
