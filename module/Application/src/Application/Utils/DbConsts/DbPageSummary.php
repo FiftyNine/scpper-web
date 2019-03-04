@@ -13,6 +13,7 @@ class DbPageSummary
     const CONTRIBUTORRATING = 'ContributorRating';
     const ADJUSTEDRATING = 'AdjustedRating';
     const WILSONSCORE = 'WilsonScore';
+    const MONTHRATING = 'MonthRating';
 
 
     static public function hasField($field) 

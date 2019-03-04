@@ -23,6 +23,7 @@ class DbViewPagesDeleted
     const CONTRIBUTORRATING = 'ContributorRating';
     const ADJUSTEDRATING = 'AdjustedRating';
     const WILSONSCORE = 'WilsonScore';
+    const MONTHRATING = 'MonthRating';
     const REVISIONS = 'Revisions';
     const STATUSID = 'StatusId';
     const KINDID = 'KindId';

@@ -312,8 +312,8 @@ class VoteDbSqlMapper extends ZendDbSqlMapper implements VoteMapperInterface
                 ->where([
                     'a.'.DbViewAuthors::USERID.' = ?' => $userId,
                     'a.'.DbViewAuthors::SITEID.' = ?' => $siteId,
-                    'v.'.DbViewVotesAll::FROMMEMBER.' = 1',
-                    'v.'.DbViewVotesAll::DELETED.' <> 1'
+                    'a.'.DbViewAuthors::RATED.' = 1',
+                    'v.'.DbViewVotes::FROMMEMBER.' = 1'
                 ]);
         return $this->getChartData($sql, $select);       
     }

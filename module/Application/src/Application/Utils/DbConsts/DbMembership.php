@@ -13,6 +13,7 @@ class DbMembership
     const ADJUSTEDRATING = 'AdjustedRating';
     const ADJUSTEDWEIGHT = 'AdjustedWeight';
     const CLEANRATING = 'CleanRating';
+    const ABORTED = 'Aborted';
 
 
     static public function hasField($field) 

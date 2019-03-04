@@ -64,7 +64,7 @@ class AuthorshipDbSqlMapper extends ZendDbSqlMapper implements AuthorshipMapperI
                         DbViewAuthors::SITEID
                 ])
                 ->where([
-                        '('.DbViewAuthors::KINDID.' IS NULL OR '.DbViewAuthors::KINDID.' <> '.PageKind::SERVICE.')',
+                        '('.DbViewAuthors::RATED.' = 1)',
                         DbViewAuthors::PAGEDELETED.' = 0'
                 ]);
         return $select;

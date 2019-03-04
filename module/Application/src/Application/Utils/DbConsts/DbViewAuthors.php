@@ -12,6 +12,7 @@ class DbViewAuthors
     const PAGENAME = 'PageName';
     const PAGETITLE = 'PageTitle';
     const PAGEDELETED = 'PageDeleted';
+    const CATEGORYNAME = 'CategoryName';
     const STATUSID = 'StatusId';
     const KINDID = 'KindId';
     const STATUS = 'Status';
@@ -22,6 +23,7 @@ class DbViewAuthors
     const USERDISPLAYNAME = 'UserDisplayName';
     const USERDELETED = 'UserDeleted';
     const USERID = 'UserId';
+    const RATED = 'Rated';
 
 
     static public function hasField($field) 
