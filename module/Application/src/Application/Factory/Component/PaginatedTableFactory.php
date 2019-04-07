@@ -12,6 +12,7 @@ use Application\Component\PaginatedTable\Column;
 use Application\Utils\DbConsts\DbViewUsers;
 use Application\Utils\DbConsts\DbViewMembership;
 use Application\Utils\DbConsts\DbViewPages;
+use Application\Utils\DbConsts\DbViewPageReports;
 use Application\Utils\DbConsts\DbViewRevisions;
 use Application\Utils\DbConsts\DbViewVotes;
 use Application\Utils\DbConsts\DbViewUserActivity;
@@ -329,5 +330,37 @@ class PaginatedTableFactory
             false
         );
         return $table;        
-    }        
+    }
+    
+    static public function createReportsTable($paginator)
+    {
+        $table = new \Application\Component\PaginatedTable\Table(
+            'reports',
+            [
+                Column::group([
+                    Column::column('#', 8, '', true, '', Column::INDEX),
+                    Column::column('Branch', 20, '', true, '', Column::OTHER),
+                    Column::column('Page', 92, '', true, '', Column::PAGE),
+                ], 40, 768),
+                Column::group([
+                    Column::column('Reporter', 40, '', true, '', Column::OTHER),
+                    Column::column('Submitted', 60, '', false, '', Column::DATE),
+                ], 20, 991),
+                Column::group([
+                    Column::column('Status', 60, ''),
+                    Column::column('Kind', 40, ''),
+                ], 15, 768),
+                Column::group([
+                    Column::column('Authors', 60, '', true, '', Column::USERS)
+                ], 15, 991),                
+                Column::group([
+                    Column::column('State', 20, '', true, '', Column::OTHER),
+                ], 10, 768)
+            ], 
+            $paginator, 
+            'partial/tables/reports.phtml', 
+            false
+        );
+        return $table;        
+    }    
 }

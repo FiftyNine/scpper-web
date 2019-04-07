@@ -12,7 +12,8 @@ class DbViewPageReports
     const ORIGINALID = 'OriginalId';
     const KINDID = 'KindId';
     const CONTRIBUTORS = 'Contributors';
-    const PROCESSED = 'Processed';
+    const DATE = 'Date';
+    const REPORTSTATE = 'ReportState';
     const SITEID = 'SiteId';
     const SITENAME = 'SiteName';
     const PAGENAME = 'PageName';

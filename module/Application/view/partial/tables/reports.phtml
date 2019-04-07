@@ -1,0 +1,85 @@
+<?php 
+$row = $this->row;
+switch($this->column->getName()) {
+    case '#':
+        if ($this->collapsed) {
+            echo "#";
+        }
+        echo $this->index;
+        break;
+    case 'Branch':
+        echo strtoupper($row->getPage()->getSite()->getShortName());
+        break;
+    case 'Page':
+        echo $this->partial('partial/page.phtml', ['page' => $row->getPage()]);
+        break;
+    case 'Reporter':
+        echo $this->escapeHtml($row->getReporter());
+        break;
+    case 'Submitted':
+        if ($row->getDate()) {
+            echo $row->getDate()->format('Y-m-d');
+        }
+        break;        
+    case 'Status':
+        if ($row->getStatus() != $row->getOldStatus()) {
+            echo '<div class="report-old">'.\Application\Utils\PageStatus::getDescription($row->getOldStatus()).'</div>';            
+            echo '<div class="report-new">'.\Application\Utils\PageStatus::getDescription($row->getStatus()).'</div>';
+        } else {
+            echo \Application\Utils\PageStatus::getDescription($row->getStatus());
+        }
+        break;
+    case 'Kind':
+        if ($row->getKind() != $row->getOldKind()) {
+            echo '<div class="report-old">'.\Application\Utils\PageKind::getDescription($row->getOldKind()).'</div>';
+            echo '<div class="report-new">'.\Application\Utils\PageKind::getDescription($row->getKind()).'</div>';
+        } else {
+            echo \Application\Utils\PageKind::getDescription($row->getKind());
+        }
+        break;
+    case 'Authors':
+        $oldArray = [];
+        $newArray = [];
+        foreach ($row->getPage()->getAuthors() as $author) {
+            $oldArray[$author->getUserId()] = $author->getRole();
+        }
+        foreach ($row->getContributors() as $contributor) {
+            $newArray[$contributor->getUserId()] = $contributor->getRole();
+        }
+        $removed = array_diff_assoc($oldArray, $newArray);
+        $added = array_diff_assoc($newArray, $oldArray);
+        $same = array_intersect_assoc($oldArray, $newArray);
+        foreach ($row->getPage()->getAuthors() as $author) {
+            if (array_key_exists($author->getUserId(), $removed)) {
+                echo '<div class="report-old">'.$this->partial('partial/author.phtml', [
+                    'author' => $author,
+                    'one' => false]).'</div>';
+            }
+        }
+        foreach ($row->getPage()->getAuthors() as $author) {
+            if (array_key_exists($author->getUserId(), $same)) {
+                echo $this->partial('partial/author.phtml', [
+                    'author' => $author,
+                    'one' => false]);
+            }
+        }
+        foreach ($row->getContributors() as $author) {
+            if (array_key_exists($author->getUserId(), $added)) {
+                $authorView = new \Application\Utils\AuthorView(
+                        $author->getUserId(), 
+                        ['d' => false, 'dn' => $author->getUserName()], 
+                        $author->getRole());
+                echo '<div class="report-new">'.$this->partial('partial/author.phtml', [
+                    'author' => $authorView,
+                    'one' => false]).'</div>';
+            }
+        }        
+        break;
+    case 'State':
+        $text = \Application\Utils\ReportState::getDescription($row->getReportState());
+        // echo '<span class="glyphicon '.$glyph.'" aria-label="'.$hint.'" title="'.$hint.'"></span>';
+        echo '<a href="/admin/report/'.$row->getId().'">'.$text.'</a>';
+        break;
+    default:;    
+}
+?> 

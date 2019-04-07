@@ -12,7 +12,8 @@ class DbPageReports
     const ORIGINALID = 'OriginalId';
     const KINDID = 'KindId';
     const CONTRIBUTORS = 'Contributors';
-    const PROCESSED = 'Processed';
+    const REPORTSTATE = 'ReportState';
+    const DATE = 'Date';
 
 
     static public function hasField($field) 

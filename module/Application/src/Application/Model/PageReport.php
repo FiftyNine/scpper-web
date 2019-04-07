@@ -33,9 +33,20 @@ class PageReport implements PageReportInterface
     protected $reporter;
     
     /**
+     * 
+     * @var \DateTime
+     */
+    protected $date;
+    
+    /**
      * @var int
      */
     protected $status;
+
+    /**
+     * @var int
+     */
+    protected $oldStatus;
     
     /**
      * @var int
@@ -46,6 +57,11 @@ class PageReport implements PageReportInterface
      * @var int
      */
     protected $kind;
+
+    /**
+     * @var int
+     */
+    protected $oldKind;
     
     /**
      * @var string
@@ -54,9 +70,9 @@ class PageReport implements PageReportInterface
 
     /**
      *
-     * @var bool
+     * @var int
      */
-    protected $processed;
+    protected $reportState;
     
     /**
      * @var \Application\Model\PageInterface
@@ -82,7 +98,7 @@ class PageReport implements PageReportInterface
     { 
         $this->pageMapper = $pageMapper;
         $this->contributors = [];
-        $this->processed = false;
+        $this->reportState = \Application\Utils\ReportState::PENDING;
     }
     /**
      * {@inheritDoc}
@@ -137,6 +153,19 @@ class PageReport implements PageReportInterface
     {
         $this->reporter = $reporter;
     }    
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+    
+    public function setDate(\DateTime $value = null)
+    {
+        $this->date = $value;
+    }
     
     /**
      * {@inheritDoc}
@@ -153,6 +182,22 @@ class PageReport implements PageReportInterface
     {        
         $this->status = $status;
     }    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getOldStatus()
+    {
+        return $this->oldStatus;
+    }
+
+    /**
+     * @param int $status
+     */
+    public function setOldStatus($status)
+    {        
+        $this->oldStatus = $status;
+    }       
     
     /**
      * {@inheritDoc}
@@ -184,7 +229,23 @@ class PageReport implements PageReportInterface
     public function setKind($kind)
     {
         $this->kind = $kind;
-    }    
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getOldKind()
+    {
+        return $this->oldKind;
+    }
+
+    /**
+     * @param int $kind
+     */
+    public function setOldKind($kind)
+    {
+        $this->oldKind = $kind;
+    }
     
     /**
      * {@inheritDoc}
@@ -205,17 +266,17 @@ class PageReport implements PageReportInterface
     /**
      * {@inheritDoc}
      */
-    public function getProcessed()
+    public function getReportState()
     {
-        return $this->processed;
+        return $this->reportState;
     }
 
     /**
-     * @param bool $processed
+     * @param int $state
      */
-    public function setProcessed($processed)
+    public function setReportState($state)
     {
-        $this->processed = (bool)$processed;
+        $this->reportState = $state;
     }
         
     /**

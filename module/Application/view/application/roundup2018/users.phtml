@@ -226,7 +226,7 @@
                     <th class="column-date">First page</th>
                 </tr>
                 <?php foreach ($data as $index => $row): ?>
-                <?php $userView = new \Application\Utils\Roundup\UserView($row['UserId'], ['d' => false, 'dn' => $row['DisplayName']]); ?>
+                <?php $userView = new \Application\Utils\UserView($row['UserId'], ['d' => false, 'dn' => $row['DisplayName']]); ?>
                 <tr>                    
                     <td><?php echo $index+1; ?></td>
                     <td><?php echo $this->partial('partial/user.phtml', ['user' => $userView]); ?></td>
@@ -261,7 +261,7 @@
             <table class="roundup-voter-list">
                 <tbody>
                     <?php foreach ($this->gatekeepers as $row): ?>
-                    <?php $userView = new \Application\Utils\Roundup\UserView($row['UserId'], ['d' => false, 'dn' => $row['UserDisplayName']]); ?>
+                    <?php $userView = new \Application\Utils\UserView($row['UserId'], ['d' => false, 'dn' => $row['UserDisplayName']]); ?>
                     <tr>
                         <td><?php echo $this->partial('partial/user.phtml', ['user' => $userView]); ?></td>
                         <td class="roundup-list-value"><?php printf("%d (+%d / -%d)", $row['Count'], $row['Positive'], $row['Negative']); ?></td>
@@ -275,7 +275,7 @@
             <table class="roundup-voter-list">
                 <tbody>
                     <?php foreach ($this->eyeForQuality as $row): ?>
-                    <?php $userView = new \Application\Utils\Roundup\UserView($row['UserId'], ['d' => false, 'dn' => $row['UserDisplayName']]); ?>
+                    <?php $userView = new \Application\Utils\UserView($row['UserId'], ['d' => false, 'dn' => $row['UserDisplayName']]); ?>
                     <tr>
                         <td><?php echo $this->partial('partial/user.phtml', ['user' => $userView]); ?></td>
                         <td class="roundup-list-value"><?php printf("%.2f%% (+%d / -%d)", $row['Guessed']*100, $row['Positive'], $row['Negative']); ?></td>
@@ -289,7 +289,7 @@
             <table class="roundup-voter-list">
                 <tbody>
                     <?php foreach ($this->contrarians as $row): ?>
-                    <?php $userView = new \Application\Utils\Roundup\UserView($row['UserId'], ['d' => false, 'dn' => $row['UserDisplayName']]); ?>
+                    <?php $userView = new \Application\Utils\UserView($row['UserId'], ['d' => false, 'dn' => $row['UserDisplayName']]); ?>
                     <tr>
                         <td><?php echo $this->partial('partial/user.phtml', ['user' => $userView]); ?></td>
                         <td class="roundup-list-value"><?php printf("%.2f%% (+%d / -%d)", $row['Guessed']*100, $row['Positive'], $row['Negative']); ?></td>

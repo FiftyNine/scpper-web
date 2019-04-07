@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace Application\Utils\Roundup;
+namespace Application\Utils;
 
 /**
  * This is a wrapper class to provide a User-like interface for raw data

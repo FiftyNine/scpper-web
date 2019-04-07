@@ -12,7 +12,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\Hydrator\ClassMethods;
 use Application\Mapper\PageReportDbSqlMapper;
-use Application\Utils\DbConsts\DbPageReports;
+use Application\Utils\DbConsts\DbViewPageReports;
 
 /**
  * Description of PageReportDbSqlMapperFactory
@@ -26,18 +26,26 @@ class PageReportDbSqlMapperFactory implements FactoryInterface
         $dbAdapter = $serviceLocator->get('Zend\Db\Adapter\Adapter');
         $hydrator = new ClassMethods();
         $namingStrat = new \Zend\Stdlib\Hydrator\NamingStrategy\MapNamingStrategy([
-            DbPageReports::PAGEID => 'pageId',
-            DbPageReports::REPORTER => 'reporter',
-            DbPageReports::STATUSID => 'status',
-            DbPageReports::KINDID => 'kind',
-            DbPageReports::ORIGINALID => 'originalId',
-            DbPageReports::CONTRIBUTORS => 'contributorsJson']);
+            DbViewPageReports::PAGEID => 'pageId',
+            DbViewPageReports::REPORTER => 'reporter',
+            DbViewPageReports::DATE => 'date',
+            DbViewPageReports::STATUSID => 'status',
+            DbViewPageReports::OLDSTATUSID => 'oldStatus',
+            DbViewPageReports::OLDSTATUS => '',
+            DbViewPageReports::KINDID => 'kind',
+            DbViewPageReports::OLDKINDID => 'oldKind',
+            DbViewPageReports::OLDKIND => '',
+            DbViewPageReports::ORIGINALID => 'originalId',
+            DbViewPageReports::CONTRIBUTORS => 'contributorsJson']);
         $hydrator->setNamingStrategy($namingStrat);
         $hydrator->addFilter('excluded',
                 function($prop) {
                     $methods = [
+                        'getOldStatus',
+                        'getOldKind',
+                        'getDate',
                         'getPage',
-                        'getOriginalPage',
+                        'getOriginalPage',                        
                         'getPageName',
                         'getSiteName',
                         'hasOriginal',
@@ -55,8 +63,8 @@ class PageReportDbSqlMapperFactory implements FactoryInterface
                     return false === array_search($method, $methods);
                 },
                 \Zend\Stdlib\Hydrator\Filter\FilterComposite::CONDITION_AND);
-        $hydrator->addStrategy('processed', new \Zend\Stdlib\Hydrator\Strategy\BooleanStrategy('1', '0'));
+        $hydrator->addStrategy(DbViewPageReports::DATE, new \Zend\Stdlib\Hydrator\Strategy\DateTimeFormatterStrategy('Y-m-d H:i:s'));
         $prototype = $serviceLocator->get('PageReportPrototype');
-        return new PageReportDbSqlMapper($dbAdapter, $hydrator, $prototype, DbPageReports::TABLE, DbPageReports::ID);
+        return new PageReportDbSqlMapper($dbAdapter, $hydrator, $prototype, DbViewPageReports::TABLE, DbViewPageReports::ID);
     }
 }

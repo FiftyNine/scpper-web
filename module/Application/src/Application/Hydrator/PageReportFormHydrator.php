@@ -28,7 +28,6 @@ class PageReportFormHydrator extends ClassMethods
         $this->addStrategy(PageReportFieldset::KIND, new IntStrategy(false));
         $this->addStrategy(PageReportFieldset::STATUS, new IntStrategy(false));
         $this->addStrategy(PageReportFieldset::ORIGINAL_ID, new IntStrategy(true));        
-        $this->addStrategy('processed', new \Zend\Stdlib\Hydrator\Strategy\BooleanStrategy('1', ''));
         $namingStrat = new \Zend\Stdlib\Hydrator\NamingStrategy\MapNamingStrategy([
             PageReportFieldset::REPORT_ID => 'id',
             PageReportFieldset::PAGE_ID => 'pageId',

@@ -399,12 +399,12 @@
                 <?php foreach ($top as $index => $pid): ?>
                 <tr>                    
                     <?php $page = $pages[$pid]; ?>
-                    <?php $pageView = new \Application\Utils\Roundup\PageView($pid, $page); ?>
+                    <?php $pageView = new \Application\Utils\PageView($pid, $page); ?>
                     <?php 
                         $authorViews = [];
                         foreach ($page['a'] as $uid => $author) {
                             $user = $users[$uid];
-                            $authorViews[] = new \Application\Utils\Roundup\AuthorView($uid, $user, $author['r']);
+                            $authorViews[] = new \Application\Utils\AuthorView($uid, $user, $author['r']);
                         } 
                     ?>
                     <td><?php echo $index+1; ?></td>
@@ -446,12 +446,12 @@
                 <tr>                    
                     <?php $pid = $item['PageId']; ?>
                     <?php $page = $pages[$pid]; ?>
-                    <?php $pageView = new \Application\Utils\Roundup\PageView($pid, $page); ?>
+                    <?php $pageView = new \Application\Utils\PageView($pid, $page); ?>
                     <?php 
                         $authorViews = [];
                         foreach ($page['a'] as $uid => $author) {
                             $user = $users[$uid];
-                            $authorViews[] = new \Application\Utils\Roundup\AuthorView($uid, $user, $author['r']);
+                            $authorViews[] = new \Application\Utils\AuthorView($uid, $user, $author['r']);
                         } 
                     ?>
                     <td><?php echo $index+1; ?></td>
@@ -494,12 +494,12 @@
                 <tr>                    
                     <?php $pid = $cPage['PageId']; ?>
                     <?php $page = $pages[$pid]; ?>
-                    <?php $pageView = new \Application\Utils\Roundup\PageView($pid, $page); ?>
+                    <?php $pageView = new \Application\Utils\PageView($pid, $page); ?>
                     <?php 
                         $authorViews = [];
                         foreach ($page['a'] as $uid => $author) {
                             $user = $users[$uid];
-                            $authorViews[] = new \Application\Utils\Roundup\AuthorView($uid, $user, $author['r']);
+                            $authorViews[] = new \Application\Utils\AuthorView($uid, $user, $author['r']);
                         } 
                     ?>
                     <td><?php echo $index+1; ?></td>
@@ -542,12 +542,12 @@
                 <tr>                    
                     <?php $pid = $item['PageId']; ?>
                     <?php $page = $this->oldPages[$pid]; ?>
-                    <?php $pageView = new \Application\Utils\Roundup\PageView($pid, $page); ?>
+                    <?php $pageView = new \Application\Utils\PageView($pid, $page); ?>
                     <?php 
                         $authorViews = [];
                         foreach ($page['a'] as $uid => $author) {
                             $user = $users[$uid];
-                            $authorViews[] = new \Application\Utils\Roundup\AuthorView($uid, $user, $author['r']);
+                            $authorViews[] = new \Application\Utils\AuthorView($uid, $user, $author['r']);
                         } 
                     ?>
                     <td><?php echo $index+1; ?></td>
@@ -781,12 +781,12 @@
             <tr>                    
                 <?php $pid = $raw['PageId']; ?>
                 <?php $page = $pages[$pid]; ?>
-                <?php $pageView = new \Application\Utils\Roundup\PageView($pid, $page); ?>
+                <?php $pageView = new \Application\Utils\PageView($pid, $page); ?>
                 <?php 
                     $authorViews = [];
                     foreach ($page['a'] as $uid => $author) {
                         $user = $users[$uid];
-                        $authorViews[] = new \Application\Utils\Roundup\AuthorView($uid, $user, $author['r']);
+                        $authorViews[] = new \Application\Utils\AuthorView($uid, $user, $author['r']);
                     } 
                 ?>
                 <td><?php echo $index+1; ?></td>

@@ -294,7 +294,7 @@ return [
                                 'controller' => 'Application\Controller\User',
                                 'action' => 'user'
                             ],
-                        ],                        
+                        ],
                     ],
                     'default' => [
                         'type'    => 'Segment',
@@ -346,6 +346,29 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'reports' => [
+                        'type'    => 'Segment',
+                        'options' => [
+                            'route'    => '/reports',
+                            'defaults' => [
+                                'controller' => 'Application\Controller\AdminPanel',
+                                'action' => 'reports'
+                            ],
+                        ],                        
+                    ],
+                    'report' => [
+                        'type'    => 'Segment',
+                        'options' => [
+                            'route'    => '/report/:reportId',
+                            'constraints' => [                                
+                                'reportId'     => '[1-9][0-9]*',
+                            ],                                                
+                            'defaults' => [
+                                'controller' => 'Application\Controller\AdminPanel',
+                                'action' => 'report'
+                            ],
+                        ],
+                    ],                    
                     'default' => [
                         'type'    => 'Segment',
                         'options' => [
@@ -417,8 +440,8 @@ return [
                             ],
                         ],
                     ],                    
-                ],                     
-            ],
+                            ],
+                        ],
             '2018' => [
                 'type' => 'Literal',
                 'options' => [

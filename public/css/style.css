@@ -1029,6 +1029,14 @@ a.report-page {
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;    
 }
 
+div.report-new, div.report-new a, div.report-new span.glyphicon{
+    color: green;    
+}
+
+div.report-old, div.report-old a, div.report-old span.glyphicon {
+    color: crimson;    
+}
+
 /** Roundup **/
 
 div#mainlist-timelapse-cover {

@@ -28,11 +28,22 @@ interface PageReportInterface
      * @return string
      */    
     public function getReporter();
+ 
+    /**
+     * 
+     * @return \DateTime
+     */
+    public function getDate();    
     
     /**
      * @return Const of Application\Utils\PageStatus 
      */
     public function getStatus();
+
+    /**
+     * @return Const of Application\Utils\PageStatus 
+     */
+    public function getOldStatus();
     
     /**
      * @return int
@@ -43,6 +54,11 @@ interface PageReportInterface
      * @return Const of Application\Utils\PageKind
      */
     public function getKind();
+
+    /**
+     * @return Const of Application\Utils\PageKind
+     */
+    public function getOldKind();
     
     /**
      * @return Application\Model\PageReportContributor[]
@@ -50,9 +66,9 @@ interface PageReportInterface
     public function getContributors();
 
     /**
-     * @return bool
+     * @return int A constant from Application\Utils\ReportState;
      */
-    public function getProcessed();
+    public function getReportState();
     
     /**
      * @return Application\Model\PageInterface

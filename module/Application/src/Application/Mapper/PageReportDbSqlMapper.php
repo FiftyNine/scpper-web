@@ -15,6 +15,7 @@ use Zend\Db\Sql\Sql;
 use Zend\Db\Adapter\Driver\ResultInterface;
 use Application\Model\PageReportInterface;
 use Application\Utils\DbConsts\DbPageStatus;
+use Application\Utils\DbConsts\DbPageReports;
 use Application\Utils\DbConsts\DbAuthors;
 
 /**
@@ -30,16 +31,16 @@ class PageReportDbSqlMapper extends ZendDbSqlMapper implements PageReportMapperI
     public function save(PageReportInterface $report)
     {
         $data = $this->hydrator->extract($report);
-        unset($data[$this->table]); // Neither Insert nor Update needs the ID in the array
+        unset($data[DbPageReports::TABLE]); // Neither Insert nor Update needs the ID in the array
 
         if ($report->getId()) {
             // ID present, it's an Update
-            $action = new Update($this->table);
+            $action = new Update(DbPageReports::TABLE);
             $action->set($data);
             $action->where([$this->idFieldName.' = ?' => $report->getId()]);
         } else {
             // ID NOT present, it's an Insert
-            $action = new Insert($this->table);
+            $action = new Insert(DbPageReports::TABLE);
             $action->values($data);
         }
 

@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-namespace Application\Utils\Roundup;
+namespace Application\Utils;
 
 /**
  * This is a wrapper class to provide a Authorship-like interface for raw data

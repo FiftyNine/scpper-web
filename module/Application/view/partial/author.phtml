@@ -1,0 +1,24 @@
+<div class="author">
+    <?php if (!$this->one || $this->collapsed || $this->author->getRole() !== \Application\Utils\AuthorRole::AUTHOR): ?>
+        <?php 
+            switch ($this->author->getRole()) {
+                case \Application\Utils\AuthorRole::REWRITE_AUTHOR:
+                    $glyph = "glyphicon-erase";
+                    $hint = "Rewrite author";
+                    break;
+                case \Application\Utils\AuthorRole::TRANSLATOR:
+                    $glyph = "glyphicon-globe";
+                    $hint = "Translator";
+                    break;
+                default: /*\Application\Utils\AuthorRole::AUTHOR*/
+                    $glyph = "glyphicon-pencil";
+                    $hint = "Author";
+                    break;
+            }
+        ?>
+        <span class="glyphicon <?php echo $glyph; ?>" aria-label="<?php echo $hint; ?>" title="<?php echo $hint; ?>"></span>
+    <?php endif; ?>        
+    <?php
+        echo $this->partial('partial/user.phtml', ['user' => $this->author->getUser()]);
+    ?>
+</div>

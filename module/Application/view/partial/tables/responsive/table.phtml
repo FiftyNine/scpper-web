@@ -105,7 +105,7 @@
     <?php $i=1; ?>
     <?php foreach ($table->getPaginator() as $row): ?>
     <div class="responsive-table-row responsive-table-data">
-        <?php                 
+        <?php   
             echo $this->partial('partial/tables/responsive/cells.phtml', [
                 'table' => $table,
                 'columns' => $cols,
