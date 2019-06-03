@@ -784,6 +784,8 @@ div.google-visualization-tooltip {
 
 .page-source {
     width: 100%;
+    background-color: rgb(235, 235, 228);
+    cursor: default;
 }
 
 /** User **/

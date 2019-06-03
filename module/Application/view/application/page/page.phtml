@@ -249,7 +249,7 @@ echo $this->partial(
 <?php if ($page->getDeleted()): ?>
 <hr>
 <h4>Source</h4>
-<textarea class="page-source" disabled="true" readonly="true" rows="20">
+<textarea class="page-source" readonly="true" rows="20">
 <?php echo $this->escapeHtml(trim($page->getSource())); ?>
 </textarea>
 <?php endif; ?>
