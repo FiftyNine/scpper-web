@@ -114,11 +114,12 @@ scpper.charts.activity = {
         scpper.charts.activity.drawColumnChart(barData, barLabels, barTitle, barId, colors);
         // Prepare data for line chart
         var lineData = [
-            [result.data[0][0], result.data[0][1] + result.starting]
+            [new Date(result.fromDate), result.starting]
         ]; // $.extend(true, [], result.data);        
         for (var i=1; i<result.data.length; i++) {
-            lineData.push([result.data[i][0], lineData[i-1][1]+result.data[i][1]]);
+            lineData.push([result.data[i][0], lineData[i-1][1]+result.data[i-1][1]]);
         }
+        lineData.push([new Date(result.toDate), lineData[result.data.length-1][1]+result.data[result.data.length-1][1]]);
         // Draw line chart
         scpper.charts.activity.drawLineChart(lineData, lineLabel, lineTitle, lineId, colors[0]);
     },
@@ -131,7 +132,9 @@ scpper.charts.activity = {
                 url: "/activity/getUserChartData",
                 type: "get",
                 data: chartsData
-            }).done(function (result) {
+            }).done(function (result) {                
+                result.toDate = chartsData.toDate;
+                result.fromDate = chartsData.fromDate;
                 scpper.charts.activity.drawTimeLineCharts(result, ['Joined'], 'New users', 'users-joined', 'Users', 'Total users', 'users-total', ['#94C282']);
             }).fail(function () {
                 scpper.charts.setFailedBackground('users-joined');
@@ -152,6 +155,8 @@ scpper.charts.activity = {
                 type: "get",
                 data: chartsData
             }).done(function (result) {
+                result.toDate = chartsData.toDate;
+                result.fromDate = chartsData.fromDate;
                 scpper.charts.activity.drawTimeLineCharts(result, ['Remains', 'Didn\'t make it'], 'New pages', 'pages-created', 'Pages', 'Total pages', 'pages-total', ['#6DAECF', '#DB9191']);
             }).fail(function () {
                 scpper.charts.setFailedBackground('pages-created');
@@ -172,6 +177,8 @@ scpper.charts.activity = {
                 type: "get",
                 data: chartsData
             }).done(function (result) {
+                result.toDate = chartsData.toDate;
+                result.fromDate = chartsData.fromDate;
                 scpper.charts.activity.drawTimeLineCharts(result, ['Created'], 'New revisions', 'revisions-created', 'Revisions', 'Total revisions', 'revisions-total', ['#DB9191']);
             }).fail(function () {
                 scpper.charts.setFailedBackground('revisions-created');
@@ -192,6 +199,8 @@ scpper.charts.activity = {
                 type: "get",
                 data: chartsData
             }).done(function (result) {
+                result.toDate = chartsData.toDate;
+                result.fromDate = chartsData.fromDate;
                 scpper.charts.activity.drawTimeLineCharts(result, ['Votes'], 'New votes', 'votes-cast', 'Votes', 'Total votes', 'votes-total', ['#E0A96E']);
             }).fail(function () {
                 scpper.charts.setFailedBackground('votes-cast');

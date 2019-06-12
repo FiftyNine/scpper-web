@@ -44,10 +44,10 @@ class DateAggregate implements QueryAggregateInterface
                 $result = 'MAKEDATE(YEAR('.$this->propertyName.'), 1)';
                 break;
             case self::MONTH:
-                $result = 'DATE_SUB(DATE('.$this->propertyName.'), INTERVAL DAYOFMONTH('.$this->propertyName.') DAY)';
+                $result = 'DATE_SUB(DATE('.$this->propertyName.'), INTERVAL DAYOFMONTH('.$this->propertyName.')-1 DAY)';
                 break;
             case self::WEEK:
-                $result = 'DATE_SUB(DATE('.$this->propertyName.'), INTERVAL WEEKDAY('.$this->propertyName.') DAY)';
+                $result = 'DATE_SUB(DATE('.$this->propertyName.'), INTERVAL WEEKDAY('.$this->propertyName.')-1 DAY)';
                 break;
             default:
                 $result = 'DATE('.$this->propertyName.')';
