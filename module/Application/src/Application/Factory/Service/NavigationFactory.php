@@ -55,7 +55,7 @@ class NavigationFactory extends AbstractNavigationFactory
                 'route' => 'select-site',
                 'active' => $isActive,
                 'query' => [
-                    'siteId' => $site->getId()                        
+                    'siteId' => $site->getId(),
                 ]
             ];
         }

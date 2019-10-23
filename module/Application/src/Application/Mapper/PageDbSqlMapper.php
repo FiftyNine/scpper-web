@@ -6,6 +6,7 @@ use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Predicate;
+use Application\Utils\AuthorRole;
 use Application\Utils\Order;
 use Application\Utils\PageStatus;
 use Application\Utils\PageKind;
@@ -212,6 +213,28 @@ class PageDbSqlMapper extends ZendDbSqlMapper implements PageMapperInterface
         $select = $sql->select(DbViewPages::TABLE)
                 ->where([DbViewPages::ORIGINALID.' = ?' => $pageId]);
         return $this->fetchResultSet($sql, $select);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function findTranslationsOfUser($userId, $siteId, $order = null, $paginated = false)
+    {
+        $sql = new Sql($this->dbAdapter);
+        // Only undeleted pages
+        $select = $sql->select(['p' => DbViewPages::TABLE])
+                ->join(['a' => DbViewAuthors::TABLE], 'p.'.DbViewPages::ORIGINALID.' = a.'.DbViewAuthors::PAGEID, [])
+                ->where([
+                    'p.'.DbViewPages::SITEID.' = ?' => $siteId,
+                    'a.'.DbViewAuthors::USERID.' = ?' => $userId,
+                    'a.'.DbViewAuthors::ROLEID.' IN ('.AuthorRole::AUTHOR.','.AuthorRole::REWRITE_AUTHOR.')']);        
+        if (is_array($order)) {
+            $this->orderSelect($select, $order);
+        }
+        if ($paginated) {
+            return $this->getPaginator($select);            
+        }        
+        return $this->fetchResultSet($sql, $select);                
     }
 
     /**

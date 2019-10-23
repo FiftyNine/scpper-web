@@ -102,6 +102,16 @@ class UserController extends AbstractActionController
         return $table;
     }
 
+    protected function getTranslationsTable($userId, $siteId, $orderBy, $order, $page, $perPage)
+    {
+        $pages = $this->services->getPageService()->findTranslationsOfUser($userId, $siteId, [$orderBy => $order], true, $page, $perPage);
+        $pages->setCurrentPageNumber($page);
+        $pages->setItemCountPerPage($perPage);
+        $table = PaginatedTableFactory::createPagesTable($pages);
+        $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);
+        return $table;
+    }    
+    
     protected function getVotesTable($userId, $siteId, $orderBy, $order, $page, $perPage)
     {
         $votes = $this->services->getVoteService()->findVotesOfUser($userId, $siteId, [$orderBy => $order], true, $page, $perPage);
@@ -121,9 +131,13 @@ class UserController extends AbstractActionController
     {
         $siteId = $this->services->getUtilityService()->getSiteId();
         $site = $this->services->getSiteService()->find($siteId);
-        $userId = (int)$this->params()->fromRoute('userId');
+        $userId = (int)$this->params()->fromRoute('userId');                
         try {
             $user = $this->services->getUserService()->find($userId);
+            $pages = $this->getPagesTable($userId, $siteId, null, DbViewPagesAll::CREATIONDATE, ORDER::DESCENDING, 1, 10);
+            $translations = $this->getTranslationsTable($userId, $siteId, DbViewPagesAll::CREATIONDATE, ORDER::DESCENDING, 1, 10);
+            // if ($user->)
+            
         } catch (\InvalidArgumentException $e) {
             return $this->notFoundAction();
         }
@@ -133,7 +147,8 @@ class UserController extends AbstractActionController
         return new ViewModel([
             'user' => $user,
             'site' => $site,
-            'pages' => $this->getPagesTable($userId, $siteId, null, DbViewPagesAll::CREATIONDATE, ORDER::DESCENDING, 1, 10),
+            'pages' => $pages,
+            'translations' => $translations,
             'deleted' => $this->services->getUserService()->countAuthorshipsOfUser($userId, $siteId, true),
             'fans' => $this->getFans($userId, $siteId, true),
             'tags' => $this->getFavoriteTags($userId, $siteId, true),
@@ -153,7 +168,7 @@ class UserController extends AbstractActionController
         }
         return new JsonModel($user->toArray());
     }
-    
+
     public function ratingChartAction()
     {
         $result = ['success' => false];
@@ -204,6 +219,34 @@ class UserController extends AbstractActionController
             $order = Order::DESCENDING;
         }    
         $table = $this->getPagesTable($userId, $siteId, null, $orderBy, $order, $page, $perPage);
+        $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
+        if ($renderer) {
+            $result['success'] = true;                
+            $result['content'] = $renderer(
+                'partial/tables/default/table.phtml', 
+                [
+                    'table' => $table, 
+                    'data' => []
+                ]
+            );
+        }
+        return new JsonModel($result);                        
+    }
+
+    public function translationListAction()
+    {
+        $userId = (int)$this->params()->fromQuery('userId');
+        $siteId = (int)$this->params()->fromQuery('siteId');
+        $page = (int)$this->params()->fromQuery('page', 1);
+        $perPage = (int)$this->params()->fromQuery('perPage', 10);
+        $orderBy = $this->params()->fromQuery('orderBy', DbViewPagesAll::CREATIONDATE);
+        $order = $this->params()->fromQuery('ascending', false);
+        if ($order) {
+            $order = Order::ASCENDING;
+        } else {
+            $order = Order::DESCENDING;
+        }    
+        $table = $this->getTranslationsTable($userId, $siteId, $orderBy, $order, $page, $perPage);
         $renderer = $this->getServiceLocator()->get('ViewHelperManager')->get('partial');
         if ($renderer) {
             $result['success'] = true;                

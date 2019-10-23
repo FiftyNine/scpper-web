@@ -160,6 +160,16 @@ class PageService implements PageServiceInterface
     {
         $pages = $this->mapper->findPagesByUser($userId, $siteId, $deleted, $order, $paginated);
         $pages = $this->preparePages($pages, $paginated, $page, $perPage);
+        return $pages;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function findTranslationsOfUser($userId, $siteId, $order = null, $paginated = false, $page = 1, $perPage = 10)
+    {
+        $pages = $this->mapper->findTranslationsOfUser($userId, $siteId, $order, $paginated);
+        $pages = $this->preparePages($pages, $paginated, $page, $perPage);
         return $pages;        
     }
     

@@ -79,6 +79,10 @@ class IndexController extends AbstractActionController
         $request = $this->getRequest();
         $response = $this->getResponse();
         $this->services->getUtilityService()->selectSite($request, $response);
+        $referer = $request->getHeaders('referer');
+        if ($referer) {
+            return $this->redirect()->toUrl($referer->getUri());
+        }
         return $this->redirect()->toRoute('home');
     }
     

@@ -74,6 +74,18 @@ interface PageServiceInterface
      * @return PageInterface[]
      */
     public function findPagesByUser($userId, $siteId, $deleted = false, $order = null, $paginated = false, $page = 1, $perPage = 10);
+
+    /**
+     * Find all translated pages on the site authored by user on other sites
+     * @param int $userId
+     * @param int $siteId
+     * @param array(string => int) $order Associative array of field names and sorting orders (constants from \Application\Utils\Order)
+     * @param bool $paginated Return a \Zend\Paginator\Paginator object instead of actual objects
+     * @param int $page Number of page of paginator
+     * @param int $perPage Items per page of paginator
+     * @return PageInterface[]
+     */
+    public function findTranslationsOfUser($userId, $siteId, $order = null, $paginated = false, $page = 1, $perPage = 10);
     
     /**
      * Find all pages on the site by the list of tags

@@ -69,6 +69,14 @@ interface PageMapperInterface extends SimpleMapperInterface
      * @return PageInterface[]
      */
     public function findTranslations($pageId);
+
+    /**
+     * Find translations of pages authored by this user on other wikis
+     * @param int $userId
+     * @param int $siteId
+     * @return PageInterface[]
+     */
+    public function findTranslationsOfUser($userId, $siteId);
     
     /**
      * Find page's rank on the site
