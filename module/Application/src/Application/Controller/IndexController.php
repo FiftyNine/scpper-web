@@ -109,6 +109,9 @@ class IndexController extends AbstractActionController
         if ((int)$pageId > 0 && $this->fillExtensionPageInfo($pageId, $result['data'])) {            
             $result['status'] = 'ok';
         }
+        $this->getResponse()->getHeaders()->addHeaders([
+            'Access-Control-Allow-Origin' => '*'
+        ]);
         return new JsonModel($result);
     }
 }
