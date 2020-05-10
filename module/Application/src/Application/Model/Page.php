@@ -98,6 +98,11 @@ class Page implements PageInterface
      * @var string
      */
     protected $source;
+
+    /**
+     * @var bool
+     */
+    protected $hideSource;
     
     /**
      *
@@ -333,6 +338,19 @@ class Page implements PageInterface
     public function setSource($value)
     {
         $this->source = $value;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getHideSource()
+    {
+        return $this->hideSource;
+    }
+
+    public function setHideSource($value)
+    {
+        $this->hideSource = $value;
     }
     
     /**

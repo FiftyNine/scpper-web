@@ -15,6 +15,7 @@ class DbViewPages
     const TITLE = 'Title';
     const ALTTITLE = 'AltTitle';
     const SOURCE = 'Source';
+    const HIDESOURCE = 'HideSource';
     const DELETED = 'Deleted';
     const LASTUPDATE = 'LastUpdate';
     const CREATIONDATE = 'CreationDate';

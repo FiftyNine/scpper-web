@@ -43,6 +43,11 @@ interface PageInterface
      * @return string
      */
     public function getSource();
+
+    /**
+     * @return bool
+     */
+    public function getHideSource();
     
     /**
      * @return int

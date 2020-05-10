@@ -15,6 +15,7 @@ class DbPages
     const ALTTITLE = 'AltTitle';
     const DELETED = 'Deleted';
     const LASTUPDATE = 'LastUpdate';
+    const HIDESOURCE = 'HideSource';
 
 
     static public function hasField($field) 
