@@ -15,6 +15,7 @@ class DbSites
     const DEFAULTLANGUAGE = 'DefaultLanguage';
     const LASTUPDATE = 'LastUpdate';
     const HIDEVOTES = 'HideVotes';
+    const PROTOCOL = 'Protocol';
 
 
     static public function hasField($field) 

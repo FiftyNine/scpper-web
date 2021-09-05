@@ -39,6 +39,12 @@ interface SiteInterface
      * @return \DateTime
      */
     public function getLastUpdate();  
+
+    /**
+     * 
+     * @return string
+     */
+    public function getProtocol();  
     
     /**
      * 

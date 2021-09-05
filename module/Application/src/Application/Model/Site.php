@@ -41,6 +41,12 @@ class Site implements SiteInterface
     protected $lastUpdate;
 
     /**
+     *
+     * @var string
+     */
+    protected $protocol;    
+    
+    /**
      * 
      * @var int
      */
@@ -228,13 +234,31 @@ class Site implements SiteInterface
             $this->lastUpdate->setTimeStamp($lastUpdate);
         }
     }        
+
+    /**
+     * 
+     * {@inheritDoc}
+     */
+    public function getProtocol()
+    {
+        return $this->protocol;
+    }
+    
+    /**
+     * 
+     * @param string $protocol
+     */
+    public function setProtocol($protocol)
+    {
+        $this->protocol = $protocol;
+    }  
     
     /**
      * {@inheritDoc}
      */
     public function getUrl()
     {
-        return "http://{$this->getWikidotName()}.wikidot.com";
+        return "{$this->getProtocol()}://{$this->getWikidotName()}.wikidot.com";
     }
 
     /**
