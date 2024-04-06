@@ -248,20 +248,18 @@ echo $this->partial(
 ?>    
 </div>
 <?php endif; ?>
-<?php if ($page->getDeleted()): ?>
 <hr>
 <h4>Source</h4>
 <textarea class="page-source" readonly="true" rows="20">
 <?php 
     if ($page->getHideSource()) {
-        echo "Source text was hidden at author's request.\r\nPlease contact me on Wikidot (FiftyNine) or via e-mail (admin@scpper.com) to get access to the source.\r\nYou will need to provide author's permission or sufficient reason, such as investigation being carried out by wiki staff.";
+        echo "Source text was hidden at author's request.\r\nPlease contact me via e-mail (admin@scpper.com) to get access to the source.\r\nYou will need to provide author's permission or sufficient reason, such as investigation being carried out by wiki staff.";
     }
     else {
         echo $this->escapeHtml(trim($page->getSource()));
     }
 ?>
 </textarea>
-<?php endif; ?>
 
 <div id="report-dialog" title="Enter correct information">
 <?php $this->reportForm->setAttribute('action', '/page/report'); ?>
