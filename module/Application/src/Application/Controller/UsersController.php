@@ -69,10 +69,12 @@ class UsersController extends AbstractActionController
             $userIds[] = $author->getUserId();
             $authorById[$author->getUserId()] = $author;
         }
-        $users = $this->services->getUserService()->findAll(
-            [sprintf('%s IN (%s)',  DbViewUsers::USERID, implode(',', $userIds))]);
-        foreach ($users as $user) {
-            $authorById[$user->getId()]->setUser($user);
+        if (sizeof($userIds)>0) {
+            $users = $this->services->getUserService()->findAll(
+                [sprintf('%s IN (%s)',  DbViewUsers::USERID, implode(',', $userIds))]);
+            foreach ($users as $user) {
+                $authorById[$user->getId()]->setUser($user);
+            }
         }
         $table = \Application\Factory\Component\PaginatedTableFactory::createAuthorsTable($authors);
         $table->getColumns()->setOrder($orderBy, $order === Order::ASCENDING);        

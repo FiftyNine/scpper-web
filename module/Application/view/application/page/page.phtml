@@ -58,13 +58,15 @@ $this->headScript()->appendFile('https://www.gstatic.com/charts/loader.js');
     on
     <?php echo $this->partial('partial/site.phtml', ['site' => $page->getSite(), 'link' => true]);?>
     <br>
+    <?php if ($page->getSite()->getLastUpdate()): ?>
     <span class="small-text">
         <?php if ($page->getDeleted()): ?>
             Last update <?php echo $page->getLastUpdate()->format('Y-m-d H:i') ?>
         <?php else : ?>
-            Updated <?php echo $page->getSite()->getLastUpdate()->format('Y-m-d H:i') ?>
+            Updated <?php echo $page->getSite()->getLastUpdate()->format('Y-m-d H:i'); ?>
         <?php endif; ?>
     </span>
+    <?php endif; ?>
 </p>
 <hr>
 <div id="page-top">

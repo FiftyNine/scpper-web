@@ -188,7 +188,11 @@ class ActivityController extends AbstractActionController
         $fromControl = $this->dateIntervalForm->get(DateIntervalForm::FROM_DATE_NAME);
         $toControl= $this->dateIntervalForm->get(DateIntervalForm::TO_DATE_NAME);
         $lastDate = $site->getLastUpdate();
-        $lastDate->setTime(23, 59, 59);
+        if ($lastDate) {
+            $lastDate->setTime(23, 59, 59);
+        } else {
+            $lastDate = new \DateTime();
+        }
         $fromControl->setAttribute('max', $lastDate->format('Y-m-d'));
         $toControl->setAttribute('max', $lastDate->format('Y-m-d'));        
         $from = clone $lastDate;

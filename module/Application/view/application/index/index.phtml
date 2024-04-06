@@ -26,9 +26,11 @@
                 <h1>
                     <?php echo $this->escapeHtml($this->site->getNativeName()); ?>
                 </h1>
+                <?php if ($site->getLastUpdate()): ?>
                 <span class="small-text">
-                    Updated <?php echo $this->site->getLastUpdate()->format('Y-m-d H:i:s'); ?>
-                </span>                    
+                    Updated <?php echo $site->getLastUpdate()->format('Y-m-d H:i'); ?>
+                </span>
+                <?php endif; ?>
             </div>            
         </div>
         <div class="row tile-row">

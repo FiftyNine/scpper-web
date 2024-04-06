@@ -43,7 +43,7 @@ $this->headTitle(sprintf('Changes from %s to %s', $fromDate->getValue(), $toDate
         $('#show-pages').on('click', {container: "#pages-list", url: "/activity/pages", payload: paginatorData}, scpper.tables.fetchPaginatorFirst);
         $('#show-editors').on('click', {container: "#editors-list", url: "/activity/editors", payload: paginatorData}, scpper.tables.fetchPaginatorFirst);
         $('#show-voters').on('click', {container: "#voters-list", url: "/activity/voters", payload: paginatorData}, scpper.tables.fetchPaginatorFirst);    
-        $('.datepicker').datepicker({autoSize: true, dateFormat: "yy-mm-dd", maxDate: "<?php echo $site->getLastUpdate()->format('Y-m-d');?>"});
+        $('.datepicker').datepicker({autoSize: true, dateFormat: "yy-mm-dd", maxDate: "<?php echo ($site->getLastUpdate() ?: new \DateTime())->format('Y-m-d');?>"});
         $('.activity-tabs-stack>.activity-tab').on('click', null, function(event) {$(this).toggleClass('active');});
         $('.activity-tabs-row>.activity-tab-users').on('click', null, function(event) {activateTab('.activity-tab-users', scpper.charts.activity.drawUserCharts)});
         $('.activity-tabs-row>.activity-tab-pages').on('click', null, function(event) {activateTab('.activity-tab-pages', scpper.charts.activity.drawPageCharts)});

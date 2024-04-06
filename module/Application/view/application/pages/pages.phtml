@@ -20,7 +20,11 @@
 <span class="h1">
     <?php echo $this->partial('partial/site.phtml', ['site' => $this->site, 'link' => true]);?>
 </span>
-<p class="small-text">Updated <?php echo $this->site->getLastUpdate()->format('Y-m-d H:i'); ?></p>
+<?php if ($this->site->getLastUpdate()): ?>
+<p class="small-text">
+    Updated <?php echo $this->site->getLastUpdate()->format('Y-m-d H:i'); ?>
+</p>
+<?php endif; ?>
 <h3>Pages (<?php echo $this->table->getPaginator()->getTotalItemCount();?> total)</h3>
 <div class="table-container" id="page-list">
 <?php
