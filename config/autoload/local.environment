@@ -1,0 +1,9 @@
+<?php
+
+return [
+    'db' => [
+        'dsn'      => "mysql:dbname=".getenv('DB_NAME').";host=".getenv('DB_HOST').";charset=utf8mb4",
+        'username' => getenv('DB_USER'),
+        'password' => getenv('DB_PASSWORD'),
+    ],
+];
