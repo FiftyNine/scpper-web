@@ -18,4 +18,6 @@ WORKDIR /var/www/scpper
 RUN chown www-data:www-data /var/www/scpper
 RUN chmod 777 /var/www/scpper 
 COPY . .
-RUN php composer.phar update
+RUN mv config/autoload/local.environment config/autoload/local.php
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+RUN composer update

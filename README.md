@@ -1,12 +1,30 @@
-ScpperDB
+# scpper/web
 =======================
 
-This is a project to provide a web interface for a database containing data extracted from SCP Foundation wiki (http://www.scp-wiki.net/) and its branches.
-Database itself is updated with the help of SCP web crawler.
-Source code for website and web-crawler is available at https://github.com/FiftyNine?tab=repositories
+This is a project to provide a web interface for a database containing data extracted from [SCP Foundation wiki](http://www.scp-wiki.net/) and its branches.
+Database itself is updated with the help of [scpper-crawler](https://github.com/FiftyNine/scpper-crawler).
+Source code for database, website and crawler is available at https://github.com/FiftyNine?tab=repositories
 
-Author: Alexander "FiftyNine" Krivopalov, E-mail: lixbart@mail.ru
+## As local copy  
+  #### Requirements
+ - PHP 7.4
+ - [Composer](https://getcomposer.org/download/)
+ - An instance of a MySQL [scpper/db](https://github.com/FiftyNine/scpper-db) database
+  #### Instructions
+  - To define connection parameters follow instructions in README.md from `config/autoload` folder
+  - run `composer update`
+  - Change your http server FOCUMENT ROOT folder to the `public` folder of this repo.
+## As Docker container
+  - Define following environmental variables for a container:
+    - DB_HOST - host name of the MySQL server
+    - DB_NAME - database to be updated
+    - DB_USER - MySQL user that has write and execute rights for the specified database
+    - DB_PASSWORD - password for the specified user
 
+Author: Alexander "FiftyNine" Krivopalov  
+E-mail: admin@scpper.com
+
+========================
 ## API
 
 **Endpoint**: /api/[method]
